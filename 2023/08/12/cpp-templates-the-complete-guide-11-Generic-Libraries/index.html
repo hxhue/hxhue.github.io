@@ -1,0 +1,457 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 7.1.1">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"hxhue.github.io","root":"/","scheme":"Muse","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}};
+  </script>
+
+  <meta name="description" content="CallablesCallable 有很多：函数、函数指针、成员函数、lambda 表达式（函数对象特例）、函数对象（Functor）等。 lambda 表达式lambda 是函数对象。当捕获列表没有参数的时候，lambda 还有一个转换成一般函数指针的隐式转换操作符。在无捕获列表的 lambda 前加上 + 符号，能使得 lambda 变成函数指针也就是这个道理。 std::invoke支持 C">
+<meta property="og:type" content="article">
+<meta property="og:title" content="CTTCG 11 Generic Libraries">
+<meta property="og:url" content="https://hxhue.github.io/2023/08/12/cpp-templates-the-complete-guide-11-Generic-Libraries/index.html">
+<meta property="og:site_name" content="Hxhue&#39;s Blog">
+<meta property="og:description" content="CallablesCallable 有很多：函数、函数指针、成员函数、lambda 表达式（函数对象特例）、函数对象（Functor）等。 lambda 表达式lambda 是函数对象。当捕获列表没有参数的时候，lambda 还有一个转换成一般函数指针的隐式转换操作符。在无捕获列表的 lambda 前加上 + 符号，能使得 lambda 变成函数指针也就是这个道理。 std::invoke支持 C">
+<meta property="og:locale" content="en_US">
+<meta property="og:image" content="https://hxhue.github.io/assets/b3845cd77d05ec85f0ca9ee6c18da549.png">
+<meta property="og:image" content="https://hxhue.github.io/assets/36dfbb182fd538b3aa875b147435b913.png">
+<meta property="og:image" content="https://hxhue.github.io/assets/9e9ecc5f98150242809bfc0c17ab6ced.png">
+<meta property="og:image" content="https://hxhue.github.io/assets/b3845cd77d05ec85f0ca9ee6c18da549.png">
+<meta property="og:image" content="https://hxhue.github.io/assets/2060a648cdb9319059382bb87423f469.png">
+<meta property="article:published_time" content="2023-08-11T16:00:00.000Z">
+<meta property="article:modified_time" content="2024-03-05T12:15:54.952Z">
+<meta property="article:author" content="Hxhue">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://hxhue.github.io/assets/b3845cd77d05ec85f0ca9ee6c18da549.png">
+
+<link rel="canonical" href="https://hxhue.github.io/2023/08/12/cpp-templates-the-complete-guide-11-Generic-Libraries/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'en'
+  };
+</script>
+
+  <title>CTTCG 11 Generic Libraries | Hxhue's Blog</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="Toggle navigation bar">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">Hxhue's Blog</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="main-menu menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="home fa-fw"></i>Home</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="archive fa-fw"></i>Archives</a>
+
+  </li>
+        <li class="menu-item menu-item-about">
+
+    <a href="/about/" rel="section"><i class="user fa-fw"></i>About</a>
+
+  </li>
+        <li class="menu-item menu-item-categories">
+
+    <a href="/categories/" rel="section"><i class="th fa-fw"></i>Categories</a>
+
+  </li>
+  </ul>
+</nav>
+
+
+
+
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post posts-expand">
+            
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
+    <link itemprop="mainEntityOfPage" href="https://hxhue.github.io/2023/08/12/cpp-templates-the-complete-guide-11-Generic-Libraries/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="Hxhue">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Hxhue's Blog">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          CTTCG 11 Generic Libraries
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">Posted on</span>
+
+              <time title="Created: 2023-08-12 00:00:00" itemprop="dateCreated datePublished" datetime="2023-08-12T00:00:00+08:00">2023-08-12</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">Edited on</span>
+                <time title="Modified: 2024-03-05 20:15:54" itemprop="dateModified" datetime="2024-03-05T20:15:54+08:00">2024-03-05</time>
+              </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">In</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/cttcg/" itemprop="url" rel="index"><span itemprop="name">C++ Templates: The Complete Guide</span></a>
+                </span>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <h1 id="Callables"><a href="#Callables" class="headerlink" title="Callables"></a>Callables</h1><p>Callable 有很多：函数、函数指针、成员函数、lambda 表达式（函数对象特例）、函数对象（Functor）等。</p>
+<h2 id="lambda-表达式"><a href="#lambda-表达式" class="headerlink" title="lambda 表达式"></a>lambda 表达式</h2><p>lambda 是函数对象。当捕获列表没有参数的时候，lambda 还有一个转换成一般函数指针的隐式转换操作符。在无捕获列表的 lambda 前加上 <code>+</code> 符号，能使得 lambda 变成函数指针也就是这个道理。</p>
+<h2 id="std-invoke"><a href="#std-invoke" class="headerlink" title="std::invoke"></a><code>std::invoke</code></h2><p>支持 Callable 并不简单，因为需要考虑到成员函数的调用需要通过 this 指针来完成。C++17 提供了 <code>std::invoke</code> 来将这些操作统一起来，只需要把 this 指针当作第一个参数传入。</p>
+<h2 id="surrogate-function-从类型隐式转换得来"><a href="#surrogate-function-从类型隐式转换得来" class="headerlink" title="surrogate function - 从类型隐式转换得来"></a>surrogate function - 从类型隐式转换得来</h2><p>dummy&#x2F;surrogate function（哑函数&#x2F;替代函数）指的是某一个函数对象还具有一个到普通函数引用或者普通函数指针的隐式转换，这个转换好的函数就是替代函数。替代函数用到了一次隐式转换，所以在参数匹配均不优于函数对象的其他<code>()</code>操作符重载时不会被选中。但若替代函数是更好的替代，将出现函数使用 ambiguous 的情况。</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">class</span> <span class="title class_">IndirectFunctor</span> &#123;</span><br><span class="line">   <span class="keyword">public</span>:</span><br><span class="line">    <span class="function"><span class="type">void</span> <span class="title">operator</span><span class="params">()</span><span class="params">(<span class="type">double</span>, <span class="type">double</span>)</span> <span class="type">const</span> </span>&#123;&#125;</span><br><span class="line">    <span class="function"><span class="keyword">operator</span> <span class="title">auto</span> <span class="params">()</span> <span class="type">const</span> </span>&#123;</span><br><span class="line">        <span class="keyword">return</span> +[<span class="type">double</span>, <span class="type">int</span>](<span class="type">double</span>,%<span class="number">20</span><span class="type">int</span>) &#123;&#125;;</span><br><span class="line">    &#125;;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="type">void</span> <span class="title">activate</span><span class="params">(IndirectFunctor <span class="type">const</span>&amp; funcObj)</span> </span>&#123;</span><br><span class="line">    <span class="built_in">funcObj</span>(<span class="number">3</span>, <span class="number">5</span>); <span class="comment">// ERROR: ambiguous</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>上面的代码若将 <code>operator auto() const</code> 中的 lambda 表达式的参数类型改成 <code>(double, double)</code>，该函数就会因为需要一次额外的隐式转换而落选，代码能够正常编译。</p>
+<h1 id="Type-Traits"><a href="#Type-Traits" class="headerlink" title="Type Traits"></a>Type Traits</h1><p><code>std::decay_t&lt;int const&amp;&gt;</code> → <code>int</code></p>
+<p>remove_const 不能去掉引用的 const 属性，但是 decay 可以。</p>
+<p><code>std::add_rvalue_reference_t&lt;int const&amp;&gt;</code> → <code>int const &amp;</code></p>
+<p>左值引用的右值引用还是左值引用。</p>
+<p><code>std::is_assignable_v&lt;int,int&gt;</code> → <code>false</code></p>
+<p><code>std::is_assignable_v&lt;int&amp;,int&gt;</code> → <code>true</code></p>
+<p>注意值类型是不能赋值的，这个检查比类型间是否可以转换更加严格。</p>
+<p><code>std::is_swappable_v&lt;int&gt;</code> yields true (assuming lvalues)，<strong>默认左值</strong></p>
+<p><code>std::is_swappable_with_v&lt;int&amp;,int&amp;&gt;</code> yields true (equivalent to the previous check)</p>
+<p><code>std::is_swappable_with_v&lt;int,int&gt;</code> yields false (taking value category into account)</p>
+<p>带有 with 的是接受两个参数的。</p>
+<p><code>std::conditional</code> 能够接受一个条件和两个类型，按照三元表达式的处理逻辑返回一个类型：</p>
+<p><img src="/assets/b3845cd77d05ec85f0ca9ee6c18da549.png"></p>
+<h1 id="std-addressof"><a href="#std-addressof" class="headerlink" title="std::addressof()"></a><code>std::addressof()</code></h1><p>用来获取真实地址。可以规避 &amp; 运算符重载的影响。</p>
+<h1 id="std-declval"><a href="#std-declval" class="headerlink" title="std::declval&lt;T&gt;()"></a><code>std::declval&lt;T&gt;()</code></h1><p>这个函数模板用于创建一个 <code>**T&amp;&amp;**</code> 类型的值。该值只能用于提供类型信息，不能被真正使用。应用场景有 type traits 或者 decltype 里面。注意由于返回的是转发引用，所以对非左值引用的参数类型返回的是右值引用，其结果可能需要我们做去引用或者 decay 处理。</p>
+<h1 id="完美转发"><a href="#完美转发" class="headerlink" title="完美转发"></a>完美转发</h1><p>一般的转发是这样的：</p>
+<p><img src="/assets/36dfbb182fd538b3aa875b147435b913.png"></p>
+<p>下面讨论一些棘手的情况。</p>
+<h2 id="传参场景-1：多次调用同一函数时参数可能已被移动"><a href="#传参场景-1：多次调用同一函数时参数可能已被移动" class="headerlink" title="传参场景 1：多次调用同一函数时参数可能已被移动"></a>传参场景 1：多次调用同一函数时参数可能已被移动</h2><p>如果正在遍历一个范围，需要反复多次调用同一函数时，就不能使用完美转发了。因为调用一次后，函数对象和其他参数都可能会被这次调用移动。这个时候只能传值或者常引用。</p>
+<h2 id="传参场景-2：链式调用"><a href="#传参场景-2：链式调用" class="headerlink" title="传参场景 2：链式调用"></a>传参场景 2：链式调用</h2><p>可能需要对参数的调用结果做出一定处理之后继续使用。这个时候可以用 <code>auto &amp;&amp;</code> 来承接返回值。</p>
+<p><img src="/assets/9e9ecc5f98150242809bfc0c17ab6ced.png"></p>
+<p>用 auto &amp;&amp; 相比 decltype(auto) 可以省去之后调用 std::move 的麻烦，因为我们明确不需要链式调用的中间值。</p>
+<p>💡 注意与 <code>std::declval</code> 不同，<code>std::move</code> 的结果是一定会变成右值的。而 <code>std::declval</code> 是尝试加右值引用，可能会<strong>折叠</strong>成左值引用。</p>
+<p>虽然中间值用 auto &amp;&amp;，返回值还是用 decltype(auto)（见下面）。</p>
+<h2 id="正确使用-auto-推导返回值"><a href="#正确使用-auto-推导返回值" class="headerlink" title="正确使用 auto 推导返回值"></a>正确使用 <code>auto</code> 推导返回值</h2><p>函数返回值类型应该视情况被声明为 <code>decltype(auto)</code> 。与其他几种形式的区别是：<code>auto</code> 不能保留引用， <code>auto &amp;&amp;</code> 在没有引用的时候会多添加引用属性（在函数体内使用当然是没问题的，因为在作用域内有生命周期延长，所以不会悬挂，但是作为返回值就有问题）。</p>
+<p>其次，函数中真正用到的最后一个被直接返回的值也要声明为 <code>decltype(auto)</code>。</p>
+<p>💡 decltype(auto) 在参数上面的使用可能会在后面章节讨论。一般来说还是要谨慎在模板参数中使用带引用的 auto（decltype(auto) 可能会被推导为引用）。</p>
+<h2 id="void-类型不被能-decltype-auto-或者-auto-接受"><a href="#void-类型不被能-decltype-auto-或者-auto-接受" class="headerlink" title="void 类型不被能 decltype(auto) 或者 auto &amp;&amp; 接受"></a>void 类型不被能 decltype(auto) 或者 auto &amp;&amp; 接受</h2><p>用 <code>if constexpr</code> 表达式判断返回值类型：</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">if</span> <span class="title">constexpr</span><span class="params">(std::is_same_v&lt;</span></span></span><br><span class="line"><span class="params"><span class="function">	std::<span class="type">invoke_result_t</span>&lt;Callable, Args...&gt;, <span class="type">void</span>&gt;)</span></span></span><br></pre></td></tr></table></figure>
+
+<p>然后分情况处理。在返回值类型为 void 的时候就省略掉对返回值的利用。</p>
+<h2 id="对字面量的推导"><a href="#对字面量的推导" class="headerlink" title="对字面量的推导"></a>对字面量的推导</h2><p>完美转发前首先需要对参数类型推导，这相当于禁用了类型之间的隐式转换，见 <a href="%E6%A6%82%E5%BF%B5/c++/%E8%AF%BB%20C++%20Templates_%20The%20Complete%20Guide/15%20Template%20Argument%20Deduction.md#%E5%AE%8C%E7%BE%8E%E8%BD%AC%E5%8F%91"></a>。</p>
+<h1 id="模板参数是引用"><a href="#模板参数是引用" class="headerlink" title="模板参数是引用"></a>模板参数是引用</h1><p>比较危险。标准库做出了专门处理，或者拒绝参数为引用的情形。</p>
+<h1 id="延迟评估"><a href="#延迟评估" class="headerlink" title="延迟评估"></a>延迟评估</h1><p>有些类模板不需要参数是完整类型，比如智能指针。</p>
+<p>如果类模板中出现了一些函数对参数 T 的完整性 T 有要求，编译就可能向错误的方向发生。在智能指针的场景下，一个链表的定义中很可能包含了不完整的类型（Node），这就符合上面的情况。</p>
+<p><img src="/assets/b3845cd77d05ec85f0ca9ee6c18da549.png"></p>
+<p>这张图中的可移动构造的 type trait 就要求类型 T 是完整类型，否则将返回 false。处理方案是把这个函数声明变成函数模板声明：</p>
+<p><img src="/assets/2060a648cdb9319059382bb87423f469.png"></p>
+<p>函数模板只会在用到的时候被实例化，这样就延后了对于 conditional 条件的判断，到时 D 即 T 应该已经是一个完整类型。</p>
+
+    </div>
+
+    
+    
+    
+
+      <footer class="post-footer">
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/2023/08/12/cpp-templates-the-complete-guide-12-Fundamentals-in-Depth/" rel="prev" title="CTTCG 12 Fundamentals in Depth">
+      <i class="fa fa-chevron-left"></i> CTTCG 12 Fundamentals in Depth
+    </a></div>
+      <div class="post-nav-item">
+    <a href="/2023/08/12/cpp-templates-the-complete-guide-10-Basic-Template-Terminology/" rel="next" title="CTTCG 10 Basic Template Terminology">
+      CTTCG 10 Basic Template Terminology <i class="fa fa-chevron-right"></i>
+    </a></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+
+
+          </div>
+          
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          Table of Contents
+        </li>
+        <li class="sidebar-nav-overview">
+          Overview
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#Callables"><span class="nav-number">1.</span> <span class="nav-text">Callables</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#lambda-%E8%A1%A8%E8%BE%BE%E5%BC%8F"><span class="nav-number">1.1.</span> <span class="nav-text">lambda 表达式</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#std-invoke"><span class="nav-number">1.2.</span> <span class="nav-text">std::invoke</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#surrogate-function-%E4%BB%8E%E7%B1%BB%E5%9E%8B%E9%9A%90%E5%BC%8F%E8%BD%AC%E6%8D%A2%E5%BE%97%E6%9D%A5"><span class="nav-number">1.3.</span> <span class="nav-text">surrogate function - 从类型隐式转换得来</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Type-Traits"><span class="nav-number">2.</span> <span class="nav-text">Type Traits</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#std-addressof"><span class="nav-number">3.</span> <span class="nav-text">std::addressof()</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#std-declval"><span class="nav-number">4.</span> <span class="nav-text">std::declval&lt;T&gt;()</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%AE%8C%E7%BE%8E%E8%BD%AC%E5%8F%91"><span class="nav-number">5.</span> <span class="nav-text">完美转发</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%BC%A0%E5%8F%82%E5%9C%BA%E6%99%AF-1%EF%BC%9A%E5%A4%9A%E6%AC%A1%E8%B0%83%E7%94%A8%E5%90%8C%E4%B8%80%E5%87%BD%E6%95%B0%E6%97%B6%E5%8F%82%E6%95%B0%E5%8F%AF%E8%83%BD%E5%B7%B2%E8%A2%AB%E7%A7%BB%E5%8A%A8"><span class="nav-number">5.1.</span> <span class="nav-text">传参场景 1：多次调用同一函数时参数可能已被移动</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%BC%A0%E5%8F%82%E5%9C%BA%E6%99%AF-2%EF%BC%9A%E9%93%BE%E5%BC%8F%E8%B0%83%E7%94%A8"><span class="nav-number">5.2.</span> <span class="nav-text">传参场景 2：链式调用</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%AD%A3%E7%A1%AE%E4%BD%BF%E7%94%A8-auto-%E6%8E%A8%E5%AF%BC%E8%BF%94%E5%9B%9E%E5%80%BC"><span class="nav-number">5.3.</span> <span class="nav-text">正确使用 auto 推导返回值</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#void-%E7%B1%BB%E5%9E%8B%E4%B8%8D%E8%A2%AB%E8%83%BD-decltype-auto-%E6%88%96%E8%80%85-auto-%E6%8E%A5%E5%8F%97"><span class="nav-number">5.4.</span> <span class="nav-text">void 类型不被能 decltype(auto) 或者 auto &amp;&amp; 接受</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%AF%B9%E5%AD%97%E9%9D%A2%E9%87%8F%E7%9A%84%E6%8E%A8%E5%AF%BC"><span class="nav-number">5.5.</span> <span class="nav-text">对字面量的推导</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E6%A8%A1%E6%9D%BF%E5%8F%82%E6%95%B0%E6%98%AF%E5%BC%95%E7%94%A8"><span class="nav-number">6.</span> <span class="nav-text">模板参数是引用</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%BB%B6%E8%BF%9F%E8%AF%84%E4%BC%B0"><span class="nav-number">7.</span> <span class="nav-text">延迟评估</span></a></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+  <p class="site-author-name" itemprop="name">Hxhue</p>
+  <div class="site-description" itemprop="description"></div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">52</span>
+          <span class="site-state-item-name">posts</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+            <a href="/categories/">
+          
+        <span class="site-state-item-count">3</span>
+        <span class="site-state-item-name">categories</span></a>
+      </div>
+  </nav>
+</div>
+
+
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+
+<div class="copyright">
+  
+  &copy; 
+  <span itemprop="copyrightYear">2024</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Hxhue</span>
+</div>
+  <div class="powered-by">Powered by <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://muse.theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Muse</a>
+  </div>
+
+        
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/muse.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+</body>
+</html>

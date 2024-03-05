@@ -1,0 +1,458 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 7.1.1">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"hxhue.github.io","root":"/","scheme":"Muse","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}};
+  </script>
+
+  <meta name="description" content="2023 年 5 月 7 日 两个 type traits#type_traits std::decay_t 去引用、去限定符、函数&#x2F;数组变指针；std::common_type_t 用三元运算符获得更“宽泛”类型 函数模板默认参数模板默认参数可以放在最前面，不像普通函数只能把带有默认值的参数放在最后。而且函数模板可以明确指定开头几个参数，让后面的参数由推导规则生成。 函数重载参数匹配优">
+<meta property="og:type" content="article">
+<meta property="og:title" content="CTTCG 01 Function Templates">
+<meta property="og:url" content="https://hxhue.github.io/2023/08/12/cpp-templates-the-complete-guide-01-Function-Templates/index.html">
+<meta property="og:site_name" content="Hxhue&#39;s Blog">
+<meta property="og:description" content="2023 年 5 月 7 日 两个 type traits#type_traits std::decay_t 去引用、去限定符、函数&#x2F;数组变指针；std::common_type_t 用三元运算符获得更“宽泛”类型 函数模板默认参数模板默认参数可以放在最前面，不像普通函数只能把带有默认值的参数放在最后。而且函数模板可以明确指定开头几个参数，让后面的参数由推导规则生成。 函数重载参数匹配优">
+<meta property="og:locale" content="en_US">
+<meta property="og:image" content="https://hxhue.github.io/assets/e4fbc0fe9351908a43237c5100659419.png">
+<meta property="og:image" content="https://hxhue.github.io/assets/e227b1aec68720e2114c3fc519a7657e.png">
+<meta property="article:published_time" content="2023-08-11T16:00:00.000Z">
+<meta property="article:modified_time" content="2024-03-05T12:15:30.032Z">
+<meta property="article:author" content="Hxhue">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://hxhue.github.io/assets/e4fbc0fe9351908a43237c5100659419.png">
+
+<link rel="canonical" href="https://hxhue.github.io/2023/08/12/cpp-templates-the-complete-guide-01-Function-Templates/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'en'
+  };
+</script>
+
+  <title>CTTCG 01 Function Templates | Hxhue's Blog</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="Toggle navigation bar">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">Hxhue's Blog</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="main-menu menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="home fa-fw"></i>Home</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="archive fa-fw"></i>Archives</a>
+
+  </li>
+        <li class="menu-item menu-item-about">
+
+    <a href="/about/" rel="section"><i class="user fa-fw"></i>About</a>
+
+  </li>
+        <li class="menu-item menu-item-categories">
+
+    <a href="/categories/" rel="section"><i class="th fa-fw"></i>Categories</a>
+
+  </li>
+  </ul>
+</nav>
+
+
+
+
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post posts-expand">
+            
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
+    <link itemprop="mainEntityOfPage" href="https://hxhue.github.io/2023/08/12/cpp-templates-the-complete-guide-01-Function-Templates/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="Hxhue">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Hxhue's Blog">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          CTTCG 01 Function Templates
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">Posted on</span>
+
+              <time title="Created: 2023-08-12 00:00:00" itemprop="dateCreated datePublished" datetime="2023-08-12T00:00:00+08:00">2023-08-12</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">Edited on</span>
+                <time title="Modified: 2024-03-05 20:15:30" itemprop="dateModified" datetime="2024-03-05T20:15:30+08:00">2024-03-05</time>
+              </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">In</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/cttcg/" itemprop="url" rel="index"><span itemprop="name">C++ Templates: The Complete Guide</span></a>
+                </span>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <p>2023 年 5 月 7 日</p>
+<h1 id="两个-type-traits"><a href="#两个-type-traits" class="headerlink" title="两个 type traits"></a>两个 type traits</h1><p>#type_traits <code>std::decay_t</code> 去引用、去限定符、函数&#x2F;数组变指针；<code>std::common_type_t</code> 用三元运算符获得更“宽泛”类型</p>
+<h1 id="函数模板默认参数"><a href="#函数模板默认参数" class="headerlink" title="函数模板默认参数"></a>函数模板默认参数</h1><p>模板默认参数可以放在最前面，不像普通函数只能把带有默认值的参数放在最后。而且函数模板可以明确指定开头几个参数，让后面的参数由推导规则生成。</p>
+<h1 id="函数重载参数匹配优先级"><a href="#函数重载参数匹配优先级" class="headerlink" title="函数重载参数匹配优先级"></a>函数重载参数匹配优先级</h1><h2 id="优先级排序"><a href="#优先级排序" class="headerlink" title="优先级排序"></a>优先级排序</h2><ol>
+<li>perfect match</li>
+<li>decay，或者修改指针的内外层 const 属性（volatile 应该也算吧？）<br>比如 <code>char *</code> 到 <code>char const *</code></li>
+<li>promotion，比 int 小的转到 int 或更大的整数，或者 float 到 double。<br>举例：bool 到 char 不是 promotion，而是 standard conversion</li>
+<li>standard conversion，包括 <strong>int to float</strong>，<strong>子类（值&#x2F;引用&#x2F;指针）向基类（值&#x2F;引用&#x2F;指针）转换</strong></li>
+<li>用户定义的转换，包括标准库的类</li>
+<li>与可变长参数列表匹配，也就是 <code>(...)</code><br>例外：<code>f(...)</code> <strong>和</strong> <code>f(void)</code> <strong>参数类型是同级别的</strong>，因为没有提供参数，编译器不知道哪一个匹配更合适。</li>
+</ol>
+<p>以上参数匹配<strong>不涉及到值类型、左引用、右引用的区别</strong>。只要引用属性能够匹配，就不区分优先级。比如同时匹配到 <code>f(int)</code> 和 <code>f(int &amp;)</code> 编译器就会抱怨函数调用 ambiguous。</p>
+<p>各个参数匹配优先级有差异时：如果一个函数重载的参数组的优先级均不低于另一个函数重载，则前一个函数重载更优先。</p>
+<p>各个参数匹配优先级一样时：</p>
+<ol>
+<li>非模板函数比模板函数更优先。</li>
+<li>特化程度高的模板函数比特化程度低的模板函数更优先。</li>
+<li>一般模板函数比模板参数中带有 parameter pack（实际上匹配为空）的模板函数更优先。</li>
+</ol>
+<p>在传递参数时最多允许一次用户定义转换。<strong>如果函数重载 A 的参数类型转换序列是 B 的子序列，则函数重载 A 的优先级更高。</strong></p>
+<h2 id="standard-conversion-中的指针转换"><a href="#standard-conversion-中的指针转换" class="headerlink" title="standard conversion 中的指针转换"></a>standard conversion 中的指针转换</h2><ol>
+<li>转换成 <code>bool</code></li>
+<li>转换成 <code>void *</code></li>
+<li>子类指针向基类指针的转换</li>
+<li><strong>指向成员指针（pointers to members）从基类向子类的转换</strong></li>
+</ol>
+<p>这几类转换中优先级从 1 到 3 越来越高。第 3 点中，向基类指针转换时跨过的层级越少转换优先级越高。第 4 点也是，转换跨越的层次越少优先级越高。</p>
+<blockquote>
+<p>由于成员是从基类继承下来的，所以从基类向子类转换是合理的。</p>
+</blockquote>
+<h2 id="初始化列表作为实参"><a href="#初始化列表作为实参" class="headerlink" title="初始化列表作为实参"></a>初始化列表作为实参</h2><p><img src="/assets/e4fbc0fe9351908a43237c5100659419.png"></p>
+<p>可以尝试把初始化列表推导成：</p>
+<ol>
+<li><code>std::initializer_list</code></li>
+<li>可以接受 <code>std::initializer_list</code> 作为参数调用构造函数的类</li>
+<li>把初始化列表当成 uniform initialization 调用构造函数的类</li>
+<li>aggregate 的初始化</li>
+</ol>
+<p>如果推导为 <code>std::initializer_list&lt;T&gt;</code>，那么本次匹配的优先级由初始化列表中各参数类型转换的最差优先级决定。比如 <code>&#123;&#39;a&#39;, &#39;b&#39;, 0&#125;</code> 在推导成 <code>std::initializer_list&lt;char&gt;</code> 时，需要 0 从 int 转换成 char（标准转换）；推导成 <code>std::initializer_list&lt;int&gt;</code> 时，需要前面的字符从 char 转换成 int（integer promotion）。因而匹配 <code>f(std::initializer_list&lt;int&gt;)</code> 比 匹配 <code>f(std::initializer_list&lt;char&gt;)</code> 优先级更高。</p>
+<p>如果推导成 2 或 3（同一类），优先级如下：</p>
+<ol>
+<li>如果初始化列表为空，且类具有可调用的默认构造函数，则匹配默认构造函数</li>
+<li>考虑第 2 类</li>
+<li>考虑第 3 类的所有其他构造函数</li>
+</ol>
+<h2 id="Surrogate-Function"><a href="#Surrogate-Function" class="headerlink" title="Surrogate Function"></a>Surrogate Function</h2><p><img src="/assets/e227b1aec68720e2114c3fc519a7657e.png"></p>
+<p>可以想象函数本身也是参数中的一个。上面的 <code>funcObj</code> 是一个 <code>const</code> 引用，不过 <code>operator FuncType*</code> 也恰好可以在 <code>const</code> 属性的 this 指针上调用，因而转换是可行的。由于需要额外的转换，所以第二个函数在参数 0 位置不如第一个函数匹配程度高（按照 <code>IndirectFunctor</code> 中的两个函数的顺序）。但是在参数 2 位置，<code>FuncType</code> 接受 <code>int</code>，比第一个函数匹配程度高，这就导致了两个函数无法决出优先级。</p>
+<h1 id="函数重载时名字可见性"><a href="#函数重载时名字可见性" class="headerlink" title="函数重载时名字可见性"></a>函数重载时名字可见性</h1><p>#lookup 在模板中使用了其他函数时，可以参与重载决议的函数必须在此之前。即便后面有匹配度更高的函数也无法使用。P19</p>
+<h1 id="std-ref"><a href="#std-ref" class="headerlink" title="std::ref"></a><code>std::ref</code></h1><p>书中的一个观点是：函数模板的参数可以使用值类型，如果确实需要传递引用，由用户调用 std::ref 或者 std::cref 即可。P20</p>
+<p>这个观点比较有意思，但是函数模板使用起来会比较麻烦。</p>
+
+    </div>
+
+    
+    
+    
+
+      <footer class="post-footer">
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/2023/08/12/cpp-templates-the-complete-guide-03-Nontype-Template-Parameters/" rel="prev" title="CTTCG 03 Nontype Template Parameters">
+      <i class="fa fa-chevron-left"></i> CTTCG 03 Nontype Template Parameters
+    </a></div>
+      <div class="post-nav-item">
+    <a href="/2023/08/12/cpp-templates-the-complete-guide-0-D-Standard-Type-Utilities/" rel="next" title="CTTCG 附录 D Standard Type Utilities">
+      CTTCG 附录 D Standard Type Utilities <i class="fa fa-chevron-right"></i>
+    </a></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+
+
+          </div>
+          
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          Table of Contents
+        </li>
+        <li class="sidebar-nav-overview">
+          Overview
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#%E4%B8%A4%E4%B8%AA-type-traits"><span class="nav-number">1.</span> <span class="nav-text">两个 type traits</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%87%BD%E6%95%B0%E6%A8%A1%E6%9D%BF%E9%BB%98%E8%AE%A4%E5%8F%82%E6%95%B0"><span class="nav-number">2.</span> <span class="nav-text">函数模板默认参数</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%87%BD%E6%95%B0%E9%87%8D%E8%BD%BD%E5%8F%82%E6%95%B0%E5%8C%B9%E9%85%8D%E4%BC%98%E5%85%88%E7%BA%A7"><span class="nav-number">3.</span> <span class="nav-text">函数重载参数匹配优先级</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%BC%98%E5%85%88%E7%BA%A7%E6%8E%92%E5%BA%8F"><span class="nav-number">3.1.</span> <span class="nav-text">优先级排序</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#standard-conversion-%E4%B8%AD%E7%9A%84%E6%8C%87%E9%92%88%E8%BD%AC%E6%8D%A2"><span class="nav-number">3.2.</span> <span class="nav-text">standard conversion 中的指针转换</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%88%9D%E5%A7%8B%E5%8C%96%E5%88%97%E8%A1%A8%E4%BD%9C%E4%B8%BA%E5%AE%9E%E5%8F%82"><span class="nav-number">3.3.</span> <span class="nav-text">初始化列表作为实参</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Surrogate-Function"><span class="nav-number">3.4.</span> <span class="nav-text">Surrogate Function</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%87%BD%E6%95%B0%E9%87%8D%E8%BD%BD%E6%97%B6%E5%90%8D%E5%AD%97%E5%8F%AF%E8%A7%81%E6%80%A7"><span class="nav-number">4.</span> <span class="nav-text">函数重载时名字可见性</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#std-ref"><span class="nav-number">5.</span> <span class="nav-text">std::ref</span></a></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+  <p class="site-author-name" itemprop="name">Hxhue</p>
+  <div class="site-description" itemprop="description"></div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">52</span>
+          <span class="site-state-item-name">posts</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+            <a href="/categories/">
+          
+        <span class="site-state-item-count">3</span>
+        <span class="site-state-item-name">categories</span></a>
+      </div>
+  </nav>
+</div>
+
+
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+
+<div class="copyright">
+  
+  &copy; 
+  <span itemprop="copyrightYear">2024</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Hxhue</span>
+</div>
+  <div class="powered-by">Powered by <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://muse.theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Muse</a>
+  </div>
+
+        
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/muse.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+</body>
+</html>

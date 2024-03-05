@@ -1,0 +1,463 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 7.1.1">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"hxhue.github.io","root":"/","scheme":"Muse","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}};
+  </script>
+
+  <meta name="description" content="下面都是用的 Itanium C++ ABI。机器字长为 64 位。 指向成员函数的指针：2 倍大小在 64 位下是 16 字节，因为需要支持虚函数调用。指向成员函数的指针会保存两部分数据： ptr：非虚函数则存储函数地址。虚函数则存储虚表中偏置加 1（1 plus the virtual table offset (in bytes) of the function, represented a">
+<meta property="og:type" content="article">
+<meta property="og:title" content="C++ 对象模型开销总结">
+<meta property="og:url" content="https://hxhue.github.io/2023/08/12/inside-the-cpp-object-model-C-%E5%AF%B9%E8%B1%A1%E6%A8%A1%E5%9E%8B%E5%BC%80%E9%94%80%E6%80%BB%E7%BB%93/index.html">
+<meta property="og:site_name" content="Hxhue&#39;s Blog">
+<meta property="og:description" content="下面都是用的 Itanium C++ ABI。机器字长为 64 位。 指向成员函数的指针：2 倍大小在 64 位下是 16 字节，因为需要支持虚函数调用。指向成员函数的指针会保存两部分数据： ptr：非虚函数则存储函数地址。虚函数则存储虚表中偏置加 1（1 plus the virtual table offset (in bytes) of the function, represented a">
+<meta property="og:locale" content="en_US">
+<meta property="og:image" content="https://hxhue.github.io/assets/330ad93e6e502a485f38a465497e5685.png">
+<meta property="og:image" content="https://hxhue.github.io/assets/2b8d47a8e6b1211028438a01a87879dc.png">
+<meta property="og:image" content="https://hxhue.github.io/assets/8df4c419d661852da7eccf5709ec60eb.png">
+<meta property="og:image" content="https://hxhue.github.io/assets/f9ac45d4d57dd1d7c0c52cc6afa1db5c.png">
+<meta property="og:image" content="https://hxhue.github.io/assets/31b3aadd8a98cd2b2f2d0fcf7791f013.png">
+<meta property="og:image" content="https://hxhue.github.io/assets/30fb8fc1adba1e75180fb9c4c5935c36.png">
+<meta property="article:published_time" content="2023-08-12T07:17:00.000Z">
+<meta property="article:modified_time" content="2024-03-05T12:18:59.279Z">
+<meta property="article:author" content="Hxhue">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://hxhue.github.io/assets/330ad93e6e502a485f38a465497e5685.png">
+
+<link rel="canonical" href="https://hxhue.github.io/2023/08/12/inside-the-cpp-object-model-C-%E5%AF%B9%E8%B1%A1%E6%A8%A1%E5%9E%8B%E5%BC%80%E9%94%80%E6%80%BB%E7%BB%93/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'en'
+  };
+</script>
+
+  <title>C++ 对象模型开销总结 | Hxhue's Blog</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="Toggle navigation bar">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">Hxhue's Blog</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="main-menu menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="home fa-fw"></i>Home</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="archive fa-fw"></i>Archives</a>
+
+  </li>
+        <li class="menu-item menu-item-about">
+
+    <a href="/about/" rel="section"><i class="user fa-fw"></i>About</a>
+
+  </li>
+        <li class="menu-item menu-item-categories">
+
+    <a href="/categories/" rel="section"><i class="th fa-fw"></i>Categories</a>
+
+  </li>
+  </ul>
+</nav>
+
+
+
+
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post posts-expand">
+            
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
+    <link itemprop="mainEntityOfPage" href="https://hxhue.github.io/2023/08/12/inside-the-cpp-object-model-C-%E5%AF%B9%E8%B1%A1%E6%A8%A1%E5%9E%8B%E5%BC%80%E9%94%80%E6%80%BB%E7%BB%93/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="Hxhue">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Hxhue's Blog">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          C++ 对象模型开销总结
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">Posted on</span>
+
+              <time title="Created: 2023-08-12 15:17:00" itemprop="dateCreated datePublished" datetime="2023-08-12T15:17:00+08:00">2023-08-12</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">Edited on</span>
+                <time title="Modified: 2024-03-05 20:18:59" itemprop="dateModified" datetime="2024-03-05T20:18:59+08:00">2024-03-05</time>
+              </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">In</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/cpp-object-model/" itemprop="url" rel="index"><span itemprop="name">深度探索 C++ 对象模型</span></a>
+                </span>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <p><strong>下面都是用的 Itanium C++ ABI。机器字长为 64 位。</strong></p>
+<h1 id="指向成员函数的指针：2-倍大小"><a href="#指向成员函数的指针：2-倍大小" class="headerlink" title="指向成员函数的指针：2 倍大小"></a>指向成员函数的指针：2 倍大小</h1><p>在 64 位下是 16 字节，因为需要支持虚函数调用。指向成员函数的指针会保存两部分数据：</p>
+<p><code>ptr</code>：非虚函数则存储函数地址。虚函数则存储虚表中偏置加 1（1 plus the virtual table offset (in bytes) of the function, represented as a <code>ptrdiff_t</code>）</p>
+<p><code>adj</code>：存储对 this 指针的调整量。</p>
+<p><img src="/assets/330ad93e6e502a485f38a465497e5685.png"></p>
+<p>用 <code>指向成员函数的指针</code> 调用函数时，需要在传入的 this 指针上添加偏置（在多继承中有用），偏置信息就存储在该指针内。下一节“调用虚函数的开销”也描述了如何在跨平台 C++ ABI 上装配一个 指向成员函数的指针。</p>
+<h1 id="调用虚函数：多访存-2-次"><a href="#调用虚函数：多访存-2-次" class="headerlink" title="调用虚函数：多访存 2 次"></a>调用虚函数：多访存 2 次</h1><figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;cstdio&gt;</span></span></span><br><span class="line"></span><br><span class="line"><span class="keyword">struct</span> <span class="title class_">BaseObject</span> &#123;</span><br><span class="line">    <span class="function"><span class="keyword">virtual</span> <span class="type">int</span> <span class="title">f</span><span class="params">()</span> </span>&#123; <span class="keyword">return</span> <span class="number">13</span>; &#125;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="keyword">struct</span> <span class="title class_">DerivedObject</span> : BaseObject &#123;</span><br><span class="line">    <span class="function"><span class="type">int</span> <span class="title">f</span><span class="params">()</span> <span class="keyword">override</span> </span>&#123; <span class="keyword">return</span> <span class="number">4000</span>; &#125;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="type">int</span> <span class="title">main</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    BaseObject *p = <span class="keyword">new</span> DerivedObject;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 访存两次得到虚函数（感觉 long 类型比 char*/void* 模拟汇编更加合适）</span></span><br><span class="line">    <span class="type">long</span> vptr = *(<span class="type">long</span> *)p;</span><br><span class="line">    <span class="type">long</span> func = *(<span class="type">long</span> *)(vptr + <span class="number">0</span>);</span><br><span class="line">    </span><br><span class="line">    <span class="comment">// 把 this 指针作为第一个参数传入</span></span><br><span class="line">    <span class="keyword">auto</span> method = (<span class="built_in">int</span> (*)(BaseObject *))func;</span><br><span class="line">    <span class="type">int</span> result = <span class="built_in">method</span>(p);</span><br><span class="line">    </span><br><span class="line">    <span class="comment">// 尽管也可以按照 Itanium C++ ABI 装配成员函数指针，</span></span><br><span class="line">    <span class="comment">// 但实际上调用时还是会动态查找，相当于上面的访存操作白做了。</span></span><br><span class="line">    <span class="comment">// int (BaseObject::*method)();</span></span><br><span class="line">    <span class="comment">// auto &amp;manip = (long (&amp;)[2])method;</span></span><br><span class="line">    <span class="comment">// manip[0] = (long)func;</span></span><br><span class="line">    <span class="comment">// manip[1] = 0; // single inheritance</span></span><br><span class="line">    <span class="comment">// int result = (p-&gt;*method)();</span></span><br><span class="line"></span><br><span class="line">    <span class="built_in">printf</span>(<span class="string">&quot;result: %d\n&quot;</span>, result);</span><br><span class="line">    <span class="comment">// 打印结果：result: 4000</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h1 id="访问继承自虚基类的成员：多访存-2-次"><a href="#访问继承自虚基类的成员：多访存-2-次" class="headerlink" title="访问继承自虚基类的成员：多访存 2 次"></a>访问继承自虚基类的成员：多访存 2 次</h1><p>需要多访存 2 次得到虚基类子对象的位置。</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">BaseObject *p = <span class="keyword">new</span> DerivedObject;</span><br><span class="line"><span class="comment">// 编译期能计算出这个常量，该常量为负数且小于 -(int64_t)sizeof(long) * 2</span></span><br><span class="line"><span class="type">long</span> vptr_to_offset = ...; </span><br><span class="line"><span class="type">char</span> *vptr = *(<span class="type">char</span> **)p;                        <span class="comment">// [1]</span></span><br><span class="line"><span class="type">long</span> offset = *(<span class="type">long</span> *)(vptr + vptr_to_offset ); <span class="comment">// [2]</span></span><br><span class="line"><span class="type">char</span> *subobject = p + offset;                    <span class="comment">// 这一步不访存</span></span><br><span class="line"><span class="comment">// 省略：用虚基类子对象的指针访问其成员</span></span><br></pre></td></tr></table></figure>
+
+<p>当然，通过虚基类的指针访问它自己的成员，是不需要先计算偏置的。</p>
+<h1 id="调用继承自虚基类的虚函数：多访存-2-4-次"><a href="#调用继承自虚基类的虚函数：多访存-2-4-次" class="headerlink" title="调用继承自虚基类的虚函数：多访存 2 &#x2F; 4 次"></a>调用继承自虚基类的虚函数：多访存 2 &#x2F; 4 次</h1><p>首先取虚函数的地址要 2 次访存。其次，如果该虚函数是在虚基类实现的，且继承链上没有覆盖实现，则需要将 this 指针对准到虚基类，获取偏置又要 2 次访存，所以一共是 4 次。（如果有覆盖实现，则对准 this 指针所用的偏置是编译期常量。如果覆盖了实现，但是实现中仍然使用了来自于虚基类的数据，则也得多 2 次访存来获取偏置。）</p>
+<blockquote>
+<p>在使用虚基类的虚函数版本时，gcc 倾向于先获得虚基类的偏置，然后得到虚基类的 vptr，再通过这个 vptr 读取虚函数地址——尽管子类的 vtable 中也记录有虚函数。</p>
+</blockquote>
+<p>按照上面的说法，<strong>如果虚基类提供的虚函数都是纯虚函数，且虚基类本身不带有数据</strong>，那么用于对齐 this 指针的 2 次访存代价是不需要付出的。</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;cstdio&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;memory&gt;</span></span></span><br><span class="line"></span><br><span class="line"><span class="keyword">struct</span> <span class="title class_">Dog</span> &#123;</span><br><span class="line">  <span class="function"><span class="keyword">virtual</span> <span class="type">void</span> <span class="title">bark</span><span class="params">()</span> </span>= <span class="number">0</span>;</span><br><span class="line">  <span class="keyword">virtual</span> ~<span class="built_in">Dog</span>() = <span class="keyword">default</span>; <span class="comment">// &lt;-- 很重要</span></span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 虚拟继承能够支持菱形继承，但代价是接口类的vptr不能被复用</span></span><br><span class="line"><span class="keyword">struct</span> <span class="title class_">GoldenRetriever</span> : <span class="keyword">virtual</span> Dog &#123;</span><br><span class="line">  <span class="function"><span class="type">void</span> <span class="title">bark</span><span class="params">()</span> <span class="keyword">override</span> </span>&#123;</span><br><span class="line">    <span class="built_in">puts</span>(<span class="string">&quot;I&#x27;m golden!&quot;</span>);</span><br><span class="line">  &#125;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="type">int</span> <span class="title">main</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    <span class="comment">// 这里有向基类的隐式类型转换，所以得有虚析构函数。</span></span><br><span class="line">    <span class="comment">// 只是恰好这个子类没有覆写析构函数而已，换个子类可能就不安全了。</span></span><br><span class="line">    std::unique_ptr&lt;Dog&gt; dog = std::<span class="built_in">make_unique</span>&lt;GoldenRetriever&gt;();</span><br><span class="line">    dog-&gt;<span class="built_in">bark</span>();</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">interface</span> <span class="title class_">Dog</span> &#123;</span><br><span class="line">  <span class="keyword">void</span> <span class="title function_">bark</span><span class="params">()</span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">class</span> <span class="title class_">GoldenRetriever</span> <span class="keyword">implements</span> <span class="title class_">Dog</span> &#123;</span><br><span class="line">  <span class="meta">@Override</span></span><br><span class="line">  <span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">bark</span><span class="params">()</span> &#123;</span><br><span class="line">    System.out.println(<span class="string">&quot;I&#x27;m golden!&quot;</span>);</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  <span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title function_">main</span><span class="params">(String[] args)</span> &#123;</span><br><span class="line">    <span class="type">Dog</span> <span class="variable">dog</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">GoldenRetriever</span>();</span><br><span class="line">    dog.bark();</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>上面是 Java 和 C++ 中定义接口的不同之处。在 C++ 中，为了使得接口支持菱形继承，有必要加上 virtual 属性；Java 中对象只能单继承，因而没有这个问题。</p>
+<p>Java 中接口继承接口用关键字 extends；C++ 中接口继承接口也得加上 virtual，因为接口概念虽然存在，但 C++ 里接口是类的子集，而不是 C++ 直接支持的类型。</p>
+<h1 id="读-std-type-info：静态访存-0-次，动态-2-次"><a href="#读-std-type-info：静态访存-0-次，动态-2-次" class="headerlink" title="读 std::type_info：静态访存 0 次，动态 2 次"></a>读 <code>std::type_info</code>：静态访存 0 次，动态 2 次</h1><p>⚠ 在多态类的指针或引用上使用 typeid 关键字才会用以下方式访问（虚拟继承得到了 vptr 也不行）。如果该类的类型完全确定，则在编译期可以直接确定地址。</p>
+<p>在编译器内部实现中有两种方式可以读取 <code>std::type_info *</code> 。</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">BaseObject *p = <span class="keyword">new</span> DerivedObject;</span><br><span class="line"></span><br><span class="line"><span class="comment">// vtable_prefix = &#123; whole_object, whole_type, origin &#125;</span></span><br><span class="line"><span class="type">char</span> *vptr = *(<span class="type">char</span> **)p;                         <span class="comment">// [1]</span></span><br><span class="line"><span class="type">long</span> offset = *(<span class="type">long</span> *)(vptr - <span class="built_in">sizeof</span>(<span class="type">long</span>) * <span class="number">2</span>); <span class="comment">// [2]</span></span><br><span class="line"><span class="type">char</span> *realp = p + offset;                         <span class="comment">// 这一步不访存</span></span><br><span class="line"><span class="type">char</span> *realvptr = *(<span class="type">char</span> **)realp;                 <span class="comment">// [3]</span></span><br><span class="line"></span><br><span class="line"><span class="comment">// __class_type_info 继承于 std::type_info</span></span><br><span class="line">__class_type_info *info = *(__class_type_info **)(realvptr - <span class="built_in">sizeof</span>(<span class="type">long</span>)); <span class="comment">// [4]</span></span><br></pre></td></tr></table></figure>
+
+<p>或者：</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">BaseObject *p = <span class="keyword">new</span> DerivedObject;</span><br><span class="line"></span><br><span class="line"><span class="type">long</span> vptr = *(<span class="type">long</span> *)p;                         </span><br><span class="line">__class_type_info *info = *(__class_type_info **)(vptr - <span class="built_in">sizeof</span>(<span class="type">long</span>));</span><br></pre></td></tr></table></figure>
+
+<p>前者访存 4 次，后者访存 2 次。如果<strong>类型正在构建中</strong>，这两个地址是不同的，否则应该相等，dynamic_cast 对这个特殊情况有专门的处理（两个都读，一共 6 次访存，可以看之后的小节）。如果是我们的代码动态使用，用到的是访存 2 次的版本！</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;typeinfo&gt;</span></span></span><br><span class="line"></span><br><span class="line"><span class="keyword">struct</span> <span class="title class_">A</span> &#123;</span><br><span class="line">    <span class="type">int</span> a;</span><br><span class="line">    <span class="function"><span class="keyword">virtual</span> <span class="type">void</span> <span class="title">f</span><span class="params">()</span> </span>&#123;&#125;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="keyword">struct</span> <span class="title class_">B</span> : A &#123;</span><br><span class="line">    <span class="type">int</span> b;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="type">int</span> <span class="title">main</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    A *p = <span class="keyword">new</span> B;</span><br><span class="line">    <span class="keyword">auto</span> &amp;info = <span class="built_in">typeid</span>(*p);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p><img src="/assets/2b8d47a8e6b1211028438a01a87879dc.png"></p>
+<h1 id="比较-std-type-info-std-type-index：类型名（mangled）字符串比较"><a href="#比较-std-type-info-std-type-index：类型名（mangled）字符串比较" class="headerlink" title="比较 std::type_info &#x2F; std::type_index：类型名（mangled）字符串比较"></a>比较 <code>std::type_info</code> &#x2F; <code>std::type_index</code>：类型名（mangled）字符串比较</h1><p>用 RTTI 比较类型等同于比较字符串。</p>
+<p>编译期间只需要比较地址，但是编译期无论多慢都不影响运行性能所以显得没那么重要。</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 去掉了一些条件编译分支</span></span><br><span class="line">_GLIBCXX23_CONSTEXPR <span class="keyword">inline</span> <span class="type">bool</span></span><br><span class="line">type_info::<span class="keyword">operator</span>==(<span class="type">const</span> type_info&amp; __arg) <span class="type">const</span> _GLIBCXX_NOEXCEPT</span><br><span class="line">&#123;</span><br><span class="line">	<span class="keyword">if</span> (std::__is_constant_evaluated())</span><br><span class="line">	  <span class="keyword">return</span> <span class="keyword">this</span> == &amp;__arg;</span><br><span class="line">	<span class="keyword">if</span> (__name == __arg.__name)</span><br><span class="line">	  <span class="keyword">return</span> <span class="literal">true</span>;</span><br><span class="line">	<span class="keyword">return</span> __name[<span class="number">0</span>] != <span class="string">&#x27;*&#x27;</span> &amp;&amp; __builtin_strcmp (__name, __arg.<span class="built_in">name</span>()) == <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p><code>std::type_index</code> 包含了一个 <code>std::type_info</code> 的指针，比较运算符会转发到 <code>std::type_info</code> 的比较上，内联之后代价一样。</p>
+<h1 id="dynamic-cast-static-cast-向上转型：非零偏移需先判空"><a href="#dynamic-cast-static-cast-向上转型：非零偏移需先判空" class="headerlink" title="dynamic_cast &#x2F; static_cast 向上转型：非零偏移需先判空"></a><code>dynamic_cast</code> &#x2F; <code>static_cast</code> 向上转型：非零偏移需先判空</h1><p>如果是向第一个基类转型，则地址没有偏移，直接赋值即可。<strong>如果是第二个或更后面的非空基类转型，则地址会发生偏移，需要判断指针是否为空再赋值</strong>：若为空则仍保持空；若不空则对指针做偏移运算。</p>
+<h1 id="dynamic-cast-向下转型：精确命中则快，否则是开销大的图搜索"><a href="#dynamic-cast-向下转型：精确命中则快，否则是开销大的图搜索" class="headerlink" title="dynamic_cast 向下转型：精确命中则快，否则是开销大的图搜索"></a><code>dynamic_cast</code> 向下转型：精确命中则快，否则是开销大的图搜索</h1><p>用 <code>static_cast</code> 做向下转型没有运行时检查，用 <code>dynamic_cast</code> 做向上转型则效果等同于 <code>static_cast</code>。<strong>所以一般说 <code>dynamic_cast</code>，关注的多是 <code>dynamic_cast</code> 的运行时检查。</strong></p>
+<p>首先检查类型是否正在构建，这个阶段会从两个地方读 type_info，检查其地址一致性。<strong>一共访存 6 次。</strong>如果地址不同则类型正在构建，不允许转换，返回 nullptr。</p>
+<p><img src="/assets/8df4c419d661852da7eccf5709ec60eb.png"></p>
+<p><img src="/assets/f9ac45d4d57dd1d7c0c52cc6afa1db5c.png"></p>
+<p>接下来判断是否目的类型和当前真实类型完全相符，如果相符可以直接返回。多判断 <code>src2dst</code> 和偏置的相等性可能是冗余信息检查，以便避免失败时 <strong>type_info 中的字符串比较</strong>（个人想法）。</p>
+<p><img src="/assets/31b3aadd8a98cd2b2f2d0fcf7791f013.png"></p>
+<p>如果失败，则还需要<strong>考虑目的类是否为真实类型的基类</strong>。这会用到一个另外的虚函数，其结果还需要进行一些校验。这个过程就比较耗时了。</p>
+<p><img src="/assets/30fb8fc1adba1e75180fb9c4c5935c36.png"></p>
+<blockquote>
+<p>如果我们向下转型时要求类型必须精确匹配，则可以用比较 type_info 和 static_cast 的方式减少开销。首先是我们读 type_info 往往不是在构造函数中，所以只需要 2 次访存而不是 6 次；其次是如果精确匹配失败可以直接返回，而不是进入接下来的图搜索步骤。</p>
+</blockquote>
+
+    </div>
+
+    
+    
+    
+
+      <footer class="post-footer">
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/2023/08/12/inside-the-cpp-object-model-%E5%A4%8D%E5%88%B6%E6%9E%84%E9%80%A0%E5%92%8C%E8%B5%8B%E5%80%BC%E8%BF%90%E7%AE%97%E7%AC%A6/" rel="prev" title="复制构造和赋值运算符">
+      <i class="fa fa-chevron-left"></i> 复制构造和赋值运算符
+    </a></div>
+      <div class="post-nav-item">
+    <a href="/2023/08/12/inside-the-cpp-object-model-Cfront-%E5%A6%82%E4%BD%95%E6%8F%92%E5%85%A5%E6%9E%84%E9%80%A0%E5%87%BD%E6%95%B0/" rel="next" title="Cfront 如何插入构造函数">
+      Cfront 如何插入构造函数 <i class="fa fa-chevron-right"></i>
+    </a></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+
+
+          </div>
+          
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          Table of Contents
+        </li>
+        <li class="sidebar-nav-overview">
+          Overview
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#%E6%8C%87%E5%90%91%E6%88%90%E5%91%98%E5%87%BD%E6%95%B0%E7%9A%84%E6%8C%87%E9%92%88%EF%BC%9A2-%E5%80%8D%E5%A4%A7%E5%B0%8F"><span class="nav-number">1.</span> <span class="nav-text">指向成员函数的指针：2 倍大小</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E8%B0%83%E7%94%A8%E8%99%9A%E5%87%BD%E6%95%B0%EF%BC%9A%E5%A4%9A%E8%AE%BF%E5%AD%98-2-%E6%AC%A1"><span class="nav-number">2.</span> <span class="nav-text">调用虚函数：多访存 2 次</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E8%AE%BF%E9%97%AE%E7%BB%A7%E6%89%BF%E8%87%AA%E8%99%9A%E5%9F%BA%E7%B1%BB%E7%9A%84%E6%88%90%E5%91%98%EF%BC%9A%E5%A4%9A%E8%AE%BF%E5%AD%98-2-%E6%AC%A1"><span class="nav-number">3.</span> <span class="nav-text">访问继承自虚基类的成员：多访存 2 次</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E8%B0%83%E7%94%A8%E7%BB%A7%E6%89%BF%E8%87%AA%E8%99%9A%E5%9F%BA%E7%B1%BB%E7%9A%84%E8%99%9A%E5%87%BD%E6%95%B0%EF%BC%9A%E5%A4%9A%E8%AE%BF%E5%AD%98-2-4-%E6%AC%A1"><span class="nav-number">4.</span> <span class="nav-text">调用继承自虚基类的虚函数：多访存 2 &#x2F; 4 次</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E8%AF%BB-std-type-info%EF%BC%9A%E9%9D%99%E6%80%81%E8%AE%BF%E5%AD%98-0-%E6%AC%A1%EF%BC%8C%E5%8A%A8%E6%80%81-2-%E6%AC%A1"><span class="nav-number">5.</span> <span class="nav-text">读 std::type_info：静态访存 0 次，动态 2 次</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E6%AF%94%E8%BE%83-std-type-info-std-type-index%EF%BC%9A%E7%B1%BB%E5%9E%8B%E5%90%8D%EF%BC%88mangled%EF%BC%89%E5%AD%97%E7%AC%A6%E4%B8%B2%E6%AF%94%E8%BE%83"><span class="nav-number">6.</span> <span class="nav-text">比较 std::type_info &#x2F; std::type_index：类型名（mangled）字符串比较</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#dynamic-cast-static-cast-%E5%90%91%E4%B8%8A%E8%BD%AC%E5%9E%8B%EF%BC%9A%E9%9D%9E%E9%9B%B6%E5%81%8F%E7%A7%BB%E9%9C%80%E5%85%88%E5%88%A4%E7%A9%BA"><span class="nav-number">7.</span> <span class="nav-text">dynamic_cast &#x2F; static_cast 向上转型：非零偏移需先判空</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#dynamic-cast-%E5%90%91%E4%B8%8B%E8%BD%AC%E5%9E%8B%EF%BC%9A%E7%B2%BE%E7%A1%AE%E5%91%BD%E4%B8%AD%E5%88%99%E5%BF%AB%EF%BC%8C%E5%90%A6%E5%88%99%E6%98%AF%E5%BC%80%E9%94%80%E5%A4%A7%E7%9A%84%E5%9B%BE%E6%90%9C%E7%B4%A2"><span class="nav-number">8.</span> <span class="nav-text">dynamic_cast 向下转型：精确命中则快，否则是开销大的图搜索</span></a></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+  <p class="site-author-name" itemprop="name">Hxhue</p>
+  <div class="site-description" itemprop="description"></div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">52</span>
+          <span class="site-state-item-name">posts</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+            <a href="/categories/">
+          
+        <span class="site-state-item-count">3</span>
+        <span class="site-state-item-name">categories</span></a>
+      </div>
+  </nav>
+</div>
+
+
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+
+<div class="copyright">
+  
+  &copy; 
+  <span itemprop="copyrightYear">2024</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Hxhue</span>
+</div>
+  <div class="powered-by">Powered by <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://muse.theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Muse</a>
+  </div>
+
+        
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/muse.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+</body>
+</html>
