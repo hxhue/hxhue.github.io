@@ -17,7 +17,7 @@
 
 <script id="hexo-configurations">
     var NexT = window.NexT || {};
-    var CONFIG = {"hostname":"hxhue.github.io","root":"/","scheme":"Muse","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}};
+    var CONFIG = {"hostname":"hxhue.github.io","root":"/","scheme":"Gemini","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},"path":"search.xml"};
   </script>
 
   <meta property="og:type" content="website">
@@ -72,6 +72,7 @@
   </style>
 </noscript>
 
+<link rel="alternate" href="/atom.xml" title="Hxhue's Blog" type="application/atom+xml">
 </head>
 
 <body itemscope itemtype="http://schema.org/WebPage">
@@ -99,6 +100,7 @@
 
   <div class="site-nav-right">
     <div class="toggle popup-trigger">
+        <i class="fa fa-search fa-fw fa-lg"></i>
     </div>
   </div>
 </div>
@@ -123,16 +125,48 @@
     <a href="/about/" rel="section"><i class="user fa-fw"></i>About</a>
 
   </li>
+        <li class="menu-item menu-item-tags">
+
+    <a href="/tags/" rel="section"><i class="tags fa-fw"></i>Tags</a>
+
+  </li>
         <li class="menu-item menu-item-categories">
 
     <a href="/categories/" rel="section"><i class="th fa-fw"></i>Categories</a>
 
   </li>
+      <li class="menu-item menu-item-search">
+        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>Search
+        </a>
+      </li>
   </ul>
 </nav>
 
 
 
+  <div class="search-pop-overlay">
+    <div class="popup search-popup">
+        <div class="search-header">
+  <span class="search-icon">
+    <i class="fa fa-search"></i>
+  </span>
+  <div class="search-input-container">
+    <input autocomplete="off" autocapitalize="off"
+           placeholder="Searching..." spellcheck="false"
+           type="search" class="search-input">
+  </div>
+  <span class="popup-btn-close">
+    <i class="fa fa-times-circle"></i>
+  </span>
+</div>
+<div id="search-result">
+  <div id="no-result">
+    <i class="fa fa-spinner fa-pulse fa-5x fa-fw"></i>
+  </div>
+</div>
+
+    </div>
+  </div>
 
 </div>
     </header>
@@ -155,7 +189,7 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
-    <link itemprop="mainEntityOfPage" href="https://hxhue.github.io/2023/08/12/inside-the-cpp-object-model-%E9%9D%99%E6%80%81%E6%88%90%E5%91%98%E5%87%BD%E6%95%B0/">
+    <link itemprop="mainEntityOfPage" href="https://hxhue.github.io/2023/08/12/cpplang-libstdc-vs-libc-std-tuple/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="image" content="/images/avatar.gif">
@@ -169,7 +203,7 @@
       <header class="post-header">
         <h2 class="post-title" itemprop="name headline">
           
-            <a href="/2023/08/12/inside-the-cpp-object-model-%E9%9D%99%E6%80%81%E6%88%90%E5%91%98%E5%87%BD%E6%95%B0/" class="post-title-link" itemprop="url">静态成员函数</a>
+            <a href="/2023/08/12/cpplang-libstdc-vs-libc-std-tuple/" class="post-title-link" itemprop="url">(libstdc++ vs libc++) std::tuple</a>
         </h2>
 
         <div class="post-meta">
@@ -186,7 +220,7 @@
                   <i class="far fa-calendar-check"></i>
                 </span>
                 <span class="post-meta-item-text">Edited on</span>
-                <time title="Modified: 2024-03-05 20:18:40" itemprop="dateModified" datetime="2024-03-05T20:18:40+08:00">2024-03-05</time>
+                <time title="Modified: 2024-03-06 10:00:41" itemprop="dateModified" datetime="2024-03-06T10:00:41+08:00">2024-03-06</time>
               </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
@@ -194,7 +228,7 @@
               </span>
               <span class="post-meta-item-text">In</span>
                 <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/cpp-object-model/" itemprop="url" rel="index"><span itemprop="name">深度探索 C++ 对象模型</span></a>
+                  <a href="/categories/cpplang/" itemprop="url" rel="index"><span itemprop="name">C++ Language</span></a>
                 </span>
             </span>
 
@@ -209,11 +243,20 @@
     <div class="post-body" itemprop="articleBody">
 
       
-          <h1 id="静态成员函数出现之前"><a href="#静态成员函数出现之前" class="headerlink" title="静态成员函数出现之前"></a>静态成员函数出现之前</h1><p>很久以前没有静态成员函数（直到 Cfront 2.0 才加入），那个时候静态方法可以用这种方式调用：</p>
-<p><img src="/assets/07580994615633018e06f05426e98683.png"></p>
-<p>该方法没有通过 this 访存，因而不会出现段错误。尽管这种方法还在某些编译器上能够使用，<strong>但这种写法在现在是未定义行为</strong>。</p>
-<h1 id="在表达式上调用静态成员函数"><a href="#在表达式上调用静态成员函数" class="headerlink" title="在表达式上调用静态成员函数"></a>在表达式上调用静态成员函数</h1><p>可以在一个表达式上调用静态成员函数。表达式的返回值被忽略，但是有副作用；另外表达式的返回值类型帮助确定了静态成员函数应该在哪里寻找。</p>
-<p><img src="/assets/e6a19b3df1203e1e537bda3c535fda52.png"></p>
+          <h1 id="列表构造顺序"><a href="#列表构造顺序" class="headerlink" title="列表构造顺序"></a>列表构造顺序</h1><p><code>libstdc++</code> 用的是递归反向构造，尾部的参数先构造。与之对应，<code>libc++</code> 用的是 parameter pack 继承，是正向构造。</p>
+<h1 id="下标编号"><a href="#下标编号" class="headerlink" title="下标编号"></a>下标编号</h1><p>两者都使用了下标编号。这样即便 <code>std::tuple</code> 的某两个参数类型相同，也能通过不同的下标把两个元素区分开。</p>
+<h1 id="EBCO"><a href="#EBCO" class="headerlink" title="EBCO"></a>EBCO</h1><p>两者都有 EBCO 技术。假定 <code>Base&lt;T, bool = InheritableEmptyBase&lt;T&gt;::value&gt;</code> 为两个库所用的元素包装类，<code>Base</code> 在参数为空类且能够被继承时，采用继承的方式存储元素，否则用成员变量存储元素。</p>
+<p>但是由于元组参数构造顺序不同，两种库实现占用的空间也可能不同。考虑类型 <code>std::tuple&lt;A, char, A, char, B&gt;</code>，其中 <code>A</code> 和 <code>B</code> 都是空类型，它在 libc++ 中只需要占用 2 个字节。</p>
+<p>而 libstdc++ 中同样的类型需要占用 3 个字节：</p>
+<p>如图，最后一次继承的时候先继承 <code>TupleImpl&lt;char, A, char, B&gt;</code>（假设 <code>TupleImpl</code> 是递归继承功能的实现模板），后继承 <code>Base&lt;A&gt;</code>，但由于地址 0 处已经有 <code>A</code> 类型，所以只能放在地址 2 处。（EBCO 失效之后只能跨过整个基类，不能摆在基类的中间地址。）</p>
+<p><img src="/assets/a9ab4e97e8b420a649deed55a5905d87.png"></p>
+<p><img src="/assets/5cd80e43c49d1a957332e090e15ac09b.png"></p>
+<h1 id="get-with-index"><a href="#get-with-index" class="headerlink" title="get with index"></a>get with index</h1><p>get 模板的参数中有下标，而特定元组中的下标可以决定其基类的类型。两个库都巧妙利用了基类名唯一的特性，从结果来说是等效的。</p>
+<p>libstdc++ 通过限定名获取元素：</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">_Tuple_impl&lt;__i, _Head, _Tail...&gt;::_M_head(<span class="type">__t</span>);</span><br></pre></td></tr></table></figure>
+
+<p><code>_M_head</code> 是用来获取被包裹的元素的方法（实际上是个很短的、返回某个数据域的方法）。</p>
+<p>libc++ 则将 <code>*this</code> 转换成基类指针再掉用获取元素的方法。</p>
 
       
     </div>
@@ -233,7 +276,7 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
-    <link itemprop="mainEntityOfPage" href="https://hxhue.github.io/2023/08/12/inside-the-cpp-object-model-%E7%B1%BB%E5%AE%9A%E4%B9%89%E4%B8%AD%E7%9A%84%E7%B1%BB%E5%9E%8B%E5%90%8D%E5%8F%AF%E8%A7%81%E6%80%A7/">
+    <link itemprop="mainEntityOfPage" href="https://hxhue.github.io/2023/08/12/cpplang-Heterogeneous-Lookup/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="image" content="/images/avatar.gif">
@@ -247,7 +290,7 @@
       <header class="post-header">
         <h2 class="post-title" itemprop="name headline">
           
-            <a href="/2023/08/12/inside-the-cpp-object-model-%E7%B1%BB%E5%AE%9A%E4%B9%89%E4%B8%AD%E7%9A%84%E7%B1%BB%E5%9E%8B%E5%90%8D%E5%8F%AF%E8%A7%81%E6%80%A7/" class="post-title-link" itemprop="url">类定义中的类型名可见性</a>
+            <a href="/2023/08/12/cpplang-Heterogeneous-Lookup/" class="post-title-link" itemprop="url">Heterogeneous Lookup</a>
         </h2>
 
         <div class="post-meta">
@@ -264,7 +307,7 @@
                   <i class="far fa-calendar-check"></i>
                 </span>
                 <span class="post-meta-item-text">Edited on</span>
-                <time title="Modified: 2024-03-05 20:18:43" itemprop="dateModified" datetime="2024-03-05T20:18:43+08:00">2024-03-05</time>
+                <time title="Modified: 2024-03-06 10:35:59" itemprop="dateModified" datetime="2024-03-06T10:35:59+08:00">2024-03-06</time>
               </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
@@ -272,7 +315,7 @@
               </span>
               <span class="post-meta-item-text">In</span>
                 <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/cpp-object-model/" itemprop="url" rel="index"><span itemprop="name">深度探索 C++ 对象模型</span></a>
+                  <a href="/categories/cpplang/" itemprop="url" rel="index"><span itemprop="name">C++ Language</span></a>
                 </span>
             </span>
 
@@ -287,10 +330,16 @@
     <div class="post-body" itemprop="articleBody">
 
       
-          <p>尽管现在的编译器能够正确理解数据成员（含有隐式的 this 指针）的使用，并在看到整个类定义之后再查找名字，类型名的查找则发生的很早，导致使用时可能看不到、或者使用了错误的类型声明。</p>
-<p>所以，应该尽可能在类定义的开头写好类型别名。</p>
-<p><img src="/assets/fde83ca0b85569926f6b3f81c6ef41c2.png"></p>
-<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;iostream&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;type_traits&gt;</span></span></span><br><span class="line"></span><br><span class="line"><span class="keyword">typedef</span> <span class="type">int</span> length;</span><br><span class="line"></span><br><span class="line"><span class="keyword">class</span> <span class="title class_">Point3d</span> &#123;</span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">  **<span class="function"><span class="type">void</span> <span class="title">mumble</span><span class="params">(length val)</span> </span>&#123; _val = val; &#125;</span><br><span class="line">  <span class="function">length <span class="title">mumble</span><span class="params">()</span> </span>&#123; <span class="keyword">return</span> _val; &#125;</span><br><span class="line"></span><br><span class="line">  <span class="built_in">static_assert</span>(std::is_same_v&lt;length, <span class="type">int</span>&gt;);</span><br><span class="line"></span><br><span class="line"><span class="keyword">private</span>:</span><br><span class="line">  <span class="keyword">typedef</span> <span class="type">float</span> length;</span><br><span class="line">  length _val;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="type">int</span> <span class="title">main</span><span class="params">()</span> </span>&#123;&#125;</span><br></pre></td></tr></table></figure>
+          <p><a target="_blank" rel="noopener" href="https://www.cppstories.com/2021/heterogeneous-access-cpp20/">https://www.cppstories.com/2021/heterogeneous-access-cpp20/</a></p>
+<h1 id="C-14-加入了对有序容器的异质查找"><a href="#C-14-加入了对有序容器的异质查找" class="headerlink" title="C++ 14 加入了对有序容器的异质查找"></a>C++ 14 加入了对有序容器的异质查找</h1><p>用户的工作量很小，对标准库中的类型，只需要加上第三个模板参数：<code>std::less&lt;&gt;</code>（它的默认参数是 void）。<code>std::less&lt;void&gt;</code> 类中申明了 <code>is_transparent</code> 类型，所以可以用于异质查找。</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line">std::map&lt;std::string, <span class="type">int</span>&gt; intMap &#123;</span><br><span class="line">    &#123; <span class="string">&quot;Hello Super Long String&quot;</span>, <span class="number">1</span> &#125;,</span><br><span class="line">    &#123; <span class="string">&quot;Another Longish String&quot;</span>, <span class="number">2</span> &#125;,</span><br><span class="line">    &#123; <span class="string">&quot;This cannot fall into SSO buffer&quot;</span>, <span class="number">3</span> &#125;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line">std::cout &lt;&lt; <span class="string">&quot;Lookup in intMap with by const char*:\\n&quot;</span>;</span><br><span class="line">std::cout &lt;&lt; intMap.<span class="built_in">contains</span>(<span class="string">&quot;Hello Super Long String&quot;</span>) &lt;&lt; <span class="string">&#x27;\\n&#x27;</span>;</span><br><span class="line"><span class="comment">//</span></span><br><span class="line">std::map&lt;std::string, <span class="type">int</span>, std::less&lt;&gt;&gt; trIntMap &#123;</span><br><span class="line">    &#123; <span class="string">&quot;Hello Super Long String&quot;</span>, <span class="number">1</span> &#125;,</span><br><span class="line">    &#123; <span class="string">&quot;Another Longish String&quot;</span>, <span class="number">2</span> &#125;,</span><br><span class="line">    &#123;<span class="string">&quot;This cannot fall into SSO buffer&quot;</span>, <span class="number">3</span> &#125;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line">std::cout &lt;&lt; <span class="string">&quot;Lookup in trIntMap by const char*: \\n&quot;</span>;</span><br><span class="line">std::cout &lt;&lt; trIntMap.<span class="built_in">contains</span>(<span class="string">&quot;Hello Super Long String&quot;</span>) &lt;&lt; <span class="string">&#x27;\\n&#x27;</span>;</span><br></pre></td></tr></table></figure>
+
+<h1 id="C-20-加入了对无序容器的异质查找"><a href="#C-20-加入了对无序容器的异质查找" class="headerlink" title="C++ 20 加入了对无序容器的异质查找"></a><strong>C++ 20 加入了对无序容器的异质查找</strong></h1><p>需要提供标注 <code>is_transparent</code> 的 hash 算子和等于算子。等于算子一般可以直接用 std::equal_to&lt;&gt;，但 hash 算子常常需要我们自己提供。</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">struct</span> <span class="title class_">string_hash</span> &#123;</span><br><span class="line">  <span class="keyword">using</span> is_transparent = <span class="type">void</span>;</span><br><span class="line">  [nodiscard](nodiscard) <span class="function"><span class="type">size_t</span> <span class="title">operator</span><span class="params">()</span><span class="params">(<span class="type">const</span> <span class="type">char</span> *txt)</span> <span class="type">const</span> </span>&#123;</span><br><span class="line">    <span class="comment">// 对指针的hash只考虑了地址，所以要选用string_view的hash</span></span><br><span class="line">    <span class="keyword">return</span> std::hash&lt;std::string_view&gt;&#123;&#125;(txt);</span><br><span class="line">  &#125;</span><br><span class="line">  [nodiscard](nodiscard) <span class="function"><span class="type">size_t</span> <span class="title">operator</span><span class="params">()</span><span class="params">(std::string_view txt)</span> <span class="type">const</span> </span>&#123;</span><br><span class="line">    <span class="keyword">return</span> std::hash&lt;std::string_view&gt;&#123;&#125;(txt);</span><br><span class="line">  &#125;</span><br><span class="line">  [nodiscard](nodiscard) <span class="function"><span class="type">size_t</span> <span class="title">operator</span><span class="params">()</span><span class="params">(<span class="type">const</span> std::string &amp;txt)</span> <span class="type">const</span> </span>&#123;</span><br><span class="line">    <span class="comment">// string和string_view的hash方式一样</span></span><br><span class="line">    <span class="comment">// 但用string的特化会减少一次从string到string_view的构造</span></span><br><span class="line">    <span class="keyword">return</span> std::hash&lt;std::string&gt;&#123;&#125;(txt);</span><br><span class="line">  &#125;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line">std::unordered_map&lt;std::string, <span class="type">int</span>, string_hash, std::equal_to&lt;&gt;&gt;</span><br><span class="line">      intMapTransparent &#123;</span><br><span class="line">    &#123; <span class="string">&quot;Hello Super Long String&quot;</span>, <span class="number">1</span> &#125;,</span><br><span class="line">    &#123; <span class="string">&quot;Another Longish String&quot;</span>, <span class="number">2</span> &#125;,</span><br><span class="line">    &#123;<span class="string">&quot;This cannot fall into SSO buffer&quot;</span>, <span class="number">3</span> &#125;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="type">bool</span> found = intMapTransparent.<span class="built_in">contains</span>(<span class="string">&quot;Hello Super Long String&quot;</span>);</span><br><span class="line">std::cout &lt;&lt; <span class="string">&quot;Found: &quot;</span> &lt;&lt; std::boolalpha &lt;&lt; found &lt;&lt; <span class="string">&#x27;\\n&#x27;</span>;</span><br></pre></td></tr></table></figure>
+
+<h1 id="为什么-C-不把异质容器的查找作为默认？"><a href="#为什么-C-不把异质容器的查找作为默认？" class="headerlink" title="为什么 C++ 不把异质容器的查找作为默认？"></a>为什么 C++ 不把异质容器的查找作为默认？</h1><p>同质查找是先转换类型，再多次比较。异质查找是多次比较，每次比较时调用的算子可能会做类型转换操作。如果算子没有对异质查找优化，每次比较时都构建临时对象开销非常大。</p>
+<p>标准库的 <code>string</code> &#x2F; <code>string_view</code> &#x2F; <code>const char *</code> 是一个很好的可以使用异质查找的例子，因为他们之间的相互比较都有良好的无需临时构造对象的算子。</p>
+
       
     </div>
 
@@ -309,7 +358,7 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
-    <link itemprop="mainEntityOfPage" href="https://hxhue.github.io/2023/08/12/inside-the-cpp-object-model-%E9%9D%9E%E8%87%AA%E5%8A%A8%E5%8F%98%E9%87%8F%E5%88%9D%E5%A7%8B%E5%8C%96/">
+    <link itemprop="mainEntityOfPage" href="https://hxhue.github.io/2023/08/12/cpplang-C-%E5%87%A0%E7%A7%8D%E6%96%B0%E5%A2%9E%E7%B1%BB%E5%9E%8B%E8%BD%AC%E6%8D%A2%E7%9A%84%E5%8C%BA%E5%88%AB-%E6%A0%87%E5%87%86%E5%BA%93%E6%A8%A1%E6%9D%BF%E5%87%BD%E6%95%B0/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="image" content="/images/avatar.gif">
@@ -323,7 +372,7 @@
       <header class="post-header">
         <h2 class="post-title" itemprop="name headline">
           
-            <a href="/2023/08/12/inside-the-cpp-object-model-%E9%9D%9E%E8%87%AA%E5%8A%A8%E5%8F%98%E9%87%8F%E5%88%9D%E5%A7%8B%E5%8C%96/" class="post-title-link" itemprop="url">非自动变量初始化</a>
+            <a href="/2023/08/12/cpplang-C-%E5%87%A0%E7%A7%8D%E6%96%B0%E5%A2%9E%E7%B1%BB%E5%9E%8B%E8%BD%AC%E6%8D%A2%E7%9A%84%E5%8C%BA%E5%88%AB-%E6%A0%87%E5%87%86%E5%BA%93%E6%A8%A1%E6%9D%BF%E5%87%BD%E6%95%B0/" class="post-title-link" itemprop="url">C++ 几种新增类型转换的区别 + 标准库模板函数</a>
         </h2>
 
         <div class="post-meta">
@@ -340,7 +389,7 @@
                   <i class="far fa-calendar-check"></i>
                 </span>
                 <span class="post-meta-item-text">Edited on</span>
-                <time title="Modified: 2024-03-05 20:46:51" itemprop="dateModified" datetime="2024-03-05T20:46:51+08:00">2024-03-05</time>
+                <time title="Modified: 2024-03-06 10:30:31" itemprop="dateModified" datetime="2024-03-06T10:30:31+08:00">2024-03-06</time>
               </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
@@ -348,7 +397,7 @@
               </span>
               <span class="post-meta-item-text">In</span>
                 <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/cpp-object-model/" itemprop="url" rel="index"><span itemprop="name">深度探索 C++ 对象模型</span></a>
+                  <a href="/categories/cpplang/" itemprop="url" rel="index"><span itemprop="name">C++ Language</span></a>
                 </span>
             </span>
 
@@ -363,505 +412,22 @@
     <div class="post-body" itemprop="articleBody">
 
       
-          <h1 id="C-和-C-的区别"><a href="#C-和-C-的区别" class="headerlink" title="C++ 和 C 的区别"></a>C++ 和 C 的区别</h1><ol>
-<li>C++ 支持使用非常量表达式对全局或静态变量初始化。对于 local static &#x2F; thread_local static 变量而言，这项功能使得访问时有同步开销。（像 C 一样用常量表达式初始化就不会有访问开销）</li>
-<li>C++ 的 thread_local 变量在函数中自动具有 static 属性，C 要手动加。而且 C 的 thread_local 在 C23 之前是个宏。</li>
-</ol>
-<h1 id="全局-static-变量"><a href="#全局-static-变量" class="headerlink" title="全局 (static) 变量"></a>全局 (static) 变量</h1><p>全局区域定义的变量，可以具有 static 属性也可以没有。</p>
-<h2 id="不支持非常量初始化表达式（C-模型）"><a href="#不支持非常量初始化表达式（C-模型）" class="headerlink" title="不支持非常量初始化表达式（C 模型）"></a>不支持非常量初始化表达式（C 模型）</h2><p>编译器会抱怨：initializer element is not constant。</p>
-<h2 id="支持非常量初始化表达式，但只对对象生效（Cfront-1-0-模型）"><a href="#支持非常量初始化表达式，但只对对象生效（Cfront-1-0-模型）" class="headerlink" title="支持非常量初始化表达式，但只对对象生效（Cfront 1.0 模型）"></a><del>支持非常量初始化表达式，但只对对象生效</del>（Cfront 1.0 模型）</h2><p>在用户程序真正运行前插入一段<strong>静态变量初始化代码。</strong></p>
-<p>Cfront 早期对 class object 支持了<strong>非常量的静态初始化</strong>，但<strong>标准类型</strong>（整数、指针等）的静态支持和 C 一样。</p>
-<p><img src="/assets/dd4139cc4c1f5af8a382e9708ca348b5.png"></p>
-<p>考虑下面的代码：</p>
-<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">struct</span> <span class="title class_">Point</span> &#123;</span><br><span class="line">    <span class="type">double</span> x;</span><br><span class="line">    <span class="type">double</span> y;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="keyword">struct</span> <span class="title class_">Point</span> point = &#123;<span class="number">2.4</span>, <span class="number">0.1</span>&#125;;</span><br></pre></td></tr></table></figure>
-
-<p>此代码是合法的 C 或 C++ 代码。它的数据值直接写到 data section 里，不需要静态初始化代码（也就是不需要用非常量表达式对变量初始化）。</p>
-<p>修改这段代码之后就不能作为 C 语言编译了，但是可以作为 C++ 编译：</p>
-<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">struct</span> <span class="title class_">Point</span> &#123;</span><br><span class="line">    <span class="type">double</span> x;</span><br><span class="line">    <span class="type">double</span> y;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="keyword">struct</span> <span class="title class_">Point</span> point = &#123;<span class="number">2.4</span>, <span class="number">0.1</span>&#125;;</span><br><span class="line"><span class="keyword">struct</span> <span class="title class_">Point</span> another_point = point;</span><br></pre></td></tr></table></figure>
-
-<p>初始化 <code>another_point</code> 需要用到 <code>point</code>，这产生了全局变量之间的依赖关系，在编译器看来不是常量表达式，所以这个过程会被放到<strong>静态变量初始化代码</strong>中进行。</p>
-<h2 id="所有类型支持非常量初始化表达式（现在的-C-模型）"><a href="#所有类型支持非常量初始化表达式（现在的-C-模型）" class="headerlink" title="所有类型支持非常量初始化表达式（现在的 C++ 模型）"></a>所有类型支持非常量初始化表达式（现在的 C++ 模型）</h2><p>后来 C++ 对所有类型都支持非常量静态初始化了。这可能是支持虚基类的副产品，因为虚基类和子类之间的指针转换需要知道 offset，而 offset 只能在编译全部完成之后才能确定。</p>
-<p>可以参考：</p>
-<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">class</span> <span class="title class_">Base</span> &#123;&#125;;</span><br><span class="line"><span class="keyword">class</span> <span class="title class_">VirtualBase</span>: <span class="keyword">public</span> <span class="keyword">virtual</span> Base &#123;&#125;;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 不需要静态初始化代码</span></span><br><span class="line"><span class="comment">// Base *pbase = (Base *)0x1000;</span></span><br><span class="line"></span><br><span class="line"><span class="comment">// 从 VirtualBase* 转换成 Base*，需要静态初始化代码</span></span><br><span class="line"><span class="comment">// 如果把虚继承改成具体继承，也不再会需要静态初始化代码</span></span><br><span class="line">Base *pbase2 = (VirtualBase *)<span class="number">0x1000</span>;</span><br></pre></td></tr></table></figure>
-
-<h3 id="GPT-对于书中说法的解释"><a href="#GPT-对于书中说法的解释" class="headerlink" title="GPT 对于书中说法的解释"></a>GPT 对于书中说法的解释</h3><p>Consider the following example:</p>
-<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">class</span> <span class="title class_">Base</span> &#123;&#125;;</span><br><span class="line"><span class="keyword">class</span> <span class="title class_">VirtualBase</span>: <span class="keyword">public</span> <span class="keyword">virtual</span> Base &#123;&#125;;</span><br><span class="line"></span><br><span class="line"><span class="keyword">class</span> <span class="title class_">Derived1</span>: <span class="keyword">public</span> VirtualBase &#123;&#125;;</span><br><span class="line"><span class="keyword">class</span> <span class="title class_">Derived2</span>: <span class="keyword">public</span> VirtualBase &#123;&#125;;</span><br></pre></td></tr></table></figure>
-
-<p>In this example, we have two separate derived classes, <strong><code>Derived1</code></strong> and <strong><code>Derived2</code></strong>, both inheriting from the same virtual base class <strong><code>VirtualBase</code></strong>.</p>
-<p>Now, when the compiler encounters the definition of <strong><code>Derived1</code></strong> or <strong><code>Derived2</code></strong> in a given translation unit, it doesn’t have information about other derived classes. As a result, the exact offset of the <strong><code>VirtualBase</code></strong> subobject within <strong><code>Derived1</code></strong> or <strong><code>Derived2</code></strong> cannot be determined at that point.</p>
-<p>To handle this situation, the compiler employs static initialization. It generates code that initializes static variables associated with the virtual base class. These static variables store the offset information needed to access the virtual base class subobject. The initialization of these static variables happens at runtime before any objects of the derived classes are created.</p>
-<p>By utilizing static initialization, the compiler ensures that the correct offset information is available at runtime, allowing proper access to the virtual base class subobject.</p>
-<h1 id="局部-static-变量"><a href="#局部-static-变量" class="headerlink" title="局部 static 变量"></a>局部 static 变量</h1><p>这里只讨论 C++，C 没有非常量初始化的功能。</p>
-<p>C++ 保证函数中的静态对象只在其对应函数被调用时初始化，而且仅初始化一次。如果是常量初始化表达式，则在编译时可以初始化，函数中也不需要同步措施；<strong>但如果是非常量初始化表达式，则有同步代价！</strong></p>
-<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;cstdio&gt;</span></span></span><br><span class="line"></span><br><span class="line"><span class="keyword">struct</span> <span class="title class_">Echo</span> &#123;</span><br><span class="line">    <span class="built_in">Echo</span>(<span class="type">const</span> <span class="type">char</span> *s) &#123;</span><br><span class="line">        <span class="built_in">puts</span>(s);</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="type">static</span> Echo *static_member;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 初始化只能放到这里，如果放到上面 Echo 就不是完整对象不能创建</span></span><br><span class="line"><span class="comment">// 前面声明不能加 inline 因为 inline 会让声明变成定义</span></span><br><span class="line"><span class="comment">// 此处定义不能加 static 因为不能多次指定存储类型</span></span><br><span class="line"><span class="keyword">inline</span> Echo *Echo::static_member = <span class="keyword">new</span> Echo &#123;<span class="string">&quot;Echo::static_member&quot;</span>&#125;;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="type">void</span> <span class="title">test_echo</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    <span class="function"><span class="type">static</span> Echo <span class="title">hidden</span><span class="params">(<span class="string">&quot;local static&quot;</span>)</span></span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function">Echo <span class="title">global_echo</span><span class="params">(<span class="string">&quot;global&quot;</span>)</span></span>;</span><br><span class="line"><span class="function"><span class="type">static</span> Echo <span class="title">static_echo</span><span class="params">(<span class="string">&quot;static echo&quot;</span>)</span></span>;</span><br><span class="line"></span><br><span class="line"><span class="keyword">struct</span> <span class="title class_">Foo</span> &#123;</span><br><span class="line">    <span class="type">static</span> <span class="keyword">inline</span> Echo *static_member = <span class="keyword">new</span> Echo &#123;<span class="string">&quot;Foo::static_member&quot;</span>&#125;;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="type">int</span> <span class="title">main</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    <span class="comment">// 试试调用 0/1/2 次</span></span><br><span class="line">    <span class="built_in">test_echo</span>();</span><br><span class="line">    <span class="built_in">test_echo</span>();</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<p>打印结果：</p>
-<figure class="highlight txt"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">Echo::static_member</span><br><span class="line">global</span><br><span class="line">static echo</span><br><span class="line">Foo::static_member</span><br><span class="line">local static</span><br></pre></td></tr></table></figure>
-
-<p>上面的代码中如果注释掉 main 函数中的两次调用，则 <code>hidden(&quot;local static&quot;)</code> 不会被初始化！这是汇编，有了同步措施后复杂了不少：</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br></pre></td><td class="code"><pre><span class="line">test_echo():</span><br><span class="line">        push    rbp</span><br><span class="line">        mov     rbp, rsp</span><br><span class="line">        push    r12</span><br><span class="line">        push    rbx</span><br><span class="line">        movzx   eax, BYTE PTR guard variable for test_echo()::hidden[rip]</span><br><span class="line">        test    al, al</span><br><span class="line">        sete    al</span><br><span class="line">        test    al, al</span><br><span class="line">        je      .L7</span><br><span class="line">        mov     edi, OFFSET FLAT:guard variable for test_echo()::hidden</span><br><span class="line">        call    __cxa_guard_acquire</span><br><span class="line">        test    eax, eax</span><br><span class="line">        setne   al</span><br><span class="line">        test    al, al</span><br><span class="line">        je      .L7</span><br><span class="line">        mov     r12d, 0</span><br><span class="line">        mov     esi, OFFSET FLAT:.LC0</span><br><span class="line">        mov     edi, OFFSET FLAT:_ZZ9test_echovE6hidden</span><br><span class="line">        call    Echo::Echo(char const*) [complete object constructor]</span><br><span class="line">        mov     edi, OFFSET FLAT:guard variable for test_echo()::hidden</span><br><span class="line">        call    __cxa_guard_release</span><br><span class="line">        jmp     .L7</span><br><span class="line">        mov     rbx, rax</span><br><span class="line">        test    r12b, r12b</span><br><span class="line">        jne     .L5</span><br><span class="line">        mov     edi, OFFSET FLAT:guard variable for test_echo()::hidden</span><br><span class="line">        call    __cxa_guard_abort</span><br><span class="line">.L5:</span><br><span class="line">        mov     rax, rbx</span><br><span class="line">        mov     rdi, rax</span><br><span class="line">        call    _Unwind_Resume</span><br><span class="line">.L7:</span><br><span class="line">        nop</span><br><span class="line">        pop     rbx</span><br><span class="line">        pop     r12</span><br><span class="line">        pop     rbp</span><br><span class="line">        ret</span><br></pre></td></tr></table></figure>
-
-<h1 id="全局-局部-thread-local-变量"><a href="#全局-局部-thread-local-变量" class="headerlink" title="全局&#x2F;局部 thread_local 变量"></a>全局&#x2F;局部 thread_local 变量</h1><h2 id="C-11-thread-local"><a href="#C-11-thread-local" class="headerlink" title="C++11 thread_local"></a>C++11 thread_local</h2><p>访问变量需要使用一个<strong>和线程相关的段寄存器</strong>和固定的变量偏移得到变量的地址，这样不同线程访问的变量地址肯定不同。</p>
-<p>对于全局的 thread_local 变量，每次访问 thread_local 变量 i 会先调用 TLS wrapper function for i，然后该函数调用 TLS init function for i （在 godbolt 过滤的汇编中是 __tls_init）确保变量只被初始化一次，最后返回变量的<strong>地址</strong>。</p>
-<p><a target="_blank" rel="noopener" href="https://godbolt.org/z/Y8a7s4Msz">https://godbolt.org/z/Y8a7s4Msz</a></p>
-<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;iostream&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;thread&gt;</span></span></span><br><span class="line"></span><br><span class="line"><span class="keyword">thread_local</span> <span class="type">int</span> i = <span class="built_in">time</span>(<span class="number">0</span>);</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="type">int</span> <span class="title">main</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    i = <span class="number">7</span>;</span><br><span class="line">    std::thread t&#123;[&amp;]()&#123; i = <span class="number">9</span>; &#125;&#125;;</span><br><span class="line">    t.<span class="built_in">join</span>();</span><br><span class="line">    std::cout &lt;&lt; i &lt;&lt; <span class="string">&quot;\n&quot;</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<p>对于局部的 thread_local 变量：</p>
-<p><a target="_blank" rel="noopener" href="https://godbolt.org/z/xdePfv3eM">https://godbolt.org/z/xdePfv3eM</a></p>
-<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;iostream&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;thread&gt;</span></span></span><br><span class="line"></span><br><span class="line"><span class="comment">// 因为 main 入口肯定只有一个，所以尝试把 thread_local 放到其他函数中试试</span></span><br><span class="line"><span class="comment">// 实际上和把 thread_local 变量放在 main 中的效果一样</span></span><br><span class="line"><span class="function"><span class="type">int</span> &amp;<span class="title">get_i</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    <span class="keyword">thread_local</span> <span class="type">int</span> i = <span class="built_in">time</span>(<span class="number">0</span>);</span><br><span class="line">    <span class="keyword">return</span> i;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="type">int</span> <span class="title">main</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    <span class="built_in">get_i</span>() = <span class="number">7</span>;</span><br><span class="line">    std::thread t&#123;[&amp;]()&#123; <span class="built_in">get_i</span>() = <span class="number">9</span>; &#125;&#125;;</span><br><span class="line">    t.<span class="built_in">join</span>();</span><br><span class="line">    std::cout &lt;&lt; <span class="built_in">get_i</span>() &lt;&lt; <span class="string">&quot;\n&quot;</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<p><code>get_i()</code> 中也有确保变量仅仅初始化一次的逻辑。</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line">get_i()::i:</span><br><span class="line">        .zero   4</span><br><span class="line">guard variable for get_i()::i:</span><br><span class="line">        .zero   8</span><br><span class="line">get_i():</span><br><span class="line">        push    rbp</span><br><span class="line">        mov     rbp, rsp</span><br><span class="line">        mov     rax, QWORD PTR fs:0</span><br><span class="line">        add     rax, OFFSET FLAT:guard variable for get_i()::i@tpoff</span><br><span class="line">        movzx   eax, BYTE PTR [rax]</span><br><span class="line">        test    al, al</span><br><span class="line">        jne     .L11</span><br><span class="line">        mov     edi, 0</span><br><span class="line">        call    time</span><br><span class="line">        mov     DWORD PTR fs:get_i()::i@tpoff, eax</span><br><span class="line">        mov     rax, QWORD PTR fs:0</span><br><span class="line">        add     rax, OFFSET FLAT:guard variable for get_i()::i@tpoff</span><br><span class="line">        mov     BYTE PTR [rax], 1</span><br><span class="line">.L11:</span><br><span class="line">        mov     rax, QWORD PTR fs:0</span><br><span class="line">        add     rax, OFFSET FLAT:get_i()::i@tpoff</span><br><span class="line">        pop     rbp</span><br><span class="line">        ret</span><br></pre></td></tr></table></figure>
-
-<p>所以，全局和局部的 thread_local 变量访问的代价是一样的。只不过如果 thread_local 是局部的，那么同步逻辑就直接放在函数中；如果是全局的，同步逻辑用一个生成的函数实现而已。</p>
-<p>接下来尝试把 time(0) 这种初始化表达式换成一个常量，比如说 2，则访问 thread_local 时不会有同步措施，只是创建线程的时候要复制一份变量而已。</p>
-<h2 id="C11-Thread-local"><a href="#C11-Thread-local" class="headerlink" title="C11 _Thread_local"></a>C11 _Thread_local</h2><p>C11 的头文件 threads.h 中有下面定义：</p>
-<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">define</span> thread_local _Thread_local</span></span><br></pre></td></tr></table></figure>
-
-<p>这就和以前的 bool 宏需要引入一样。在 C23 之后，thread_local 就是一个单独的关键字了。</p>
-<p>C11 的 thread_local 是不具备 static 属性的，在函数中使用时要用 thread_local static，而 C++ 中的 thread_local 在函数中自动具备 static 属性，加不加 static 都行。</p>
-<p>C++ 标准：</p>
-<blockquote>
-<p>When thread_local is applied to a variable of block scope the storage-class-specifier static <strong>is implied</strong> if it does not appear explicitly.</p>
-</blockquote>
-<p>2023 年 6 月 15 日：C11 的 threads.h 在 Windows 上没有实现，而且也没有提供像 C++ 的 mutex 一样的同步功能，写 C 语言用线程还是 pthreads.h &#x2F; Win32 API 会比较好一点。</p>
-
-      
-    </div>
-
-    
-    
-    
-      <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  
-  
-  
-
-      
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
-    <link itemprop="mainEntityOfPage" href="https://hxhue.github.io/2023/08/12/cpp-templates-the-complete-guide-0-D-Standard-Type-Utilities/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/avatar.gif">
-      <meta itemprop="name" content="Hxhue">
-      <meta itemprop="description" content="">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Hxhue's Blog">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          
-            <a href="/2023/08/12/cpp-templates-the-complete-guide-0-D-Standard-Type-Utilities/" class="post-title-link" itemprop="url">CTTCG 附录 D Standard Type Utilities</a>
-        </h2>
-
-        <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-calendar"></i>
-              </span>
-              <span class="post-meta-item-text">Posted on</span>
-
-              <time title="Created: 2023-08-12 00:00:00" itemprop="dateCreated datePublished" datetime="2023-08-12T00:00:00+08:00">2023-08-12</time>
-            </span>
-              <span class="post-meta-item">
-                <span class="post-meta-item-icon">
-                  <i class="far fa-calendar-check"></i>
-                </span>
-                <span class="post-meta-item-text">Edited on</span>
-                <time title="Modified: 2024-03-05 20:11:48" itemprop="dateModified" datetime="2024-03-05T20:11:48+08:00">2024-03-05</time>
-              </span>
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-folder"></i>
-              </span>
-              <span class="post-meta-item-text">In</span>
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/cttcg/" itemprop="url" rel="index"><span itemprop="name">C++ Templates: The Complete Guide</span></a>
-                </span>
-            </span>
-
-          
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          <p>这一章介绍的大都是用来查询类型属性的 type traits。还有一些其他的工具。</p>
-<h1 id="按数据概念分类"><a href="#按数据概念分类" class="headerlink" title="按数据概念分类"></a>按数据概念分类</h1><p><img src="/assets/d1144640c713ad4c260d6384745dfbfa.png"></p>
-<p>下面是基本（primary）类型，范围都是互斥的，而且任何一个类型必然使得下面中的一个且仅有一个评估为真：</p>
-<p><img src="/assets/dcc6d966cfc2ca89b40dd02a0fa1ac0e.png"></p>
-<p>（C++14 之前没有 <code>is_null_pointer</code>，所以那个时候 <code>nullptr</code> 的类型 <code>std:: nullptr_t</code> 是个特例。）</p>
-<p>上面的类型判断的时候会忽略外层的 cv 属性。图来自书中 <strong>Table D.1. Traits to Check the Primary Type Category</strong>。</p>
-<p>还有一些复合分类，这里省略。</p>
-<p><strong>Table D.2. Traits to Check for Composite Type Category</strong></p>
-<h1 id="查询特定属性"><a href="#查询特定属性" class="headerlink" title="查询特定属性"></a>查询特定属性</h1><p><strong>Table D.3. Traits to Test Simple Type Properties</strong></p>
-<p>比如判断是否为 pod、抽象类、final 类等。</p>
-<blockquote>
-<p><code>std::is_pod</code> 被标记为过时，建议使用 <code>is_standard_layout_v</code> &amp;&amp; <code>is_trivial_v</code> 两个 trait 组合起来判断。</p>
-</blockquote>
-<h1 id="查询是否具有某个特定操作"><a href="#查询是否具有某个特定操作" class="headerlink" title="查询是否具有某个特定操作"></a>查询是否具有某个特定操作</h1><p><strong>Table D.4. Traits to Check for Speciﬁc Operations</strong></p>
-<p>比如能够复制构造、能够复制赋值等。</p>
-<h1 id="判断类型之间关系"><a href="#判断类型之间关系" class="headerlink" title="判断类型之间关系"></a>判断类型之间关系</h1><p><strong>Table D.5. Traits to Test Type Relationships</strong></p>
-<p>比如 <code>std::is_base_of</code>。</p>
-<h1 id="类型构造"><a href="#类型构造" class="headerlink" title="类型构造"></a>类型构造</h1><p><strong>Table D.6. Traits for Type Construction</strong></p>
-<p>比如加引用、去掉 cv 属性之类的。得到的是新类型，而不是 true 或 false 的回答。</p>
-<h1 id="其他"><a href="#其他" class="headerlink" title="其他"></a>其他</h1><p><img src="/assets/e18d27c88bd0475c98cb776724bef8ce.png"></p>
-<p>图出自 <strong>Table D.7. Other Type Traits</strong>。</p>
-<h1 id="逻辑运算"><a href="#逻辑运算" class="headerlink" title="逻辑运算"></a>逻辑运算</h1><p><img src="/assets/677fc5b11af4bf047754d1498c697775.png"></p>
-<p>图来自 PDF 第 770 页（书中页码 735 页）。</p>
-<h1 id="非类型萃取工具"><a href="#非类型萃取工具" class="headerlink" title="非类型萃取工具"></a>非类型萃取工具</h1><p><img src="/assets/cc5534873381637edfeb51c6ecf1b5c7.png"></p>
-<p>前者用于创建对应类型的对象用于非评估环境的类型计算；后者用于获取对象的真实地址。</p>
-
-      
-    </div>
-
-    
-    
-    
-      <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  
-  
-  
-
-      
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
-    <link itemprop="mainEntityOfPage" href="https://hxhue.github.io/2023/08/12/cpp-templates-the-complete-guide-01-Function-Templates/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/avatar.gif">
-      <meta itemprop="name" content="Hxhue">
-      <meta itemprop="description" content="">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Hxhue's Blog">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          
-            <a href="/2023/08/12/cpp-templates-the-complete-guide-01-Function-Templates/" class="post-title-link" itemprop="url">CTTCG 01 Function Templates</a>
-        </h2>
-
-        <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-calendar"></i>
-              </span>
-              <span class="post-meta-item-text">Posted on</span>
-
-              <time title="Created: 2023-08-12 00:00:00" itemprop="dateCreated datePublished" datetime="2023-08-12T00:00:00+08:00">2023-08-12</time>
-            </span>
-              <span class="post-meta-item">
-                <span class="post-meta-item-icon">
-                  <i class="far fa-calendar-check"></i>
-                </span>
-                <span class="post-meta-item-text">Edited on</span>
-                <time title="Modified: 2024-03-05 20:15:30" itemprop="dateModified" datetime="2024-03-05T20:15:30+08:00">2024-03-05</time>
-              </span>
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-folder"></i>
-              </span>
-              <span class="post-meta-item-text">In</span>
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/cttcg/" itemprop="url" rel="index"><span itemprop="name">C++ Templates: The Complete Guide</span></a>
-                </span>
-            </span>
-
-          
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          <p>2023 年 5 月 7 日</p>
-<h1 id="两个-type-traits"><a href="#两个-type-traits" class="headerlink" title="两个 type traits"></a>两个 type traits</h1><p>#type_traits <code>std::decay_t</code> 去引用、去限定符、函数&#x2F;数组变指针；<code>std::common_type_t</code> 用三元运算符获得更“宽泛”类型</p>
-<h1 id="函数模板默认参数"><a href="#函数模板默认参数" class="headerlink" title="函数模板默认参数"></a>函数模板默认参数</h1><p>模板默认参数可以放在最前面，不像普通函数只能把带有默认值的参数放在最后。而且函数模板可以明确指定开头几个参数，让后面的参数由推导规则生成。</p>
-<h1 id="函数重载参数匹配优先级"><a href="#函数重载参数匹配优先级" class="headerlink" title="函数重载参数匹配优先级"></a>函数重载参数匹配优先级</h1><h2 id="优先级排序"><a href="#优先级排序" class="headerlink" title="优先级排序"></a>优先级排序</h2><ol>
-<li>perfect match</li>
-<li>decay，或者修改指针的内外层 const 属性（volatile 应该也算吧？）<br>比如 <code>char *</code> 到 <code>char const *</code></li>
-<li>promotion，比 int 小的转到 int 或更大的整数，或者 float 到 double。<br>举例：bool 到 char 不是 promotion，而是 standard conversion</li>
-<li>standard conversion，包括 <strong>int to float</strong>，<strong>子类（值&#x2F;引用&#x2F;指针）向基类（值&#x2F;引用&#x2F;指针）转换</strong></li>
-<li>用户定义的转换，包括标准库的类</li>
-<li>与可变长参数列表匹配，也就是 <code>(...)</code><br>例外：<code>f(...)</code> <strong>和</strong> <code>f(void)</code> <strong>参数类型是同级别的</strong>，因为没有提供参数，编译器不知道哪一个匹配更合适。</li>
-</ol>
-<p>以上参数匹配<strong>不涉及到值类型、左引用、右引用的区别</strong>。只要引用属性能够匹配，就不区分优先级。比如同时匹配到 <code>f(int)</code> 和 <code>f(int &amp;)</code> 编译器就会抱怨函数调用 ambiguous。</p>
-<p>各个参数匹配优先级有差异时：如果一个函数重载的参数组的优先级均不低于另一个函数重载，则前一个函数重载更优先。</p>
-<p>各个参数匹配优先级一样时：</p>
-<ol>
-<li>非模板函数比模板函数更优先。</li>
-<li>特化程度高的模板函数比特化程度低的模板函数更优先。</li>
-<li>一般模板函数比模板参数中带有 parameter pack（实际上匹配为空）的模板函数更优先。</li>
-</ol>
-<p>在传递参数时最多允许一次用户定义转换。<strong>如果函数重载 A 的参数类型转换序列是 B 的子序列，则函数重载 A 的优先级更高。</strong></p>
-<h2 id="standard-conversion-中的指针转换"><a href="#standard-conversion-中的指针转换" class="headerlink" title="standard conversion 中的指针转换"></a>standard conversion 中的指针转换</h2><ol>
-<li>转换成 <code>bool</code></li>
-<li>转换成 <code>void *</code></li>
-<li>子类指针向基类指针的转换</li>
-<li><strong>指向成员指针（pointers to members）从基类向子类的转换</strong></li>
-</ol>
-<p>这几类转换中优先级从 1 到 3 越来越高。第 3 点中，向基类指针转换时跨过的层级越少转换优先级越高。第 4 点也是，转换跨越的层次越少优先级越高。</p>
-<blockquote>
-<p>由于成员是从基类继承下来的，所以从基类向子类转换是合理的。</p>
-</blockquote>
-<h2 id="初始化列表作为实参"><a href="#初始化列表作为实参" class="headerlink" title="初始化列表作为实参"></a>初始化列表作为实参</h2><p><img src="/assets/e4fbc0fe9351908a43237c5100659419.png"></p>
-<p>可以尝试把初始化列表推导成：</p>
-<ol>
-<li><code>std::initializer_list</code></li>
-<li>可以接受 <code>std::initializer_list</code> 作为参数调用构造函数的类</li>
-<li>把初始化列表当成 uniform initialization 调用构造函数的类</li>
-<li>aggregate 的初始化</li>
-</ol>
-<p>如果推导为 <code>std::initializer_list&lt;T&gt;</code>，那么本次匹配的优先级由初始化列表中各参数类型转换的最差优先级决定。比如 <code>&#123;&#39;a&#39;, &#39;b&#39;, 0&#125;</code> 在推导成 <code>std::initializer_list&lt;char&gt;</code> 时，需要 0 从 int 转换成 char（标准转换）；推导成 <code>std::initializer_list&lt;int&gt;</code> 时，需要前面的字符从 char 转换成 int（integer promotion）。因而匹配 <code>f(std::initializer_list&lt;int&gt;)</code> 比 匹配 <code>f(std::initializer_list&lt;char&gt;)</code> 优先级更高。</p>
-<p>如果推导成 2 或 3（同一类），优先级如下：</p>
-<ol>
-<li>如果初始化列表为空，且类具有可调用的默认构造函数，则匹配默认构造函数</li>
-<li>考虑第 2 类</li>
-<li>考虑第 3 类的所有其他构造函数</li>
-</ol>
-<h2 id="Surrogate-Function"><a href="#Surrogate-Function" class="headerlink" title="Surrogate Function"></a>Surrogate Function</h2><p><img src="/assets/e227b1aec68720e2114c3fc519a7657e.png"></p>
-<p>可以想象函数本身也是参数中的一个。上面的 <code>funcObj</code> 是一个 <code>const</code> 引用，不过 <code>operator FuncType*</code> 也恰好可以在 <code>const</code> 属性的 this 指针上调用，因而转换是可行的。由于需要额外的转换，所以第二个函数在参数 0 位置不如第一个函数匹配程度高（按照 <code>IndirectFunctor</code> 中的两个函数的顺序）。但是在参数 2 位置，<code>FuncType</code> 接受 <code>int</code>，比第一个函数匹配程度高，这就导致了两个函数无法决出优先级。</p>
-<h1 id="函数重载时名字可见性"><a href="#函数重载时名字可见性" class="headerlink" title="函数重载时名字可见性"></a>函数重载时名字可见性</h1><p>#lookup 在模板中使用了其他函数时，可以参与重载决议的函数必须在此之前。即便后面有匹配度更高的函数也无法使用。P19</p>
-<h1 id="std-ref"><a href="#std-ref" class="headerlink" title="std::ref"></a><code>std::ref</code></h1><p>书中的一个观点是：函数模板的参数可以使用值类型，如果确实需要传递引用，由用户调用 std::ref 或者 std::cref 即可。P20</p>
-<p>这个观点比较有意思，但是函数模板使用起来会比较麻烦。</p>
-
-      
-    </div>
-
-    
-    
-    
-      <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  
-  
-  
-
-      
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
-    <link itemprop="mainEntityOfPage" href="https://hxhue.github.io/2023/08/12/cpp-templates-the-complete-guide-03-Nontype-Template-Parameters/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/avatar.gif">
-      <meta itemprop="name" content="Hxhue">
-      <meta itemprop="description" content="">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Hxhue's Blog">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          
-            <a href="/2023/08/12/cpp-templates-the-complete-guide-03-Nontype-Template-Parameters/" class="post-title-link" itemprop="url">CTTCG 03 Nontype Template Parameters</a>
-        </h2>
-
-        <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-calendar"></i>
-              </span>
-              <span class="post-meta-item-text">Posted on</span>
-
-              <time title="Created: 2023-08-12 00:00:00" itemprop="dateCreated datePublished" datetime="2023-08-12T00:00:00+08:00">2023-08-12</time>
-            </span>
-              <span class="post-meta-item">
-                <span class="post-meta-item-icon">
-                  <i class="far fa-calendar-check"></i>
-                </span>
-                <span class="post-meta-item-text">Edited on</span>
-                <time title="Modified: 2024-03-05 20:15:35" itemprop="dateModified" datetime="2024-03-05T20:15:35+08:00">2024-03-05</time>
-              </span>
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-folder"></i>
-              </span>
-              <span class="post-meta-item-text">In</span>
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/cttcg/" itemprop="url" rel="index"><span itemprop="name">C++ Templates: The Complete Guide</span></a>
-                </span>
-            </span>
-
-          
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          <p>模板参数也可以不是类型，而是值。</p>
-<h1 id="非类型参数推导只对直接调用有效"><a href="#非类型参数推导只对直接调用有效" class="headerlink" title="非类型参数推导只对直接调用有效"></a>非类型参数推导只对直接调用有效</h1><p>模板函数的类型推导只对立即调用有效，而对算法模板这类需要提前知道类型信息的场合无效。比如：</p>
-<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">std::<span class="built_in">transform</span> (source.<span class="built_in">begin</span>(), source.<span class="built_in">end</span>(), <span class="comment">// start and end of source</span></span><br><span class="line">	dest.<span class="built_in">begin</span>(),     <span class="comment">// start of destination</span></span><br><span class="line">	addValue&lt;<span class="number">5</span>,<span class="type">int</span>&gt;); <span class="comment">// operation</span></span><br></pre></td></tr></table></figure>
-
-<p>上面代码中尽管 <code>addValue</code> 的参数可能可以推导出来，但由于 <code>std::transform</code> 要求提前知道函数的类型，去掉参数之后代码无法编译。</p>
-<h1 id="非类型参数的类型限制"><a href="#非类型参数的类型限制" class="headerlink" title="非类型参数的类型限制"></a>非类型参数的类型限制</h1><p><strong>非类型参数不能是浮点数（未来可能可以）。只能是整数、nullptr、指针或左值引用。</strong></p>
-<p>2017 年的 P1714 提案建议增加浮点数，目前找不到后续。不过，gcc 13 在 <code>-std=c++20</code> 时已经提供了浮点数参数功能，clang 暂不支持。</p>
-<p>作为对比，如今 C++20 中某些非 union class type 已经可以作为模板参数，但浮点数不能。见 <a href="%E6%A6%82%E5%BF%B5/c++/Class%20types%20in%20NTTP.md">Class types in NTTP</a>。</p>
-<p>当参数是指针或引用时，不可以指向字符串字面量、临时值、数据成员或其他子对象；C++11 还要求对象有 external linkage，C++14 要求对象有 external linkage 或者 internal linkage，C++17 对 linkage 没有要求。</p>
-<p>虽然不能使用字符串字面量，但可以使用编译期可定的字符数组的引用作为参数。</p>
-<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">extern</span> <span class="type">char</span> <span class="type">const</span> s03[] = <span class="string">&quot;hi&quot;</span>; <span class="comment">// external linkage</span></span><br><span class="line"><span class="type">char</span> <span class="type">const</span> s11[] = <span class="string">&quot;hi&quot;</span>;        <span class="comment">// internal linkage</span></span><br><span class="line"><span class="function"><span class="type">int</span> <span class="title">main</span><span class="params">()</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">	Message&lt;s03&gt; m03;               <span class="comment">// OK (all versions)</span></span><br><span class="line">	Message&lt;s11&gt; m11;               <span class="comment">// OK since C++11</span></span><br><span class="line">	<span class="type">static</span> <span class="type">char</span> <span class="type">const</span> s17[] = <span class="string">&quot;hi&quot;</span>; <span class="comment">// no linkage</span></span><br><span class="line">	Message&lt;s17&gt; m17;               <span class="comment">// OK since C++17</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<h1 id="非类型参数可能需要括号包裹"><a href="#非类型参数可能需要括号包裹" class="headerlink" title="非类型参数可能需要括号包裹"></a>非类型参数可能需要括号包裹</h1><p>模板参数中出现表达式时，要使用括号，否则容易出现尖括号被理解成模板参数结束标志，导致无法编译的情况：<code>C&lt;42, sizeof(int) &gt; 4&gt; c;</code> ，应该改成 <code>C&lt;42, (sizeof(int) &gt; 4)&gt; c;</code></p>
-<h1 id="auto-作为非类型参数"><a href="#auto-作为非类型参数" class="headerlink" title="auto 作为非类型参数"></a>auto 作为非类型参数</h1><p>由于非类型参数的通用限制，<code>auto &amp;&amp;</code> 是不允许使用的（非类型参数不能有右值）。允许的有：<code>auto</code> &#x2F; <code>auto &amp;</code> &#x2F; <code>auto const &amp;</code> &#x2F; <code>decltype(auto)</code>。当实际类型为引用时，要求传入的值在编译期具有可计算出的不变地址（全局常量和变量符合要求、纯右值的数字字面量不符合要求）。当实际类型为值时，需要传入的值在编译器有可计算出的不变值（全局常量和数字字面量符合要求）。</p>
-<p>指定非类型参数的类型是 auto 时，仍然可以通过 decltype 手段获得参数，也有了自动推导类型的优势。比如可以编写一个原地分配内存的 Stack 类：</p>
-<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">Stack&lt;<span class="type">int</span>, <span class="number">20u</span>&gt; stk1;</span><br><span class="line">Stack&lt;<span class="type">int</span>, <span class="number">20</span>&gt; stk2;</span><br></pre></td></tr></table></figure>
-
-<p>这样两个 Stack 对象的 <code>size_type</code> 不同。</p>
-<p>另外， <code>decltype(auto)</code> 可以表示类型完美转发的场景。</p>
-<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">template</span>&lt;<span class="keyword">decltype</span>(<span class="keyword">auto</span>) N&gt;</span><br><span class="line"><span class="keyword">class</span> <span class="title class_">C</span> &#123;</span><br><span class="line">  <span class="comment">//...</span></span><br><span class="line">&#125;;</span><br><span class="line"><span class="type">int</span> i;</span><br><span class="line">C&lt;(i)&gt; x; <span class="comment">// N is int&amp;</span></span><br></pre></td></tr></table></figure>
-
-<p>上面的代码如果写成 <code>C&lt;i&gt; x</code> 或者模板参数是 <code>auto N</code>，N 的类型就是 int 而不是引用类型。</p>
-<p>💡 既然模板参数要求编译期计算完成，好像在参数中传递引用没有什么意义？</p>
-
-      
-    </div>
-
-    
-    
-    
-      <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  
-  
-  
-
-      
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
-    <link itemprop="mainEntityOfPage" href="https://hxhue.github.io/2023/08/12/cpp-templates-the-complete-guide-02-Class-Templates/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/avatar.gif">
-      <meta itemprop="name" content="Hxhue">
-      <meta itemprop="description" content="">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Hxhue's Blog">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          
-            <a href="/2023/08/12/cpp-templates-the-complete-guide-02-Class-Templates/" class="post-title-link" itemprop="url">CTTCG 02 Class Templates</a>
-        </h2>
-
-        <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-calendar"></i>
-              </span>
-              <span class="post-meta-item-text">Posted on</span>
-
-              <time title="Created: 2023-08-12 00:00:00" itemprop="dateCreated datePublished" datetime="2023-08-12T00:00:00+08:00">2023-08-12</time>
-            </span>
-              <span class="post-meta-item">
-                <span class="post-meta-item-icon">
-                  <i class="far fa-calendar-check"></i>
-                </span>
-                <span class="post-meta-item-text">Edited on</span>
-                <time title="Modified: 2024-03-05 20:15:32" itemprop="dateModified" datetime="2024-03-05T20:15:32+08:00">2024-03-05</time>
-              </span>
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-folder"></i>
-              </span>
-              <span class="post-meta-item-text">In</span>
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/cttcg/" itemprop="url" rel="index"><span itemprop="name">C++ Templates: The Complete Guide</span></a>
-                </span>
-            </span>
-
-          
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          <p>2023 年 5 月 7 日</p>
-<h1 id="定义位置"><a href="#定义位置" class="headerlink" title="定义位置"></a>定义位置</h1><p>类模板只能在全局或者类声明中定义，不能在块或者函数中定义。</p>
-<h1 id="类模板外函数定义的写法"><a href="#类模板外函数定义的写法" class="headerlink" title="类模板外函数定义的写法"></a>类模板外函数定义的写法</h1><p>类模板中定义函数，T 类型参数可以省略；在类模板中声明，但在外提供函数定义，就需要在定义处给出完整的类型参数：</p>
-<p><code>template&lt;typename T&gt; void Stack&lt;T /* 不能省略 */&gt;::push (T const&amp; elem) &#123; /* impl */ &#125;</code></p>
-<p>一个例外是析构函数和构造函数的名称处，因为这里不表类型，而是表示函数名。</p>
-<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">template</span>&lt;<span class="keyword">typename</span> T&gt; <span class="type">void</span> Stack&lt;T&gt;::<span class="built_in">Stack</span>() &#123; <span class="comment">/* impl */</span> &#125;</span><br><span class="line"><span class="comment">//                                   ^^^^ 这里不能加参数T</span></span><br></pre></td></tr></table></figure>
-
-<p>P30 处理友元函数，比如向输出流打印。最简单的还是<strong>直接在类模板</strong>中提供定义：</p>
-<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">friend</span> std::ostream&amp; <span class="keyword">operator</span>&lt;&lt;(std::ostream&amp; os, Stack <span class="type">const</span>&amp; s) &#123;</span><br><span class="line">	<span class="keyword">for</span> (<span class="keyword">auto</span> <span class="type">const</span>&amp; i : s.elems) os &lt;&lt; i &lt;&lt; <span class="string">&#x27; &#x27;</span>;</span><br><span class="line">	<span class="keyword">return</span> os;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<p>如果只在类模板中写声明，要么 ① 把函数写成模板函数，并使用不同的类型参数符号，然后在类外补上定义：</p>
-<p><code>template &lt;class U&gt; friend std::ostream&amp; operator&lt;&lt;(std::ostream&amp; os, Stack&lt;U&gt; const&amp; s);</code></p>
-<p>② 要么先声明类模板，再声明这个模板函数，然后在类中写：</p>
-<p><code>friend std::ostream&amp; operator&lt;&lt; &lt;&gt;(std::ostream&amp; os, Stack const&amp; s);</code></p>
-<p>其中<code>&lt;&gt;</code>表示函数需要匹配某个模板。最后在类外补上定义。</p>
-<h1 id="按需实例化"><a href="#按需实例化" class="headerlink" title="按需实例化"></a>按需实例化</h1><p>类模板只会实例化那些被用到的成员函数。这虽然降低了空间开销，但也使得一些问题很难被发现，比如常常在添加新的功能（调用之前没被调用的函数）后才发现旧代码无法编译的问题。</p>
-<h1 id="特化"><a href="#特化" class="headerlink" title="特化"></a>特化</h1><p>可以用 <code>template &lt;&gt;</code> 特化类模板。<strong>若特化类模板要在外给出函数定义，只需要把他当成普通的类，不要再加</strong> <code>template &lt;&gt;</code><strong>。</strong></p>
-<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">template</span>&lt;&gt; <span class="keyword">class</span> <span class="title class_">Stack</span>&lt;std::string&gt; &#123; <span class="comment">/* impl */</span> &#125;;</span><br><span class="line"><span class="type">void</span> Stack&lt;std::string&gt;::<span class="built_in">push</span> (std::string <span class="type">const</span>&amp; elem) <span class="comment">/* impl */</span></span><br></pre></td></tr></table></figure>
-
-<h1 id="偏特化"><a href="#偏特化" class="headerlink" title="偏特化"></a>偏特化</h1><figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">template</span>&lt;<span class="keyword">typename</span> T&gt;</span><br><span class="line"><span class="keyword">class</span> <span class="title class_">Stack</span>&lt;T*&gt; &#123; <span class="comment">/* impl */</span> &#125;</span><br><span class="line"><span class="comment">//         ^^^ 注意这个尖括号是相对类模板的定义多出来的</span></span><br></pre></td></tr></table></figure>
-
-<p>偏特化任何模板时不能再提供<strong>默认模板参数</strong>，省略会导致继承默认参数，不省略则可以额外指定。特化函数模板时不能再提供<strong>函数默认参数值</strong>，但也不能省略参数声明。（一个是写在尖括号 <code>&lt;&gt;</code> 里的，一个是写在小括号 <code>()</code> 里面的。）</p>
-<p>偏特化是可以有更多的模板参数的，这样才能表达更加复杂和具体的结构，比如任意一个指向成员的指针至少需要两个模板参数来精确表达：</p>
-<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">template</span>&lt;<span class="keyword">typename</span> T, <span class="keyword">typename</span> C&gt;</span><br><span class="line"><span class="keyword">class</span> <span class="title class_">List</span>&lt;T* C::*&gt; &#123;</span><br><span class="line">	<span class="comment">// 略</span></span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
-
-<h1 id="默认参数"><a href="#默认参数" class="headerlink" title="默认参数"></a>默认参数</h1><p>类模板的默认参数应该放到靠后的位置，因为类模板是不能通过参数推导的。这个和模板函数注意对比。</p>
-<h1 id="Alias-Templates"><a href="#Alias-Templates" class="headerlink" title="Alias Templates"></a>Alias Templates</h1><figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">namespace</span> std &#123;</span><br><span class="line">	<span class="keyword">template</span>&lt;<span class="keyword">typename</span> T&gt; <span class="keyword">using</span> <span class="type">add_const_t</span> = <span class="keyword">typename</span> add_const&lt;T&gt;::type;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<p>#alias alias templates 不能被特化。</p>
-<h1 id="C-17-省略类模板参数"><a href="#C-17-省略类模板参数" class="headerlink" title="C++ 17 省略类模板参数"></a>C++ 17 省略类模板参数</h1><figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">Stack&lt;<span class="type">int</span>&gt; intStack1;</span><br><span class="line">Stack&lt;<span class="type">int</span>&gt; intStack2 = intStack1;</span><br><span class="line">Stack intStack3 = intStack1; <span class="comment">// 能推断出类型参数是 int</span></span><br></pre></td></tr></table></figure>
-
-<p>由于推导的类型不一定是我们想要的，我们有时应该尽量在成员函数中写成接受值（而不是引用）的形式，从而使得数组能退化成首元素指针。P41</p>
-<p>存在疑问时，类模板参数推导倾向于拷贝，而不是将参数作为子元素。P43</p>
-<p>C++ 类模板在推导参数时不支持偏特化。就算是空参数也不行（空参数是 Java 的语法）。比如 <code>Stack stk &#123;&quot;2&quot;&#125;;</code> 正确，而 <code>Stack&lt;&gt; stk &#123;&quot;2&quot;&#125;;</code> 错误。</p>
-<h1 id="Deduction-Guide"><a href="#Deduction-Guide" class="headerlink" title="Deduction Guide"></a>Deduction Guide</h1><p><code>Stack(char const*) -&gt; Stackstd::string;</code></p>
-<p>对于聚合类模板也可以定义推导规则，比如：</p>
-<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">template</span>&lt;<span class="keyword">typename</span> T&gt;</span><br><span class="line"><span class="keyword">struct</span> <span class="title class_">ValueWithComment</span> &#123;</span><br><span class="line">	T value;</span><br><span class="line">	std::string comment;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="built_in">ValueWithComment</span>(<span class="type">char</span> <span class="type">const</span>*, <span class="type">char</span> <span class="type">const</span>*)</span><br><span class="line">  -&gt; ValueWithComment&lt;std::string&gt;;</span><br></pre></td></tr></table></figure>
-
-<p>这样 <code>ValueWithComment vc2 = &#123;&quot;hello&quot;, &quot;initial value&quot;&#125;;</code> 就会被推导规则引导。如果没有这条规则，代码就无法通过编译，因为推导是根据类模板构造函数的参数进行的，而聚合类没有构造函数。</p>
-<p>注意，C++20 不需要 deduction guide 也可以编译上面的代码，应该是聚合类的定义、类模板参数推导要求有改动。</p>
-<p>其他：</p>
-<ul>
-<li>还能对推导规则添加 explicit 关键字。</li>
-<li>deduction guide 本身可以是模板：<code>template&lt;typename T&gt; S(T) -&gt; S&lt;T&gt;;</code></li>
-<li>和 auto 一样，当模板类参数被省略时，想要在同一语句中声明两个变量，必须保证他们的参数类型一致。</li>
-<li>deduction guide 本身只用于引导参数推导，不用于实际调用。因此对于多个引用类型（左引、右引）的构造函数，只需要写一个“值类型作为参数”的推导规则。</li>
+          <h1 id="四大关键字"><a href="#四大关键字" class="headerlink" title="四大关键字"></a>四大关键字</h1><ul>
+<li><code>static_cast</code> 大多数转换，包括左右值转换、<strong>父子类指针&#x2F;引用之间的转换</strong>（不进行安全检查，但会修正指针偏移）。</li>
+<li><code>const_cast</code> 也能进行 volatile 属性的修改！！</li>
+<li><code>dynamic_cast</code> 父子类指针&#x2F;引用之间的转换。其中子类转向基类相当于使用 <code>static_cast</code> ，没有运行时安全检查。而基类转向子类则有运行时安全检查，而且要求基类是多态类，否则无法编译。</li>
+<li><code>reinterpret_cast</code></li>
 </ul>
+<h1 id="标准库的共享指针转换模板"><a href="#标准库的共享指针转换模板" class="headerlink" title="标准库的共享指针转换模板"></a>标准库的共享指针转换模板</h1><p>标准库中还有针对于 <code>std::shared_ptr</code> 的类型转换模板。转换后返回一个共享指针，但其包裹的类型被转换成了对应的类型：</p>
+<ul>
+<li><code>std::static_pointer_cast</code></li>
+<li><code>std::const_pointer_cast</code></li>
+<li><code>std::dynamic_pointer_cast</code></li>
+</ul>
+<p>注意：这种转换算作指针的复制，所以共享指针对应的控制块引用计数加一（如果指针非空）。</p>
+<p>举例：</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">struct</span> <span class="title class_">A</span>    &#123;&#125;;</span><br><span class="line"><span class="keyword">struct</span> <span class="title class_">B</span>: A &#123;&#125;;</span><br><span class="line"><span class="keyword">auto</span> sp = std::<span class="built_in">make_shared</span>&lt;B&gt;();</span><br><span class="line"><span class="keyword">if</span> (<span class="keyword">auto</span> sp2 = std::<span class="built_in">dynamic_pointer_cast</span>&lt;A&gt;(sp)) &#123;</span><br><span class="line">	std::cout &lt;&lt; <span class="string">&quot;success\n&quot;</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
 
       
     </div>
@@ -881,7 +447,7 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
-    <link itemprop="mainEntityOfPage" href="https://hxhue.github.io/2023/08/12/cpp-templates-the-complete-guide-04-Variadic-Templates/">
+    <link itemprop="mainEntityOfPage" href="https://hxhue.github.io/2023/08/12/cpplang-Hidden-Friends/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="image" content="/images/avatar.gif">
@@ -895,7 +461,7 @@
       <header class="post-header">
         <h2 class="post-title" itemprop="name headline">
           
-            <a href="/2023/08/12/cpp-templates-the-complete-guide-04-Variadic-Templates/" class="post-title-link" itemprop="url">CTTCG 04 Variadic Templates</a>
+            <a href="/2023/08/12/cpplang-Hidden-Friends/" class="post-title-link" itemprop="url">Hidden Friends</a>
         </h2>
 
         <div class="post-meta">
@@ -905,14 +471,14 @@
               </span>
               <span class="post-meta-item-text">Posted on</span>
 
-              <time title="Created: 2023-08-12 00:00:00" itemprop="dateCreated datePublished" datetime="2023-08-12T00:00:00+08:00">2023-08-12</time>
+              <time title="Created: 2023-08-12 15:17:00" itemprop="dateCreated datePublished" datetime="2023-08-12T15:17:00+08:00">2023-08-12</time>
             </span>
               <span class="post-meta-item">
                 <span class="post-meta-item-icon">
                   <i class="far fa-calendar-check"></i>
                 </span>
                 <span class="post-meta-item-text">Edited on</span>
-                <time title="Modified: 2024-03-05 20:15:37" itemprop="dateModified" datetime="2024-03-05T20:15:37+08:00">2024-03-05</time>
+                <time title="Modified: 2024-03-06 10:36:04" itemprop="dateModified" datetime="2024-03-06T10:36:04+08:00">2024-03-06</time>
               </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
@@ -920,7 +486,7 @@
               </span>
               <span class="post-meta-item-text">In</span>
                 <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/cttcg/" itemprop="url" rel="index"><span itemprop="name">C++ Templates: The Complete Guide</span></a>
+                  <a href="/categories/cpplang/" itemprop="url" rel="index"><span itemprop="name">C++ Language</span></a>
                 </span>
             </span>
 
@@ -935,48 +501,477 @@
     <div class="post-body" itemprop="articleBody">
 
       
-          <blockquote>
-<p>可变长表达式可以对参数包逐个处理。与折叠表达式（相当于函数式编程中的 <strong>reduce</strong>，但如果用上逗号表达式就能表达 <strong>foreach</strong>）不同，可变长表达式（相当于函数式编程中的 <strong>map</strong>）不会改变参数数量，允许的形式也比折叠表达式宽松一点。</p>
-</blockquote>
-<h1 id="参数包（Parameter-Pack）和可变长模板"><a href="#参数包（Parameter-Pack）和可变长模板" class="headerlink" title="参数包（Parameter Pack）和可变长模板"></a>参数包（Parameter Pack）和可变长模板</h1><p>模板函数可以指定参数包，用 <code>sizeof…()</code> 运算符可以获得参数包的数量。<strong>至少有一个参数包的模板称为可变长模板（variadic template）</strong>。</p>
-<h2 id="0-Pack-Expansion：参数传递"><a href="#0-Pack-Expansion：参数传递" class="headerlink" title="0 Pack Expansion：参数传递"></a>0 Pack Expansion：参数传递</h2><p>参数传递。</p>
+          <p>下面的代码中，Bar 能够隐式转换成 Foo。想要重载 Foo 的等于运算符至少有三种方案：</p>
+<ol>
+<li>重载全局的 <code>==</code> 运算符</li>
+<li>重载 Foo 中的 hidden friend，即 <code>friend bool operator==(Foo const &amp;a, Foo const &amp;b)</code></li>
+<li>重载 <code>bool operator==(Foo const &amp;a) const</code></li>
+</ol>
+<p>第一种方案会污染全局的名字空间，使得 Bar 和 Bar 之间也能通过转换两个参数进行比较；第三种方案允许第二个参数的隐式类型转换，但要求第一个参数必须是 Foo 类型；第二种方案只要求任一个参数为 Foo 类型，使得 ADL 能够参与找到这个函数，另一个参数则可以通过隐式类型转换来得到。</p>
+<p>成员函数的劣势是由于查找方式和 this 指针的存在，函数失去了对称性。全局函数的劣势则是没有用上 ADL 的优势，hidden friends 在这种情况比较好。</p>
+<p><a target="_blank" rel="noopener" href="https://godbolt.org/z/6sxdno3Yh">https://godbolt.org/z/6sxdno3Yh</a></p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;iostream&gt;</span></span></span><br><span class="line"></span><br><span class="line"><span class="meta">#<span class="keyword">define</span> HIDDEN_FEIDEND 1</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">struct</span> <span class="title class_">Foo</span> &#123;</span><br><span class="line">    <span class="type">int</span> value&#123;&#125;;</span><br><span class="line"><span class="meta">#<span class="keyword">ifdef</span> HIDDEN_FEIDEND</span></span><br><span class="line">    <span class="keyword">friend</span> <span class="type">bool</span> <span class="keyword">operator</span>==(Foo <span class="type">const</span> &amp;a, Foo <span class="type">const</span> &amp;b) &#123;</span><br><span class="line">        <span class="keyword">return</span> a.value == b.value;</span><br><span class="line">    &#125;</span><br><span class="line"><span class="meta">#<span class="keyword">endif</span></span></span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="keyword">struct</span> <span class="title class_">Bar</span> &#123;</span><br><span class="line">    <span class="type">int</span> value&#123;&#125;;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// Bar can be converted implicitly to Foo.</span></span><br><span class="line">    <span class="comment">// `explicit` keyword makes the conversion explicit.</span></span><br><span class="line">    <span class="comment">// explicit</span></span><br><span class="line">    <span class="function"><span class="keyword">operator</span> <span class="title">Foo</span><span class="params">()</span> <span class="type">const</span> </span>&#123;</span><br><span class="line">        <span class="keyword">return</span> Foo&#123;value&#125;;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="meta">#<span class="keyword">ifndef</span> HIDDEN_FEIDEND</span></span><br><span class="line"><span class="comment">// Normal operator overload that can be found in global scope</span></span><br><span class="line"><span class="type">bool</span> <span class="keyword">operator</span>==(Foo <span class="type">const</span> &amp;a, Foo <span class="type">const</span> &amp;b) &#123;</span><br><span class="line">    <span class="keyword">return</span> a.value == b.value;</span><br><span class="line">&#125;</span><br><span class="line"><span class="meta">#<span class="keyword">endif</span></span></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="type">int</span> <span class="title">main</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    Bar a&#123;<span class="number">-4</span>&#125;, b&#123;<span class="number">1</span>&#125;;</span><br><span class="line">    Foo c&#123;<span class="number">2</span>&#125;;</span><br><span class="line">    <span class="comment">// std::cout &lt;&lt; std::boolalpha &lt;&lt; (a == b) &lt;&lt; &quot;\\n&quot;; // ok if no HIDDEN_FEIDEND</span></span><br><span class="line">    std::cout &lt;&lt; std::boolalpha &lt;&lt; (a == c) &lt;&lt; <span class="string">&quot;\\n&quot;</span>; <span class="comment">// ok</span></span><br><span class="line">    std::cout &lt;&lt; std::boolalpha &lt;&lt; (c == a) &lt;&lt; <span class="string">&quot;\\n&quot;</span>; <span class="comment">// ok</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
+    <link itemprop="mainEntityOfPage" href="https://hxhue.github.io/2023/08/12/cpplang-P2266R3-Simpler-implicit-move-%E5%AF%B9-C-23-%E5%87%BD%E6%95%B0%E8%BF%94%E5%9B%9E%E5%80%BC%E8%AF%AD%E4%B9%89%E7%9A%84%E6%94%B9%E5%8F%98/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="Hxhue">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Hxhue's Blog">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/2023/08/12/cpplang-P2266R3-Simpler-implicit-move-%E5%AF%B9-C-23-%E5%87%BD%E6%95%B0%E8%BF%94%E5%9B%9E%E5%80%BC%E8%AF%AD%E4%B9%89%E7%9A%84%E6%94%B9%E5%8F%98/" class="post-title-link" itemprop="url">P2266R3: Simpler implicit move 对 C++23 函数返回值语义的改变</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">Posted on</span>
+
+              <time title="Created: 2023-08-12 15:17:00" itemprop="dateCreated datePublished" datetime="2023-08-12T15:17:00+08:00">2023-08-12</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">Edited on</span>
+                <time title="Modified: 2024-03-06 10:37:42" itemprop="dateModified" datetime="2024-03-06T10:37:42+08:00">2024-03-06</time>
+              </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">In</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/cpplang/" itemprop="url" rel="index"><span itemprop="name">C++ Language</span></a>
+                </span>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <p>可以参考原文 **P2266R3: Simpler implicit move (open-std.org)**。因为 proposal 被修订过，有些链接失效了。</p>
+<p>Implicit Move 指的是函数返回处隐式调用移动构造函数的优化。<strong>和 C++17 加入的 RVO 一样，都是对返回值优化的策略</strong>。其他的返回值优化的策略还包括将右值引用绑定到左值引用上，使得变量生命周期延长（在 C++23 被禁用）等。</p>
+<h1 id="C-11-允许纯右值变量隐式移动"><a href="#C-11-允许纯右值变量隐式移动" class="headerlink" title="C++11 允许纯右值变量隐式移动"></a>C++11 允许纯右值变量隐式移动</h1><p>implicit move 在 C++11 中就已经出现，该特性让编译器在函数直接返回<strong>纯右值</strong>具名变量（变量都是具名的）时，隐式调用返回类型的移动构造函数（不必写 <code>return std::move(x)</code>）。</p>
+<p>此时隐式移动要求：返回值是值类型，且变量是值类型。</p>
+<h1 id="C-11-允许-Copy-elision，C-17-强制-RVO"><a href="#C-11-允许-Copy-elision，C-17-强制-RVO" class="headerlink" title="C++11 允许 Copy-elision，C++17 强制 RVO"></a>C++11 允许 Copy-elision，C++17 强制 RVO</h1><p><a target="_blank" rel="noopener" href="https://en.cppreference.com/w/cpp/language/copy_elision">Copy elision - cppreference.com</a></p>
+<p>尽管一个类的复制&#x2F;移动构造函数、析构函数可能具有副作用，C++11 也<strong>允许但不强制</strong>编译器进行拷贝省略的优化。<strong>C++17 强制 RVO</strong>，这一部分不再被视为 Copy-elision 的规则范畴。其他 Copy-elision 的规则仍然存在。</p>
+<p>强制 RVO 并不是强制要求 NRVO。RVO 和 NRVO 的区别可见 <a href="_export/_posts/inside-the-cpp-object-model/Cfront%20%E5%A6%82%E4%BD%95%E6%8F%92%E5%85%A5%E6%9E%84%E9%80%A0%E5%87%BD%E6%95%B0.md">Cfront 如何插入构造函数</a> 。</p>
+<p><strong>NRVO 是一种可选的优化（但大多数情况下可用）</strong>。可选优化还有 catch (C++11) &#x2F; throw (C++11) &#x2F; coroutines (C++20) 等。</p>
+<p>对于 NRVO，gcc 默认开启，可以用选项关闭；而 MSVC 默认关闭，在 &#x2F;O2 选项下开启。</p>
+<h1 id="C-20-允许将亡值变量隐式移动"><a href="#C-20-允许将亡值变量隐式移动" class="headerlink" title="C++20 允许将亡值变量隐式移动"></a>C++20 允许将亡值变量隐式移动</h1><p>C++20 还允许<strong>将亡值</strong>具名变量也使用该优化。</p>
+<p>此时隐式移动要求：返回值是值类型，且变量是值类型或右值引用。</p>
+<p>此外对返回值值属性的判断也有了变化：<strong>如果返回值声明是值类型</strong>，先把返回值表达式当右值，不能匹配时又把表达式当成左值匹配。</p>
+<h1 id="C-11-允许将亡值变量绑定在左值引用返回值上"><a href="#C-11-允许将亡值变量绑定在左值引用返回值上" class="headerlink" title="C++11 允许将亡值变量绑定在左值引用返回值上"></a>C++11 允许将亡值变量绑定在左值引用返回值上</h1><p><strong>当返回类型是引用类型（而不是直接构造对应类型）时，规则就变得复杂了。</strong>由于前面不涉及到返回值类型是引用类型，所以即便这个特性是 C++11 就有的，也放在后面来描述。</p>
+<p><em>C++11 允许将亡值变量绑定在左值引用返回值上</em> 的原理似乎是将返回值将亡值作为左值来看待。这样做将亡值将不能绑定在右值引用返回值上。</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 1. 下面的 in 不代表 since 的含义，只表示测试了当前版本编译情况。</span></span><br><span class="line"><span class="comment">// 2. 所有代码只编译不链接。</span></span><br><span class="line"><span class="keyword">struct</span> <span class="title class_">Widget</span> &#123;</span><br><span class="line">    <span class="built_in">Widget</span>(Widget&amp;&amp;); <span class="comment">// Widget 只能移动，不能复制</span></span><br><span class="line">&#125;;</span><br><span class="line"><span class="keyword">struct</span> <span class="title class_">RRefTaker</span> &#123;</span><br><span class="line">    <span class="built_in">RRefTaker</span>(Widget&amp;&amp;);</span><br><span class="line">&#125;;</span><br><span class="line"><span class="function">RRefTaker <span class="title">two</span><span class="params">(Widget w)</span> </span>&#123;</span><br><span class="line">    <span class="keyword">return</span> w;  <span class="comment">// OK since C++11 + CWG1579</span></span><br><span class="line">&#125;</span><br><span class="line"><span class="function">RRefTaker <span class="title">three</span><span class="params">(Widget&amp;&amp; w)</span> </span>&#123;</span><br><span class="line">    <span class="keyword">return</span> w;  <span class="comment">// OK since C++20 because P0527</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// C++20 中下面两个函数的绑定方式不符合直觉：</span></span><br><span class="line"><span class="function">Widget&amp;&amp; <span class="title">four</span><span class="params">(Widget&amp;&amp; w)</span> </span>&#123;</span><br><span class="line">    <span class="keyword">return</span> w;  <span class="comment">// OK since C++23</span></span><br><span class="line">&#125;</span><br><span class="line"><span class="function">Widget&amp; <span class="title">five</span><span class="params">(Widget&amp;&amp; w)</span> </span>&#123;</span><br><span class="line">    <span class="keyword">return</span> w;  <span class="comment">// OK since C++11, until C++23</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 1. 代码试图通过将右值引用绑定到左值引用延长 x 的生命周期，使用不当则引用悬挂，</span></span><br><span class="line"><span class="comment">//    这是右值引用能绑定在左值引用上的特例。</span></span><br><span class="line"><span class="comment">// 2. C++23 禁止了将右值引用绑定到左值引用返回值上。</span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;mutex&gt;</span></span></span><br><span class="line"><span class="keyword">using</span> NotMovable = std::lock_guard&lt;std::mutex&gt;;</span><br><span class="line"><span class="function">NotMovable &amp;<span class="title">six</span><span class="params">(NotMovable &amp;&amp;x)</span> </span>&#123;</span><br><span class="line">    <span class="keyword">return</span> x; <span class="comment">// Ok since C++11, until C++23</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h1 id="C-20-的返回值处理缺陷"><a href="#C-20-的返回值处理缺陷" class="headerlink" title="C++20 的返回值处理缺陷"></a>C++20 的返回值处理缺陷</h1><h2 id="不能将右值引用绑定在右值引用返回值上"><a href="#不能将右值引用绑定在右值引用返回值上" class="headerlink" title="不能将右值引用绑定在右值引用返回值上"></a>不能将右值引用绑定在右值引用返回值上</h2><p><a target="_blank" rel="noopener" href="https://www.open-std.org/jtc1/sc22/wg21/docs/papers/2022/p2266r3.html#perfect-backwarding%5D(https://www.open-std.org/jtc1/sc22/wg21/docs/papers/2022/p2266r3.html#perfect-backwarding%5D(https://www.open-std.org/jtc1/sc22/wg21/docs/papers/2022/p2266r3.html#perfect-backwarding">链接</a></p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">template</span>&lt;<span class="keyword">class</span> T&gt;</span></span><br><span class="line"><span class="function">T&amp;&amp; <span class="title">seven</span><span class="params">(T&amp;&amp; x)</span> </span>&#123; <span class="keyword">return</span> x; &#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="type">void</span> <span class="title">test_seven</span><span class="params">(Widget w)</span> </span>&#123;</span><br><span class="line">    Widget&amp; r = <span class="built_in">seven</span>(w);               <span class="comment">// OK</span></span><br><span class="line">    Widget&amp;&amp; rr = <span class="built_in">seven</span>(std::<span class="built_in">move</span>(w));  <span class="comment">// Error</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>r 定义行中 seven 的 <code>T</code> 类型是 <code>Widget &amp;</code>，引用折叠后得到的返回值类型是 <code>Widget &amp;</code>。而 rr 定义行中 seven 的 T 类型是 <code>Widget</code>，得到的返回值类型是<code>Widget &amp;&amp;</code>。</p>
+<h2 id="意料之外的函数重载选择"><a href="#意料之外的函数重载选择" class="headerlink" title="意料之外的函数重载选择"></a>意料之外的函数重载选择</h2><figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">struct</span> <span class="title class_">Sam</span> &#123;</span><br><span class="line">    <span class="built_in">Sam</span>(Widget&amp;);        <span class="comment">// #1</span></span><br><span class="line">    <span class="built_in">Sam</span>(<span class="type">const</span> Widget&amp;);  <span class="comment">// #2</span></span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="function">Sam <span class="title">twelve</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    Widget w;</span><br><span class="line">    <span class="keyword">return</span> w;  <span class="comment">// calls #2 since C++20 because P1155</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>这是由于 C++20 返回值类型是由函数重载规则定义的。先把返回值当右值，不能匹配时又当成左值匹配（前面 <a href="%E6%A6%82%E5%BF%B5/c++/P2266R3%20Simpler%20implicit%20move%20%E5%AF%B9%20C++23%20%E5%87%BD%E6%95%B0%E8%BF%94%E5%9B%9E%E5%80%BC%E8%AF%AD%E4%B9%89%E7%9A%84%E6%94%B9%E5%8F%98.md">C++20 允许将亡值变量隐式移动</a> 也说过）。当右值匹配时，和常引用的匹配度更高，这样产生的结果很奇怪。</p>
+<p><a target="_blank" rel="noopener" href="https://www.open-std.org/jtc1/sc22/wg21/docs/papers/2022/p2266r3.html#two-resolutions%5D(https://www.open-std.org/jtc1/sc22/wg21/docs/papers/2022/p2266r3.html#two-resolutions%5D(https://www.open-std.org/jtc1/sc22/wg21/docs/papers/2022/p2266r3.html#two-resolutions">链接</a></p>
+<h1 id="C-23-禁止将将亡值绑定到左值引用返回值，并加入返回值值属性的特殊规则"><a href="#C-23-禁止将将亡值绑定到左值引用返回值，并加入返回值值属性的特殊规则" class="headerlink" title="C++23 禁止将将亡值绑定到左值引用返回值，并加入返回值值属性的特殊规则"></a>C++23 禁止将将亡值绑定到左值引用返回值，并加入返回值值属性的特殊规则</h1><p><strong>主要是处理 C++20 新规则的表述导致的诸多不合理情景，同时也解决了部分引用悬挂的错误。</strong></p>
+<p><img src="/assets/6765d315b8badcdac5361e8300adfe91.png"></p>
+<p>C++23 中，如果<strong>返回表达式是 id-expression（或其括号形式）</strong>，且它是 move-eligible 的，那么就添加右值属性（作为将亡值对待）。如果<strong>返回的就是一个 id</strong>，那么对于 decltype 来说就当成 id 本身的类型看待。</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">auto</span> <span class="title">f</span><span class="params">(<span class="type">int</span> x)</span> -&gt; <span class="title">decltype</span><span class="params">((x))</span> </span>&#123; <span class="keyword">return</span> (x); &#125;   <span class="comment">// return type is &quot;int&amp;&quot;</span></span><br><span class="line"><span class="function"><span class="keyword">auto</span> <span class="title">g</span><span class="params">(<span class="type">int</span> x)</span> -&gt; <span class="keyword">decltype</span>(<span class="keyword">auto</span>) </span>&#123; <span class="keyword">return</span> (x); &#125;  <span class="comment">// return type is &quot;int&amp;&amp;&quot;</span></span><br></pre></td></tr></table></figure>
+
+<p>第一行返回类型由 <code>decltype((x))</code> 决定，所以返回 <code>int &amp;</code>。第二行中返回类型要参考返回表达式，而返回表达式中带有 <code>x</code>，<code>x</code> 可以被移动。<code>(x)</code> 是加右值引用，右值的右值是右值，所以得到的结果仍然是 <code>int &amp;&amp;</code>。</p>
+<p><a target="_blank" rel="noopener" href="https://www.open-std.org/jtc1/sc22/wg21/docs/papers/2022/p2266r3.html#decltype-auto%5D(https://www.open-std.org/jtc1/sc22/wg21/docs/papers/2022/p2266r3.html#decltype-auto%5D(https://www.open-std.org/jtc1/sc22/wg21/docs/papers/2022/p2266r3.html#decltype-auto">链接</a></p>
+<p>在 C++23 中 f2 和 g2 将是 ill-formed 函数定义（ill-formed 被翻译成<strong>非法</strong>）。</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">auto</span> <span class="title">f1</span><span class="params">(<span class="type">int</span> x)</span> -&gt; <span class="title">decltype</span><span class="params">(x)</span> </span>&#123; <span class="keyword">return</span> (x); &#125;     <span class="comment">// int</span></span><br><span class="line"><span class="function"><span class="keyword">auto</span> <span class="title">f2</span><span class="params">(<span class="type">int</span> x)</span> -&gt; <span class="title">decltype</span><span class="params">((x))</span> </span>&#123; <span class="keyword">return</span> (x); &#125;   <span class="comment">// int&amp;</span></span><br><span class="line"></span><br><span class="line"><span class="comment">// 使用 decltype(auto) 要参考返回值，所以在 C++20/23 的表现不同</span></span><br><span class="line"><span class="function"><span class="keyword">auto</span> <span class="title">f3</span><span class="params">(<span class="type">int</span> x)</span> -&gt; <span class="keyword">decltype</span>(<span class="keyword">auto</span>) </span>&#123; <span class="keyword">return</span> (x); &#125;  <span class="comment">// C++20: int&amp;. Proposed: int&amp;&amp;</span></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">auto</span> <span class="title">g1</span><span class="params">(<span class="type">int</span> x)</span> -&gt; <span class="title">decltype</span><span class="params">(x)</span> </span>&#123; <span class="keyword">return</span> x; &#125;       <span class="comment">// int</span></span><br><span class="line"></span><br><span class="line"><span class="comment">// 由于用的不是 decltype(auto)，所以被直接推导成了 int&amp;，不用参考返回值</span></span><br><span class="line"><span class="function"><span class="keyword">auto</span> <span class="title">g2</span><span class="params">(<span class="type">int</span> x)</span> -&gt; <span class="title">decltype</span><span class="params">((x))</span> </span>&#123; <span class="keyword">return</span> x; &#125;     <span class="comment">// int&amp;</span></span><br><span class="line"></span><br><span class="line"><span class="comment">// 为什么不参考返回值？</span></span><br><span class="line"><span class="comment">// 可能是因为x是id，而不是id-expression，所以能直接推导出对应类型</span></span><br><span class="line"><span class="function"><span class="keyword">auto</span> <span class="title">g3</span><span class="params">(<span class="type">int</span> x)</span> -&gt; <span class="keyword">decltype</span>(<span class="keyword">auto</span>) </span>&#123; <span class="keyword">return</span> x; &#125;    <span class="comment">// int</span></span><br></pre></td></tr></table></figure>
+
+<h1 id="如何修改代码适配-C-23"><a href="#如何修改代码适配-C-23" class="headerlink" title="如何修改代码适配 C++23"></a>如何修改代码适配 C++23</h1><p>下面的代码片段都是前者在 C++20 中编译能成功，在 C++23 中会失败。</p>
+<h2 id="LibreOffice-OString"><a href="#LibreOffice-OString" class="headerlink" title="LibreOffice OString"></a>LibreOffice <code>OString</code></h2><figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// C++20</span></span><br><span class="line"><span class="keyword">struct</span> <span class="title class_">X</span> &#123;</span><br><span class="line">    <span class="built_in">X</span>(<span class="keyword">auto</span>&amp;);</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="function">X <span class="title">f</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    <span class="type">char</span> a[<span class="number">10</span>];</span><br><span class="line">    <span class="keyword">return</span> a;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p><code>f()</code> 函数改成：</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// C++23</span></span><br><span class="line"><span class="function">X <span class="title">f</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    <span class="type">char</span> a[<span class="number">10</span>];</span><br><span class="line">    <span class="keyword">return</span> <span class="built_in">X</span>(a); <span class="comment">// 由于返回的不是变量表达式，所以适用于普通规则</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h2 id="LibreOffice-o3tl-temporary"><a href="#LibreOffice-o3tl-temporary" class="headerlink" title="LibreOffice o3tl::temporary"></a>LibreOffice <strong><code>o3tl::temporary</code></strong></h2><figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// C++20 转右值引用为左值引用</span></span><br><span class="line"><span class="function"><span class="keyword">template</span>&lt;<span class="keyword">class</span> T&gt;</span></span><br><span class="line"><span class="function">T&amp; <span class="title">temporary</span><span class="params">(T&amp;&amp; x)</span> </span>&#123; <span class="keyword">return</span> x; &#125;</span><br></pre></td></tr></table></figure>
+
+<p>模板部分改成：</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// C++23</span></span><br><span class="line"><span class="function"><span class="keyword">template</span>&lt;<span class="keyword">class</span> T&gt;</span></span><br><span class="line"><span class="function">T&amp; <span class="title">temporary</span><span class="params">(T&amp;&amp; x)</span> </span>&#123; <span class="keyword">return</span> <span class="built_in">static_cast</span>&lt;T&amp;&gt;(x); &#125;</span><br></pre></td></tr></table></figure>
+
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
+    <link itemprop="mainEntityOfPage" href="https://hxhue.github.io/2023/08/12/cpplang-Inheritance/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="Hxhue">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Hxhue's Blog">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/2023/08/12/cpplang-Inheritance/" class="post-title-link" itemprop="url">Inheritance</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">Posted on</span>
+
+              <time title="Created: 2023-08-12 15:17:00" itemprop="dateCreated datePublished" datetime="2023-08-12T15:17:00+08:00">2023-08-12</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">Edited on</span>
+                <time title="Modified: 2024-03-06 10:36:18" itemprop="dateModified" datetime="2024-03-06T10:36:18+08:00">2024-03-06</time>
+              </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">In</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/cpplang/" itemprop="url" rel="index"><span itemprop="name">C++ Language</span></a>
+                </span>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <table>
+<thead>
+<tr>
+<th></th>
+<th>public</th>
+<th>protected</th>
+<th>private</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>共有继承</td>
+<td>public</td>
+<td>protected</td>
+<td>不可见</td>
+</tr>
+<tr>
+<td>私有继承</td>
+<td>private</td>
+<td>private</td>
+<td>不可见</td>
+</tr>
+<tr>
+<td>保护继承</td>
+<td>protected</td>
+<td>protected</td>
+<td>不可见</td>
+</tr>
+</tbody></table>
+<p>可见继承属性就是对于来自基类的 public 和 protected 成员进行一个取最小权限的操作（定义权限 public &gt; protected &gt; private）。</p>
+<p>struct 和 class 的数据定义没有区别。语法上区别是：struct 定义默认继承种类是 public，class 定义默认继承类型是 private，<strong>这和基类用 struct 还是 class 声明的无关</strong>。</p>
+<p>继承多个类时，需要给不同的基类分别指定访问限定符。</p>
+
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
+    <link itemprop="mainEntityOfPage" href="https://hxhue.github.io/2023/08/12/cpplang-Pointer-to-Member/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="Hxhue">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Hxhue's Blog">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/2023/08/12/cpplang-Pointer-to-Member/" class="post-title-link" itemprop="url">Pointer to Member</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">Posted on</span>
+
+              <time title="Created: 2023-08-12 15:17:00" itemprop="dateCreated datePublished" datetime="2023-08-12T15:17:00+08:00">2023-08-12</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">Edited on</span>
+                <time title="Modified: 2024-03-06 10:38:07" itemprop="dateModified" datetime="2024-03-06T10:38:07+08:00">2024-03-06</time>
+              </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">In</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/cpplang/" itemprop="url" rel="index"><span itemprop="name">C++ Language</span></a>
+                </span>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <h1 id="数据成员指针存储的是偏移"><a href="#数据成员指针存储的是偏移" class="headerlink" title="数据成员指针存储的是偏移"></a>数据成员指针存储的是偏移</h1><figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;iostream&gt;</span></span></span><br><span class="line"><span class="keyword">using</span> <span class="keyword">namespace</span> std;</span><br><span class="line"></span><br><span class="line"><span class="keyword">struct</span> <span class="title class_">Foo</span> &#123;</span><br><span class="line">    <span class="type">int</span> x;</span><br><span class="line">    <span class="type">int</span> y;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="type">int</span> <span class="title">main</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    Foo x&#123;<span class="number">2</span>&#125;;</span><br><span class="line">    <span class="type">int</span> Foo::* px = &amp;Foo::x;</span><br><span class="line">    <span class="type">int</span> Foo::* py = &amp;Foo::y;</span><br><span class="line">    cout &lt;&lt; (<span class="type">unsigned</span> <span class="type">long</span> &amp;)px &lt;&lt; endl; <span class="comment">// 输出0</span></span><br><span class="line">    cout &lt;&lt; (<span class="type">unsigned</span> <span class="type">long</span> &amp;)py &lt;&lt; endl; <span class="comment">// 输出4</span></span><br><span class="line">    cout &lt;&lt; <span class="built_in">sizeof</span>(px) &lt;&lt; endl;          <span class="comment">// gcc输出8</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>数据成员指针的大小和实现相关。</p>
+<h1 id="成员函数指针比一般指针占用更多空间"><a href="#成员函数指针比一般指针占用更多空间" class="headerlink" title="成员函数指针比一般指针占用更多空间"></a>成员函数指针比一般指针占用更多空间</h1><p>和编译器相关。gcc 里成员函数指针在 64 位机器下是 16 字节。</p>
+<p>如果成员函数不是虚函数：函数地址固定；this 指针偏移也可以通过类型在编译时计算出来。先偏移后调用，应该只需要 8 个字节。</p>
+<p>如果成员函数是虚函数：</p>
+<p><strong>解释</strong>：</p>
+<p><a target="_blank" rel="noopener" href="https://stackoverflow.com/a/12006882/">https://stackoverflow.com/a/12006882/</a></p>
+<p>存储一个偏移难道还不够吗？</p>
+<p>MSVC 的更奇怪，多继承指针比单继承指针的体积大：</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;iostream&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;cassert&gt;</span></span></span><br><span class="line"><span class="keyword">using</span> <span class="keyword">namespace</span> std;</span><br><span class="line"></span><br><span class="line"><span class="keyword">struct</span> <span class="title class_">A</span>       &#123; <span class="function"><span class="type">void</span> <span class="title">x</span><span class="params">()</span> </span>&#123;&#125; &#125;;</span><br><span class="line"><span class="keyword">struct</span> <span class="title class_">B</span>       &#123; <span class="function"><span class="type">void</span> <span class="title">y</span><span class="params">()</span> </span>&#123;&#125; &#125;;</span><br><span class="line"><span class="keyword">struct</span> <span class="title class_">C</span>: A, B &#123; <span class="function"><span class="type">void</span> <span class="title">z</span><span class="params">()</span> </span>&#123;&#125; &#125;;</span><br><span class="line"><span class="keyword">struct</span> <span class="title class_">D</span>       &#123; <span class="type">int</span> z; &#125;;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="type">int</span> <span class="title">main</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    <span class="comment">// x86模式编译</span></span><br><span class="line">    <span class="comment">// static_assert(sizeof(&amp;A::x) == sizeof(&amp;B::y));</span></span><br><span class="line">    <span class="comment">// static_assert(sizeof(&amp;A::x) == 4);</span></span><br><span class="line">    <span class="comment">// static_assert(sizeof(&amp;C::z) == 8);</span></span><br><span class="line">    <span class="comment">// static_assert(sizeof(&amp;D::z) == 4);</span></span><br><span class="line">    <span class="comment">// x64模式编译</span></span><br><span class="line">    <span class="built_in">static_assert</span>(<span class="built_in">sizeof</span>(&amp;A::x) == <span class="built_in">sizeof</span>(&amp;B::y));</span><br><span class="line">    <span class="built_in">static_assert</span>(<span class="built_in">sizeof</span>(&amp;A::x) == <span class="number">8</span>);</span><br><span class="line">    <span class="built_in">static_assert</span>(<span class="built_in">sizeof</span>(&amp;C::z) == <span class="number">16</span>);</span><br><span class="line">    <span class="built_in">static_assert</span>(<span class="built_in">sizeof</span>(&amp;D::z) == <span class="number">4</span>);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h1 id="使用成员指针访问成员"><a href="#使用成员指针访问成员" class="headerlink" title="使用成员指针访问成员"></a>使用成员指针访问成员</h1><p>观察：</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;iostream&gt;</span></span></span><br><span class="line"><span class="keyword">using</span> <span class="keyword">namespace</span> std;</span><br><span class="line"><span class="keyword">struct</span> <span class="title class_">Foo</span> &#123;</span><br><span class="line">    <span class="type">int</span> x;</span><br><span class="line">    <span class="type">int</span> y;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="type">int</span> <span class="title">main</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    Foo x&#123;<span class="number">2</span>, <span class="number">7</span>&#125;;</span><br><span class="line">    <span class="type">int</span> Foo::* px = &amp;Foo::x;</span><br><span class="line">    <span class="type">int</span> Foo::* py = &amp;Foo::y;</span><br><span class="line">    cout &lt;&lt; ((&amp;x) -&gt;* px) &lt;&lt; endl; <span class="comment">// 2</span></span><br><span class="line">    cout &lt;&lt; (x .* py) &lt;&lt; endl;     <span class="comment">// 7</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>可以看出 <code>.*</code> 和 <code>-&gt;*</code> 是特殊的访问操作符（这里为了体现其特殊性加了空格，实际上倾向于不加空格书写）。</p>
+
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
+    <link itemprop="mainEntityOfPage" href="https://hxhue.github.io/2023/08/12/cpplang-Strict-Aliasing/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="Hxhue">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Hxhue's Blog">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/2023/08/12/cpplang-Strict-Aliasing/" class="post-title-link" itemprop="url">Strict Aliasing</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">Posted on</span>
+
+              <time title="Created: 2023-08-12 15:17:00" itemprop="dateCreated datePublished" datetime="2023-08-12T15:17:00+08:00">2023-08-12</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">Edited on</span>
+                <time title="Modified: 2024-03-06 10:44:07" itemprop="dateModified" datetime="2024-03-06T10:44:07+08:00">2024-03-06</time>
+              </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">In</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/cpplang/" itemprop="url" rel="index"><span itemprop="name">C++ Language</span></a>
+                </span>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <p>文章：<a href="github.com">What is Strict Aliasing and Why do we Care? (github.com)</a>)</p>
+<p>所谓 Strict Aliasing 就是指为 aliasing 设定条件，使得编译器大多数场景下认为代码没有 aliasing，从而可以激进优化代码。</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;iostream&gt;</span></span></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="type">int</span> <span class="title">foo</span><span class="params">( <span class="type">float</span> *f, <span class="type">int</span> *i )</span> </span>&#123;</span><br><span class="line">    *i = <span class="number">1</span>;</span><br><span class="line">    *f = <span class="number">0.f</span>;</span><br><span class="line"></span><br><span class="line">   <span class="keyword">return</span> *i;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="type">int</span> <span class="title">main</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    <span class="type">int</span> x = <span class="number">0</span>;</span><br><span class="line"></span><br><span class="line">    std::cout &lt;&lt; x &lt;&lt; <span class="string">&quot;\n&quot;</span>;   <span class="comment">// Expect 0</span></span><br><span class="line">    x = <span class="built_in">foo</span>(<span class="built_in">reinterpret_cast</span>&lt;<span class="type">float</span>*&gt;(&amp;x), &amp;x);</span><br><span class="line">    std::cout &lt;&lt; x &lt;&lt; <span class="string">&quot;\n&quot;</span>;   <span class="comment">// Expect 0?</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>上述代码在 <code>gcc 13.1 -O2</code> 下编译，第二行打印结果为 1。编译器认为 f 和 i 指针必定不重合，所以直接返回了 1。</p>
+<h1 id="什么时候-Aliasing-是允许的？"><a href="#什么时候-Aliasing-是允许的？" class="headerlink" title="什么时候 Aliasing 是允许的？"></a>什么时候 Aliasing 是允许的？</h1><p>比较复杂，而且 C 和 C++ 的要求不同。在 alias 可用时，编译器不会像上面那样激进优化。下面只提到了一部分规则。</p>
+<p><strong>允许同类指针</strong>，而且两者都允许给指针加 cv 限定，但是 C++17 还允许 unsigned 和 signed 对应类型之间的别名，C11 不允许（尽管 gcc 和 clang 都是按照允许的方式实现的）。</p>
+<p>最基本的保证是：无论指针如何变化，只要目的类型是对象的真实类型，就能正常使用。但是如何开启一个新对象的生命周期则有区别。<strong>C 语言中只要写入就已经可以按照写入类型启用一个新的生命周期。而在 C++ 必须保存用于写入的指针并在之后始终使用该指针！（C++17 新增了</strong> <code>std::launder</code><strong>，可以不必再保存指针但是要洗一下）</strong></p>
+<p><img src="/assets/b7cb646b10cbc680cd7416f06f677cf2.png"></p>
 <blockquote>
-<p>[!note]</p>
-<p>2024 年 2 月 20 日：除了作为函数参数之外，还能用作初始化列表（花括号）的参数。</p>
+<p>问题：保存 memcpy 返回的指针可以吗？</p>
 </blockquote>
-<h2 id="1-递归：逐个处理"><a href="#1-递归：逐个处理" class="headerlink" title="1 递归：逐个处理"></a>1 递归：逐个处理</h2><figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;iostream&gt;</span></span></span><br><span class="line"><span class="function"><span class="type">void</span> <span class="title">print</span> <span class="params">()</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">template</span>&lt;<span class="keyword">typename</span> T, <span class="keyword">typename</span>... Types&gt;</span></span><br><span class="line"><span class="function"><span class="type">void</span> <span class="title">print</span> <span class="params">(T firstArg, Types... args)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">	std::cout &lt;&lt; firstArg &lt;&lt; <span class="string">&#x27;\n&#x27;</span>; <span class="comment">// print first argument</span></span><br><span class="line">	<span class="built_in">print</span>(args...);                <span class="comment">// call print() for remaining arguments</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h1 id="C-语言的-restrict-关键字"><a href="#C-语言的-restrict-关键字" class="headerlink" title="C 语言的 restrict 关键字"></a>C 语言的 restrict 关键字</h1><p><a target="_blank" rel="noopener" href="https://stackoverflow.com/a/30827311/13785815">https://stackoverflow.com/a/30827311/13785815</a></p>
+<p>restrict 关键字是指针的属性，写在指针的右侧、变量名之前，它保证了一个指针和其他指针变量没有重叠（没有 aliasing），以便编译器在 aliasing 可用时仍激进优化（<strong>可以理解为优化同类指针，但实际上是兼容类型的都可以</strong>）。</p>
+<h1 id="Type-Punning"><a href="#Type-Punning" class="headerlink" title="Type Punning"></a>Type Punning</h1><p>把一种类型当成另一种来使用，即存 A 取 B。</p>
+<p><strong>文章提出：安全无误的 type punning 可以用</strong> <code>memcpy</code><strong>。</strong></p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="type">void</span> <span class="title">func1</span><span class="params">( <span class="type">double</span> d )</span> </span>&#123;</span><br><span class="line">  std::<span class="type">int64_t</span> n;</span><br><span class="line">  std::<span class="built_in">memcpy</span>(&amp;n, &amp;d, <span class="keyword">sizeof</span> d);</span><br><span class="line">  <span class="comment">//...</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 
-<p>还要留一个非模板的单参数或者零参数的函数收尾。如果收尾的函数是零参数的，可以使用 <code>if constexpr</code> 判断剩余参数数量，从而避免多写一个函数。</p>
-<h2 id="2-折叠表达式：一次性处理"><a href="#2-折叠表达式：一次性处理" class="headerlink" title="2 折叠表达式：一次性处理"></a>2 折叠表达式：一次性处理</h2><p>这是折叠表达式的一个例子：</p>
-<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">template</span>&lt;<span class="keyword">typename</span>... T&gt;</span></span><br><span class="line"><span class="function"><span class="keyword">auto</span> <span class="title">foldSum</span> <span class="params">(T... s)</span> </span>&#123;</span><br><span class="line">	<span class="keyword">return</span> (... + s); <span class="comment">// ((s1 + s2) + s3) ...</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>在这种比较简单的赋值场景下，只要没有用 <code>-fno-builtin</code> 禁止内置函数优化，<code>memcpy</code> 调用就能直接被优化掉，对于主流编译器来说即便是 <code>-O0</code> 也是如此！</p>
+<p>memcpy 复制了值，不再使用指针，从而不受限于 aliasing 规则。</p>
+<p>在访问目标的 alignment 和 size 都相同时，我认为 type punning 的不安全之处还是在于<strong>通过转换后指针对目标的修改，对于使用转换前指针的读可以是不可见的</strong>。复制值后当然就只能读不能写了。最开始的代码要是返回的是从 f 强转成 <code>int *</code> 之后再读取的，也不会出现这种情况。</p>
+<blockquote>
+<p>C++ <code>std::launder</code> 本来应该是应对上面加粗字体说明的情况的，但是我在对局部变量使用时没有成功。</p>
+<p>2023 年 6 月 30 日：对于 A 类型的指针，强制转换为 &#x3D;&#x3D;B 类型&#x3D;&#x3D;后 launder，才能和其他 &#x3D;&#x3D;B 类型&#x3D;&#x3D;指针发生 aliasing 关系。（相容类型也可以 alias）</p>
+</blockquote>
+<p>下面是对非聚合类使用 memcpy：</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;cstdio&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;cstring&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;cassert&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;vector&gt;</span></span></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="type">int</span> <span class="title">main</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    <span class="built_in">static_assert</span>(<span class="built_in">sizeof</span>(std::vector&lt;<span class="type">int</span>&gt;) == <span class="number">24</span>);</span><br><span class="line"></span><br><span class="line">    std::vector&lt;<span class="type">int</span>&gt; v&#123;<span class="number">1</span>, <span class="number">2</span>, <span class="number">3</span>&#125;;</span><br><span class="line">    <span class="type">long</span> <span class="type">long</span> buf[<span class="built_in">sizeof</span>(v) / <span class="built_in">sizeof</span>(<span class="type">long</span> <span class="type">long</span>)];</span><br><span class="line">    <span class="built_in">memcpy</span>(buf, &amp;v, <span class="built_in">sizeof</span>(v));</span><br><span class="line"></span><br><span class="line">    <span class="built_in">printf</span>(<span class="string">&quot;%lld %lld %lld\n&quot;</span>, buf[<span class="number">0</span>], buf[<span class="number">1</span>], buf[<span class="number">2</span>]);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 
-<p>折叠表达式可以将参数包变成一个表达式，一下子利用完了所有参数，而递归函数模板是把参数数量逐次减 1，直到计算完成。</p>
-<p>注意折叠表达式的形式有限制：</p>
-<p><img src="/assets/80a37edaf35bdb004538921beb4b09c4.png"></p>
-<p>省略号、op、pack 三者紧紧连接，省略号的位置就是优先结合的位置，表达式两端一定要加上括号。</p>
-<p>正是因为这个限制，我们才<strong>不能</strong>给下面的函数模板添加参数间补充空格的功能：</p>
-<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">template</span>&lt;<span class="keyword">typename</span>... Types&gt;</span></span><br><span class="line"><span class="function"><span class="type">void</span> <span class="title">print</span> <span class="params">(Types <span class="type">const</span>&amp;... args)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">	(std::cout &lt;&lt; ... &lt;&lt; args) &lt;&lt; <span class="string">&#x27;\n&#x27;</span>; <span class="comment">// 不能打印吧？</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p><a target="_blank" rel="noopener" href="https://godbolt.org/z/zM4cY1b5n">https://godbolt.org/z/zM4cY1b5n</a></p>
+<p>尽管在 <code>-O0</code> 时显式调用了 <code>memcpy</code>，但是 <code>-O1</code> 时就能内联成简单复制。</p>
+<blockquote>
+<p>如果不想复制怎么办？这种做法对于大对象合适吗？</p>
+</blockquote>
+<p>C++ 20 有 <code>std::bit_cast</code>，是对这种特殊情况下 std::memcpy 的替代方案。也是值语义复制，而且要求目的类型和参数类型所占空间一致，而且两种类型都是 <code>trivially copyable</code> 的。</p>
+<h1 id="Common-initial-Sequence"><a href="#Common-initial-Sequence" class="headerlink" title="Common initial Sequence"></a>Common initial Sequence</h1><blockquote>
+<p>It says that we are allowed to read the non-static data member of the non-active member if it is part of the common initial sequence of the the structs [class.mem.general]p26.</p>
+</blockquote>
+<p>看上去这条规则没有什么用，但是：</p>
+<blockquote>
+<p>It Is likely the common initial sequence rule was put in place to allow discriminated union without having the discriminator outside the the union and therefore likely have padding between the discriminator and the union itself e.g.</p>
+</blockquote>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">union</span> &#123; <span class="keyword">struct</span> &#123; <span class="type">char</span> kind; ... &#125; a; <span class="keyword">struct</span> &#123; <span class="type">char</span> kind; ... &#125; b; ... &#125;;</span><br></pre></td></tr></table></figure>
 
-<p>这个追加空格的功能还可以用之后提到的可变长表达式实现。</p>
-<p>下面的打印函数中省略号无论是在左侧还是在右侧都不影响打印数字的顺序，因为没有提供 init：</p>
-<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;iostream&gt;</span></span></span><br><span class="line"></span><br><span class="line"><span class="keyword">template</span> &lt;<span class="keyword">typename</span>... Ts&gt;</span><br><span class="line"><span class="function"><span class="type">void</span> <span class="title">print</span><span class="params">(Ts... nums)</span> </span>&#123;</span><br><span class="line">    (..., (std::cout &lt;&lt; nums &lt;&lt; <span class="string">&#x27; &#x27;</span>)); <span class="comment">// 同时用到了可变长表达式（下一节）和折叠表达式</span></span><br><span class="line">    std::cout &lt;&lt; <span class="string">&#x27;\n&#x27;</span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="type">int</span> <span class="title">main</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    <span class="built_in">print</span>(<span class="number">1</span>, <span class="number">34</span>, <span class="number">7</span>);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>根据文章，这可能使得我们可以在 union 中利用 padding 存储 index，以提供 discriminated union 的功能。</p>
+<h1 id="C-std-launder"><a href="#C-std-launder" class="headerlink" title="C++ std::launder"></a>C++ <code>std::launder</code></h1><p><code>std::launder</code> 有什么用呢？表面含义是洗，也就是让指针的来源难以追溯，目的是<strong>抑制非同类指针的激进优化</strong>。但实际上 <code>std::launder</code> 的作用还是非常局限的，因为它的使用有一些必须满足的条件（<strong>其中就包含指针的类型必须和其真实类型对应，以及不能传入 void 指针和函数指针</strong>）。</p>
+<p><a target="_blank" rel="noopener" href="https://en.cppreference.com/w/cpp/utility/launder">std::launder - cppreference.com</a></p>
+<p><img src="/assets/b706c07f3b79287bcabc594362b1e5c2.png"></p>
+<p>典型的用法是用 placement new 在一块字符数组上面创建对象，然后用 <code>std::launder</code> 洗字符数组的首元素指针。</p>
+<p>如果不这样做，按照 strict aliasing 的规则，也可以保存 placement new 的返回值到一个变量，然后每次都利用这个变量做操作。</p>
+<p><a target="_blank" rel="noopener" href="https://stackoverflow.com/a/63003406">https://stackoverflow.com/a/63003406</a></p>
+<p><img src="/assets/f012dc7d5ba56e6a5a1549e0a3b67b81.png"></p>
+<ol>
+<li>初始化，u.x 被激活。</li>
+<li>赋值，u.f 被激活，u.x 失活。</li>
+<li>placement new 不会激活子对象！</li>
+<li>通过保存的指针返回不会有问题。</li>
+<li>虽然是访问失活的元素，但是洗了指针。</li>
+<li>直接访问失活元素，UB。</li>
+</ol>
+<h1 id="回到最开始的例子"><a href="#回到最开始的例子" class="headerlink" title="回到最开始的例子"></a>回到最开始的例子</h1><p>这一部分实际上都没洗成功。</p>
+<p>将第一个部分的 C++ 代码改造如下：</p>
+<p><a target="_blank" rel="noopener" href="https://godbolt.org/z/ME4PTa74b">https://godbolt.org/z/ME4PTa74b</a></p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;iostream&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;new&gt;</span></span></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="type">int</span> <span class="title">foo</span><span class="params">( <span class="type">float</span> *f, <span class="type">int</span> *i )</span> </span>&#123;</span><br><span class="line">    *i = <span class="number">1</span>;</span><br><span class="line">    *f = <span class="number">0.f</span>;</span><br><span class="line"></span><br><span class="line">   <span class="keyword">return</span> *std::<span class="built_in">launder</span>(i);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="type">int</span> <span class="title">main</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    <span class="type">int</span> x = <span class="number">0</span>;</span><br><span class="line"></span><br><span class="line">    std::cout &lt;&lt; x &lt;&lt; <span class="string">&quot;\n&quot;</span>;   <span class="comment">// Expect 0</span></span><br><span class="line">    x = <span class="built_in">foo</span>(<span class="built_in">reinterpret_cast</span>&lt;<span class="type">float</span> *&gt;(&amp;x), &amp;x);</span><br><span class="line">    std::cout &lt;&lt; x &lt;&lt; <span class="string">&quot;\n&quot;</span>;   <span class="comment">// Expect 0?</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 
-<p>而加了 init 会影响结合顺序，<code>sum</code> 中的两行输出结果不同：</p>
-<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;cstdio&gt;</span></span></span><br><span class="line"></span><br><span class="line"><span class="keyword">struct</span> <span class="title class_">Integer</span> &#123;</span><br><span class="line">  <span class="type">int</span> x;</span><br><span class="line">  <span class="built_in">Integer</span>(<span class="type">int</span> x) : x&#123;x&#125; &#123;&#125;</span><br><span class="line">  <span class="keyword">friend</span> Integer <span class="keyword">operator</span>+(Integer a, Integer b) &#123;</span><br><span class="line">    Integer c&#123;a.x + b.x&#125;;</span><br><span class="line">    <span class="built_in">printf</span>(<span class="string">&quot;%d+%d=%d\n&quot;</span>, a.x, b.x, c.x);</span><br><span class="line">    <span class="keyword">return</span> c;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="keyword">template</span> &lt;<span class="keyword">typename</span>... Ts&gt;</span><br><span class="line"><span class="function">Integer <span class="title">sum</span><span class="params">(Ts... ts)</span> </span>&#123;</span><br><span class="line">  <span class="comment">// return (0 + ... + ts);</span></span><br><span class="line">  <span class="keyword">return</span> (ts + ... + <span class="number">0</span>);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="type">int</span> <span class="title">main</span><span class="params">()</span> </span>&#123;</span><br><span class="line">  <span class="built_in">sum</span>(Integer&#123;<span class="number">2</span>&#125;, Integer&#123;<span class="number">4</span>&#125;, Integer&#123;<span class="number">8</span>&#125;);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>没有洗成功。编译器预先假设了 f 和 i 无关，这样洗还是它还是觉得返回值只和 i 有关。想要 f 的结果被编译器看到，则必须让返回值和 f 建立起来联系。实际上，在 cppreference 对 <code>std::launder</code> 的用法说明中上面的例子就不满足条件，因为对象的真实类型是 float（<code>*f = 0.f)</code>，而要使用的类型却是 int。</p>
+<p>还可以在中间穿插对其他 volatile 变量的访问（会禁止指令重排）。也可以直接用 volatile 访问目标数据。</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;string.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;stdio.h&gt;</span></span></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="type">int</span> <span class="title">foo</span><span class="params">( <span class="type">float</span> *f, <span class="type">int</span> *i )</span> </span>&#123;</span><br><span class="line">    *i = <span class="number">1</span>;</span><br><span class="line">    *f = <span class="number">0.f</span>;</span><br><span class="line">    <span class="keyword">return</span> *(<span class="type">int</span> <span class="keyword">volatile</span> *)i;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="type">int</span> <span class="title">main</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    <span class="type">int</span> x = <span class="number">0</span>;</span><br><span class="line"></span><br><span class="line">    <span class="built_in">printf</span>(<span class="string">&quot;%d\n&quot;</span>, x);   <span class="comment">// Expect 0</span></span><br><span class="line">    x = <span class="built_in">foo</span>((<span class="type">float</span> *)(&amp;x), &amp;x);</span><br><span class="line">    <span class="built_in">printf</span>(<span class="string">&quot;%d\n&quot;</span>, x);   <span class="comment">// Yes, it&#x27;s 0</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 
-<h2 id="3-可变长表达式（Variadic-Expression）：参数传递"><a href="#3-可变长表达式（Variadic-Expression）：参数传递" class="headerlink" title="3 可变长表达式（Variadic Expression）：参数传递"></a>3 可变长表达式（Variadic Expression）：参数传递</h2><p>可变长表达式可以对参数包逐个处理。与折叠表达式（相当于函数式编程中的 <strong>reduce</strong>，但如果用上逗号表达式就能表达 <strong>foreach</strong>）不同，可变长表达式（相当于函数式编程中的 <strong>map</strong>）不会改变参数数量，允许的形式也比折叠表达式宽松一点。</p>
-<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">template</span>&lt;<span class="keyword">typename</span>... T&gt;</span></span><br><span class="line"><span class="function"><span class="type">void</span> <span class="title">addOne</span> <span class="params">(T <span class="type">const</span>&amp;... args)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">	<span class="comment">// print (args + 1...);    // ERROR: 1... is a literal with too many decimal points</span></span><br><span class="line">	<span class="comment">// print (args + 1 ...);   // OK</span></span><br><span class="line">	<span class="built_in">print</span> ((args + <span class="number">1</span>)...);  <span class="comment">// OK，个人觉得这种多加括号的行为更加保守一点</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<h1 id="可变长基类"><a href="#可变长基类" class="headerlink" title="可变长基类"></a>可变长基类</h1><p>C++17 允许模板类继承多个基类：</p>
-<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">template</span>&lt;<span class="keyword">typename</span>... Bases&gt;</span><br><span class="line"><span class="keyword">struct</span> <span class="title class_">Overloader</span> : Bases...</span><br><span class="line">&#123;</span><br><span class="line">	<span class="function"><span class="keyword">using</span> <span class="title">Bases::operator</span><span class="params">()</span>...</span>; <span class="comment">// OK since C++17</span></span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
-
-<p>这是 cppreference 上面可以见到的一种访问 <code>std::variant</code> 前，将 lambda 表达式装入 visitor 的写法。</p>
-<h1 id="可变长模板的应用"><a href="#可变长模板的应用" class="headerlink" title="可变长模板的应用"></a>可变长模板的应用</h1><p>a) 可变长表达式可以用于先用下标访问元素，再将结果交给参数包函数模板打印。</p>
-<p>b) 通过给类增加参数包，可以实现 <code>std::variant</code>。</p>
-<p>c) 可以用于 deduction guide：</p>
-<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">namespace</span> std &#123;</span><br><span class="line"><span class="function"><span class="keyword">template</span>&lt;<span class="keyword">typename</span> T, <span class="keyword">typename</span>... U&gt; <span class="title">array</span><span class="params">(T, U...)</span></span></span><br><span class="line"><span class="function">	-&gt; array&lt;<span class="type">enable_if_t</span>&lt;<span class="params">(is_same_v&lt;T, U&gt; &amp;&amp; ...)</span>, T&gt;,</span></span><br><span class="line"><span class="function">	<span class="params">(<span class="number">1</span> + <span class="keyword">sizeof</span>...(U))</span>&gt;</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<p>这个推导指引检查了初始化列表是否为同类型参数，使得 <code>std::array</code> 在某些场合可以省略参数列表：<code>std::array a&#123;42,45,77&#125;;</code></p>
+<p>每次用 volatile 访存显然是 overkill，观察汇编得知比开启 <code>-fno-strict-aliasing</code> 生成的代码稍差。</p>
+<h1 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h1><p>避免 strict aliasing violation 的方法：</p>
+<ol>
+<li>用 <code>memcpy</code> 或 <code>std::bit_cast</code> 复制数据。</li>
+<li>禁用编译器的 strict aliasing 功能。</li>
+<li>保存函数或操作符的返回值 并在其上操作，或者在 placement new 之后洗指针。</li>
+</ol>
+<blockquote>
+<p>“保存函数或操作符的返回值”：这样后续操作就对返回值产生了依赖性，不需要洗指针。</p>
+<p>The Linux kernel is compiled with <code>-fno-strict-aliasing</code>. Linus justifies this in <a target="_blank" rel="noopener" href="https://www.mail-archive.com/linux-btrfs@vger.kernel.org/msg01647.html">https:&#x2F;&#x2F;www.mail-archive.com&#x2F;linux-btrfs@vger.kernel.org/msg01647.html</a> .</p>
+</blockquote>
 
       
     </div>
@@ -996,7 +991,7 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
-    <link itemprop="mainEntityOfPage" href="https://hxhue.github.io/2023/08/12/cpp-templates-the-complete-guide-05-Tricky-Basics/">
+    <link itemprop="mainEntityOfPage" href="https://hxhue.github.io/2023/08/12/cpplang-POD/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="image" content="/images/avatar.gif">
@@ -1010,7 +1005,7 @@
       <header class="post-header">
         <h2 class="post-title" itemprop="name headline">
           
-            <a href="/2023/08/12/cpp-templates-the-complete-guide-05-Tricky-Basics/" class="post-title-link" itemprop="url">CTTCG 05 Tricky Basics</a>
+            <a href="/2023/08/12/cpplang-POD/" class="post-title-link" itemprop="url">POD</a>
         </h2>
 
         <div class="post-meta">
@@ -1020,14 +1015,14 @@
               </span>
               <span class="post-meta-item-text">Posted on</span>
 
-              <time title="Created: 2023-08-12 00:00:00" itemprop="dateCreated datePublished" datetime="2023-08-12T00:00:00+08:00">2023-08-12</time>
+              <time title="Created: 2023-08-12 15:17:00" itemprop="dateCreated datePublished" datetime="2023-08-12T15:17:00+08:00">2023-08-12</time>
             </span>
               <span class="post-meta-item">
                 <span class="post-meta-item-icon">
                   <i class="far fa-calendar-check"></i>
                 </span>
                 <span class="post-meta-item-text">Edited on</span>
-                <time title="Modified: 2024-03-05 20:15:39" itemprop="dateModified" datetime="2024-03-05T20:15:39+08:00">2024-03-05</time>
+                <time title="Modified: 2024-03-06 10:38:01" itemprop="dateModified" datetime="2024-03-06T10:38:01+08:00">2024-03-06</time>
               </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
@@ -1035,7 +1030,7 @@
               </span>
               <span class="post-meta-item-text">In</span>
                 <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/cttcg/" itemprop="url" rel="index"><span itemprop="name">C++ Templates: The Complete Guide</span></a>
+                  <a href="/categories/cpplang/" itemprop="url" rel="index"><span itemprop="name">C++ Language</span></a>
                 </span>
             </span>
 
@@ -1050,54 +1045,19 @@
     <div class="post-body" itemprop="articleBody">
 
       
-          <h1 id="1-使用关键字引导编译器了解成员类型"><a href="#1-使用关键字引导编译器了解成员类型" class="headerlink" title="1 使用关键字引导编译器了解成员类型"></a>1 使用关键字引导编译器了解成员类型</h1><figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">template</span>&lt;<span class="keyword">typename</span> T&gt;</span><br><span class="line"><span class="keyword">class</span> <span class="title class_">MyClass</span> &#123;</span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">	<span class="function"><span class="type">void</span> <span class="title">foo</span><span class="params">()</span> </span>&#123;</span><br><span class="line">		<span class="keyword">typename</span> T::SubType* ptr;</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<p>上面的的代码中加了 <code>typename</code> 关键字用来表示 <code>SubType</code> 这个成员是一个类型。否则由于缺乏类型信息，编译器会认为该成员是某个数据域，从而构成了乘法表达式。</p>
-<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">template</span>&lt;<span class="type">unsigned</span> <span class="type">long</span> N&gt;</span></span><br><span class="line"><span class="function"><span class="type">void</span> <span class="title">printBitset</span> <span class="params">(std::bitset&lt;N&gt; <span class="type">const</span>&amp; bs)</span> </span>&#123;</span><br><span class="line">	std::cout &lt;&lt; bs.<span class="keyword">template</span> to_string&lt;<span class="type">char</span>, std::char_traits&lt;<span class="type">char</span>&gt;,</span><br><span class="line">		std::allocator&lt;<span class="type">char</span>&gt;&gt;();</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<p>上面的 template 关键字在 <code>to_string</code> 前作解释，表示 <code>to_string</code> 是一个函数模板，否则后面的尖括号会被认为是小于运算符，而不是函数模板参数的开始标志。</p>
-<h1 id="2-正确初始化模板类的成员"><a href="#2-正确初始化模板类的成员" class="headerlink" title="2 正确初始化模板类的成员"></a>2 正确初始化模板类的成员</h1><p>在模板类中为了保证成员被正确初始化，应该使用 {} 初始化的语法，因为无论 T 是什么类型，这种初始化方式都是可行的。此外 {} 也能用在数据成员定义处，或者构造函数初始化列表中：</p>
-<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">template</span>&lt;<span class="keyword">typename</span> T&gt;</span><br><span class="line"><span class="keyword">class</span> <span class="title class_">MyClass</span> &#123;</span><br><span class="line"><span class="keyword">private</span>:</span><br><span class="line">	T x;</span><br><span class="line">  T y&#123;&#125;;</span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">	<span class="built_in">MyClass</span>() : x&#123;&#125; &#123;</span><br><span class="line">		<span class="comment">// ensures that x is initialized even for built-in types</span></span><br><span class="line">	&#125;</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
-
-<p>这里 x 是在构造函数中初始化的，y 是在定义处初始化的。如果两处都写了初始化方式，构造函数的初始化会覆盖原来的初始化。个人认为在数据成员定义处给出初始化可以减少遗漏。</p>
-<h1 id="3-this-指针失效？"><a href="#3-this-指针失效？" class="headerlink" title="3 this 指针失效？"></a>3 this 指针失效？</h1><figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">template</span>&lt;<span class="keyword">typename</span> T&gt;</span><br><span class="line"><span class="keyword">class</span> <span class="title class_">Base</span> &#123;</span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">	<span class="function"><span class="type">void</span> <span class="title">bar</span><span class="params">()</span></span>;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="keyword">template</span>&lt;<span class="keyword">typename</span> T&gt;</span><br><span class="line"><span class="keyword">class</span> <span class="title class_">Derived</span> : Base&lt;T&gt; &#123;</span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">	<span class="function"><span class="type">void</span> <span class="title">foo</span><span class="params">()</span> </span>&#123;</span><br><span class="line">		<span class="comment">// bar(); // calls external bar() or error</span></span><br><span class="line">		<span class="keyword">this</span>-&gt;<span class="built_in">bar</span>(); <span class="comment">// correct</span></span><br><span class="line">    	<span class="comment">// Base&lt;T&gt;::bar(); // also correct</span></span><br><span class="line">	&#125;</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
-
-<p>上面的例子中，由于 Derived 模板类在定义时不知道 <code>Base&lt;T&gt;</code> 信息，因而不会在其中寻找 bar 方法。即便 Base 有 bar 方法也找不到。如果需要使用基类中的 bar 方法，应该加上 this 指针。</p>
-<h1 id="4-为数组提供模板偏特化"><a href="#4-为数组提供模板偏特化" class="headerlink" title="4 为数组提供模板偏特化"></a>4 为数组提供模板偏特化</h1><p>数组作为模板的偏特化参数时有下面的可能：</p>
+          <p>Plain Old Data</p>
+<p><a target="_blank" rel="noopener" href="https://stackoverflow.com/a/4178176/13785815">https://stackoverflow.com/a/4178176</a></p>
+<p>成为 POD 的条件：</p>
 <ol>
-<li>退化成首元素指针</li>
-<li>arrays of known bounds：没错，数组也可以是值，但是值类型的数组是无法作为函数参数的（会退化），因而只能改为引用，或者不经过函数直接使用。</li>
-<li>arrays of unknown bounds：用 <code>T[]</code> 语法就可以</li>
-<li>reference to arrays of known bounds</li>
-<li>reference to arrays of unknown bounds</li>
+<li>所有的标准类型都是 POD（尽管不是 aggregate）。</li>
+<li>数组要成为 POD 的条件是每个元素都是 POD。</li>
+<li>一个类要成为 POD，则必须首先是 <strong>aggregate</strong>，然后：<ol>
+<li>没有用户定义的赋值运算符。</li>
+<li>没有析构函数。</li>
+<li>所有成员都是 POD（递归定义）。</li>
 </ol>
-<h1 id="5-成员模板"><a href="#5-成员模板" class="headerlink" title="5 成员模板"></a>5 成员模板</h1><p>可以为类的成员提供模板。比如矩阵模板类的赋值符号，允许从 <code>Matrix&lt;int&gt;</code> 赋值到 <code>Matrix&lt;double&gt;</code> 之类的。但是注意：模板化的构造函数或赋值运算符是不会覆盖默认的构造函数和赋值运算符的。</p>
-<h1 id="6-inline-函数模板特化"><a href="#6-inline-函数模板特化" class="headerlink" title="6 inline 函数模板特化"></a>6 inline 函数模板特化</h1><p>模板函数的特化相当于普通函数。因而如果被包含在头文件中也需要 <code>inline</code> 关键字，否则有可能会出现重复定义的编译错误。</p>
-<p>应该理解 <code>inline</code> 的含义为允许函数多次出现在不同的翻译单元中。<code>inline</code> 对内联的要求事实上也不是强制的。</p>
-<h1 id="7-变量模板（C-14）"><a href="#7-变量模板（C-14）" class="headerlink" title="7 变量模板（C++14）"></a>7 变量模板（C++14）</h1><p>变量也可以是模板！通过指定不同的参数得到的是不同的变量，相同参数则是指的同一变量。下面展示的是一个常量模板（常量是变量的特例）：</p>
-<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">template</span>&lt;<span class="keyword">typename</span> T&gt;</span><br><span class="line"><span class="keyword">constexpr</span> T pi&#123;<span class="number">3.1415926535897932385</span>&#125;;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="type">int</span> <span class="title">main</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    <span class="comment">// std::cout &lt;&lt; pi&lt;int&gt; &lt;&lt; &#x27;\n&#x27;; // 装不下</span></span><br><span class="line">    std::cout &lt;&lt; pi&lt;<span class="type">double</span>&gt; &lt;&lt; <span class="string">&#x27;\n&#x27;</span>;</span><br><span class="line">    std::cout &lt;&lt; pi&lt;<span class="type">float</span>&gt; &lt;&lt; <span class="string">&#x27;\n&#x27;</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<p>注意 int 作为参数会报错，因为花括号初始化不允许类型窄化的转换。</p>
-<p>有哪些好处？</p>
-<ol>
-<li>这样能够规避使用者的强制类型转换。</li>
-<li>提供数据成员的 alias，比如 Type Traits Suffix <code>_v</code> 的使用</li>
+</li>
 </ol>
-<p>C++20 的 <code>&lt;numbers&gt;</code> 头文件中就用这样的方式定义了一组数学常量，<code>pi</code> 和 <code>pi_v</code> 也包含在其中。不过该头文件中还增加了 <code>inline</code> 限定符。很多变量模板曾经是 <code>constexpr</code>，在 C++17 之后也改成 <code>inline constexpr</code> 了。<a target="_blank" rel="noopener" href="https://stackoverflow.com/q/75659426/13785815">https://stackoverflow.com/q/75659426/13785815</a> 是一个相关话题的讨论，目前还没有结果。</p>
-<p>2023 年 5 月 11 日：<a href="%E6%A6%82%E5%BF%B5/c++/%E8%AF%BB%20C++%20Templates_%20The%20Complete%20Guide/12%20Fundamentals%20in%20Depth.md">后续链接：12 Fundamentals in Depth</a></p>
-<p>不确定变量模板中 inline 是不是必须的，但在非变量模板中 inline 很重要：</p>
-<p><a href="quuxplusone.github.io">An example where <code>inline constexpr</code> makes a difference – Arthur O’Dwyer – Stuff mostly about C++ (quuxplusone.github.io)</a>) 该链接巧妙地构造出一个反例，使得”同一“ <code>constexpr</code> 变量的地址不同。原因是 <code>constexpr</code> 是 internal linkage，而 <code>inline constexpr</code> 是 external linkage。</p>
-<h1 id="8-模板类模板（模板类作为模板类参数）"><a href="#8-模板类模板（模板类作为模板类参数）" class="headerlink" title="8 模板类模板（模板类作为模板类参数）"></a>8 模板类模板（模板类作为模板类参数）</h1><p>class class template 指的是用一个模板类作为模板类参数的行为：</p>
-<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">template</span>&lt;<span class="keyword">typename</span> T,</span><br><span class="line">		<span class="keyword">template</span>&lt;<span class="keyword">typename</span> Elem, <span class="keyword">typename</span> = std::allocator&lt;Elem&gt;&gt;</span><br><span class="line">				<span class="keyword">class</span> Cont = std::deque&gt;</span><br><span class="line"><span class="keyword">class</span> Stack &#123;</span><br><span class="line">  <span class="comment">// ...</span></span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
-
-<p>注意必须包含头文件 <code>&lt;deque&gt;</code>，否则会报错说 <code>std::deque</code> 并不是模板类，这个报错比较隐晦难懂。如果没有用到 <code>typename</code> 的名字，也可以不写出：</p>
-<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">template</span>&lt;<span class="keyword">typename</span> T, <span class="keyword">template</span>&lt;<span class="keyword">typename</span>, <span class="keyword">typename</span>&gt; <span class="keyword">class</span> <span class="title class_">Cont</span> = std::deque&gt;</span><br><span class="line"><span class="keyword">class</span> Stack &#123;</span><br><span class="line">  <span class="comment">// ...</span></span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
-
-<p>在 C++17 之后，作为参数的模板类中的 <code>class</code> 也能写成 <code>typename</code>：</p>
-<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">template</span>&lt;<span class="keyword">typename</span> T,</span><br><span class="line">				<span class="keyword">template</span>&lt;<span class="keyword">typename</span> Elem, <span class="keyword">typename</span> = std::allocator&lt;Elem&gt;&gt;</span><br><span class="line">					<span class="keyword">typename</span> Cont = std::deque&gt;</span><br><span class="line"><span class="keyword">class</span> Stack &#123;</span><br><span class="line">  <span class="comment">// ...</span></span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
-
-<p>在 C++17 之前，参数模板类匹配时不会考虑默认参数，因而如果传入的模板类的参数更多（即便是有些参数有默认值），也会出现参数不匹配的问题。上面的代码通过写全所有参数，并为第二个参数提供默认值规避了这个问题。</p>
-<p>💡 标准模板库里面应该是没有使用类类模板。可能是有一些比较棘手的地方。</p>
 
       
     </div>
@@ -1117,7 +1077,7 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
-    <link itemprop="mainEntityOfPage" href="https://hxhue.github.io/2023/08/12/cpp-templates-the-complete-guide-06-Move-Semantics-and-enable-if/">
+    <link itemprop="mainEntityOfPage" href="https://hxhue.github.io/2023/08/12/cpplang-Three-way-Comparison/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="image" content="/images/avatar.gif">
@@ -1131,7 +1091,7 @@
       <header class="post-header">
         <h2 class="post-title" itemprop="name headline">
           
-            <a href="/2023/08/12/cpp-templates-the-complete-guide-06-Move-Semantics-and-enable-if/" class="post-title-link" itemprop="url">CTTCG 06 Move Semantics and enable_if</a>
+            <a href="/2023/08/12/cpplang-Three-way-Comparison/" class="post-title-link" itemprop="url">Three-way Comparison =</a>
         </h2>
 
         <div class="post-meta">
@@ -1141,14 +1101,14 @@
               </span>
               <span class="post-meta-item-text">Posted on</span>
 
-              <time title="Created: 2023-08-12 00:00:00" itemprop="dateCreated datePublished" datetime="2023-08-12T00:00:00+08:00">2023-08-12</time>
+              <time title="Created: 2023-08-12 15:17:00" itemprop="dateCreated datePublished" datetime="2023-08-12T15:17:00+08:00">2023-08-12</time>
             </span>
               <span class="post-meta-item">
                 <span class="post-meta-item-icon">
                   <i class="far fa-calendar-check"></i>
                 </span>
                 <span class="post-meta-item-text">Edited on</span>
-                <time title="Modified: 2024-03-05 20:15:41" itemprop="dateModified" datetime="2024-03-05T20:15:41+08:00">2024-03-05</time>
+                <time title="Modified: 2024-03-06 10:44:53" itemprop="dateModified" datetime="2024-03-06T10:44:53+08:00">2024-03-06</time>
               </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
@@ -1156,7 +1116,7 @@
               </span>
               <span class="post-meta-item-text">In</span>
                 <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/cttcg/" itemprop="url" rel="index"><span itemprop="name">C++ Templates: The Complete Guide</span></a>
+                  <a href="/categories/cpplang/" itemprop="url" rel="index"><span itemprop="name">C++ Language</span></a>
                 </span>
             </span>
 
@@ -1171,19 +1131,28 @@
     <div class="post-body" itemprop="articleBody">
 
       
-          <p>Perfect forwarding:</p>
-<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">template</span>&lt;<span class="keyword">typename</span> T&gt;</span></span><br><span class="line"><span class="function"><span class="type">void</span> <span class="title">f</span> <span class="params">(T&amp;&amp; val)</span> </span>&#123;</span><br><span class="line">	<span class="built_in">g</span>(std::forward&lt;T&gt;(val)); <span class="comment">// perfect forward val to g()</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<p>注意，完美转发只对模板参数有效，对依赖于模板参数的类型也是无效的，比如：<code>typename T::iterator&amp;&amp;</code> 是无效的，仍表示严格的右值引用。</p>
-<p>完美转发也不能加 const 属性。添加 const 属性后表示常右值引用（而且这种形式很少被使用）。</p>
-<h1 id="尝试用完美转发简化代码"><a href="#尝试用完美转发简化代码" class="headerlink" title="尝试用完美转发简化代码"></a>尝试用完美转发简化代码</h1><p>设想一个 Person 类，里面只有一个 <code>std::string</code> 类型的 name 数据。已经实现了复制构造函数和移动构造函数。从数据的构造函数有 <code>std::string &amp;&amp;</code> 和 <code>std::string const &amp;</code> 两个重载版本。使用完美转发可以同时写出匹配这两种参数的函数模板，减少代码量。</p>
-<p>💡 事实上，代码量并不会减少，反而会变得复杂。在这种必定需要复制的场合，最好的方式还是接受 <code>std::string</code> 的值类型。下面的讨论假定必须使用模板实现。</p>
-<p>问题在哪里？</p>
-<p>完美转发匹配的优先级太高了，在传入一个 <code>Person &amp;</code> 对象的时候，<code>Person const &amp;</code> 复制构造函数匹配优先度低，从而调用的是函数模板。而给定的函数模板是为字符串类型写的，显然 Person 不能用于初始化 <code>std::string</code>，因而无法编译。</p>
-<p>可以用 <code>std::enable_if</code> 来要求参数必须是字符串。在 C++20 中，可以用 concept 来加限制。</p>
-<p>💡 <code>std::enable_if_t</code> 这样形式的 <code>_t</code> 后缀是 C++14 引入的。而 <code>std::is_convertable_v</code> 这样的 _v 后缀是 C++17 引入的。</p>
-<h1 id="函数模板还有什么问题？"><a href="#函数模板还有什么问题？" class="headerlink" title="函数模板还有什么问题？"></a>函数模板还有什么问题？</h1><p>若为类中的特殊函数提供函数模板，默认的特殊函数并不会被删除。在都能够匹配的场合中，默认的特殊函数优先级更高。因而有时候需要显式 delete。</p>
-<p>但是最好还是不要为特殊函数提供模板。</p>
+          <h1 id="含义"><a href="#含义" class="headerlink" title="含义"></a>含义</h1><p>C++ 20 加入了 <code>&lt;=&gt;</code> 操作符，该操作符会按布局顺序比较成员，比较时会递归使用 <code>&lt;=&gt;</code> 操作符。对于类类型来说，即便默认的 <code>&lt;=&gt;</code> 操作符可用，也必须显式声明为 <code>= default</code>，否则不能使用。</p>
+<blockquote>
+<p>如果需要在 B 类中包含 A 类，同时声明 B 类的默认 <code>&lt;=&gt;</code> 操作符以便比较 B 类对象，则必须同时在 A 类中声明默认的 <code>&lt;=&gt;</code> 操作符。</p>
+</blockquote>
+<p>Three-way comparison operator 的返回值可以是偏序、弱序或强序。体现在 C++ 语言中是：</p>
+<ul>
+<li>偏序：弱序 或者 不可比较。</li>
+<li>弱序：a 和 b 的关系只能是小于、等于、大于之一。比较相等性时常用 <code>!(a &lt; b) &amp;&amp; !(b &lt; a)</code> 的形式。相等的值可以拥有不同的身份。</li>
+<li>强序：a 和 b 的关系只能是小于、等于、大于之一。可以直接用 <code>==</code> 比较相等性，相等则意味着完全一致，可以相互替代。</li>
+</ul>
+<p><img src="/assets/c514b73891d6ffad12fe7d0e440c7ebb.png"></p>
+<blockquote>
+<p><a target="_blank" rel="noopener" href="https://news.ycombinator.com/item?id=20550902">https://news.ycombinator.com/item?id=20550902</a></p>
+<p>In a strong ordering, two objects can only by one smaller, equal or larger than the other. If they are equal, it means that they are substitutable.</p>
+<p>In a weak ordering, two objects can only be one smaller, equivalent or larger than the other. No substitutability is implied.</p>
+<p>In a partial ordering, two objects can be one smaller, equivalent or larger than the other, or just not comparable. Again, no substitutability is implied.</p>
+</blockquote>
+<h1 id="默认-存在的条件"><a href="#默认-存在的条件" class="headerlink" title="默认 &lt;=&gt; 存在的条件"></a>默认 <code>&lt;=&gt;</code> 存在的条件</h1><p><a href="since%20C++20">Default comparisons (since C++20) - cppreference.com</a>%20-%20cppreference.com)。</p>
+<h1 id="对引用类型成员的处理"><a href="#对引用类型成员的处理" class="headerlink" title="对引用类型成员的处理"></a>对引用类型成员的处理</h1><p>当类中包含类型为<strong>引用</strong>的成员时，该类默认的 <code>&lt;=&gt;</code> 被删除（而不是被隐藏），除非人为定义否则不能被用户使用。</p>
+<blockquote>
+<p>尽管“提出类类型作为模板参数”的论文使用 <code>&lt;=&gt;</code> 的规则描述类 NTTP 的要求，并建议禁用那些带有引用成员的类作为参数，但实际上 gcc 会使用地址比较允许这样的类型。</p>
+</blockquote>
 
       
     </div>
@@ -1202,7 +1171,7 @@
 
   
   <nav class="pagination">
-    <a class="extend prev" rel="prev" href="/page/2/"><i class="fa fa-angle-left" aria-label="Previous page"></i></a><a class="page-number" href="/">1</a><a class="page-number" href="/page/2/">2</a><span class="page-number current">3</span><a class="page-number" href="/page/4/">4</a><span class="space">&hellip;</span><a class="page-number" href="/page/6/">6</a><a class="extend next" rel="next" href="/page/4/"><i class="fa fa-angle-right" aria-label="Next page"></i></a>
+    <a class="extend prev" rel="prev" href="/page/2/"><i class="fa fa-angle-left" aria-label="Previous page"></i></a><a class="page-number" href="/">1</a><a class="page-number" href="/page/2/">2</a><span class="page-number current">3</span><a class="page-number" href="/page/4/">4</a><span class="space">&hellip;</span><a class="page-number" href="/page/10/">10</a><a class="extend next" rel="next" href="/page/4/"><i class="fa fa-angle-right" aria-label="Next page"></i></a>
   </nav>
 
 
@@ -1268,15 +1237,21 @@
       <div class="site-state-item site-state-posts">
           <a href="/archives/">
         
-          <span class="site-state-item-count">52</span>
+          <span class="site-state-item-count">95</span>
           <span class="site-state-item-name">posts</span>
         </a>
       </div>
       <div class="site-state-item site-state-categories">
             <a href="/categories/">
           
-        <span class="site-state-item-count">3</span>
+        <span class="site-state-item-count">4</span>
         <span class="site-state-item-name">categories</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+            <a href="/tags/">
+          
+        <span class="site-state-item-count">1</span>
+        <span class="site-state-item-name">tags</span></a>
       </div>
   </nav>
 </div>
@@ -1308,7 +1283,7 @@
   </span>
   <span class="author" itemprop="copyrightHolder">Hxhue</span>
 </div>
-  <div class="powered-by">Powered by <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://muse.theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Muse</a>
+  <div class="powered-by">Powered by <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Gemini</a>
   </div>
 
         
@@ -1334,7 +1309,7 @@
 <script src="/js/motion.js"></script>
 
 
-<script src="/js/schemes/muse.js"></script>
+<script src="/js/schemes/pisces.js"></script>
 
 
 <script src="/js/next-boot.js"></script>
@@ -1345,6 +1320,10 @@
   
 
 
+
+
+  
+<script src="/js/local-search.js"></script>
 
 
 

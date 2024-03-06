@@ -17,15 +17,15 @@
 
 <script id="hexo-configurations">
     var NexT = window.NexT || {};
-    var CONFIG = {"hostname":"hxhue.github.io","root":"/","scheme":"Muse","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}};
+    var CONFIG = {"hostname":"hxhue.github.io","root":"/","scheme":"Gemini","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},"path":"search.xml"};
   </script>
 
-  <meta name="description" content="🪄TLDR：几种 SFINAE 的模式 对于函数参数列表非空的函数模板，可以用非 varargs 函数实现功能，varargs 作为 fallback。 类模板可以用偏特化实现功能重载，用带模板默认参数的原始模板作为 fallback。 模板用 tag dispatching 不会有重复定义的问题。 std::enable_if 用在函数模板的模板默认参数上表达更简洁，但用在返回值上可避免重复定">
+  <meta name="description" content="TLDR：几种 SFINAE 的模式 对于函数参数列表非空的函数模板，可以用非 varargs 函数实现功能，varargs 作为 fallback。 类模板可以用偏特化实现功能重载，用带模板默认参数的原始模板作为 fallback。 模板用 tag dispatching 不会有重复定义的问题。 std::enable_if 用在函数模板的模板默认参数上表达更简洁，但用在返回值上可避免重复定义。">
 <meta property="og:type" content="article">
 <meta property="og:title" content="CTTCG 20 Overloading on Type Properties">
 <meta property="og:url" content="https://hxhue.github.io/2023/08/12/cpp-templates-the-complete-guide-20-Overloading-on-Type-Properties/index.html">
 <meta property="og:site_name" content="Hxhue&#39;s Blog">
-<meta property="og:description" content="🪄TLDR：几种 SFINAE 的模式 对于函数参数列表非空的函数模板，可以用非 varargs 函数实现功能，varargs 作为 fallback。 类模板可以用偏特化实现功能重载，用带模板默认参数的原始模板作为 fallback。 模板用 tag dispatching 不会有重复定义的问题。 std::enable_if 用在函数模板的模板默认参数上表达更简洁，但用在返回值上可避免重复定">
+<meta property="og:description" content="TLDR：几种 SFINAE 的模式 对于函数参数列表非空的函数模板，可以用非 varargs 函数实现功能，varargs 作为 fallback。 类模板可以用偏特化实现功能重载，用带模板默认参数的原始模板作为 fallback。 模板用 tag dispatching 不会有重复定义的问题。 std::enable_if 用在函数模板的模板默认参数上表达更简洁，但用在返回值上可避免重复定义。">
 <meta property="og:locale" content="en_US">
 <meta property="og:image" content="https://hxhue.github.io/assets/4a2d335dbfcb745748f3f9ed238ca55a.png">
 <meta property="og:image" content="https://hxhue.github.io/assets/eaeb707e938f2938d24b4e73e223d799.png">
@@ -33,8 +33,9 @@
 <meta property="og:image" content="https://hxhue.github.io/assets/5c475d8c5e719480120ff175750090f1.png">
 <meta property="og:image" content="https://hxhue.github.io/assets/13f492bfd83a46683758462adf03bb2b.png">
 <meta property="article:published_time" content="2023-08-11T16:00:00.000Z">
-<meta property="article:modified_time" content="2024-03-05T12:16:13.287Z">
+<meta property="article:modified_time" content="2024-03-06T01:32:38.810Z">
 <meta property="article:author" content="Hxhue">
+<meta property="article:tag" content="C++">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:image" content="https://hxhue.github.io/assets/4a2d335dbfcb745748f3f9ed238ca55a.png">
 
@@ -82,6 +83,7 @@
   </style>
 </noscript>
 
+<link rel="alternate" href="/atom.xml" title="Hxhue's Blog" type="application/atom+xml">
 </head>
 
 <body itemscope itemtype="http://schema.org/WebPage">
@@ -109,6 +111,7 @@
 
   <div class="site-nav-right">
     <div class="toggle popup-trigger">
+        <i class="fa fa-search fa-fw fa-lg"></i>
     </div>
   </div>
 </div>
@@ -133,16 +136,48 @@
     <a href="/about/" rel="section"><i class="user fa-fw"></i>About</a>
 
   </li>
+        <li class="menu-item menu-item-tags">
+
+    <a href="/tags/" rel="section"><i class="tags fa-fw"></i>Tags</a>
+
+  </li>
         <li class="menu-item menu-item-categories">
 
     <a href="/categories/" rel="section"><i class="th fa-fw"></i>Categories</a>
 
   </li>
+      <li class="menu-item menu-item-search">
+        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>Search
+        </a>
+      </li>
   </ul>
 </nav>
 
 
 
+  <div class="search-pop-overlay">
+    <div class="popup search-popup">
+        <div class="search-header">
+  <span class="search-icon">
+    <i class="fa fa-search"></i>
+  </span>
+  <div class="search-input-container">
+    <input autocomplete="off" autocapitalize="off"
+           placeholder="Searching..." spellcheck="false"
+           type="search" class="search-input">
+  </div>
+  <span class="popup-btn-close">
+    <i class="fa fa-times-circle"></i>
+  </span>
+</div>
+<div id="search-result">
+  <div id="no-result">
+    <i class="fa fa-spinner fa-pulse fa-5x fa-fw"></i>
+  </div>
+</div>
+
+    </div>
+  </div>
 
 </div>
     </header>
@@ -196,7 +231,7 @@
                   <i class="far fa-calendar-check"></i>
                 </span>
                 <span class="post-meta-item-text">Edited on</span>
-                <time title="Modified: 2024-03-05 20:16:13" itemprop="dateModified" datetime="2024-03-05T20:16:13+08:00">2024-03-05</time>
+                <time title="Modified: 2024-03-06 09:32:38" itemprop="dateModified" datetime="2024-03-06T09:32:38+08:00">2024-03-06</time>
               </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
@@ -204,7 +239,7 @@
               </span>
               <span class="post-meta-item-text">In</span>
                 <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/cttcg/" itemprop="url" rel="index"><span itemprop="name">C++ Templates: The Complete Guide</span></a>
+                  <a href="/categories/book-cttcg/" itemprop="url" rel="index"><span itemprop="name">C++ Templates: The Complete Guide</span></a>
                 </span>
             </span>
 
@@ -219,7 +254,7 @@
     <div class="post-body" itemprop="articleBody">
 
       
-        <h1 id="🪄TLDR：几种-SFINAE-的模式"><a href="#🪄TLDR：几种-SFINAE-的模式" class="headerlink" title="🪄TLDR：几种 SFINAE 的模式"></a>🪄TLDR：几种 SFINAE 的模式</h1><ol>
+        <h1 id="TLDR：几种-SFINAE-的模式"><a href="#TLDR：几种-SFINAE-的模式" class="headerlink" title="TLDR：几种 SFINAE 的模式"></a>TLDR：几种 SFINAE 的模式</h1><ol>
 <li>对于<strong>函数参数列表非空</strong>的函数模板，可以用非 varargs 函数实现功能，varargs 作为 fallback。</li>
 <li>类模板可以用偏特化实现功能重载，用带模板默认参数的原始模板作为 fallback。</li>
 <li>模板用 tag dispatching 不会有重复定义的问题。</li>
@@ -295,6 +330,9 @@
     
 
       <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/cpp/" rel="tag"># C++</a>
+          </div>
 
         
 
@@ -302,8 +340,8 @@
         
     <div class="post-nav">
       <div class="post-nav-item">
-    <a href="/2023/08/12/cpp-templates-the-complete-guide-19-1-%E7%94%A8-SFINAE-%E5%AE%9E%E7%8E%B0-Traits/" rel="prev" title="CTTCG 19.1 用 SFINAE 实现 Traits">
-      <i class="fa fa-chevron-left"></i> CTTCG 19.1 用 SFINAE 实现 Traits
+    <a href="/2023/08/12/cpp-templates-the-complete-guide-23-Metaprogramming/" rel="prev" title="CTTCG 23 Metaprogramming">
+      <i class="fa fa-chevron-left"></i> CTTCG 23 Metaprogramming
     </a></div>
       <div class="post-nav-item">
     <a href="/2023/08/12/cpp-templates-the-complete-guide-19-Implementing-Traits/" rel="next" title="CTTCG 19 Implementing Traits">
@@ -367,7 +405,7 @@
 
       <!--noindex-->
       <div class="post-toc-wrap sidebar-panel">
-          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#%F0%9F%AA%84TLDR%EF%BC%9A%E5%87%A0%E7%A7%8D-SFINAE-%E7%9A%84%E6%A8%A1%E5%BC%8F"><span class="nav-number">1.</span> <span class="nav-text">🪄TLDR：几种 SFINAE 的模式</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%87%BD%E6%95%B0%E6%A8%A1%E6%9D%BF%E7%9A%84%E9%87%8D%E8%BD%BD"><span class="nav-number">2.</span> <span class="nav-text">函数模板的重载</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E7%AE%80%E5%8D%95%E6%8F%90%E4%BE%9B%E5%8F%82%E6%95%B0%E4%B8%8D%E5%90%8C%E7%9A%84%E9%87%8D%E8%BD%BD"><span class="nav-number">2.1.</span> <span class="nav-text">简单提供参数不同的重载</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Tag-Dispatching-%E5%92%8C-std-enable-if"><span class="nav-number">2.2.</span> <span class="nav-text">Tag Dispatching 和 std::enable_if</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#std-enable-if-%E7%9A%84%E9%87%8D%E5%A4%8D%E5%A3%B0%E6%98%8E%E9%97%AE%E9%A2%98"><span class="nav-number">2.3.</span> <span class="nav-text">std::enable_if 的重复声明问题</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E7%AC%AC%E5%9B%9B%E7%A7%8D%E6%96%B9%E6%A1%88%EF%BC%9Aif-constexpr"><span class="nav-number">2.4.</span> <span class="nav-text">第四种方案：if constexpr</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E7%AC%AC%E4%BA%94%E7%A7%8D%E6%96%B9%E6%A1%88%EF%BC%9AConcept"><span class="nav-number">2.5.</span> <span class="nav-text">第五种方案：Concept</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E7%B1%BB%E6%A8%A1%E6%9D%BF%E7%9A%84%E9%87%8D%E8%BD%BD"><span class="nav-number">3.</span> <span class="nav-text">类模板的重载</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%A6%82%E4%BD%95%E9%80%89%E6%8B%A9-tag%EF%BC%9F"><span class="nav-number">3.1.</span> <span class="nav-text">如何选择 tag？</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%A4%84%E7%90%86-bool-%E7%9A%84%E4%B8%8A%E4%B8%8B%E6%96%87%E8%BD%AC%E6%8D%A2%EF%BC%88contextual-conversion%EF%BC%89"><span class="nav-number">4.</span> <span class="nav-text">处理 bool 的上下文转换（contextual conversion）</span></a></li></ol></div>
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#TLDR%EF%BC%9A%E5%87%A0%E7%A7%8D-SFINAE-%E7%9A%84%E6%A8%A1%E5%BC%8F"><span class="nav-number">1.</span> <span class="nav-text">TLDR：几种 SFINAE 的模式</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%87%BD%E6%95%B0%E6%A8%A1%E6%9D%BF%E7%9A%84%E9%87%8D%E8%BD%BD"><span class="nav-number">2.</span> <span class="nav-text">函数模板的重载</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E7%AE%80%E5%8D%95%E6%8F%90%E4%BE%9B%E5%8F%82%E6%95%B0%E4%B8%8D%E5%90%8C%E7%9A%84%E9%87%8D%E8%BD%BD"><span class="nav-number">2.1.</span> <span class="nav-text">简单提供参数不同的重载</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Tag-Dispatching-%E5%92%8C-std-enable-if"><span class="nav-number">2.2.</span> <span class="nav-text">Tag Dispatching 和 std::enable_if</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#std-enable-if-%E7%9A%84%E9%87%8D%E5%A4%8D%E5%A3%B0%E6%98%8E%E9%97%AE%E9%A2%98"><span class="nav-number">2.3.</span> <span class="nav-text">std::enable_if 的重复声明问题</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E7%AC%AC%E5%9B%9B%E7%A7%8D%E6%96%B9%E6%A1%88%EF%BC%9Aif-constexpr"><span class="nav-number">2.4.</span> <span class="nav-text">第四种方案：if constexpr</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E7%AC%AC%E4%BA%94%E7%A7%8D%E6%96%B9%E6%A1%88%EF%BC%9AConcept"><span class="nav-number">2.5.</span> <span class="nav-text">第五种方案：Concept</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E7%B1%BB%E6%A8%A1%E6%9D%BF%E7%9A%84%E9%87%8D%E8%BD%BD"><span class="nav-number">3.</span> <span class="nav-text">类模板的重载</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%A6%82%E4%BD%95%E9%80%89%E6%8B%A9-tag%EF%BC%9F"><span class="nav-number">3.1.</span> <span class="nav-text">如何选择 tag？</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%A4%84%E7%90%86-bool-%E7%9A%84%E4%B8%8A%E4%B8%8B%E6%96%87%E8%BD%AC%E6%8D%A2%EF%BC%88contextual-conversion%EF%BC%89"><span class="nav-number">4.</span> <span class="nav-text">处理 bool 的上下文转换（contextual conversion）</span></a></li></ol></div>
       </div>
       <!--/noindex-->
 
@@ -381,15 +419,21 @@
       <div class="site-state-item site-state-posts">
           <a href="/archives/">
         
-          <span class="site-state-item-count">52</span>
+          <span class="site-state-item-count">95</span>
           <span class="site-state-item-name">posts</span>
         </a>
       </div>
       <div class="site-state-item site-state-categories">
             <a href="/categories/">
           
-        <span class="site-state-item-count">3</span>
+        <span class="site-state-item-count">4</span>
         <span class="site-state-item-name">categories</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+            <a href="/tags/">
+          
+        <span class="site-state-item-count">1</span>
+        <span class="site-state-item-name">tags</span></a>
       </div>
   </nav>
 </div>
@@ -421,7 +465,7 @@
   </span>
   <span class="author" itemprop="copyrightHolder">Hxhue</span>
 </div>
-  <div class="powered-by">Powered by <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://muse.theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Muse</a>
+  <div class="powered-by">Powered by <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Gemini</a>
   </div>
 
         
@@ -447,7 +491,7 @@
 <script src="/js/motion.js"></script>
 
 
-<script src="/js/schemes/muse.js"></script>
+<script src="/js/schemes/pisces.js"></script>
 
 
 <script src="/js/next-boot.js"></script>
@@ -458,6 +502,10 @@
   
 
 
+
+
+  
+<script src="/js/local-search.js"></script>
 
 
 
