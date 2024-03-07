@@ -17,7 +17,7 @@
 
 <script id="hexo-configurations">
     var NexT = window.NexT || {};
-    var CONFIG = {"hostname":"hxhue.github.io","root":"/","scheme":"Gemini","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},"path":"search.xml"};
+    var CONFIG = {"hostname":"hxhue.github.io","root":"/","scheme":"Gemini","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":false,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},"path":"search.xml"};
   </script>
 
   <meta property="og:type" content="website">
@@ -76,7 +76,7 @@
 </head>
 
 <body itemscope itemtype="http://schema.org/WebPage">
-  <div class="container use-motion">
+  <div class="container">
     <div class="headband"></div>
 
     <header class="header" itemscope itemtype="http://schema.org/WPHeader">
@@ -185,6 +185,425 @@
 
           <div class="content index posts-expand">
             
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
+    <link itemprop="mainEntityOfPage" href="https://hxhue.github.io/2023/08/12/cpplang-explicit/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="Hxhue">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Hxhue's Blog">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/2023/08/12/cpplang-explicit/" class="post-title-link" itemprop="url">explicit</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">Posted on</span>
+
+              <time title="Created: 2023-08-12 15:17:00" itemprop="dateCreated datePublished" datetime="2023-08-12T15:17:00+08:00">2023-08-12</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">Edited on</span>
+                <time title="Modified: 2024-03-06 10:34:20" itemprop="dateModified" datetime="2024-03-06T10:34:20+08:00">2024-03-06</time>
+              </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">In</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/cpplang/" itemprop="url" rel="index"><span itemprop="name">C++ Language</span></a>
+                </span>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <p>一般认为 <code>explicit</code> 是用在单参数 <code>ctor</code> 上防止隐式类型转换的。但如果参数有多个，explicit 关键字也有其他的作用。</p>
+<h1 id="explicit-可以阻止-推导"><a href="#explicit-可以阻止-推导" class="headerlink" title="explicit 可以阻止 {} 推导"></a><code>explicit</code> 可以阻止 <code>&#123;&#125;</code> 推导</h1><p><a target="_blank" rel="noopener" href="https://stackoverflow.com/a/39122237/13785815">https://stackoverflow.com/a/39122237/13785815</a></p>
+<p>可以参考另一篇文章：{ } Syntax。</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">struct</span> <span class="title class_">Foo</span> &#123; <span class="built_in">Foo</span>(<span class="type">int</span>, <span class="type">int</span>) &#123;&#125; &#125;;</span><br><span class="line"><span class="keyword">struct</span> <span class="title class_">Bar</span> &#123; <span class="function"><span class="keyword">explicit</span> <span class="title">Bar</span><span class="params">(<span class="type">int</span>, <span class="type">int</span>)</span> </span>&#123;&#125; &#125;;</span><br><span class="line"></span><br><span class="line"><span class="function">Foo <span class="title">f1</span><span class="params">(<span class="number">1</span>, <span class="number">1</span>)</span></span>; <span class="comment">// ok</span></span><br><span class="line">Foo f2 &#123;<span class="number">1</span>, <span class="number">1</span>&#125;; <span class="comment">// ok</span></span><br><span class="line">Foo f3 = &#123;<span class="number">1</span>, <span class="number">1</span>&#125;; <span class="comment">// ok</span></span><br><span class="line"></span><br><span class="line"><span class="function">Bar <span class="title">b1</span><span class="params">(<span class="number">1</span>, <span class="number">1</span>)</span></span>; <span class="comment">// ok</span></span><br><span class="line">Bar b2 &#123;<span class="number">1</span>, <span class="number">1</span>&#125;; <span class="comment">// ok</span></span><br><span class="line">Bar b3 = &#123;<span class="number">1</span>, <span class="number">1</span>&#125;; <span class="comment">// NOT OKAY</span></span><br><span class="line"></span><br><span class="line">Bar many_bars[] = &#123; &#123;<span class="number">1</span>, <span class="number">1</span>&#125; &#125;;     <span class="comment">// ERROR explicit阻止了 &#123;1, 1&#125; 被推导成 Bar&#123;1, 1&#125;</span></span><br><span class="line">Bar many_bars2[] = &#123; Bar&#123;<span class="number">1</span>, <span class="number">1</span>&#125; &#125;; <span class="comment">// okay</span></span><br></pre></td></tr></table></figure>
+
+<h1 id="阻止“去掉默认值是单参数构造函数”的隐式转换"><a href="#阻止“去掉默认值是单参数构造函数”的隐式转换" class="headerlink" title="阻止“去掉默认值是单参数构造函数”的隐式转换"></a>阻止“去掉默认值是单参数构造函数”的隐式转换</h1><p>如果将来某个构造函数除了第一个参数之外的其他参数有了默认值，则会引起和单参数构造函数一样的隐式转换问题。</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">class</span> <span class="title class_">A</span> &#123;</span><br><span class="line">    <span class="keyword">public</span>:</span><br><span class="line">        <span class="built_in">A</span>( <span class="type">int</span> b, <span class="type">int</span> c=<span class="number">0</span> ) &#123;&#125; <span class="comment">// A 可以从 int 隐式转换而来</span></span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
+    <link itemprop="mainEntityOfPage" href="https://hxhue.github.io/2023/08/12/cpplang-noexcept-throw/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="Hxhue">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Hxhue's Blog">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/2023/08/12/cpplang-noexcept-throw/" class="post-title-link" itemprop="url">noexcept + throw</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">Posted on</span>
+
+              <time title="Created: 2023-08-12 15:17:00" itemprop="dateCreated datePublished" datetime="2023-08-12T15:17:00+08:00">2023-08-12</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">Edited on</span>
+                <time title="Modified: 2024-03-06 10:37:30" itemprop="dateModified" datetime="2024-03-06T10:37:30+08:00">2024-03-06</time>
+              </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">In</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/cpplang/" itemprop="url" rel="index"><span itemprop="name">C++ Language</span></a>
+                </span>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <p>noexcept 有几个用法：</p>
+<ol>
+<li>在编译期返回一个常量布尔值，评估其表达式是否会抛出异常。</li>
+<li>用于标志一个函数是否能抛出异常，需要一个编译期布尔常量作为参数。</li>
+<li>标志函数不会抛出异常。相当于 <code>noexcept(true)</code>。</li>
+</ol>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// whether foo is declared noexcept depends on if the expression</span></span><br><span class="line"><span class="comment">// T() will throw any exceptions</span></span><br><span class="line"><span class="function"><span class="keyword">template</span>&lt;<span class="keyword">class</span> T&gt;</span></span><br><span class="line"><span class="function"><span class="type">void</span> <span class="title">foo</span><span class="params">()</span> <span class="title">noexcept</span><span class="params">(<span class="keyword">noexcept</span>(T()))</span> </span>&#123;&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="type">void</span> <span class="title">bar</span><span class="params">()</span> <span class="title">noexcept</span><span class="params">(<span class="literal">true</span>)</span> </span>&#123;&#125;</span><br><span class="line"><span class="function"><span class="type">void</span> <span class="title">baz</span><span class="params">()</span> <span class="keyword">noexcept</span> </span>&#123; <span class="keyword">throw</span> <span class="number">42</span>; &#125; <span class="comment">// noexcept is the same as noexcept(true)</span></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="type">int</span> <span class="title">main</span><span class="params">()</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="built_in">foo</span>&lt;<span class="type">int</span>&gt;(); <span class="comment">// noexcept(noexcept(int())) =&gt; noexcept(true), so this is fine</span></span><br><span class="line"></span><br><span class="line">    <span class="built_in">bar</span>(); <span class="comment">// fine</span></span><br><span class="line">    <span class="built_in">baz</span>(); <span class="comment">// compiles, but at runtime this calls std::terminate</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>C++17 已经禁用 <code>throw</code> 的显式异常声明。（被称为 <code>Dynamic exception specification</code>）</p>
+
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
+    <link itemprop="mainEntityOfPage" href="https://hxhue.github.io/2023/08/12/cpplang-range-for/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="Hxhue">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Hxhue's Blog">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/2023/08/12/cpplang-range-for/" class="post-title-link" itemprop="url">range-for</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">Posted on</span>
+
+              <time title="Created: 2023-08-12 15:17:00" itemprop="dateCreated datePublished" datetime="2023-08-12T15:17:00+08:00">2023-08-12</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">Edited on</span>
+                <time title="Modified: 2024-03-06 10:38:56" itemprop="dateModified" datetime="2024-03-06T10:38:56+08:00">2024-03-06</time>
+              </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">In</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/cpplang/" itemprop="url" rel="index"><span itemprop="name">C++ Language</span></a>
+                </span>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <p>以前容易出现引用悬挂的问题。在新的语言标准中得到了改进。</p>
+<p>C++11 只是简单的语法糖，只能保证表达式返回值被临时变量接受并保留到循环结束：(<a target="_blank" rel="noopener" href="https://stackoverflow.com/a/51440883">https://stackoverflow.com/a/51440883</a>)</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">&#123;</span><br><span class="line">    <span class="keyword">auto</span>&amp;&amp; __range = <span class="built_in">f</span>()[<span class="number">5</span>]; <span class="comment">// (*)</span></span><br><span class="line">    <span class="keyword">auto</span> __begin = __range.<span class="built_in">begin</span>(); <span class="comment">// not exactly, but close enough</span></span><br><span class="line">    <span class="keyword">auto</span> __end = __range.<span class="built_in">end</span>();     <span class="comment">// in C++17, these types can be different</span></span><br><span class="line">    <span class="keyword">for</span> (; __begin != __end; ++__begin) &#123;</span><br><span class="line">        <span class="keyword">auto</span> e = *__begin;</span><br><span class="line">        <span class="comment">// rest of body</span></span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>C++20 range-for 生命周期规则一样，不过可以在里面创建临时对象，避免后面引用过程中的悬挂：</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;iostream&gt;</span></span></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="type">int</span> <span class="title">main</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    <span class="keyword">for</span> (<span class="keyword">auto</span> lst = &#123;<span class="number">1</span>, <span class="number">2</span>, <span class="number">5</span>, <span class="number">1</span>, <span class="number">71</span>&#125;; <span class="keyword">auto</span> i : lst) &#123;</span><br><span class="line">        std::cout &lt;&lt; i &lt;&lt; <span class="string">&#x27;\n&#x27;</span>;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>C++23 则要求在 range-for 括号中创建的临时对象生命周期延长到整个循环结束后。不过截至 2023 年 6 月 3 日，没有编译器实现。</p>
+
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
+    <link itemprop="mainEntityOfPage" href="https://hxhue.github.io/2023/08/12/cpplang-sizeof/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="Hxhue">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Hxhue's Blog">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/2023/08/12/cpplang-sizeof/" class="post-title-link" itemprop="url">sizeof</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">Posted on</span>
+
+              <time title="Created: 2023-08-12 15:17:00" itemprop="dateCreated datePublished" datetime="2023-08-12T15:17:00+08:00">2023-08-12</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">Edited on</span>
+                <time title="Modified: 2024-03-06 10:40:50" itemprop="dateModified" datetime="2024-03-06T10:40:50+08:00">2024-03-06</time>
+              </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">In</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/cpplang/" itemprop="url" rel="index"><span itemprop="name">C++ Language</span></a>
+                </span>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <p>下面几个表达式相等：</p>
+<ul>
+<li><code>sizeof(T&amp;)</code></li>
+<li><code>sizeof(T&amp;&amp;)</code></li>
+<li><code>sizeof(T)</code></li>
+</ul>
+<p>也就是说 <code>sizeof</code> 会去掉引用。忘记出处了，twitter 上有人提过一个 quiz，什么类型 <code>T</code> 能满足 <code>struct &#123;T x;&#125;</code> 和 <code>T</code> 的 sizeof 结果不相等，引用类型就满足这样的情况。</p>
+
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
+    <link itemprop="mainEntityOfPage" href="https://hxhue.github.io/2023/08/12/cpplang-lambda/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="Hxhue">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Hxhue's Blog">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/2023/08/12/cpplang-lambda/" class="post-title-link" itemprop="url">lambda</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">Posted on</span>
+
+              <time title="Created: 2023-08-12 15:17:00" itemprop="dateCreated datePublished" datetime="2023-08-12T15:17:00+08:00">2023-08-12</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">Edited on</span>
+                <time title="Modified: 2024-03-06 10:37:22" itemprop="dateModified" datetime="2024-03-06T10:37:22+08:00">2024-03-06</time>
+              </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">In</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/cpplang/" itemprop="url" rel="index"><span itemprop="name">C++ Language</span></a>
+                </span>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <h1 id="演化"><a href="#演化" class="headerlink" title="演化"></a>演化</h1><h2 id="C-11"><a href="#C-11" class="headerlink" title="C++11"></a>C++11</h2><p>虽然有了 auto 关键字，但是用起来还是需要 trailing return type 声明。</p>
+<h2 id="C-14"><a href="#C-14" class="headerlink" title="C++14"></a>C++14</h2><p>可以省略尾部声明：</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">auto</span> <span class="title">f</span><span class="params">()</span>         </span>&#123; <span class="keyword">return</span> <span class="number">42</span>; &#125; <span class="comment">// #1</span></span><br><span class="line"><span class="function"><span class="keyword">auto</span> <span class="title">f</span><span class="params">()</span> -&gt; <span class="keyword">auto</span> </span>&#123; <span class="keyword">return</span> <span class="number">42</span>; &#125; <span class="comment">// #2</span></span><br></pre></td></tr></table></figure>
+
+<p><code>#1</code> 相当于 <code>#2</code>。这在 lambda 中是被默认启用的（即便是 C++11 也支持），因而我们写 lambda 经常不必提供返回值类型。例外：但是在构造递归 lambda 时需要显式声明返回值类型，或者先用 <code>function</code> 模板类存储起来，类型也就能从 <code>function</code> 中推导。</p>
+<h2 id="C-20"><a href="#C-20" class="headerlink" title="C++20"></a>C++20</h2><p><strong>支持给 lambda 声明模板参数</strong>。比如：<code>auto f = []&lt;typename T&gt;( T t ) &#123;&#125;;</code></p>
+<p>这样 <code>f</code> 对象内部就有一个调用操作符模板。可以使用 <code>f.template operator()&lt;T&gt;(t)</code> 访问，当 <code>T</code> 能被推导时模板参数列表可以省略。与之前的 auto 类型参数相比，这项改动使得我们可以添加一些不能从函数参数中推导出来的模板参数（想一想 <code>std::make_shared</code> 函数模板也无法得知将要创建的对象类型，因而需要手动指定）。</p>
+<p>可以用 <code>...args=</code> <strong>初始化语法</strong>指定表达式（这样使用移动或者转发），以前版本捕获 <code>args...</code> 参数时只能通过复制。</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">template</span> &lt;<span class="keyword">class</span>... Args&gt;</span><br><span class="line"><span class="function"><span class="keyword">auto</span> <span class="title">delay_invoke_foo</span><span class="params">(Args... args)</span> </span>&#123;</span><br><span class="line">    <span class="keyword">return</span> [...args=std::<span class="built_in">move</span>(args)](args)) -&gt; <span class="keyword">decltype</span>(<span class="keyword">auto</span>) &#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="built_in">foo</span>(args...);</span><br><span class="line">    &#125;;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h2 id="C-23"><a href="#C-23" class="headerlink" title="C++23"></a>C++23</h2><p>有了 explicit object parameter（毕竟 lambda 也是匿名对象）。</p>
+<h1 id="语法"><a href="#语法" class="headerlink" title="语法"></a>语法</h1><p>现在 lambda 已经可以复杂成这样了：</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;cstdio&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;type_traits&gt;</span></span></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="type">int</span> <span class="title">main</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    <span class="comment">// 在这个例子上没什么用，但是可以写这么长</span></span><br><span class="line">    <span class="keyword">auto</span> f = [] &lt;<span class="keyword">typename</span> T&gt; </span><br><span class="line">        <span class="built_in">requires</span>(std::is_standard_layout_v&lt;T&gt; &amp;&amp; std::is_trivial_v&lt;T&gt;) </span><br><span class="line">        [nodiscard](nodiscard) <span class="built_in">alignas</span>(<span class="number">8</span>) </span><br><span class="line">        (T i) -&gt; T &#123; <span class="keyword">return</span> i; &#125;;</span><br><span class="line">    </span><br><span class="line">    <span class="built_in">printf</span>(<span class="string">&quot;%f\n&quot;</span>, <span class="built_in">f</span>(<span class="number">4.0</span>));</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h1 id="实现递归"><a href="#实现递归" class="headerlink" title="实现递归"></a>实现递归</h1><h2 id="方案-1：Deducing-This"><a href="#方案-1：Deducing-This" class="headerlink" title="方案 1：Deducing This"></a>方案 1：Deducing This</h2><p>C++23 有了 explicit object parameter，不再需要捕获自己。现在可以这样实现：</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 在 MSVC 上编译成功（2023年5月24日）</span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;iostream&gt;</span></span></span><br><span class="line"><span class="function"><span class="type">int</span> <span class="title">main</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    <span class="comment">// 由于没有捕获任何变量，所以内部的f和外面的f重名也没有关系！</span></span><br><span class="line">    <span class="keyword">auto</span> f = [<span class="keyword">this</span> <span class="keyword">auto</span> <span class="type">const</span> &amp;f, <span class="type">int</span> a](<span class="keyword">this</span> <span class="keyword">auto</span> <span class="type">const</span> &amp;f, <span class="type">int</span> a) -&gt; <span class="type">int</span> &#123;</span><br><span class="line">        <span class="keyword">return</span> a &gt; <span class="number">0</span> ? a + <span class="built_in">f</span>(a - <span class="number">1</span>) : <span class="number">0</span>;</span><br><span class="line">    &#125;;</span><br><span class="line">    std::cout &lt;&lt; <span class="built_in">f</span>(<span class="number">10</span>) &lt;&lt; <span class="string">&#x27;\n&#x27;</span>; <span class="comment">// prints 55</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h2 id="方案-2：-std-function-类模板"><a href="#方案-2：-std-function-类模板" class="headerlink" title="方案 2： std::function 类模板"></a>方案 2： <code>std::function</code> 类模板</h2><p>在 lambda 表达式外创建一个对象，这样就能把自己捕获进来。</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">std::function&lt;<span class="type">int</span>(<span class="type">int</span>)&gt; fibonacci = [&amp;](<span class="type">int</span> i) &#123;</span><br><span class="line">    <span class="keyword">return</span> i &lt; <span class="number">2</span> ? i : <span class="built_in">fibonacci</span>(i<span class="number">-1</span>) + <span class="built_in">fibonacci</span>(i<span class="number">-2</span>);</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+
+<p>由于能够从 <code>std::function</code> 模板参数中推导 lambda 的返回值类型，所以 lambda 的 trailing return type 可以省略不写。事实上，只有 <code>fibonacci</code> 的类型已经确定了，lambda 中才能调用它，所以即便是写上 lambda 的尾返回值，<code>std::function</code> 的模板参数也不能被推导出来。</p>
+<h2 id="方案-3：显式传入函数"><a href="#方案-3：显式传入函数" class="headerlink" title="方案 3：显式传入函数"></a>方案 3：显式传入函数</h2><figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">auto</span> fibonacci = [&amp;] (<span class="keyword">auto</span> <span class="type">const</span> &amp;f, <span class="type">int</span> i) -&gt; <span class="type">int</span> &#123;</span><br><span class="line">    <span class="keyword">return</span> i &lt; <span class="number">2</span> ? i : <span class="built_in">f</span>(f, i<span class="number">-1</span>) + <span class="built_in">f</span>(f, i<span class="number">-2</span>);</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+
+<p>调用的时候就要多传一个 <code>fibonacci</code> 函数对象本身作为参数了。为什么这里不像方案 2 一样需要提前知道函数的类型呢？因为 auto 推导让这个函数模板中的代码生成延后到了第二阶段。</p>
+
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
       
   
   
@@ -644,93 +1063,6 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
-    <link itemprop="mainEntityOfPage" href="https://hxhue.github.io/2023/08/12/cpplang-%E6%8A%8A%E4%B8%8D%E5%88%9D%E5%A7%8B%E5%8C%96%E7%9A%84%E6%9E%84%E9%80%A0%E5%87%BD%E6%95%B0%E4%BD%9C%E4%B8%BA%E9%9D%9E%E9%BB%98%E8%AE%A4%E6%9E%84%E9%80%A0%E5%87%BD%E6%95%B0%E7%9A%84%E5%B0%9D%E8%AF%95/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/avatar.gif">
-      <meta itemprop="name" content="Hxhue">
-      <meta itemprop="description" content="">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Hxhue's Blog">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          
-            <a href="/2023/08/12/cpplang-%E6%8A%8A%E4%B8%8D%E5%88%9D%E5%A7%8B%E5%8C%96%E7%9A%84%E6%9E%84%E9%80%A0%E5%87%BD%E6%95%B0%E4%BD%9C%E4%B8%BA%E9%9D%9E%E9%BB%98%E8%AE%A4%E6%9E%84%E9%80%A0%E5%87%BD%E6%95%B0%E7%9A%84%E5%B0%9D%E8%AF%95/" class="post-title-link" itemprop="url">把不初始化的构造函数作为非默认构造函数的尝试</a>
-        </h2>
-
-        <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-calendar"></i>
-              </span>
-              <span class="post-meta-item-text">Posted on</span>
-
-              <time title="Created: 2023-08-12 15:17:00" itemprop="dateCreated datePublished" datetime="2023-08-12T15:17:00+08:00">2023-08-12</time>
-            </span>
-              <span class="post-meta-item">
-                <span class="post-meta-item-icon">
-                  <i class="far fa-calendar-check"></i>
-                </span>
-                <span class="post-meta-item-text">Edited on</span>
-                <time title="Modified: 2024-03-06 10:16:35" itemprop="dateModified" datetime="2024-03-06T10:16:35+08:00">2024-03-06</time>
-              </span>
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-folder"></i>
-              </span>
-              <span class="post-meta-item-text">In</span>
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/cpplang/" itemprop="url" rel="index"><span itemprop="name">C++ Language</span></a>
-                </span>
-            </span>
-
-          
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          <p>结论：很没有用。</p>
-<h1 id="类型定义"><a href="#类型定义" class="headerlink" title="类型定义"></a>类型定义</h1><figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">struct</span> <span class="title class_">Point3f</span> &#123;</span><br><span class="line">    <span class="type">float</span> x, y, z;</span><br><span class="line">    </span><br><span class="line">    <span class="built_in">Point3f</span>(): <span class="built_in">x</span>(<span class="number">0.0f</span>), <span class="built_in">y</span>(<span class="number">0.0f</span>), <span class="built_in">z</span>(<span class="number">0.0f</span>) &#123;&#125;</span><br><span class="line">    <span class="built_in">Point3f</span>(<span class="type">float</span> a, <span class="type">float</span> b, <span class="type">float</span> c) : <span class="built_in">x</span>(a), <span class="built_in">y</span>(b), <span class="built_in">z</span>(c) &#123;&#125;</span><br><span class="line">    </span><br><span class="line">    <span class="keyword">struct</span> <span class="title class_">Uninitialized</span> &#123;&#125;;</span><br><span class="line">    <span class="built_in">Point3f</span>(Uninitialized) &#123;&#125; <span class="comment">// &lt;-- 希望不初始化内部元素</span></span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
-
-<h1 id="在大部分时候是多余的"><a href="#在大部分时候是多余的" class="headerlink" title="在大部分时候是多余的"></a>在大部分时候是多余的</h1><p>冗余代码消除的效果不是很明显，因为编译器能够认出重复赋值的场景，并进行优化。但也能找到一个能成功的例子：一个用于初始化的函数在其他翻译单元中生成且不进行链接时优化。</p>
-<p><a target="_blank" rel="noopener" href="https://godbolt.org/z/GMx9sWj81">https://godbolt.org/z/GMx9sWj81</a></p>
-<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;cstdio&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;cstring&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;cstdlib&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;ctime&gt;</span></span></span><br><span class="line"></span><br><span class="line"><span class="comment">// 本来想要用一个 Uninitialized 标记构造不初始化的点，以图在某些情况下获得性能提升，并且同时保留安全性</span></span><br><span class="line"><span class="comment">// 但是在 -O0 下效果不如 Aggregate，至少要用 -O1</span></span><br><span class="line"><span class="comment">// 开了 -O1 之后，发现刚构造就赋值效果和全零初始化再赋值一样，编译器能把重复赋值优化掉</span></span><br><span class="line"><span class="comment">// 所以把初始化的过程放到一个函数里面去，发现这个函数的赋值操作也能被编译器注意到</span></span><br><span class="line"><span class="comment">// 接下来把函数声明成外部函数，只观察汇编，不链接成可执行文件。</span></span><br><span class="line"><span class="comment">// 这才终于发现了 Uninitialized 优化有效的情况，而且开到 -O3 也优化不掉，可能需要链接时优化</span></span><br><span class="line"><span class="keyword">struct</span> <span class="title class_">Point3f</span> &#123;</span><br><span class="line">    <span class="type">float</span> x, y, z;</span><br><span class="line">    </span><br><span class="line">    <span class="built_in">Point3f</span>(): <span class="built_in">x</span>(<span class="number">0.0f</span>), <span class="built_in">y</span>(<span class="number">0.0f</span>), <span class="built_in">z</span>(<span class="number">0.0f</span>) &#123;&#125;</span><br><span class="line">    <span class="built_in">Point3f</span>(<span class="type">float</span> a, <span class="type">float</span> b, <span class="type">float</span> c) : <span class="built_in">x</span>(a), <span class="built_in">y</span>(b), <span class="built_in">z</span>(c) &#123;&#125;</span><br><span class="line">    </span><br><span class="line">    <span class="keyword">struct</span> <span class="title class_">Uninitialized</span> &#123;&#125;;</span><br><span class="line">    <span class="built_in">Point3f</span>(Uninitialized) &#123;&#125;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="comment">// void init_point(Point3f *p) &#123;</span></span><br><span class="line"><span class="comment">//     p-&gt;x = rand();</span></span><br><span class="line"><span class="comment">//     p-&gt;y = rand();</span></span><br><span class="line"><span class="comment">//     p-&gt;z = rand();</span></span><br><span class="line"><span class="comment">// &#125;</span></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">extern</span> <span class="type">void</span> <span class="title">init_point</span><span class="params">(Point3f *p)</span></span>;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="type">int</span> <span class="title">main</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    <span class="built_in">srand</span>(<span class="built_in">time</span>(<span class="number">0</span>));</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 注释掉其中一个，观察汇编代码的变化</span></span><br><span class="line">    <span class="comment">// Point3f p = Point3f::Uninitialized&#123;&#125;;</span></span><br><span class="line">    Point3f p;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 防止编译器优化掉写内存</span></span><br><span class="line">    <span class="built_in">init_point</span>(&amp;p);</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 为什么不把 p 定义成 volatile 来强制写内存？</span></span><br><span class="line">    <span class="comment">// 效果有一点差异！</span></span><br><span class="line">    <span class="comment">// 1. 通过 volatile 对象，比如 volatile Point3f vp; 不能访问非 volatile 实例方法，</span></span><br><span class="line">    <span class="comment">// 但可以访问类似于 bool empty() volatile const; 的方法。</span></span><br><span class="line">    <span class="comment">// 2. 通过 volatile 对象连续访问其成员，this 指针的取用似乎会被优化合并到一次。</span></span><br><span class="line">    <span class="comment">// 3. 可见 volatile 加在对象创建处和加在成员声明处效果并不一样。</span></span><br><span class="line"></span><br><span class="line">    <span class="built_in">printf</span>(<span class="string">&quot;x=%.2f y=%.2f, z=%.2f\n&quot;</span>, p.x, p.y, p.z);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<h1 id="和-libstdc-std-vector-等构造函数协作得不友好"><a href="#和-libstdc-std-vector-等构造函数协作得不友好" class="headerlink" title="和 libstdc++ std::vector 等构造函数协作得不友好"></a>和 libstdc++ <code>std::vector</code> 等构造函数协作得不友好</h1><p>放在 vector 中初始化，用下面的代码最后测出来的结果（在各种优化等级下）都是两者差不多。</p>
-<p>又在 godbolt 上看汇编，结果 -O1 等级下生成的代码循环初始化的部分一样，都是把内容初始化为了全零。-O2&#x2F;-O3 下用到了 SSE 寄存器，但是循环代码一样。此外使用了 Uninitialized 标记的初始化方式在进入循环前多了一个设置好参数的步骤，由于不在循环里面，对性能影响不大。</p>
-<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;vector&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;iostream&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;chrono&gt;</span></span></span><br><span class="line"></span><br><span class="line"><span class="keyword">struct</span> <span class="title class_">Point3f</span> &#123;</span><br><span class="line">    <span class="type">float</span> x, y, z;</span><br><span class="line">    </span><br><span class="line">    <span class="built_in">Point3f</span>(): <span class="built_in">x</span>(<span class="number">0.0f</span>), <span class="built_in">y</span>(<span class="number">0.0f</span>), <span class="built_in">z</span>(<span class="number">0.0f</span>) &#123;&#125;</span><br><span class="line">    <span class="built_in">Point3f</span>(<span class="type">float</span> a, <span class="type">float</span> b, <span class="type">float</span> c) : <span class="built_in">x</span>(a), <span class="built_in">y</span>(b), <span class="built_in">z</span>(c) &#123;&#125;</span><br><span class="line">    </span><br><span class="line">    <span class="keyword">struct</span> <span class="title class_">Uninitialized</span> &#123;&#125;;</span><br><span class="line">    <span class="built_in">Point3f</span>(Uninitialized) &#123;&#125;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="type">int</span> <span class="title">main</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    <span class="type">const</span> <span class="type">int</span> N = <span class="number">10000000</span>;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">auto</span> t0 = std::chrono::steady_clock::<span class="built_in">now</span>();</span><br><span class="line">    <span class="function">std::vector&lt;Point3f&gt; <span class="title">v</span><span class="params">(N)</span></span>;</span><br><span class="line">    <span class="keyword">auto</span> t1 = std::chrono::steady_clock::<span class="built_in">now</span>();</span><br><span class="line">    <span class="function">std::vector&lt;Point3f&gt; <span class="title">v_uninit</span><span class="params">(N, Point3f::Uninitialized&#123;&#125; <span class="comment">/* 有隐式转换 */</span> )</span></span>;</span><br><span class="line">    <span class="keyword">auto</span> t2 = std::chrono::steady_clock::<span class="built_in">now</span>();</span><br><span class="line">    std::cout &lt;&lt; std::chrono::<span class="built_in">duration_cast</span>&lt;std::chrono::nanoseconds&gt;(t1 - t0).<span class="built_in">count</span>() &lt;&lt; <span class="string">&quot;ns\n&quot;</span>;</span><br><span class="line">    std::cout &lt;&lt; std::chrono::<span class="built_in">duration_cast</span>&lt;std::chrono::nanoseconds&gt;(t2 - t1).<span class="built_in">count</span>() &lt;&lt; <span class="string">&quot;ns\n&quot;</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<p>为什么传入不初始化的代码，结果还是初始化了？接下来我把 vector 改成 malloc&#x2F;new，并手动用 placement new 初始化，就发现 Uninitialized 标记确实做到了不初始化。</p>
-<p>问题出在额外的 Uninitialized 标记上。这个标记虽然是个空类型，但是占用了一个参数的位置，从而使得匹配到的 libstdc++ <code>std::vector</code> 的构造函数变化了。这个匹配到的构造函数使用的值类型为 <code>const value_type &amp;</code>，这意味着参数必须<strong>是</strong>或<strong>先隐式转换成对应元素类型</strong>，然后再用于复制构造。<strong>由于参数没有用于直接构造，<code>std::vector</code> 构造函数不能够被很好优化。</strong></p>
-<p>将默认构造函数的全零初始化删掉，也发现确实生成了绕过初始化的代码。</p>
-
-      
-    </div>
-
-    
-    
-    
-      <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  
-  
-  
-
-      
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
     <link itemprop="mainEntityOfPage" href="https://hxhue.github.io/2023/08/12/cpplang-%E5%AE%9E%E7%8E%B0%E7%AE%80%E5%8D%95%E7%9A%84%E8%8A%B1%E6%8B%AC%E5%8F%B7%E6%8F%92%E5%80%BC%E6%89%93%E5%8D%B0/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -803,378 +1135,10 @@
   
   
 
-      
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
-    <link itemprop="mainEntityOfPage" href="https://hxhue.github.io/2023/08/12/cpplang-%E7%94%A8%E6%8B%B7%E8%B4%9D%E5%B9%B6%E4%BA%A4%E6%8D%A2%E5%AE%9E%E7%8E%B0-operator/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/avatar.gif">
-      <meta itemprop="name" content="Hxhue">
-      <meta itemprop="description" content="">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Hxhue's Blog">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          
-            <a href="/2023/08/12/cpplang-%E7%94%A8%E6%8B%B7%E8%B4%9D%E5%B9%B6%E4%BA%A4%E6%8D%A2%E5%AE%9E%E7%8E%B0-operator/" class="post-title-link" itemprop="url">用拷贝并交换实现 operator=</a>
-        </h2>
-
-        <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-calendar"></i>
-              </span>
-              <span class="post-meta-item-text">Posted on</span>
-
-              <time title="Created: 2023-08-12 15:17:00" itemprop="dateCreated datePublished" datetime="2023-08-12T15:17:00+08:00">2023-08-12</time>
-            </span>
-              <span class="post-meta-item">
-                <span class="post-meta-item-icon">
-                  <i class="far fa-calendar-check"></i>
-                </span>
-                <span class="post-meta-item-text">Edited on</span>
-                <time title="Modified: 2024-03-06 10:16:58" itemprop="dateModified" datetime="2024-03-06T10:16:58+08:00">2024-03-06</time>
-              </span>
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-folder"></i>
-              </span>
-              <span class="post-meta-item-text">In</span>
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/cpplang/" itemprop="url" rel="index"><span itemprop="name">C++ Language</span></a>
-                </span>
-            </span>
-
-          
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          <p><strong>问：</strong> C++ 中有一种实现赋值运算符的方式：先在栈内用复制&#x2F;移动构造创建一个新的对象，然后和 *this 交换。不算上标准库或用户实现的 swap 函数的引入，只需要两行代码。请问这种实现方式需要判断赋值运算符的参数指向的对象和 this 相同吗？不判断安全吗？</p>
-<p><strong>答：</strong> 这种实现方式通常被称为”拷贝并交换（copy-and-swap）”，用于实现赋值运算符。在这种实现方式中，确实不需要判断参数指向的对象和 <strong><code>this</code></strong> 是否相同，因为在执行交换之前，会创建一个参数对象的副本，即使它们相同，也不会产生任何问题。</p>
-<p>这种实现方式是安全的，即使参数对象和当前对象是同一个对象。这是因为在执行交换之前，已经创建了参数对象的副本，因此交换操作不会对原始对象产生任何影响。在交换之后，原始对象的资源将被正确释放，而新的副本将具有参数对象的值。</p>
-<p>下面是一个简单的示例来说明这个过程：</p>
-<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line">cppCopy code</span><br><span class="line"><span class="keyword">class</span> <span class="title class_">MyClass</span> &#123;</span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">    MyClass&amp; <span class="keyword">operator</span>=(MyClass other) &#123;</span><br><span class="line">        <span class="built_in">swap</span>(*<span class="keyword">this</span>, other); <span class="comment">// 交换当前对象和参数对象</span></span><br><span class="line">        <span class="keyword">return</span> *<span class="keyword">this</span>;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// ... 其他成员函数和数据成员 ...</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">private</span>:</span><br><span class="line">    <span class="comment">// 交换函数</span></span><br><span class="line">    <span class="function"><span class="keyword">friend</span> <span class="type">void</span> <span class="title">swap</span><span class="params">(MyClass&amp; first, MyClass&amp; second)</span> </span>&#123;</span><br><span class="line">        <span class="comment">// 交换数据成员</span></span><br><span class="line">        <span class="comment">// ...</span></span><br><span class="line">    &#125;</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
-
-<p>在这个示例中，赋值运算符接受一个按值传递的参数 <code>other</code>，它会自动调用参数对象的复制构造函数创建一个副本。然后通过调用全局的 <strong><code>swap</code></strong> 函数来交换当前对象和副本的数据成员。这确保了异常安全性和正确资源管理。</p>
-<p>总结起来，拷贝并交换方式的实现不需要判断参数对象和当前对象是否相同，它是一种安全且简洁的赋值运算符实现方式。</p>
-
-      
-    </div>
-
-    
-    
-    
-      <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  
-  
-  
-
-      
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
-    <link itemprop="mainEntityOfPage" href="https://hxhue.github.io/2023/08/12/inside-the-cpp-object-model-C-%E5%AF%B9%E8%B1%A1%E6%A8%A1%E5%9E%8B%E5%BC%80%E9%94%80%E6%80%BB%E7%BB%93/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/avatar.gif">
-      <meta itemprop="name" content="Hxhue">
-      <meta itemprop="description" content="">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Hxhue's Blog">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          
-            <a href="/2023/08/12/inside-the-cpp-object-model-C-%E5%AF%B9%E8%B1%A1%E6%A8%A1%E5%9E%8B%E5%BC%80%E9%94%80%E6%80%BB%E7%BB%93/" class="post-title-link" itemprop="url">C++ 对象模型开销总结</a>
-        </h2>
-
-        <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-calendar"></i>
-              </span>
-              <span class="post-meta-item-text">Posted on</span>
-
-              <time title="Created: 2023-08-12 15:17:00" itemprop="dateCreated datePublished" datetime="2023-08-12T15:17:00+08:00">2023-08-12</time>
-            </span>
-              <span class="post-meta-item">
-                <span class="post-meta-item-icon">
-                  <i class="far fa-calendar-check"></i>
-                </span>
-                <span class="post-meta-item-text">Edited on</span>
-                <time title="Modified: 2024-03-06 09:34:07" itemprop="dateModified" datetime="2024-03-06T09:34:07+08:00">2024-03-06</time>
-              </span>
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-folder"></i>
-              </span>
-              <span class="post-meta-item-text">In</span>
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/book-itcom/" itemprop="url" rel="index"><span itemprop="name">深度探索 C++ 对象模型</span></a>
-                </span>
-            </span>
-
-          
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          <p><strong>下面都是用的 Itanium C++ ABI。机器字长为 64 位。</strong></p>
-<h1 id="指向成员函数的指针：2-倍大小"><a href="#指向成员函数的指针：2-倍大小" class="headerlink" title="指向成员函数的指针：2 倍大小"></a>指向成员函数的指针：2 倍大小</h1><p>在 64 位下是 16 字节，因为需要支持虚函数调用。指向成员函数的指针会保存两部分数据：</p>
-<p><code>ptr</code>：非虚函数则存储函数地址。虚函数则存储虚表中偏置加 1（1 plus the virtual table offset (in bytes) of the function, represented as a <code>ptrdiff_t</code>）</p>
-<p><code>adj</code>：存储对 this 指针的调整量。</p>
-<p><img src="/assets/330ad93e6e502a485f38a465497e5685.png"></p>
-<p>用 <code>指向成员函数的指针</code> 调用函数时，需要在传入的 this 指针上添加偏置（在多继承中有用），偏置信息就存储在该指针内。下一节“调用虚函数的开销”也描述了如何在跨平台 C++ ABI 上装配一个 指向成员函数的指针。</p>
-<h1 id="调用虚函数：多访存-2-次"><a href="#调用虚函数：多访存-2-次" class="headerlink" title="调用虚函数：多访存 2 次"></a>调用虚函数：多访存 2 次</h1><figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;cstdio&gt;</span></span></span><br><span class="line"></span><br><span class="line"><span class="keyword">struct</span> <span class="title class_">BaseObject</span> &#123;</span><br><span class="line">    <span class="function"><span class="keyword">virtual</span> <span class="type">int</span> <span class="title">f</span><span class="params">()</span> </span>&#123; <span class="keyword">return</span> <span class="number">13</span>; &#125;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="keyword">struct</span> <span class="title class_">DerivedObject</span> : BaseObject &#123;</span><br><span class="line">    <span class="function"><span class="type">int</span> <span class="title">f</span><span class="params">()</span> <span class="keyword">override</span> </span>&#123; <span class="keyword">return</span> <span class="number">4000</span>; &#125;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="type">int</span> <span class="title">main</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    BaseObject *p = <span class="keyword">new</span> DerivedObject;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 访存两次得到虚函数（感觉 long 类型比 char*/void* 模拟汇编更加合适）</span></span><br><span class="line">    <span class="type">long</span> vptr = *(<span class="type">long</span> *)p;</span><br><span class="line">    <span class="type">long</span> func = *(<span class="type">long</span> *)(vptr + <span class="number">0</span>);</span><br><span class="line">    </span><br><span class="line">    <span class="comment">// 把 this 指针作为第一个参数传入</span></span><br><span class="line">    <span class="keyword">auto</span> method = (<span class="built_in">int</span> (*)(BaseObject *))func;</span><br><span class="line">    <span class="type">int</span> result = <span class="built_in">method</span>(p);</span><br><span class="line">    </span><br><span class="line">    <span class="comment">// 尽管也可以按照 Itanium C++ ABI 装配成员函数指针，</span></span><br><span class="line">    <span class="comment">// 但实际上调用时还是会动态查找，相当于上面的访存操作白做了。</span></span><br><span class="line">    <span class="comment">// int (BaseObject::*method)();</span></span><br><span class="line">    <span class="comment">// auto &amp;manip = (long (&amp;)[2])method;</span></span><br><span class="line">    <span class="comment">// manip[0] = (long)func;</span></span><br><span class="line">    <span class="comment">// manip[1] = 0; // single inheritance</span></span><br><span class="line">    <span class="comment">// int result = (p-&gt;*method)();</span></span><br><span class="line"></span><br><span class="line">    <span class="built_in">printf</span>(<span class="string">&quot;result: %d\n&quot;</span>, result);</span><br><span class="line">    <span class="comment">// 打印结果：result: 4000</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<h1 id="访问继承自虚基类的成员：多访存-2-次"><a href="#访问继承自虚基类的成员：多访存-2-次" class="headerlink" title="访问继承自虚基类的成员：多访存 2 次"></a>访问继承自虚基类的成员：多访存 2 次</h1><p>需要多访存 2 次得到虚基类子对象的位置。</p>
-<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">BaseObject *p = <span class="keyword">new</span> DerivedObject;</span><br><span class="line"><span class="comment">// 编译期能计算出这个常量，该常量为负数且小于 -(int64_t)sizeof(long) * 2</span></span><br><span class="line"><span class="type">long</span> vptr_to_offset = ...; </span><br><span class="line"><span class="type">char</span> *vptr = *(<span class="type">char</span> **)p;                        <span class="comment">// [1]</span></span><br><span class="line"><span class="type">long</span> offset = *(<span class="type">long</span> *)(vptr + vptr_to_offset ); <span class="comment">// [2]</span></span><br><span class="line"><span class="type">char</span> *subobject = p + offset;                    <span class="comment">// 这一步不访存</span></span><br><span class="line"><span class="comment">// 省略：用虚基类子对象的指针访问其成员</span></span><br></pre></td></tr></table></figure>
-
-<p>当然，通过虚基类的指针访问它自己的成员，是不需要先计算偏置的。</p>
-<h1 id="调用继承自虚基类的虚函数：多访存-2-4-次"><a href="#调用继承自虚基类的虚函数：多访存-2-4-次" class="headerlink" title="调用继承自虚基类的虚函数：多访存 2 &#x2F; 4 次"></a>调用继承自虚基类的虚函数：多访存 2 &#x2F; 4 次</h1><p>首先取虚函数的地址要 2 次访存。其次，如果该虚函数是在虚基类实现的，且继承链上没有覆盖实现，则需要将 this 指针对准到虚基类，获取偏置又要 2 次访存，所以一共是 4 次。（如果有覆盖实现，则对准 this 指针所用的偏置是编译期常量。如果覆盖了实现，但是实现中仍然使用了来自于虚基类的数据，则也得多 2 次访存来获取偏置。）</p>
-<blockquote>
-<p>在使用虚基类的虚函数版本时，gcc 倾向于先获得虚基类的偏置，然后得到虚基类的 vptr，再通过这个 vptr 读取虚函数地址——尽管子类的 vtable 中也记录有虚函数。</p>
-</blockquote>
-<p>按照上面的说法，<strong>如果虚基类提供的虚函数都是纯虚函数，且虚基类本身不带有数据</strong>，那么用于对齐 this 指针的 2 次访存代价是不需要付出的。</p>
-<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;cstdio&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;memory&gt;</span></span></span><br><span class="line"></span><br><span class="line"><span class="keyword">struct</span> <span class="title class_">Dog</span> &#123;</span><br><span class="line">  <span class="function"><span class="keyword">virtual</span> <span class="type">void</span> <span class="title">bark</span><span class="params">()</span> </span>= <span class="number">0</span>;</span><br><span class="line">  <span class="keyword">virtual</span> ~<span class="built_in">Dog</span>() = <span class="keyword">default</span>; <span class="comment">// &lt;-- 很重要</span></span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 虚拟继承能够支持菱形继承，但代价是接口类的vptr不能被复用</span></span><br><span class="line"><span class="keyword">struct</span> <span class="title class_">GoldenRetriever</span> : <span class="keyword">virtual</span> Dog &#123;</span><br><span class="line">  <span class="function"><span class="type">void</span> <span class="title">bark</span><span class="params">()</span> <span class="keyword">override</span> </span>&#123;</span><br><span class="line">    <span class="built_in">puts</span>(<span class="string">&quot;I&#x27;m golden!&quot;</span>);</span><br><span class="line">  &#125;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="type">int</span> <span class="title">main</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    <span class="comment">// 这里有向基类的隐式类型转换，所以得有虚析构函数。</span></span><br><span class="line">    <span class="comment">// 只是恰好这个子类没有覆写析构函数而已，换个子类可能就不安全了。</span></span><br><span class="line">    std::unique_ptr&lt;Dog&gt; dog = std::<span class="built_in">make_unique</span>&lt;GoldenRetriever&gt;();</span><br><span class="line">    dog-&gt;<span class="built_in">bark</span>();</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">interface</span> <span class="title class_">Dog</span> &#123;</span><br><span class="line">  <span class="keyword">void</span> <span class="title function_">bark</span><span class="params">()</span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">class</span> <span class="title class_">GoldenRetriever</span> <span class="keyword">implements</span> <span class="title class_">Dog</span> &#123;</span><br><span class="line">  <span class="meta">@Override</span></span><br><span class="line">  <span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">bark</span><span class="params">()</span> &#123;</span><br><span class="line">    System.out.println(<span class="string">&quot;I&#x27;m golden!&quot;</span>);</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  <span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title function_">main</span><span class="params">(String[] args)</span> &#123;</span><br><span class="line">    <span class="type">Dog</span> <span class="variable">dog</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">GoldenRetriever</span>();</span><br><span class="line">    dog.bark();</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<p>上面是 Java 和 C++ 中定义接口的不同之处。在 C++ 中，为了使得接口支持菱形继承，有必要加上 virtual 属性；Java 中对象只能单继承，因而没有这个问题。</p>
-<p>Java 中接口继承接口用关键字 extends；C++ 中接口继承接口也得加上 virtual，因为接口概念虽然存在，但 C++ 里接口是类的子集，而不是 C++ 直接支持的类型。</p>
-<h1 id="读-std-type-info：静态访存-0-次，动态-2-次"><a href="#读-std-type-info：静态访存-0-次，动态-2-次" class="headerlink" title="读 std::type_info：静态访存 0 次，动态 2 次"></a>读 <code>std::type_info</code>：静态访存 0 次，动态 2 次</h1><p>⚠ 在多态类的指针或引用上使用 typeid 关键字才会用以下方式访问（虚拟继承得到了 vptr 也不行）。如果该类的类型完全确定，则在编译期可以直接确定地址。</p>
-<p>在编译器内部实现中有两种方式可以读取 <code>std::type_info *</code> 。</p>
-<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">BaseObject *p = <span class="keyword">new</span> DerivedObject;</span><br><span class="line"></span><br><span class="line"><span class="comment">// vtable_prefix = &#123; whole_object, whole_type, origin &#125;</span></span><br><span class="line"><span class="type">char</span> *vptr = *(<span class="type">char</span> **)p;                         <span class="comment">// [1]</span></span><br><span class="line"><span class="type">long</span> offset = *(<span class="type">long</span> *)(vptr - <span class="built_in">sizeof</span>(<span class="type">long</span>) * <span class="number">2</span>); <span class="comment">// [2]</span></span><br><span class="line"><span class="type">char</span> *realp = p + offset;                         <span class="comment">// 这一步不访存</span></span><br><span class="line"><span class="type">char</span> *realvptr = *(<span class="type">char</span> **)realp;                 <span class="comment">// [3]</span></span><br><span class="line"></span><br><span class="line"><span class="comment">// __class_type_info 继承于 std::type_info</span></span><br><span class="line">__class_type_info *info = *(__class_type_info **)(realvptr - <span class="built_in">sizeof</span>(<span class="type">long</span>)); <span class="comment">// [4]</span></span><br></pre></td></tr></table></figure>
-
-<p>或者：</p>
-<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">BaseObject *p = <span class="keyword">new</span> DerivedObject;</span><br><span class="line"></span><br><span class="line"><span class="type">long</span> vptr = *(<span class="type">long</span> *)p;                         </span><br><span class="line">__class_type_info *info = *(__class_type_info **)(vptr - <span class="built_in">sizeof</span>(<span class="type">long</span>));</span><br></pre></td></tr></table></figure>
-
-<p>前者访存 4 次，后者访存 2 次。如果<strong>类型正在构建中</strong>，这两个地址是不同的，否则应该相等，dynamic_cast 对这个特殊情况有专门的处理（两个都读，一共 6 次访存，可以看之后的小节）。如果是我们的代码动态使用，用到的是访存 2 次的版本！</p>
-<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;typeinfo&gt;</span></span></span><br><span class="line"></span><br><span class="line"><span class="keyword">struct</span> <span class="title class_">A</span> &#123;</span><br><span class="line">    <span class="type">int</span> a;</span><br><span class="line">    <span class="function"><span class="keyword">virtual</span> <span class="type">void</span> <span class="title">f</span><span class="params">()</span> </span>&#123;&#125;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="keyword">struct</span> <span class="title class_">B</span> : A &#123;</span><br><span class="line">    <span class="type">int</span> b;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="type">int</span> <span class="title">main</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    A *p = <span class="keyword">new</span> B;</span><br><span class="line">    <span class="keyword">auto</span> &amp;info = <span class="built_in">typeid</span>(*p);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<p><img src="/assets/2b8d47a8e6b1211028438a01a87879dc.png"></p>
-<h1 id="比较-std-type-info-std-type-index：类型名（mangled）字符串比较"><a href="#比较-std-type-info-std-type-index：类型名（mangled）字符串比较" class="headerlink" title="比较 std::type_info &#x2F; std::type_index：类型名（mangled）字符串比较"></a>比较 <code>std::type_info</code> &#x2F; <code>std::type_index</code>：类型名（mangled）字符串比较</h1><p>用 RTTI 比较类型等同于比较字符串。</p>
-<p>编译期间只需要比较地址，但是编译期无论多慢都不影响运行性能所以显得没那么重要。</p>
-<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 去掉了一些条件编译分支</span></span><br><span class="line">_GLIBCXX23_CONSTEXPR <span class="keyword">inline</span> <span class="type">bool</span></span><br><span class="line">type_info::<span class="keyword">operator</span>==(<span class="type">const</span> type_info&amp; __arg) <span class="type">const</span> _GLIBCXX_NOEXCEPT</span><br><span class="line">&#123;</span><br><span class="line">	<span class="keyword">if</span> (std::__is_constant_evaluated())</span><br><span class="line">	  <span class="keyword">return</span> <span class="keyword">this</span> == &amp;__arg;</span><br><span class="line">	<span class="keyword">if</span> (__name == __arg.__name)</span><br><span class="line">	  <span class="keyword">return</span> <span class="literal">true</span>;</span><br><span class="line">	<span class="keyword">return</span> __name[<span class="number">0</span>] != <span class="string">&#x27;*&#x27;</span> &amp;&amp; __builtin_strcmp (__name, __arg.<span class="built_in">name</span>()) == <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<p><code>std::type_index</code> 包含了一个 <code>std::type_info</code> 的指针，比较运算符会转发到 <code>std::type_info</code> 的比较上，内联之后代价一样。</p>
-<h1 id="dynamic-cast-static-cast-向上转型：非零偏移需先判空"><a href="#dynamic-cast-static-cast-向上转型：非零偏移需先判空" class="headerlink" title="dynamic_cast &#x2F; static_cast 向上转型：非零偏移需先判空"></a><code>dynamic_cast</code> &#x2F; <code>static_cast</code> 向上转型：非零偏移需先判空</h1><p>如果是向第一个基类转型，则地址没有偏移，直接赋值即可。<strong>如果是第二个或更后面的非空基类转型，则地址会发生偏移，需要判断指针是否为空再赋值</strong>：若为空则仍保持空；若不空则对指针做偏移运算。</p>
-<h1 id="dynamic-cast-向下转型：精确命中则快，否则是开销大的图搜索"><a href="#dynamic-cast-向下转型：精确命中则快，否则是开销大的图搜索" class="headerlink" title="dynamic_cast 向下转型：精确命中则快，否则是开销大的图搜索"></a><code>dynamic_cast</code> 向下转型：精确命中则快，否则是开销大的图搜索</h1><p>用 <code>static_cast</code> 做向下转型没有运行时检查，用 <code>dynamic_cast</code> 做向上转型则效果等同于 <code>static_cast</code>。<strong>所以一般说 <code>dynamic_cast</code>，关注的多是 <code>dynamic_cast</code> 的运行时检查。</strong></p>
-<p>首先检查类型是否正在构建，这个阶段会从两个地方读 type_info，检查其地址一致性。<strong>一共访存 6 次。</strong>如果地址不同则类型正在构建，不允许转换，返回 nullptr。</p>
-<p><img src="/assets/8df4c419d661852da7eccf5709ec60eb.png"></p>
-<p><img src="/assets/f9ac45d4d57dd1d7c0c52cc6afa1db5c.png"></p>
-<p>接下来判断是否目的类型和当前真实类型完全相符，如果相符可以直接返回。多判断 <code>src2dst</code> 和偏置的相等性可能是冗余信息检查，以便避免失败时 <strong>type_info 中的字符串比较</strong>（个人想法）。</p>
-<p><img src="/assets/31b3aadd8a98cd2b2f2d0fcf7791f013.png"></p>
-<p>如果失败，则还需要<strong>考虑目的类是否为真实类型的基类</strong>。这会用到一个另外的虚函数，其结果还需要进行一些校验。这个过程就比较耗时了。</p>
-<p><img src="/assets/30fb8fc1adba1e75180fb9c4c5935c36.png"></p>
-<blockquote>
-<p>如果我们向下转型时要求类型必须精确匹配，则可以用比较 type_info 和 static_cast 的方式减少开销。首先是我们读 type_info 往往不是在构造函数中，所以只需要 2 次访存而不是 6 次；其次是如果精确匹配失败可以直接返回，而不是进入接下来的图搜索步骤。</p>
-</blockquote>
-
-      
-    </div>
-
-    
-    
-    
-      <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  
-  
-  
-
-      
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
-    <link itemprop="mainEntityOfPage" href="https://hxhue.github.io/2023/08/12/inside-the-cpp-object-model-Cfront-%E5%A6%82%E4%BD%95%E6%8F%92%E5%85%A5%E6%9E%84%E9%80%A0%E5%87%BD%E6%95%B0/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/avatar.gif">
-      <meta itemprop="name" content="Hxhue">
-      <meta itemprop="description" content="">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Hxhue's Blog">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          
-            <a href="/2023/08/12/inside-the-cpp-object-model-Cfront-%E5%A6%82%E4%BD%95%E6%8F%92%E5%85%A5%E6%9E%84%E9%80%A0%E5%87%BD%E6%95%B0/" class="post-title-link" itemprop="url">Cfront 如何插入构造函数</a>
-        </h2>
-
-        <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-calendar"></i>
-              </span>
-              <span class="post-meta-item-text">Posted on</span>
-
-              <time title="Created: 2023-08-12 15:17:00" itemprop="dateCreated datePublished" datetime="2023-08-12T15:17:00+08:00">2023-08-12</time>
-            </span>
-              <span class="post-meta-item">
-                <span class="post-meta-item-icon">
-                  <i class="far fa-calendar-check"></i>
-                </span>
-                <span class="post-meta-item-text">Edited on</span>
-                <time title="Modified: 2024-03-06 09:49:47" itemprop="dateModified" datetime="2024-03-06T09:49:47+08:00">2024-03-06</time>
-              </span>
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-folder"></i>
-              </span>
-              <span class="post-meta-item-text">In</span>
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/book-itcom/" itemprop="url" rel="index"><span itemprop="name">深度探索 C++ 对象模型</span></a>
-                </span>
-            </span>
-
-          
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          <p>实际上复制构造函数的插入比较困难，比如在函数返回和传参的时候。由于 C 语言是按位复制（而不是按成员），cfront 会在函数调用前插入返回值变量声明，在函数中使用局部变量运算，并在返回时调用复制构造函数从局部变量复制成员到返回值处。</p>
-<p><strong>NRV</strong> (Named Return Value) 优化则能减少返回时的复制构造：</p>
-<p><img src="/assets/cc2fdb90393c80df691782129795025a.png"></p>
-<h1 id="关于返回值优化"><a href="#关于返回值优化" class="headerlink" title="关于返回值优化"></a>关于返回值优化</h1><p><img src="/assets/91e5f009f558bdd67bca51ca0d3776de.png"></p>
-<p>RVO（<strong>在返回值上构造，也就是临时变量</strong>的优化，不过多个分支下 return 也是可以优化的）：</p>
-<p><img src="/assets/f0dd4f2b4cb038186ac5a8e9d6687282.png"></p>
-<p>NRVO（具名局部变量的返回的优化）：</p>
-<p><img src="/assets/87aa8de6c40b1ec9d484b7ccf3880a88.png"></p>
-
-      
-    </div>
-
-    
-    
-    
-      <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  
-  
-  
-
-      
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
-    <link itemprop="mainEntityOfPage" href="https://hxhue.github.io/2023/08/12/inside-the-cpp-object-model-new-%E5%92%8C-delete/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/avatar.gif">
-      <meta itemprop="name" content="Hxhue">
-      <meta itemprop="description" content="">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Hxhue's Blog">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          
-            <a href="/2023/08/12/inside-the-cpp-object-model-new-%E5%92%8C-delete/" class="post-title-link" itemprop="url">new 和 delete</a>
-        </h2>
-
-        <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-calendar"></i>
-              </span>
-              <span class="post-meta-item-text">Posted on</span>
-
-              <time title="Created: 2023-08-12 15:17:00" itemprop="dateCreated datePublished" datetime="2023-08-12T15:17:00+08:00">2023-08-12</time>
-            </span>
-              <span class="post-meta-item">
-                <span class="post-meta-item-icon">
-                  <i class="far fa-calendar-check"></i>
-                </span>
-                <span class="post-meta-item-text">Edited on</span>
-                <time title="Modified: 2024-03-06 09:34:12" itemprop="dateModified" datetime="2024-03-06T09:34:12+08:00">2024-03-06</time>
-              </span>
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-folder"></i>
-              </span>
-              <span class="post-meta-item-text">In</span>
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/book-itcom/" itemprop="url" rel="index"><span itemprop="name">深度探索 C++ 对象模型</span></a>
-                </span>
-            </span>
-
-          
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          <h1 id="new"><a href="#new" class="headerlink" title="new"></a><code>new</code></h1><p>用 new 申请的内存最少占用 1 个字节——尽管我们申请的可能是 0 个字节。</p>
-<p><img src="/assets/e06da70dc841cb03e9e0076d20f8f899.png"></p>
-<h1 id="delete-delete"><a href="#delete-delete" class="headerlink" title="delete&#x2F;delete[]"></a><code>delete</code>&#x2F;<code>delete[]</code></h1><p>delete 和 delete[] 都会归还空间，但是 delete[] 会询问元素数量，并析构数组中的每个元素，而 delete 只会析构一个元素。</p>
-<p>尽管虚析构函数允许我们正常 delete 掉指向子类对象的基类指针，但是在基类指针上使用 delete[] 可能是有错的：</p>
-<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;cstdio&gt;</span></span></span><br><span class="line"></span><br><span class="line"><span class="keyword">struct</span> <span class="title class_">A</span> &#123;</span><br><span class="line">    <span class="type">double</span> a;</span><br><span class="line">    <span class="keyword">virtual</span> ~<span class="built_in">A</span>() &#123;</span><br><span class="line">        <span class="built_in">puts</span>(<span class="string">&quot;~A()&quot;</span>);</span><br><span class="line">        <span class="built_in">fflush</span>(stdout);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="keyword">struct</span> <span class="title class_">B</span> : A &#123;</span><br><span class="line">    <span class="type">double</span> b;</span><br><span class="line">    ~<span class="built_in">B</span>() <span class="keyword">override</span> &#123;</span><br><span class="line">        <span class="built_in">puts</span>(<span class="string">&quot;~B()&quot;</span>);</span><br><span class="line">        <span class="built_in">fflush</span>(stdout);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="built_in">static_assert</span>(<span class="built_in">sizeof</span>(A) == <span class="number">16</span>);</span><br><span class="line"><span class="built_in">static_assert</span>(<span class="built_in">sizeof</span>(B) == <span class="number">24</span>);</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="type">int</span> <span class="title">main</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    A *array_of_A = <span class="keyword">new</span> B[<span class="number">2</span>];</span><br><span class="line">    <span class="keyword">delete</span> [] array_of_A; <span class="comment">// &lt;-- 大问题！</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<p>上述代码在 Godbolt 上编译后返回 139。这里应用 delete[]，程序会将数组当成 A 数组来析构，把 A 的大小作为步长分割申请的空间，然后在每个”对象“上调用析构函数。这显然是不正确的，因为真正的步长是 B 的大小。</p>
-<p>如果注释掉 B 类中的 <code>double b;</code> 声明，让 A 和 B 的大小一致，那么析构过程不会引发程序错误。但是非常不建议这么做！这对程序修改的容错不友好。</p>
-<h1 id="Placement-new"><a href="#Placement-new" class="headerlink" title="Placement new"></a>Placement <code>new</code></h1><p>一般不用于在已有对象上重新构造，毕竟那样可以直接赋值。可以用于在 arena（一块足够大的、连续的空间）上初始化对象，但是需要<strong>记得自行析构</strong>。</p>
-
-      
-    </div>
-
-    
-    
-    
-      <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  
-  
-  
-
 
   
   <nav class="pagination">
-    <a class="extend prev" rel="prev" href="/page/4/"><i class="fa fa-angle-left" aria-label="Previous page"></i></a><a class="page-number" href="/">1</a><span class="space">&hellip;</span><a class="page-number" href="/page/4/">4</a><span class="page-number current">5</span><a class="page-number" href="/page/6/">6</a><span class="space">&hellip;</span><a class="page-number" href="/page/10/">10</a><a class="extend next" rel="next" href="/page/6/"><i class="fa fa-angle-right" aria-label="Next page"></i></a>
+    <a class="extend prev" rel="prev" href="/page/4/"><i class="fa fa-angle-left" aria-label="Previous page"></i></a><a class="page-number" href="/">1</a><span class="space">&hellip;</span><a class="page-number" href="/page/4/">4</a><span class="page-number current">5</span><a class="page-number" href="/page/6/">6</a><span class="space">&hellip;</span><a class="page-number" href="/page/11/">11</a><a class="extend next" rel="next" href="/page/6/"><i class="fa fa-angle-right" aria-label="Next page"></i></a>
   </nav>
 
 
@@ -1240,20 +1204,20 @@
       <div class="site-state-item site-state-posts">
           <a href="/archives/">
         
-          <span class="site-state-item-count">95</span>
+          <span class="site-state-item-count">106</span>
           <span class="site-state-item-name">posts</span>
         </a>
       </div>
       <div class="site-state-item site-state-categories">
             <a href="/categories/">
           
-        <span class="site-state-item-count">4</span>
+        <span class="site-state-item-count">7</span>
         <span class="site-state-item-name">categories</span></a>
       </div>
       <div class="site-state-item site-state-tags">
             <a href="/tags/">
           
-        <span class="site-state-item-count">1</span>
+        <span class="site-state-item-count">3</span>
         <span class="site-state-item-name">tags</span></a>
       </div>
   </nav>
@@ -1304,12 +1268,8 @@
 
   
   <script src="/lib/anime.min.js"></script>
-  <script src="/lib/velocity/velocity.min.js"></script>
-  <script src="/lib/velocity/velocity.ui.min.js"></script>
 
 <script src="/js/utils.js"></script>
-
-<script src="/js/motion.js"></script>
 
 
 <script src="/js/schemes/pisces.js"></script>
