@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="zh-CN">
 <head>
   <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
@@ -14,10 +14,12 @@
 
 
 <link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+  <link rel="stylesheet" href="/lib/pace/pace-theme-minimal.min.css">
+  <script src="/lib/pace/pace.min.js"></script>
 
 <script id="hexo-configurations">
     var NexT = window.NexT || {};
-    var CONFIG = {"hostname":"hxhue.github.io","root":"/","scheme":"Gemini","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":false,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},"path":"search.xml"};
+    var CONFIG = {"hostname":"hxhue.github.io","root":"/","scheme":"Gemini","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":true,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":true,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":false,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},"path":"search.xml"};
   </script>
 
   <meta name="description" content="2023 年 5 月 17 日 推导上下文：Deduced ContextP272 书上  依赖于模板类型的子类型不是推导上下文。比如 typename X&lt;N&gt;::I 不是。而 X&lt;N&gt;::* 这样的指向成员的指针没有用到子类型，所以是推导上下文。 非类型模板参数的非平凡表达式不是推导上下文。比如模板 S 和参数 I，S&lt;I+1&gt; 无法提供推导信息。  如何推">
@@ -26,7 +28,7 @@
 <meta property="og:url" content="https://hxhue.github.io/2023/08/12/cpp-templates-the-complete-guide-15-Template-Argument-Deduction/index.html">
 <meta property="og:site_name" content="Hxhue&#39;s Blog">
 <meta property="og:description" content="2023 年 5 月 17 日 推导上下文：Deduced ContextP272 书上  依赖于模板类型的子类型不是推导上下文。比如 typename X&lt;N&gt;::I 不是。而 X&lt;N&gt;::* 这样的指向成员的指针没有用到子类型，所以是推导上下文。 非类型模板参数的非平凡表达式不是推导上下文。比如模板 S 和参数 I，S&lt;I+1&gt; 无法提供推导信息。  如何推">
-<meta property="og:locale" content="en_US">
+<meta property="og:locale" content="zh_CN">
 <meta property="og:image" content="https://hxhue.github.io/assets/f7479b8da246316d6819d3674ab5e98d.png">
 <meta property="og:image" content="https://hxhue.github.io/assets/5ffedbd0cc91ad5dbbc9ae38a044d43f.png">
 <meta property="og:image" content="https://hxhue.github.io/assets/15885c4217279a0cdf53e2064b5c49fb.png">
@@ -40,7 +42,7 @@
 <meta property="og:image" content="https://hxhue.github.io/assets/0d5d1096f56a07a271fe3f835d028923.png">
 <meta property="og:image" content="https://hxhue.github.io/assets/c3de7e86b0aba0681f1fd0901a5af562.png">
 <meta property="article:published_time" content="2023-08-11T16:00:00.000Z">
-<meta property="article:modified_time" content="2024-03-06T01:29:10.532Z">
+<meta property="article:modified_time" content="2024-03-07T08:26:55.981Z">
 <meta property="article:author" content="Hxhue">
 <meta property="article:tag" content="C++">
 <meta name="twitter:card" content="summary">
@@ -55,7 +57,7 @@
     sidebar: "",
     isHome : false,
     isPost : true,
-    lang   : 'en'
+    lang   : 'zh-CN'
   };
 </script>
 
@@ -100,7 +102,7 @@
     <header class="header" itemscope itemtype="http://schema.org/WPHeader">
       <div class="header-inner"><div class="site-brand-container">
   <div class="site-nav-toggle">
-    <div class="toggle" aria-label="Toggle navigation bar">
+    <div class="toggle" aria-label="切换导航栏">
       <span class="toggle-line toggle-line-first"></span>
       <span class="toggle-line toggle-line-middle"></span>
       <span class="toggle-line toggle-line-last"></span>
@@ -130,31 +132,31 @@
   <ul id="menu" class="main-menu menu">
         <li class="menu-item menu-item-home">
 
-    <a href="/" rel="section"><i class="home fa-fw"></i>Home</a>
+    <a href="/" rel="section"><i class="home fa-fw"></i>首页</a>
 
   </li>
         <li class="menu-item menu-item-archives">
 
-    <a href="/archives/" rel="section"><i class="archive fa-fw"></i>Archives</a>
+    <a href="/archives/" rel="section"><i class="archive fa-fw"></i>归档</a>
 
   </li>
         <li class="menu-item menu-item-about">
 
-    <a href="/about/" rel="section"><i class="user fa-fw"></i>About</a>
+    <a href="/about/" rel="section"><i class="user fa-fw"></i>关于</a>
 
   </li>
         <li class="menu-item menu-item-tags">
 
-    <a href="/tags/" rel="section"><i class="tags fa-fw"></i>Tags</a>
+    <a href="/tags/" rel="section"><i class="tags fa-fw"></i>标签</a>
 
   </li>
         <li class="menu-item menu-item-categories">
 
-    <a href="/categories/" rel="section"><i class="th fa-fw"></i>Categories</a>
+    <a href="/categories/" rel="section"><i class="th fa-fw"></i>分类</a>
 
   </li>
       <li class="menu-item menu-item-search">
-        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>Search
+        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>搜索
         </a>
       </li>
   </ul>
@@ -170,7 +172,7 @@
   </span>
   <div class="search-input-container">
     <input autocomplete="off" autocapitalize="off"
-           placeholder="Searching..." spellcheck="false"
+           placeholder="搜索..." spellcheck="false"
            type="search" class="search-input">
   </div>
   <span class="popup-btn-close">
@@ -207,7 +209,7 @@
     
   
   
-  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
     <link itemprop="mainEntityOfPage" href="https://hxhue.github.io/2023/08/12/cpp-templates-the-complete-guide-15-Template-Argument-Deduction/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -229,28 +231,35 @@
               <span class="post-meta-item-icon">
                 <i class="far fa-calendar"></i>
               </span>
-              <span class="post-meta-item-text">Posted on</span>
+              <span class="post-meta-item-text">发表于</span>
 
-              <time title="Created: 2023-08-12 00:00:00" itemprop="dateCreated datePublished" datetime="2023-08-12T00:00:00+08:00">2023-08-12</time>
+              <time title="创建时间：2023-08-12 00:00:00" itemprop="dateCreated datePublished" datetime="2023-08-12T00:00:00+08:00">2023-08-12</time>
             </span>
               <span class="post-meta-item">
                 <span class="post-meta-item-icon">
                   <i class="far fa-calendar-check"></i>
                 </span>
-                <span class="post-meta-item-text">Edited on</span>
-                <time title="Modified: 2024-03-06 09:29:10" itemprop="dateModified" datetime="2024-03-06T09:29:10+08:00">2024-03-06</time>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2024-03-07 16:26:55" itemprop="dateModified" datetime="2024-03-07T16:26:55+08:00">2024-03-07</time>
               </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
                 <i class="far fa-folder"></i>
               </span>
-              <span class="post-meta-item-text">In</span>
+              <span class="post-meta-item-text">分类于</span>
                 <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
                   <a href="/categories/cpp-templates-the-complete-guide-book/" itemprop="url" rel="index"><span itemprop="name">C++ Templates: The Complete Guide</span></a>
                 </span>
             </span>
 
           
+            <span class="post-meta-item" title="阅读次数" id="busuanzi_container_page_pv" style="display: none;">
+              <span class="post-meta-item-icon">
+                <i class="eye"></i>
+              </span>
+              <span class="post-meta-item-text">阅读次数：</span>
+              <span id="busuanzi_value_page_pv"></span>
+            </span>
 
         </div>
       </header>
@@ -281,7 +290,7 @@
 
 <p>调用 <code>max(1, 3.0)</code> 就会失败，而调用 <code>max&lt;double&gt;(1, 3.0)</code> 才能成功（模板参数被人为指定之后就允许隐式类型转换了）。</p>
 <h1 id="特例：初始化列表"><a href="#特例：初始化列表" class="headerlink" title="特例：初始化列表"></a>特例：初始化列表</h1><p>初始化列表没有确定的类型，因此不能绑定在参数类型 T 上面。但是如果参数类型为 <code>std::initializer_list&lt;T&gt;</code>，则能够尝试绑定（当所有元素类型相同时成功）。</p>
-<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;initializer_list&gt;</span></span></span><br><span class="line"></span><br><span class="line"><span class="comment">// 如果把参数类型从初始化列表改成 T 就会推导失败</span></span><br><span class="line"><span class="function"><span class="keyword">template</span>&lt;<span class="keyword">typename</span> T&gt; <span class="type">void</span> <span class="title">f</span><span class="params">(std::initializer_list&lt;T&gt;)</span> </span>&#123;&#125;</span><br><span class="line"><span class="function"><span class="type">int</span> <span class="title">main</span><span class="params">()</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">	<span class="built_in">f</span>(&#123;<span class="number">2</span>, <span class="number">3</span>, <span class="number">5</span>, <span class="number">7</span>, <span class="number">9</span>&#125;);               <span class="comment">// OK: T is deduced to int</span></span><br><span class="line">	<span class="built_in">f</span>(&#123;’a’, ’e’, ’i’, ’o’, ’u’, <span class="number">42</span>&#125;); <span class="comment">// ERROR: T deduced to both char and int</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;initializer_list&gt;</span></span></span><br><span class="line"></span><br><span class="line"><span class="comment">// 如果把参数类型从初始化列表改成 T 就会推导失败</span></span><br><span class="line"><span class="function"><span class="keyword">template</span>&lt;<span class="keyword">typename</span> T&gt; <span class="type">void</span> <span class="title">f</span><span class="params">(std::initializer_list&lt;T&gt;)</span> </span>&#123;&#125;</span><br><span class="line"><span class="function"><span class="type">int</span> <span class="title">main</span><span class="params">()</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="built_in">f</span>(&#123;<span class="number">2</span>, <span class="number">3</span>, <span class="number">5</span>, <span class="number">7</span>, <span class="number">9</span>&#125;);               <span class="comment">// OK: T is deduced to int</span></span><br><span class="line">    <span class="built_in">f</span>(&#123;’a’, ’e’, ’i’, ’o’, ’u’, <span class="number">42</span>&#125;); <span class="comment">// ERROR: T deduced to both char and int</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 
 <p>同时，<code>auto primes = &#123; 2, 3, 5, 7 &#125;;</code> 创建的是 <code>std::initializer_list&lt;int&gt;</code> 类型的数据。在 C++17 之后，去掉其中的 <code>=</code> 就无法编译。C++17 对去掉 <code>=</code> 的 <code>auto x&#123;?&#125;;</code> 初始化倾向于推导为单个元素，而之前统一推导为 <code>std::initializer&lt;?&gt;</code> ：</p>
 <figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">auto</span> oops &#123; <span class="number">0</span>, <span class="number">8</span>, <span class="number">15</span> &#125;; <span class="comment">// ERROR in C++17. OK before C++17</span></span><br><span class="line"><span class="keyword">auto</span> val &#123; <span class="number">2</span> &#125;;         <span class="comment">// OK: val has type int in C++17,</span></span><br><span class="line">                        <span class="comment">// or type std::intializer_list&lt;int&gt; before C++17</span></span><br></pre></td></tr></table></figure>
@@ -289,14 +298,14 @@
 <p>在函数中使用 <code>auto</code> 推导，同时又返回初始化列表，则无法编译，因为无法确定具体类型。</p>
 <h1 id="特例：变参列表-参数包"><a href="#特例：变参列表-参数包" class="headerlink" title="特例：变参列表&#x2F;参数包"></a>特例：变参列表&#x2F;参数包</h1><p>简单情景：匹配 0 或多个剩余参数。</p>
 <p>pack expansion：</p>
-<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">template</span>&lt;<span class="keyword">typename</span> T, <span class="keyword">typename</span> U&gt; <span class="keyword">class</span> <span class="title class_">pair</span> &#123; &#125;;</span><br><span class="line"></span><br><span class="line"><span class="comment">// **匹配能力**：第一参数相同的零个或多个 pair</span></span><br><span class="line"><span class="function"><span class="keyword">template</span>&lt;<span class="keyword">typename</span> T, <span class="keyword">typename</span>... Rest&gt;</span></span><br><span class="line"><span class="function"><span class="type">void</span> <span class="title">h1</span><span class="params">(pair&lt;T, Rest&gt; <span class="type">const</span>&amp;...)</span></span>;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 由于 pack expansion 中有两个 parameter pack，因此 Ts 和 Rest 的参数数量必须一致</span></span><br><span class="line"><span class="comment">// **匹配能力**：任意参数的零个或多个 pair</span></span><br><span class="line"><span class="function"><span class="keyword">template</span>&lt;<span class="keyword">typename</span>... Ts, <span class="keyword">typename</span>... Rest&gt;</span></span><br><span class="line"><span class="function"><span class="type">void</span> <span class="title">h2</span><span class="params">(pair&lt;Ts, Rest&gt; <span class="type">const</span>&amp;...)</span></span>;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="type">void</span> <span class="title">foo</span><span class="params">(pair&lt;<span class="type">int</span>, <span class="type">float</span>&gt; pif, pair&lt;<span class="type">int</span>, <span class="type">double</span>&gt; pid, pair&lt;<span class="type">double</span>, <span class="type">double</span>&gt; pdd)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">	<span class="built_in">h1</span>(pif, pid);</span><br><span class="line">	<span class="comment">// OK: deduces T to int, Rest to &#123;float, double&#125;</span></span><br><span class="line">	<span class="built_in">h2</span>(pif, pid);</span><br><span class="line">	<span class="comment">// OK: deduces Ts to &#123;int, int&#125;, Rest to &#123;float, double&#125;</span></span><br><span class="line">	<span class="built_in">h1</span>(pif, pdd);</span><br><span class="line">	<span class="comment">// ERROR: T deduced to int from the 1st arg, but to double from the 2nd</span></span><br><span class="line">	<span class="built_in">h2</span>(pif, pdd);</span><br><span class="line">	<span class="comment">// OK: deduces Ts to &#123;int, double&#125;, Rest to &#123;float, double&#125;</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">template</span>&lt;<span class="keyword">typename</span> T, <span class="keyword">typename</span> U&gt; <span class="keyword">class</span> <span class="title class_">pair</span> &#123; &#125;;</span><br><span class="line"></span><br><span class="line"><span class="comment">// **匹配能力**：第一参数相同的零个或多个 pair</span></span><br><span class="line"><span class="function"><span class="keyword">template</span>&lt;<span class="keyword">typename</span> T, <span class="keyword">typename</span>... Rest&gt;</span></span><br><span class="line"><span class="function"><span class="type">void</span> <span class="title">h1</span><span class="params">(pair&lt;T, Rest&gt; <span class="type">const</span>&amp;...)</span></span>;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 由于 pack expansion 中有两个 parameter pack，因此 Ts 和 Rest 的参数数量必须一致</span></span><br><span class="line"><span class="comment">// **匹配能力**：任意参数的零个或多个 pair</span></span><br><span class="line"><span class="function"><span class="keyword">template</span>&lt;<span class="keyword">typename</span>... Ts, <span class="keyword">typename</span>... Rest&gt;</span></span><br><span class="line"><span class="function"><span class="type">void</span> <span class="title">h2</span><span class="params">(pair&lt;Ts, Rest&gt; <span class="type">const</span>&amp;...)</span></span>;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="type">void</span> <span class="title">foo</span><span class="params">(pair&lt;<span class="type">int</span>, <span class="type">float</span>&gt; pif, pair&lt;<span class="type">int</span>, <span class="type">double</span>&gt; pid, pair&lt;<span class="type">double</span>, <span class="type">double</span>&gt; pdd)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="built_in">h1</span>(pif, pid);</span><br><span class="line">    <span class="comment">// OK: deduces T to int, Rest to &#123;float, double&#125;</span></span><br><span class="line">    <span class="built_in">h2</span>(pif, pid);</span><br><span class="line">    <span class="comment">// OK: deduces Ts to &#123;int, int&#125;, Rest to &#123;float, double&#125;</span></span><br><span class="line">    <span class="built_in">h1</span>(pif, pdd);</span><br><span class="line">    <span class="comment">// ERROR: T deduced to int from the 1st arg, but to double from the 2nd</span></span><br><span class="line">    <span class="built_in">h2</span>(pif, pdd);</span><br><span class="line">    <span class="comment">// OK: deduces Ts to &#123;int, double&#125;, Rest to &#123;float, double&#125;</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 
 <p>传递变参，而不是做 pack expansion：</p>
-<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">template</span>&lt;<span class="keyword">typename</span>... Types&gt; <span class="keyword">class</span> <span class="title class_">Tuple</span> &#123; &#125;;</span><br><span class="line"></span><br><span class="line"><span class="comment">// **匹配能力**：参数完全相同的2个tuple</span></span><br><span class="line"><span class="function"><span class="keyword">template</span>&lt;<span class="keyword">typename</span>... Types&gt;</span></span><br><span class="line"><span class="function"><span class="type">bool</span> <span class="title">f1</span><span class="params">(Tuple&lt;Types...&gt;, Tuple&lt;Types...&gt;)</span></span>;</span><br><span class="line"></span><br><span class="line"><span class="comment">// **匹配能力**：任意参数的2个tuple</span></span><br><span class="line"><span class="function"><span class="keyword">template</span>&lt;<span class="keyword">typename</span>... Types1, <span class="keyword">typename</span>... Types2&gt;</span></span><br><span class="line"><span class="function"><span class="type">bool</span> <span class="title">f2</span><span class="params">(Tuple&lt;Types1...&gt;, Tuple&lt;Types2...&gt;)</span></span>;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="type">void</span> <span class="title">bar</span><span class="params">(Tuple&lt;<span class="type">short</span>, <span class="type">int</span>, <span class="type">long</span>&gt; sv,</span></span></span><br><span class="line"><span class="params"><span class="function">		 Tuple&lt;<span class="type">unsigned</span> <span class="type">short</span>, <span class="type">unsigned</span>, <span class="type">unsigned</span> <span class="type">long</span>&gt; uv)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">	<span class="built_in">f1</span>(sv, sv); <span class="comment">// OK: Types is deduced to &#123;short, int, long&#125;</span></span><br><span class="line">	<span class="built_in">f2</span>(sv, sv); <span class="comment">// OK: Types1 is deduced to &#123;short, int, long&#125;,</span></span><br><span class="line">	            <span class="comment">// Types2 is deduced to &#123;short, int, long&#125;</span></span><br><span class="line">	<span class="built_in">f1</span>(sv, uv); <span class="comment">// ERROR: Types is deduced to &#123;short, int, long&#125; from the 1st arg, but</span></span><br><span class="line">	            <span class="comment">// to &#123;unsigned short, unsigned, unsigned long&#125; from the 2nd</span></span><br><span class="line">	<span class="built_in">f2</span>(sv, uv); <span class="comment">// OK: Types1 is deduced to &#123;short, int, long&#125;,</span></span><br><span class="line">	            <span class="comment">// Types2 is deduced to &#123;unsigned short, unsigned, unsigned long&#125;</span></span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">template</span>&lt;<span class="keyword">typename</span>... Types&gt; <span class="keyword">class</span> <span class="title class_">Tuple</span> &#123; &#125;;</span><br><span class="line"></span><br><span class="line"><span class="comment">// **匹配能力**：参数完全相同的2个tuple</span></span><br><span class="line"><span class="function"><span class="keyword">template</span>&lt;<span class="keyword">typename</span>... Types&gt;</span></span><br><span class="line"><span class="function"><span class="type">bool</span> <span class="title">f1</span><span class="params">(Tuple&lt;Types...&gt;, Tuple&lt;Types...&gt;)</span></span>;</span><br><span class="line"></span><br><span class="line"><span class="comment">// **匹配能力**：任意参数的2个tuple</span></span><br><span class="line"><span class="function"><span class="keyword">template</span>&lt;<span class="keyword">typename</span>... Types1, <span class="keyword">typename</span>... Types2&gt;</span></span><br><span class="line"><span class="function"><span class="type">bool</span> <span class="title">f2</span><span class="params">(Tuple&lt;Types1...&gt;, Tuple&lt;Types2...&gt;)</span></span>;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="type">void</span> <span class="title">bar</span><span class="params">(Tuple&lt;<span class="type">short</span>, <span class="type">int</span>, <span class="type">long</span>&gt; sv,</span></span></span><br><span class="line"><span class="params"><span class="function">         Tuple&lt;<span class="type">unsigned</span> <span class="type">short</span>, <span class="type">unsigned</span>, <span class="type">unsigned</span> <span class="type">long</span>&gt; uv)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="built_in">f1</span>(sv, sv); <span class="comment">// OK: Types is deduced to &#123;short, int, long&#125;</span></span><br><span class="line">    <span class="built_in">f2</span>(sv, sv); <span class="comment">// OK: Types1 is deduced to &#123;short, int, long&#125;,</span></span><br><span class="line">                <span class="comment">// Types2 is deduced to &#123;short, int, long&#125;</span></span><br><span class="line">    <span class="built_in">f1</span>(sv, uv); <span class="comment">// ERROR: Types is deduced to &#123;short, int, long&#125; from the 1st arg, but</span></span><br><span class="line">                <span class="comment">// to &#123;unsigned short, unsigned, unsigned long&#125; from the 2nd</span></span><br><span class="line">    <span class="built_in">f2</span>(sv, uv); <span class="comment">// OK: Types1 is deduced to &#123;short, int, long&#125;,</span></span><br><span class="line">                <span class="comment">// Types2 is deduced to &#123;unsigned short, unsigned, unsigned long&#125;</span></span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 
 <p>这个比上面一组代码容易理解一点。</p>
 <p>还能为参数包显式指定前几个参数类型：</p>
-<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">template</span> <span class="type">void</span> <span class="title">f</span><span class="params">(Ts ... ps)</span> </span>&#123;&#125;</span><br><span class="line"><span class="function"><span class="type">int</span> <span class="title">main</span><span class="params">()</span> </span>&#123;</span><br><span class="line">	<span class="built_in">f</span>&lt;<span class="type">double</span>, <span class="type">int</span>&gt;(<span class="number">1</span>, <span class="number">2</span>, <span class="number">3</span>); <span class="comment">// OK</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">template</span> <span class="type">void</span> <span class="title">f</span><span class="params">(Ts ... ps)</span> </span>&#123;&#125;</span><br><span class="line"><span class="function"><span class="type">int</span> <span class="title">main</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    <span class="built_in">f</span>&lt;<span class="type">double</span>, <span class="type">int</span>&gt;(<span class="number">1</span>, <span class="number">2</span>, <span class="number">3</span>); <span class="comment">// OK</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 
 <p>这是一个偏特化。第一个参数被转换成了 <code>1.0</code>。</p>
 <h1 id="特例：字面量操作符模板"><a href="#特例：字面量操作符模板" class="headerlink" title="特例：字面量操作符模板"></a>特例：字面量操作符模板</h1><p>字面量有四类：整数、浮点数、字符串、字符。字面量操作符匹配的前提是字面量本身合法（如果不是合法数字，就需要用字符串表示），匹配的优先级则如下：</p>
@@ -336,7 +345,7 @@
 <li>对引用类型的 cv 限定相当于不限定，并不会报错。（<code>const</code> &#x2F; <code>volatile</code>）</li>
 </ol>
 <h1 id="完美转发"><a href="#完美转发" class="headerlink" title="完美转发"></a>完美转发</h1><h2 id="类型推导"><a href="#类型推导" class="headerlink" title="类型推导"></a>类型推导</h2><p>完美转发之前会对类型进行推导，这相当于禁止了类型之间的隐式转换，这可能会导致一些问题：</p>
-<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="type">void</span> <span class="title">g</span><span class="params">(<span class="type">int</span>*)</span></span>;</span><br><span class="line"><span class="function"><span class="type">void</span> <span class="title">g</span><span class="params">(...)</span></span>; <span class="comment">// 应当是最次的选择</span></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">template</span>&lt;<span class="keyword">typename</span> T&gt; <span class="type">void</span> <span class="title">forwardToG</span><span class="params">(T&amp;&amp; x)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">	<span class="built_in">g</span>(std::forward&lt;T&gt;(x)); <span class="comment">// forward x to g()</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="type">void</span> <span class="title">foo</span><span class="params">()</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">	<span class="built_in">g</span>(<span class="number">0</span>);          <span class="comment">// calls g(int*)</span></span><br><span class="line">	forwardToG(<span class="number">0</span>); <span class="comment">// eventually calls g(...)</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="type">void</span> <span class="title">g</span><span class="params">(<span class="type">int</span>*)</span></span>;</span><br><span class="line"><span class="function"><span class="type">void</span> <span class="title">g</span><span class="params">(...)</span></span>; <span class="comment">// 应当是最次的选择</span></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">template</span>&lt;<span class="keyword">typename</span> T&gt; <span class="type">void</span> <span class="title">forwardToG</span><span class="params">(T&amp;&amp; x)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="built_in">g</span>(std::forward&lt;T&gt;(x)); <span class="comment">// forward x to g()</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="type">void</span> <span class="title">foo</span><span class="params">()</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="built_in">g</span>(<span class="number">0</span>);          <span class="comment">// calls g(int*)</span></span><br><span class="line">    forwardToG(<span class="number">0</span>); <span class="comment">// eventually calls g(...)</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 
 <p>上面代码中经过模板捕获后参数 <code>T</code> 的类型认为是 <code>int</code>，而 <code>x</code> 的类型被认为是 <code>int &amp;&amp;</code>。<code>int</code> 类型不能和函数 <code>g</code> 的第一个重载版本匹配。这和直接调用 <code>g(0)</code> 效果不同。<strong>C++11 引入的</strong> <code>nullptr</code> <strong>本身具有类型，用在这种情况更加合适</strong>。</p>
 <p>本小节提到的对 <code>decltype(auto)</code> 的使用可以参考前面的章节。<a href="%E6%A6%82%E5%BF%B5/c++/%E8%AF%BB%20C++%20Templates_%20The%20Complete%20Guide/11%20Generic%20Libraries%20-%20%E5%90%AB%E5%AE%8C%E7%BE%8E%E8%BD%AC%E5%8F%91.md#%E5%AE%8C%E7%BE%8E%E8%BD%AC%E5%8F%91"></a></p>
@@ -346,12 +355,12 @@
 <h1 id="立即上下文（immediate-context）"><a href="#立即上下文（immediate-context）" class="headerlink" title="立即上下文（immediate context）"></a>立即上下文（immediate context）</h1><p>摘自原文：</p>
 <p><img src="/assets/5ffedbd0cc91ad5dbbc9ae38a044d43f.png"></p>
 <p><strong>在立即上下文中发生的替代错误不是错误（SFINAE）</strong>，不在其中发生的错误被视作真正的错误，无法编译。</p>
-<h2 id="类模板定义不是立即上下文"><a href="#类模板定义不是立即上下文" class="headerlink" title="类模板定义不是立即上下文"></a>类模板定义不是立即上下文</h2><figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">template</span>&lt;<span class="keyword">typename</span> T&gt;</span><br><span class="line"><span class="keyword">class</span> <span class="title class_">Array</span> &#123;</span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">	<span class="keyword">using</span> iterator = T*;</span><br><span class="line">&#125;;</span><br><span class="line"><span class="function"><span class="keyword">template</span>&lt;<span class="keyword">typename</span> T&gt;</span></span><br><span class="line"><span class="function"><span class="type">void</span> <span class="title">f</span><span class="params">(<span class="keyword">typename</span> Array&lt;T&gt;::iterator first, <span class="keyword">typename</span> Array&lt;T&gt;::iterator last)</span> </span>&#123;&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">template</span>&lt;<span class="keyword">typename</span> T&gt;</span></span><br><span class="line"><span class="function"><span class="type">void</span> <span class="title">f</span><span class="params">(T*, T*)</span> </span>&#123;&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="type">int</span> <span class="title">main</span><span class="params">()</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">	<span class="built_in">f</span>&lt;<span class="type">int</span>&amp;&gt;(<span class="number">0</span>, <span class="number">0</span>); <span class="comment">// ERROR</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h2 id="类模板定义不是立即上下文"><a href="#类模板定义不是立即上下文" class="headerlink" title="类模板定义不是立即上下文"></a>类模板定义不是立即上下文</h2><figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">template</span>&lt;<span class="keyword">typename</span> T&gt;</span><br><span class="line"><span class="keyword">class</span> <span class="title class_">Array</span> &#123;</span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">    <span class="keyword">using</span> iterator = T*;</span><br><span class="line">&#125;;</span><br><span class="line"><span class="function"><span class="keyword">template</span>&lt;<span class="keyword">typename</span> T&gt;</span></span><br><span class="line"><span class="function"><span class="type">void</span> <span class="title">f</span><span class="params">(<span class="keyword">typename</span> Array&lt;T&gt;::iterator first, <span class="keyword">typename</span> Array&lt;T&gt;::iterator last)</span> </span>&#123;&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">template</span>&lt;<span class="keyword">typename</span> T&gt;</span></span><br><span class="line"><span class="function"><span class="type">void</span> <span class="title">f</span><span class="params">(T*, T*)</span> </span>&#123;&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="type">int</span> <span class="title">main</span><span class="params">()</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="built_in">f</span>&lt;<span class="type">int</span>&amp;&gt;(<span class="number">0</span>, <span class="number">0</span>); <span class="comment">// ERROR</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 
 <p>第一个 <code>f</code> 把 <code>T</code> 类型作为参数传给了另外一个模板 <code>Array</code>，又由于这个模板可能被特化，因而不能确定其 <code>iterator</code> 的具体类型。<em>这个模板声明中对</em> <code>T</code> _的类型没有任何约束，同时也不能从参数中推导出来 T 的类型，只有通过显式传入模板参数才可能启用_。第二个 <code>f</code> 要求可以 <code>T</code> 类型有对应的指针类型。</p>
 <p>上面的代码中手动选择了 <code>int &amp;</code> 类型，该类型和函数模板的第二个形式无法匹配，却和第一个能够匹配（因为第一个 <code>f</code> 对 <code>T</code> 没有任何要求）。但是在实例化时又遇到了 <code>int &amp;*</code> 这样的非法类型，因而会出现编译错误。<em>这种出错的情况好像无论是用 enable_if 还是用 concept 都无法回避。</em> 用 type traits 和 concept 能够处理的只有对 current instantiation 的判断。</p>
 <p>如果添加一个和第二个 <code>f</code> 相似，但是参数列表改成 <code>(...)</code> 的函数模板，则也能够在给定参数类型时匹配（不给就同样无法推导类型），但是由于 <code>varargs</code> 的优先级太低，所以编译器仍然会选中第一个 <code>f</code> ，然后在实例化时编译错误。</p>
-<h2 id="异常声明不是立即上下文"><a href="#异常声明不是立即上下文" class="headerlink" title="异常声明不是立即上下文"></a>异常声明不是立即上下文</h2><figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">template</span> <span class="type">void</span> <span class="title">f</span><span class="params">(T, <span class="type">int</span>)</span> <span class="title">noexcept</span><span class="params">(nonexistent(T()))</span></span>; <span class="comment">// #1</span></span><br><span class="line"><span class="comment">// 用 throw(typename T::Nonexistent) 也是被选中但是不能编译</span></span><br><span class="line"><span class="comment">// 不过显式异常声明已经在 C++17 被移除了</span></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">template</span> <span class="type">void</span> <span class="title">f</span><span class="params">(T, ...)</span></span>; <span class="comment">// #2 (C-style vararg function)</span></span><br><span class="line"><span class="function"><span class="type">void</span> <span class="title">test</span><span class="params">(<span class="type">int</span> i)</span> </span>&#123;</span><br><span class="line">	<span class="built_in">f</span>(i, i); <span class="comment">// ERROR: chooses #1 , but the expression nonexistent(T()) is ill-formed</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h2 id="异常声明不是立即上下文"><a href="#异常声明不是立即上下文" class="headerlink" title="异常声明不是立即上下文"></a>异常声明不是立即上下文</h2><figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">template</span> <span class="type">void</span> <span class="title">f</span><span class="params">(T, <span class="type">int</span>)</span> <span class="title">noexcept</span><span class="params">(nonexistent(T()))</span></span>; <span class="comment">// #1</span></span><br><span class="line"><span class="comment">// 用 throw(typename T::Nonexistent) 也是被选中但是不能编译</span></span><br><span class="line"><span class="comment">// 不过显式异常声明已经在 C++17 被移除了</span></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">template</span> <span class="type">void</span> <span class="title">f</span><span class="params">(T, ...)</span></span>; <span class="comment">// #2 (C-style vararg function)</span></span><br><span class="line"><span class="function"><span class="type">void</span> <span class="title">test</span><span class="params">(<span class="type">int</span> i)</span> </span>&#123;</span><br><span class="line">    <span class="built_in">f</span>(i, i); <span class="comment">// ERROR: chooses #1 , but the expression nonexistent(T()) is ill-formed</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 
 <p>上面代码中 <code>#1</code> 会被选中，因为异常声明不是立即上下文。</p>
 <h1 id="auto-关键字"><a href="#auto-关键字" class="headerlink" title="auto 关键字"></a>auto 关键字</h1><p>C++17 允许在模板中使用 auto 关键字。就算不在模板中使用，<code>auto</code> 本身也多少带点模板推导的意味。</p>
@@ -431,12 +440,12 @@
         
     <div class="post-nav">
       <div class="post-nav-item">
-    <a href="/2023/08/12/cpp-templates-the-complete-guide-13-Names-in-Templates/" rel="prev" title="CTTCG 13 Names in Templates">
-      <i class="fa fa-chevron-left"></i> CTTCG 13 Names in Templates
+    <a href="/2023/08/12/cpp-templates-the-complete-guide-16-Specializations-and-Overloading/" rel="prev" title="CTTCG 16 Specializations and Overloading">
+      <i class="fa fa-chevron-left"></i> CTTCG 16 Specializations and Overloading
     </a></div>
       <div class="post-nav-item">
-    <a href="/2023/08/12/cpp-templates-the-complete-guide-11-Generic-Libraries/" rel="next" title="CTTCG 11 Generic Libraries">
-      CTTCG 11 Generic Libraries <i class="fa fa-chevron-right"></i>
+    <a href="/2023/08/12/cpp-templates-the-complete-guide-17-Future-Directions/" rel="next" title="CTTCG 17 Future Directions">
+      CTTCG 17 Future Directions <i class="fa fa-chevron-right"></i>
     </a></div>
     </div>
       </footer>
@@ -487,10 +496,10 @@
 
       <ul class="sidebar-nav motion-element">
         <li class="sidebar-nav-toc">
-          Table of Contents
+          文章目录
         </li>
         <li class="sidebar-nav-overview">
-          Overview
+          站点概览
         </li>
       </ul>
 
@@ -511,23 +520,34 @@
           <a href="/archives/">
         
           <span class="site-state-item-count">106</span>
-          <span class="site-state-item-name">posts</span>
+          <span class="site-state-item-name">日志</span>
         </a>
       </div>
       <div class="site-state-item site-state-categories">
             <a href="/categories/">
           
         <span class="site-state-item-count">7</span>
-        <span class="site-state-item-name">categories</span></a>
+        <span class="site-state-item-name">分类</span></a>
       </div>
       <div class="site-state-item site-state-tags">
             <a href="/tags/">
           
         <span class="site-state-item-count">3</span>
-        <span class="site-state-item-name">tags</span></a>
+        <span class="site-state-item-name">标签</span></a>
       </div>
   </nav>
 </div>
+  <div class="links-of-author motion-element">
+      <span class="links-of-author-item">
+        <a href="https://github.com/hxhue" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;hxhue" rel="noopener" target="_blank"><i class="fab fa-github fa-fw"></i></a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="https://stackoverflow.com/users/13785815" title="S.O. → https:&#x2F;&#x2F;stackoverflow.com&#x2F;users&#x2F;13785815" rel="noopener" target="_blank"><i class="fab fa-stack-overflow fa-fw"></i></a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="mailto:simooncake@gmail.com" title="Email → mailto:simooncake@gmail.com" rel="noopener" target="_blank"><i class="fa fa-envelope fa-fw"></i></a>
+      </span>
+  </div>
 
 
 
@@ -556,10 +576,30 @@
   </span>
   <span class="author" itemprop="copyrightHolder">Hxhue</span>
 </div>
-  <div class="powered-by">Powered by <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Gemini</a>
-  </div>
+  <div class="powered-by">由 <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Gemini</a> 强力驱动
+  </div><script color="0,0,255" opacity="0.5" zIndex="-1" count="99" src="https://cdn.jsdelivr.net/npm/canvas-nest.js@1/dist/canvas-nest.js"></script>
 
         
+<div class="busuanzi-count">
+  <script async src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+    <span class="post-meta-item" id="busuanzi_container_site_uv" style="display: none;">
+      <span class="post-meta-item-icon">
+        <i class="user"></i>
+      </span>
+      <span class="site-uv" title="总访客量">
+        <span id="busuanzi_value_site_uv"></span>
+      </span>
+    </span>
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item" id="busuanzi_container_site_pv" style="display: none;">
+      <span class="post-meta-item-icon">
+        <i class="eye"></i>
+      </span>
+      <span class="site-pv" title="总访问量">
+        <span id="busuanzi_value_site_pv"></span>
+      </span>
+    </span>
+</div>
 
 
 
@@ -574,6 +614,7 @@
 
   
   <script src="/lib/anime.min.js"></script>
+  <script src="//cdn.jsdelivr.net/npm/pangu@4/dist/browser/pangu.min.js"></script>
 
 <script src="/js/utils.js"></script>
 

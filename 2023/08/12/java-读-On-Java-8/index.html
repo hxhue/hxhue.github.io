@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="zh-CN">
 <head>
   <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
@@ -14,10 +14,12 @@
 
 
 <link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+  <link rel="stylesheet" href="/lib/pace/pace-theme-minimal.min.css">
+  <script src="/lib/pace/pace.min.js"></script>
 
 <script id="hexo-configurations">
     var NexT = window.NexT || {};
-    var CONFIG = {"hostname":"hxhue.github.io","root":"/","scheme":"Gemini","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":false,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},"path":"search.xml"};
+    var CONFIG = {"hostname":"hxhue.github.io","root":"/","scheme":"Gemini","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":true,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":true,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":false,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},"path":"search.xml"};
   </script>
 
   <meta name="description" content="Chapter 00-11Java 对象构造顺序：1、基类 2、所有域 3、初始化块 4、自身的构造函数 1234jshell&gt; a &#x3D; new Foo()Value initializationInitialization blockConstructor  为接口提供默认实现：  逆变、协变、不变的关系：  在 Java 的子类中 override 了父类的方法，返回一个协变类型也是可以">
@@ -26,7 +28,7 @@
 <meta property="og:url" content="https://hxhue.github.io/2023/08/12/java-%E8%AF%BB-On-Java-8/index.html">
 <meta property="og:site_name" content="Hxhue&#39;s Blog">
 <meta property="og:description" content="Chapter 00-11Java 对象构造顺序：1、基类 2、所有域 3、初始化块 4、自身的构造函数 1234jshell&gt; a &#x3D; new Foo()Value initializationInitialization blockConstructor  为接口提供默认实现：  逆变、协变、不变的关系：  在 Java 的子类中 override 了父类的方法，返回一个协变类型也是可以">
-<meta property="og:locale" content="en_US">
+<meta property="og:locale" content="zh_CN">
 <meta property="og:image" content="https://hxhue.github.io/assets/630546bf2b71cdf127d9f96b76c05aa1.png">
 <meta property="og:image" content="https://hxhue.github.io/assets/3e7c37a37ad6d2386c55e8ac2a421164.png">
 <meta property="og:image" content="https://hxhue.github.io/assets/36392a876786687dcbae4296fabeb60f.png">
@@ -43,7 +45,7 @@
 <meta property="og:image" content="https://hxhue.github.io/assets/a2e2fa892f2527cf25f9cfaaa2d019dd.png">
 <meta property="og:image" content="https://hxhue.github.io/assets/f87c79aadeddd47265d21c9f749dfdb5.png">
 <meta property="article:published_time" content="2023-08-12T07:17:00.000Z">
-<meta property="article:modified_time" content="2024-03-07T08:12:18.905Z">
+<meta property="article:modified_time" content="2024-03-07T08:26:55.969Z">
 <meta property="article:author" content="Hxhue">
 <meta property="article:tag" content="Java">
 <meta name="twitter:card" content="summary">
@@ -58,7 +60,7 @@
     sidebar: "",
     isHome : false,
     isPost : true,
-    lang   : 'en'
+    lang   : 'zh-CN'
   };
 </script>
 
@@ -103,7 +105,7 @@
     <header class="header" itemscope itemtype="http://schema.org/WPHeader">
       <div class="header-inner"><div class="site-brand-container">
   <div class="site-nav-toggle">
-    <div class="toggle" aria-label="Toggle navigation bar">
+    <div class="toggle" aria-label="切换导航栏">
       <span class="toggle-line toggle-line-first"></span>
       <span class="toggle-line toggle-line-middle"></span>
       <span class="toggle-line toggle-line-last"></span>
@@ -133,31 +135,31 @@
   <ul id="menu" class="main-menu menu">
         <li class="menu-item menu-item-home">
 
-    <a href="/" rel="section"><i class="home fa-fw"></i>Home</a>
+    <a href="/" rel="section"><i class="home fa-fw"></i>首页</a>
 
   </li>
         <li class="menu-item menu-item-archives">
 
-    <a href="/archives/" rel="section"><i class="archive fa-fw"></i>Archives</a>
+    <a href="/archives/" rel="section"><i class="archive fa-fw"></i>归档</a>
 
   </li>
         <li class="menu-item menu-item-about">
 
-    <a href="/about/" rel="section"><i class="user fa-fw"></i>About</a>
+    <a href="/about/" rel="section"><i class="user fa-fw"></i>关于</a>
 
   </li>
         <li class="menu-item menu-item-tags">
 
-    <a href="/tags/" rel="section"><i class="tags fa-fw"></i>Tags</a>
+    <a href="/tags/" rel="section"><i class="tags fa-fw"></i>标签</a>
 
   </li>
         <li class="menu-item menu-item-categories">
 
-    <a href="/categories/" rel="section"><i class="th fa-fw"></i>Categories</a>
+    <a href="/categories/" rel="section"><i class="th fa-fw"></i>分类</a>
 
   </li>
       <li class="menu-item menu-item-search">
-        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>Search
+        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>搜索
         </a>
       </li>
   </ul>
@@ -173,7 +175,7 @@
   </span>
   <div class="search-input-container">
     <input autocomplete="off" autocapitalize="off"
-           placeholder="Searching..." spellcheck="false"
+           placeholder="搜索..." spellcheck="false"
            type="search" class="search-input">
   </div>
   <span class="popup-btn-close">
@@ -210,7 +212,7 @@
     
   
   
-  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
     <link itemprop="mainEntityOfPage" href="https://hxhue.github.io/2023/08/12/java-%E8%AF%BB-On-Java-8/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -232,28 +234,35 @@
               <span class="post-meta-item-icon">
                 <i class="far fa-calendar"></i>
               </span>
-              <span class="post-meta-item-text">Posted on</span>
+              <span class="post-meta-item-text">发表于</span>
 
-              <time title="Created: 2023-08-12 15:17:00" itemprop="dateCreated datePublished" datetime="2023-08-12T15:17:00+08:00">2023-08-12</time>
+              <time title="创建时间：2023-08-12 15:17:00" itemprop="dateCreated datePublished" datetime="2023-08-12T15:17:00+08:00">2023-08-12</time>
             </span>
               <span class="post-meta-item">
                 <span class="post-meta-item-icon">
                   <i class="far fa-calendar-check"></i>
                 </span>
-                <span class="post-meta-item-text">Edited on</span>
-                <time title="Modified: 2024-03-07 16:12:18" itemprop="dateModified" datetime="2024-03-07T16:12:18+08:00">2024-03-07</time>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2024-03-07 16:26:55" itemprop="dateModified" datetime="2024-03-07T16:26:55+08:00">2024-03-07</time>
               </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
                 <i class="far fa-folder"></i>
               </span>
-              <span class="post-meta-item-text">In</span>
+              <span class="post-meta-item-text">分类于</span>
                 <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
                   <a href="/categories/on-java-8-book/" itemprop="url" rel="index"><span itemprop="name">On Java 8</span></a>
                 </span>
             </span>
 
           
+            <span class="post-meta-item" title="阅读次数" id="busuanzi_container_page_pv" style="display: none;">
+              <span class="post-meta-item-icon">
+                <i class="eye"></i>
+              </span>
+              <span class="post-meta-item-text">阅读次数：</span>
+              <span id="busuanzi_value_page_pv"></span>
+            </span>
 
         </div>
       </header>
@@ -313,7 +322,7 @@
 <p>在 Java 集合中放入 null 会和集合方法的返回值混淆。如果一个集合的对象可以为空，可以用<code>Collection&lt;Optional&lt;Dog&gt;&gt;</code>来表示。（仍然假定存储 Dog 类对象）</p>
 <p>Optional 对性能有影响。它可以处理函数式编程中可能断链的问题。</p>
 <h1 id="Chapter-15：异常"><a href="#Chapter-15：异常" class="headerlink" title="Chapter 15：异常"></a>Chapter 15：异常</h1><p>可以同时捕获多重异常：</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// exceptions/MultiCatch.java</span></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">MultiCatch</span> &#123;</span><br><span class="line">	<span class="keyword">void</span> <span class="title function_">x</span><span class="params">()</span> <span class="keyword">throws</span> Except1, Except2, Except3, Except4 &#123;&#125;</span><br><span class="line">	<span class="keyword">void</span> <span class="title function_">process</span><span class="params">()</span> &#123;&#125;</span><br><span class="line">	<span class="keyword">void</span> <span class="title function_">f</span><span class="params">()</span> &#123;</span><br><span class="line">		<span class="keyword">try</span> &#123;</span><br><span class="line">			x();</span><br><span class="line">		&#125; <span class="keyword">catch</span>(Except1 | Except2 | Except3 | Except4 e) &#123;</span><br><span class="line">			process();</span><br><span class="line">		&#125;</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// exceptions/MultiCatch.java</span></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">MultiCatch</span> &#123;</span><br><span class="line">    <span class="keyword">void</span> <span class="title function_">x</span><span class="params">()</span> <span class="keyword">throws</span> Except1, Except2, Except3, Except4 &#123;&#125;</span><br><span class="line">    <span class="keyword">void</span> <span class="title function_">process</span><span class="params">()</span> &#123;&#125;</span><br><span class="line">    <span class="keyword">void</span> <span class="title function_">f</span><span class="params">()</span> &#123;</span><br><span class="line">        <span class="keyword">try</span> &#123;</span><br><span class="line">            x();</span><br><span class="line">        &#125; <span class="keyword">catch</span>(Except1 | Except2 | Except3 | Except4 e) &#123;</span><br><span class="line">            process();</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 
 <p>可以在接口上说明好会抛出响应的异常。即便可能不会真正抛出，也要求使用该接口时按照异常说明来操作。这样可以提前为接口抢注异常类型，减少后续开发过程中的变动。比如 StringWriter 中的 close 方法并不会抛出异常。</p>
 <p>e.printStackTrace()默认打印在标准错误流中。可以传入参数使它打印在标准输出流中。</p>
@@ -415,7 +424,7 @@
 <p>StringTokenizer 可以按照空白分隔字符串。但是现在有了 Scanner，它能够按照任意方式分隔字符串，而且取当前区域结果的时候还能够按照给定的方式来进行类型转换。所以 StringTokenizer 显得没有什么用了。</p>
 <h1 id="RTTI"><a href="#RTTI" class="headerlink" title="RTTI"></a>RTTI</h1><p><code>instanceof</code> 的检查再转换比 try-catch 捕获 <code>ClassCastException</code> 的性能高得多。这里是和文件系统操作不同的一个地方。<code>instanceof</code>支持子类型。而<code>Class</code>的<code>equal</code>方法要求是同一个类型。</p>
 <h1 id="泛型"><a href="#泛型" class="headerlink" title="泛型"></a>泛型</h1><h2 id="协变"><a href="#协变" class="headerlink" title="协变"></a>协变</h2><p>定义的时候给定泛型边界：</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">class</span></span><br><span class="line"><span class="title class_">CanineHero</span>&lt;POWER <span class="keyword">extends</span> <span class="title class_">SuperHearing</span> &amp; SuperSmell&gt;</span><br><span class="line">        <span class="keyword">extends</span> <span class="title class_">SuperHero</span>&lt;POWER&gt; &#123;</span><br><span class="line">	<span class="comment">// ...</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">class</span></span><br><span class="line"><span class="title class_">CanineHero</span>&lt;POWER <span class="keyword">extends</span> <span class="title class_">SuperHearing</span> &amp; SuperSmell&gt;</span><br><span class="line">        <span class="keyword">extends</span> <span class="title class_">SuperHero</span>&lt;POWER&gt; &#123;</span><br><span class="line">    <span class="comment">// ...</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 
 <p>必须满足多个边界的时候用<code>&amp;</code>符号连接。（联想处理多个异常的时候用<code>|</code>连接）</p>
 <p>虽然在定义的时候可以使用多个类型来作为边界约束，但是使用的时候，通配符只能限制一个边界：</p>
@@ -426,7 +435,7 @@
 
 <p>因为边界限定了容器是<code>Apple</code>的基类，因此添加<code>Apple</code>的子类被编译器认为是安全的。super 和 extends 的限制虽然有一点差异，但是本质上都是解决了类似容器的问题。<code>super</code>保证了只能放苹果，而<code>extends</code>则保证了只能取苹果。它们需要配套使用。</p>
 <p>单个通配符 <code>?</code>可以表示任意类型，但必须是一个具体的类型。更重要的是，他可以准确规定某部分的类型，而忽略其他部分的类型。</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">UnboundedWildcards2</span> &#123;</span><br><span class="line">    <span class="keyword">static</span> Map map1;</span><br><span class="line">    <span class="keyword">static</span> Map&lt;?,?&gt; map2;</span><br><span class="line">    <span class="keyword">static</span> Map&lt;String,?&gt; map3;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">static</span> <span class="keyword">void</span> <span class="title function_">assign1</span><span class="params">(Map map)</span> &#123;</span><br><span class="line">        map1 = map;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">static</span> <span class="keyword">void</span> <span class="title function_">assign2</span><span class="params">(Map&lt;?,?&gt; map)</span> &#123;</span><br><span class="line">        map2 = map;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">static</span> <span class="keyword">void</span> <span class="title function_">assign3</span><span class="params">(Map&lt;String,?&gt; map)</span> &#123;</span><br><span class="line">        map3 = map;</span><br><span class="line">    &#125;</span><br><span class="line">		<span class="comment">// ...</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">UnboundedWildcards2</span> &#123;</span><br><span class="line">    <span class="keyword">static</span> Map map1;</span><br><span class="line">    <span class="keyword">static</span> Map&lt;?,?&gt; map2;</span><br><span class="line">    <span class="keyword">static</span> Map&lt;String,?&gt; map3;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">static</span> <span class="keyword">void</span> <span class="title function_">assign1</span><span class="params">(Map map)</span> &#123;</span><br><span class="line">        map1 = map;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">static</span> <span class="keyword">void</span> <span class="title function_">assign2</span><span class="params">(Map&lt;?,?&gt; map)</span> &#123;</span><br><span class="line">        map2 = map;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">static</span> <span class="keyword">void</span> <span class="title function_">assign3</span><span class="params">(Map&lt;String,?&gt; map)</span> &#123;</span><br><span class="line">        map3 = map;</span><br><span class="line">    &#125;</span><br><span class="line">        <span class="comment">// ...</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 
 <p>单个通配符也没有（在编译时）保存类型信息，但是<code>Holder&lt;?&gt;</code>和<code>Holder</code>是有区别的。前者表示一个具体的类型，不能是所有类型，因此不能往里面放<code>Object</code>类型的对象，会编译错误；后者是表示所有类型（<code>any</code>和<code>all</code>的区别），因此可以放<code>Object</code>，但会得到编译器警告。</p>
 <p>把一个<code>Holder&lt;Any&gt;</code>对象转换成<code>Holder&lt;?&gt;</code>是可以的。上面 <code>Holder&lt;?&gt;</code> 放东西会出错是因为调用了具体的方法，放东西的时候<code>Any</code>需要转换成 <code>T</code>，但是 <code>T</code> 又是不知道的。<code>Holder</code> 则是把<code>Any</code>转换成了<code>Object</code>，这是没给泛型参数时的一种默认实现。</p>
@@ -482,12 +491,12 @@
         
     <div class="post-nav">
       <div class="post-nav-item">
-    <a href="/2023/08/12/cpp-templates-the-complete-guide-0-D-Standard-Type-Utilities/" rel="prev" title="CTTCG 附录 D Standard Type Utilities">
-      <i class="fa fa-chevron-left"></i> CTTCG 附录 D Standard Type Utilities
+    <a href="/2023/08/12/inside-the-cpp-object-model-C-%E5%AF%B9%E8%B1%A1%E6%A8%A1%E5%9E%8B%E5%BC%80%E9%94%80%E6%80%BB%E7%BB%93/" rel="prev" title="C++ 对象模型开销总结">
+      <i class="fa fa-chevron-left"></i> C++ 对象模型开销总结
     </a></div>
       <div class="post-nav-item">
-    <a href="/2023/08/12/java-Project-Loom/" rel="next" title="OpenJDK: Project Loom">
-      OpenJDK: Project Loom <i class="fa fa-chevron-right"></i>
+    <a href="/2023/08/12/java-Java-Memory-Order/" rel="next" title="OpenJDK: Java Memory Order">
+      OpenJDK: Java Memory Order <i class="fa fa-chevron-right"></i>
     </a></div>
     </div>
       </footer>
@@ -538,10 +547,10 @@
 
       <ul class="sidebar-nav motion-element">
         <li class="sidebar-nav-toc">
-          Table of Contents
+          文章目录
         </li>
         <li class="sidebar-nav-overview">
-          Overview
+          站点概览
         </li>
       </ul>
 
@@ -562,23 +571,34 @@
           <a href="/archives/">
         
           <span class="site-state-item-count">106</span>
-          <span class="site-state-item-name">posts</span>
+          <span class="site-state-item-name">日志</span>
         </a>
       </div>
       <div class="site-state-item site-state-categories">
             <a href="/categories/">
           
         <span class="site-state-item-count">7</span>
-        <span class="site-state-item-name">categories</span></a>
+        <span class="site-state-item-name">分类</span></a>
       </div>
       <div class="site-state-item site-state-tags">
             <a href="/tags/">
           
         <span class="site-state-item-count">3</span>
-        <span class="site-state-item-name">tags</span></a>
+        <span class="site-state-item-name">标签</span></a>
       </div>
   </nav>
 </div>
+  <div class="links-of-author motion-element">
+      <span class="links-of-author-item">
+        <a href="https://github.com/hxhue" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;hxhue" rel="noopener" target="_blank"><i class="fab fa-github fa-fw"></i></a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="https://stackoverflow.com/users/13785815" title="S.O. → https:&#x2F;&#x2F;stackoverflow.com&#x2F;users&#x2F;13785815" rel="noopener" target="_blank"><i class="fab fa-stack-overflow fa-fw"></i></a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="mailto:simooncake@gmail.com" title="Email → mailto:simooncake@gmail.com" rel="noopener" target="_blank"><i class="fa fa-envelope fa-fw"></i></a>
+      </span>
+  </div>
 
 
 
@@ -607,10 +627,30 @@
   </span>
   <span class="author" itemprop="copyrightHolder">Hxhue</span>
 </div>
-  <div class="powered-by">Powered by <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Gemini</a>
-  </div>
+  <div class="powered-by">由 <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Gemini</a> 强力驱动
+  </div><script color="0,0,255" opacity="0.5" zIndex="-1" count="99" src="https://cdn.jsdelivr.net/npm/canvas-nest.js@1/dist/canvas-nest.js"></script>
 
         
+<div class="busuanzi-count">
+  <script async src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+    <span class="post-meta-item" id="busuanzi_container_site_uv" style="display: none;">
+      <span class="post-meta-item-icon">
+        <i class="user"></i>
+      </span>
+      <span class="site-uv" title="总访客量">
+        <span id="busuanzi_value_site_uv"></span>
+      </span>
+    </span>
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item" id="busuanzi_container_site_pv" style="display: none;">
+      <span class="post-meta-item-icon">
+        <i class="eye"></i>
+      </span>
+      <span class="site-pv" title="总访问量">
+        <span id="busuanzi_value_site_pv"></span>
+      </span>
+    </span>
+</div>
 
 
 
@@ -625,6 +665,7 @@
 
   
   <script src="/lib/anime.min.js"></script>
+  <script src="//cdn.jsdelivr.net/npm/pangu@4/dist/browser/pangu.min.js"></script>
 
 <script src="/js/utils.js"></script>
 
