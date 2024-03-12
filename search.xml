@@ -2,7 +2,7 @@
 <search>
   <entry>
     <title>(CppCon 2018) 105 STL Algorithms in Less Than an Hour</title>
-    <url>/2024/03/05/cppcon-CppCon2018-105-STL-Algorithms-in-Less-Than-an-Hour/</url>
+    <url>/cppcon/cppcon-2018-105-stl-algorithms-in-less-than-an-hour/</url>
     <content><![CDATA[<ol>
 <li>为了简单，下面都不用 <code>std</code> 名字空间了。而且实际上 <code>begin</code> 和 <code>end</code> 是有 ADL 的。</li>
 <li>有一些算法是在 <code>numeric</code> 头文件中的。</li>
@@ -137,7 +137,7 @@
   </entry>
   <entry>
     <title>CTTCG 附录 B Value Categories</title>
-    <url>/2023/08/12/cpp-templates-the-complete-guide-0-B-Value-Categories/</url>
+    <url>/cpp-templates-the-complete-guide/cttcg-%E9%99%84%E5%BD%95-b-value-categories/</url>
     <content><![CDATA[<p>对于变量而言，其括号表达式的值属性是左值引用。但由于 <code>decltype</code> 有特殊效果，直接对变量 <code>x</code> 使用 <code>decltype(x)</code> 并不遵循这一点，为此可以按照下面说的使用 <code>decltype((x))</code>。</p>
 <blockquote>
 <p>With the keyword decltype (introduced in C++11), it is possible to check the value category of any C++ expression. For any expression <code>x</code>, <code>decltype((x))</code> (note the double parentheses) yields:</p>
@@ -160,7 +160,7 @@
   </entry>
   <entry>
     <title>(CppCon 2023) Lock-free Atomic Shared Pointers Without a Split Reference Count</title>
-    <url>/2024/03/05/cppcon-CppCon2023-Lock-free-Atomic-Shared-Pointers-Without-a-Split-Reference-Count/</url>
+    <url>/cppcon/cppcon-2023-lock-free-atomic-shared-pointers-without-a-split-reference-count/</url>
     <content><![CDATA[<p><a href="https://youtu.be/lNPZV9Iqo3U?si=lS1hf2ND4SS-6ELB">https://youtu.be/lNPZV9Iqo3U?si=lS1hf2ND4SS-6ELB</a> by Daniel Anderson</p>
 <p><code>std::shared_ptr</code> 的原子引用计数是线程安全的，但是：</p>
 <ol>
@@ -182,7 +182,7 @@
   </entry>
   <entry>
     <title>CTTCG 附录 D Standard Type Utilities</title>
-    <url>/2023/08/12/cpp-templates-the-complete-guide-0-D-Standard-Type-Utilities/</url>
+    <url>/cpp-templates-the-complete-guide/cttcg-%E9%99%84%E5%BD%95-d-standard-type-utilities/</url>
     <content><![CDATA[<p>这一章介绍的大都是用来查询类型属性的 type traits。还有一些其他的工具。</p>
 <h1 id="an-shu-ju-gai-nian-fen-lei">按数据概念分类</h1>
 <p><img src="../../assets/d1144640c713ad4c260d6384745dfbfa.png" alt=""></p>
@@ -226,7 +226,7 @@
   </entry>
   <entry>
     <title>CTTCG 01 Function Templates</title>
-    <url>/2023/08/12/cpp-templates-the-complete-guide-01-Function-Templates/</url>
+    <url>/cpp-templates-the-complete-guide/cttcg-01-function-templates/</url>
     <content><![CDATA[<p>2023 年 5 月 7 日</p>
 <h1 id="liang-ge-type-traits">两个 type traits</h1>
 <p>std::decay_t<code> 去引用、去限定符、函数/数组变指针；</code>std::common_type_t` 用三元运算符获得更“宽泛”类型</p>
@@ -299,7 +299,7 @@
   </entry>
   <entry>
     <title>CTTCG 附录 E Concept</title>
-    <url>/2023/08/12/cpp-templates-the-complete-guide-0-E-Concept/</url>
+    <url>/cpp-templates-the-complete-guide/cttcg-%E9%99%84%E5%BD%95-e-concept/</url>
     <content><![CDATA[<h1 id="ding-yi-he-shi-yong-concept">定义和使用 concept</h1>
 <p>下面演示了几种 C++20 支持的定义 concept 的方式：</p>
 <figure class="highlight cpp"><table><tr><td class="code"><pre><span class="line"><span class="keyword">template</span> &lt;<span class="keyword">typename</span> T&gt;</span><br><span class="line"><span class="keyword">concept</span> StringConcept = <span class="built_in">requires</span>(T t) &#123;</span><br><span class="line">    <span class="keyword">typename</span> T::iterator; <span class="comment">// 1. 检查类型存在性</span></span><br><span class="line">    t.<span class="built_in">data</span>();             <span class="comment">// 2. 检查表达式合法性</span></span><br><span class="line"></span><br><span class="line">    <span class="comment">// 3. 将表达式作为concept的第一个参数，要求concept成立（额外参数从第二个参数起放置）</span></span><br><span class="line">    &#123; t.<span class="built_in">c_str</span>() &#125; -&gt; std::same_as&lt;<span class="type">char</span> <span class="type">const</span> *&gt;;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 4. 用 requires 语句引入子条件</span></span><br><span class="line">    <span class="keyword">requires</span> std::is_pointer_v&lt;<span class="keyword">decltype</span>(t.<span class="built_in">data</span>())&gt;;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 5. 除了requires体之外还能用其他编译期常量表达式做约束</span></span><br><span class="line">&#125; &amp;&amp; (<span class="built_in">sizeof</span>(T) &gt; <span class="number">8</span>) &amp;&amp; !std::is_aggregate_v&lt;T&gt;;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">template</span>&lt;StringConcept Str&gt;</span></span><br><span class="line"><span class="function"><span class="type">void</span> <span class="title">takeString</span><span class="params">(Str <span class="type">const</span> &amp;s)</span> </span>&#123; &#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="type">int</span> <span class="title">main</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    <span class="built_in">takeString</span>(std::string&#123;<span class="string">&quot;hello&quot;</span>&#125;);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
@@ -318,7 +318,7 @@
   </entry>
   <entry>
     <title>CTTCG 02 Class Templates</title>
-    <url>/2023/08/12/cpp-templates-the-complete-guide-02-Class-Templates/</url>
+    <url>/cpp-templates-the-complete-guide/cttcg-02-class-templates/</url>
     <content><![CDATA[<p>2023 年 5 月 7 日</p>
 <h1 id="ding-yi-wei-zhi">定义位置</h1>
 <p>类模板只能在全局或者类声明中定义，不能在块或者函数中定义。</p>
@@ -377,7 +377,7 @@
   </entry>
   <entry>
     <title>CTTCG 03 Nontype Template Parameters</title>
-    <url>/2023/08/12/cpp-templates-the-complete-guide-03-Nontype-Template-Parameters/</url>
+    <url>/cpp-templates-the-complete-guide/cttcg-03-nontype-template-parameters/</url>
     <content><![CDATA[<p>模板参数也可以不是类型，而是值。</p>
 <h1 id="fei-lei-xing-can-shu-tui-dao-zhi-dui-zhi-jie-diao-yong-you-xiao">非类型参数推导只对直接调用有效</h1>
 <p>模板函数的类型推导只对立即调用有效，而对算法模板这类需要提前知道类型信息的场合无效。比如：</p>
@@ -411,7 +411,7 @@
   </entry>
   <entry>
     <title>CTTCG 04 Variadic Templates</title>
-    <url>/2023/08/12/cpp-templates-the-complete-guide-04-Variadic-Templates/</url>
+    <url>/cpp-templates-the-complete-guide/cttcg-04-variadic-templates/</url>
     <content><![CDATA[<blockquote>
 <p>可变长表达式可以对参数包逐个处理。与折叠表达式（相当于函数式编程中的 <strong>reduce</strong>，但如果用上逗号表达式就能表达 <strong>foreach</strong>）不同，可变长表达式（相当于函数式编程中的 <strong>map</strong>）不会改变参数数量，允许的形式也比折叠表达式宽松一点。</p>
 </blockquote>
@@ -463,7 +463,7 @@
   </entry>
   <entry>
     <title>CTTCG 05 Tricky Basics</title>
-    <url>/2023/08/12/cpp-templates-the-complete-guide-05-Tricky-Basics/</url>
+    <url>/cpp-templates-the-complete-guide/cttcg-05-tricky-basics/</url>
     <content><![CDATA[<h1 id="1-shi-yong-guan-jian-zi-yin-dao-bian-yi-qi-liao-jie-cheng-yuan-lei-xing">1 使用关键字引导编译器了解成员类型</h1>
 <figure class="highlight cpp"><table><tr><td class="code"><pre><span class="line"><span class="keyword">template</span>&lt;<span class="keyword">typename</span> T&gt;</span><br><span class="line"><span class="keyword">class</span> <span class="title class_">MyClass</span> &#123;</span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">    <span class="function"><span class="type">void</span> <span class="title">foo</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        <span class="keyword">typename</span> T::SubType* ptr;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 <p>上面的的代码中加了 <code>typename</code> 关键字用来表示 <code>SubType</code> 这个成员是一个类型。否则由于缺乏类型信息，编译器会认为该成员是某个数据域，从而构成了乘法表达式。</p>
@@ -522,7 +522,7 @@
   </entry>
   <entry>
     <title>CTTCG 06 Move Semantics and enable_if</title>
-    <url>/2023/08/12/cpp-templates-the-complete-guide-06-Move-Semantics-and-enable-if/</url>
+    <url>/cpp-templates-the-complete-guide/cttcg-06-move-semantics-and-enable-if/</url>
     <content><![CDATA[<p>Perfect forwarding:</p>
 <figure class="highlight cpp"><table><tr><td class="code"><pre><span class="line"><span class="function"><span class="keyword">template</span>&lt;<span class="keyword">typename</span> T&gt;</span></span><br><span class="line"><span class="function"><span class="type">void</span> <span class="title">f</span> <span class="params">(T&amp;&amp; val)</span> </span>&#123;</span><br><span class="line">    <span class="built_in">g</span>(std::forward&lt;T&gt;(val)); <span class="comment">// perfect forward val to g()</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 <p>注意，完美转发只对模板参数有效，对依赖于模板参数的类型也是无效的，比如：<code>typename T::iterator&amp;&amp;</code> 是无效的，仍表示严格的右值引用。</p>
@@ -547,7 +547,7 @@
   </entry>
   <entry>
     <title>CTTCG 07 By Value or by Reference</title>
-    <url>/2023/08/12/cpp-templates-the-complete-guide-07-By-Value-or-by-Reference/</url>
+    <url>/cpp-templates-the-complete-guide/cttcg-07-by-value-or-by-reference/</url>
     <content><![CDATA[<h1 id="chuan-zhi-code-t-code">传值：<code>T</code></h1>
 <p>有 decay。</p>
 <h1 id="chuan-zuo-zhi-yin-yong-code-t-amp-code">传左值引用：<code>T &amp;</code></h1>
@@ -569,7 +569,7 @@
   </entry>
   <entry>
     <title>CTTCG 08 Compile-Time Programming</title>
-    <url>/2023/08/12/cpp-templates-the-complete-guide-08-Compile-Time-Programming/</url>
+    <url>/cpp-templates-the-complete-guide/cttcg-08-compile-time-programming/</url>
     <content><![CDATA[<h1 id="mo-ban-yuan-bian-cheng">模板元编程</h1>
 <p>略。</p>
 <h1 id="code-constexpr-code-han-shu"><code>constexpr</code> 函数</h1>
@@ -599,7 +599,7 @@
   </entry>
   <entry>
     <title>CTTCG 10 Basic Template Terminology</title>
-    <url>/2023/08/12/cpp-templates-the-complete-guide-10-Basic-Template-Terminology/</url>
+    <url>/cpp-templates-the-complete-guide/cttcg-10-basic-template-terminology/</url>
     <content><![CDATA[<h1 id="class-template-v-s-template-class">Class Template v.s. Template Class</h1>
 <p>前者是生成类的模板，后者既可以指模板，又可以指从模板生成的类。</p>
 <h1 id="substitution-instantiation-and-specialization">Substitution, Instantiation, and Specialization</h1>
@@ -630,7 +630,7 @@ global variables and static data members should be defined only once across the 
   </entry>
   <entry>
     <title>CTTCG 09 Using Templates in Practice</title>
-    <url>/2023/08/12/cpp-templates-the-complete-guide-09-Using-Templates-in-Practice/</url>
+    <url>/cpp-templates-the-complete-guide/cttcg-09-using-templates-in-practice/</url>
     <content><![CDATA[<h1 id="bao-han-mo-xing-the-inclusion-model">包含模型 - The Inclusion Model</h1>
 <p>通常模板需要被包含在头文件中工作。</p>
 <p>注意：函数模板完全特化之后也需要 inline 才能够在头文件中使用，否则会出现不同的翻译单元有重复定义的情况。</p>
@@ -658,7 +658,7 @@ global variables and static data members should be defined only once across the 
   </entry>
   <entry>
     <title>CTTCG 11 Generic Libraries</title>
-    <url>/2023/08/12/cpp-templates-the-complete-guide-11-Generic-Libraries/</url>
+    <url>/cpp-templates-the-complete-guide/cttcg-11-generic-libraries/</url>
     <content><![CDATA[<h1 id="callables">Callables</h1>
 <p>Callable 有很多：函数、函数指针、成员函数、lambda 表达式（函数对象特例）、函数对象（Functor）等。</p>
 <h2 id="lambda-biao-da-shi" id="lambda-表达式">lambda 表达式</h2>
@@ -728,7 +728,7 @@ global variables and static data members should be defined only once across the 
   </entry>
   <entry>
     <title>CTTCG 12 Fundamentals in Depth</title>
-    <url>/2023/08/12/cpp-templates-the-complete-guide-12-Fundamentals-in-Depth/</url>
+    <url>/cpp-templates-the-complete-guide/cttcg-12-fundamentals-in-depth/</url>
     <content><![CDATA[<h1 id="1-can-shu-hua-sheng-ming">1 参数化声明</h1>
 <h2 id="mo-ban-fen-lei" id="模板分类">模板分类</h2>
 <p>模板有四类：类模板、函数模板、变量模板、别名模板。其中别名模板是：</p>
@@ -855,7 +855,7 @@ global variables and static data members should be defined only once across the 
   </entry>
   <entry>
     <title>CTTCG 13 Names in Templates</title>
-    <url>/2023/08/12/cpp-templates-the-complete-guide-13-Names-in-Templates/</url>
+    <url>/cpp-templates-the-complete-guide/cttcg-13-names-in-templates/</url>
     <content><![CDATA[<h1 id="ming-zi-cha-zhao-pu-tong-cha-zhao-he-adl">名字查找：普通查找和 ADL</h1>
 <p>普通查找和 ADL 是同时进行的，不存在优先级差异。这些被找到的函数被放在一起参与重载决议。如果没有因为一般性的重载决议规则决出优劣，则会引发 ambiguous 指代错误。</p>
 <h2 id="strong-ordinary-lookup-strong-nei-bu-ming-cheng-zhe-gai-wai-bu-ming-cheng-de-gui-ze" id="ordinary-lookup-内部名称遮盖外部名称的规则"><strong>ordinary lookup</strong>: 内部名称遮盖外部名称的规则</h2>
@@ -913,7 +913,7 @@ global variables and static data members should be defined only once across the 
   </entry>
   <entry>
     <title>CTTCG 15 Template Argument Deduction</title>
-    <url>/2023/08/12/cpp-templates-the-complete-guide-15-Template-Argument-Deduction/</url>
+    <url>/cpp-templates-the-complete-guide/cttcg-15-template-argument-deduction/</url>
     <content><![CDATA[<p>2023 年 5 月 17 日</p>
 <h1 id="tui-dao-shang-xia-wen-deduced-context">推导上下文：Deduced Context</h1>
 <p>P272 书上</p>
@@ -1092,7 +1092,7 @@ global variables and static data members should be defined only once across the 
   </entry>
   <entry>
     <title>CTTCG 16 Specializations and Overloading</title>
-    <url>/2023/08/12/cpp-templates-the-complete-guide-16-Specializations-and-Overloading/</url>
+    <url>/cpp-templates-the-complete-guide/cttcg-16-specializations-and-overloading/</url>
     <content><![CDATA[<p>大部分都不需要专门总结，因此这一小节为空。</p>
 ]]></content>
       <categories>
@@ -1104,7 +1104,7 @@ global variables and static data members should be defined only once across the 
   </entry>
   <entry>
     <title>CTTCG 17 Future Directions</title>
-    <url>/2023/08/12/cpp-templates-the-complete-guide-17-Future-Directions/</url>
+    <url>/cpp-templates-the-complete-guide/cttcg-17-future-directions/</url>
     <content><![CDATA[<p>这一章讲的是对未来的展望。</p>
 <h1 id="fu-dian-shu-he-zi-fu-chuan-zuo-wei-mo-ban-can-shu">浮点数和字符串作为模板参数</h1>
 <p>浮点数在 gcc C++20 是可以作为非类型模板参数（NTTP）的；clang 不支持。目前 <a href="https://en.cppreference.com/w/cpp/compiler_support">C++ compiler support - cppreference.com</a> 上也看不到相关的支持项目。</p>
@@ -1124,7 +1124,7 @@ global variables and static data members should be defined only once across the 
   </entry>
   <entry>
     <title>CTTCG 18 The Polymorphic Power of Templates</title>
-    <url>/2023/08/12/cpp-templates-the-complete-guide-18-The-Polymorphic-Power-of-Templates/</url>
+    <url>/cpp-templates-the-complete-guide/cttcg-18-the-polymorphic-power-of-templates/</url>
     <content><![CDATA[<p>C++ 的多态有两类：bounded <strong>dynamic</strong> polymorphism 和 unbounded <strong>static</strong> polymorphism。前者 bounded 指的是虚函数有基类的接口，其行为有一定约束；后者 unbounded 指的是模板采用类型替换的方式生成代码。为了给静态多态提供约束，可以使用 enable_if 或 concept。</p>
 ]]></content>
       <categories>
@@ -1136,7 +1136,7 @@ global variables and static data members should be defined only once across the 
   </entry>
   <entry>
     <title>CTTCG 19 Implementing Traits</title>
-    <url>/2023/08/12/cpp-templates-the-complete-guide-19-Implementing-Traits/</url>
+    <url>/cpp-templates-the-complete-guide/cttcg-19-implementing-traits/</url>
     <content><![CDATA[<h1 id="trait-fen-lei">Trait 分类</h1>
 <p>不一定大家都这么叫，但是为了方便，我规定下面的术语：</p>
 <ul>
@@ -1232,7 +1232,7 @@ global variables and static data members should be defined only once across the 
   </entry>
   <entry>
     <title>CTTCG 19.1 用 SFINAE 实现 Traits</title>
-    <url>/2023/08/12/cpp-templates-the-complete-guide-19-1-%E7%94%A8-SFINAE-%E5%AE%9E%E7%8E%B0-Traits/</url>
+    <url>/cpp-templates-the-complete-guide/cttcg-19-1-%E7%94%A8-sfinae-%E5%AE%9E%E7%8E%B0-traits/</url>
     <content><![CDATA[<p>原理是用 SFINAE 机制安全地匹配几个函数或函数模板，然后再通过函数匹配信息将结果（true or false）嵌入 Trait 类中。Trait 约束条件被包含在函数模板的声明中。</p>
 <p>实现 traits 最核心的要点是<strong>模拟</strong>被替换类型的行为，然后让行为不满足的那些替换被 SFINAE 筛掉。</p>
 <h1 id="han-shu-fan-hui-ji-ben-lei-xing-jing-tai-chang-liang-ding-yi">函数返回基本类型 → 静态常量定义</h1>
@@ -1277,7 +1277,7 @@ global variables and static data members should be defined only once across the 
   </entry>
   <entry>
     <title>CTTCG 20 Overloading on Type Properties</title>
-    <url>/2023/08/12/cpp-templates-the-complete-guide-20-Overloading-on-Type-Properties/</url>
+    <url>/cpp-templates-the-complete-guide/cttcg-20-overloading-on-type-properties/</url>
     <content><![CDATA[<h1 id="tldr-ji-chong-sfinae-de-mo-shi">TLDR：几种 SFINAE 的模式</h1>
 <ol>
 <li>对于<strong>函数参数列表非空</strong>的函数模板，可以用非 varargs 函数实现功能，varargs 作为 fallback。</li>
@@ -1362,7 +1362,7 @@ global variables and static data members should be defined only once across the 
   </entry>
   <entry>
     <title>CTTCG 21 Templates and Inheritance</title>
-    <url>/2023/08/12/cpp-templates-the-complete-guide-21-Templates-and-Inheritance/</url>
+    <url>/cpp-templates-the-complete-guide/cttcg-21-templates-and-inheritance/</url>
     <content><![CDATA[<h1 id="ling-kai-xiao-ji-cheng-kong-ji-lei-you-hua-ebco">零开销继承：空基类优化（EBCO）</h1>
 <p>The Empty Base Class Optimization (EBCO)</p>
 <p>C++ 没有真正零大小的类，因为在数组等场景需要用地址区分元素。一般编译器上空类的大小是 1 个字节。不过，当基类为空时，EBCO 会使得基类在子类中不占空间。但是 EBCO 的适用有条件。下面的场景是从实践中观察出来的，可能并没有被标准定义，但它演示了 EBCO 失效：</p>
@@ -1439,7 +1439,7 @@ global variables and static data members should be defined only once across the 
   </entry>
   <entry>
     <title>CTTCG 23 Metaprogramming</title>
-    <url>/2023/08/12/cpp-templates-the-complete-guide-23-Metaprogramming/</url>
+    <url>/cpp-templates-the-complete-guide/cttcg-23-metaprogramming/</url>
     <content><![CDATA[<h1 id="fen-lei">分类</h1>
 <p>现在值元编程已经能够很好地被 <code>constexpr</code> 函数取代。</p>
 <p>类型元编程例子：<code>std::chrono</code> 中的时间单位用分数表示，两个时间单位的加和的单位可以在运行时确定——尽管分母很可能会变化。</p>
@@ -1468,7 +1468,7 @@ global variables and static data members should be defined only once across the 
   </entry>
   <entry>
     <title>CTTCG 22 Bridging Static and Dynamic Polymorphism</title>
-    <url>/2023/08/12/cpp-templates-the-complete-guide-22-Bridging-Static-and-Dynamic-Polymorphism/</url>
+    <url>/cpp-templates-the-complete-guide/cttcg-22-bridging-static-and-dynamic-polymorphism/</url>
     <content><![CDATA[<h1 id="lei-xing-ca-chu">类型擦除</h1>
 <p>主要讲的是<strong>类型擦除</strong>，例子是 <code>std::function</code> 类模板。特殊情况：<code>std::function&lt;void(void)&gt;</code> 和 <code>std::function&lt;void()&gt;</code> 是同一个类型。</p>
 <h1 id="shi-xian-si-lu">实现思路</h1>
@@ -1512,7 +1512,7 @@ global variables and static data members should be defined only once across the 
   </entry>
   <entry>
     <title>CTTCG 24 Typelists</title>
-    <url>/2023/08/12/cpp-templates-the-complete-guide-24-Typelists/</url>
+    <url>/cpp-templates-the-complete-guide/cttcg-24-typelists/</url>
     <content><![CDATA[<p>本章介绍了构建类型列表的技巧。既然类型列表可以使用这类技巧，值列表当然也可以在编译期完成类似的计算。</p>
 <p>类型列表一开始是用可变长参数列表定义的。</p>
 <figure class="highlight cpp"><table><tr><td class="code"><pre><span class="line"><span class="keyword">template</span> &lt;<span class="keyword">typename</span>... Elements&gt;</span><br><span class="line"><span class="keyword">class</span> <span class="title class_">Typelist</span> &#123;&#125;;</span><br></pre></td></tr></table></figure>
@@ -1544,7 +1544,7 @@ global variables and static data members should be defined only once across the 
   </entry>
   <entry>
     <title>CTTCG 25 Tuples</title>
-    <url>/2023/08/12/cpp-templates-the-complete-guide-25-Tuples/</url>
+    <url>/cpp-templates-the-complete-guide/cttcg-25-tuples/</url>
     <content><![CDATA[<p>类型计算可以在编译期间完成，取值的部分仍然是运行时操作。在 <code>libc++</code> 中被实现成多继承+反序构造，在 <code>libstdc++</code> 中被实现成双继承+正序构造。</p>
 <h1 id="base">Base</h1>
 <p>将元素包裹在 <code>Base</code> 中再继承可以利用到 EBCO（可优化时继承元素，不可优化时将元素作为成员）。通过给 <code>Base</code> 类模板添加下标作为参数，可以区分类型相同的元素。</p>
@@ -1566,7 +1566,7 @@ global variables and static data members should be defined only once across the 
   </entry>
   <entry>
     <title>CTTCG 26 Discriminated Unions</title>
-    <url>/2023/08/12/cpp-templates-the-complete-guide-26-Discriminated-Unions/</url>
+    <url>/cpp-templates-the-complete-guide/cttcg-26-discriminated-unions/</url>
     <content><![CDATA[<p>本章想要实现的类模板相当于 <code>std::variant</code>。 可以用递归 union 模板，也可以用字符数组存储，本章选用的是后者。</p>
 <p>使用字符数组存储未知元素，需要注意：</p>
 <ol>
@@ -1629,7 +1629,7 @@ global variables and static data members should be defined only once across the 
   </entry>
   <entry>
     <title>CTTCG 27 Expression Templates</title>
-    <url>/2023/08/12/cpp-templates-the-complete-guide-27-Expression-Templates/</url>
+    <url>/cpp-templates-the-complete-guide/cttcg-27-expression-templates/</url>
     <content><![CDATA[<h1 id="biao-da-shi-mo-ban-jie-jue-liao-shi-yao-wen-ti">表达式模板解决了什么问题</h1>
 <p>表达式模板主要用在大数组的计算上。以相加为例，应该支持的操作有：同长度的数组相加、数组和标量的相加。有时候表达式比较复杂，会涉及多个操作，这种场景下，手工编写代码效率高，但是需要自己控制循环；使用模板编写代码则需要想办法把操作一次性完成，避免多次内存分配和内存访问。</p>
 <blockquote>
@@ -1656,7 +1656,7 @@ global variables and static data members should be defined only once across the 
   </entry>
   <entry>
     <title>CTTCG 28 Debugging Templates</title>
-    <url>/2023/08/12/cpp-templates-the-complete-guide-28-Debugging-Templates/</url>
+    <url>/cpp-templates-the-complete-guide/cttcg-28-debugging-templates/</url>
     <content><![CDATA[<h1 id="shallow-instantiation">Shallow Instantiation</h1>
 <p>作用：早点暴露参数校验错误，避免在一堆模板实例化失败的信息中找错误。</p>
 <p>可以用 <code>static_assert</code> 或者定义无用类：</p>
@@ -1686,7 +1686,7 @@ global variables and static data members should be defined only once across the 
   </entry>
   <entry>
     <title>C++ 对象模型开销总结</title>
-    <url>/2023/08/12/inside-the-cpp-object-model-C-%E5%AF%B9%E8%B1%A1%E6%A8%A1%E5%9E%8B%E5%BC%80%E9%94%80%E6%80%BB%E7%BB%93/</url>
+    <url>/inside-the-cpp-object-model/c-%E5%AF%B9%E8%B1%A1%E6%A8%A1%E5%9E%8B%E5%BC%80%E9%94%80%E6%80%BB%E7%BB%93/</url>
     <content><![CDATA[<p><strong>下面都是用的 Itanium C++ ABI。机器字长为 64 位。</strong></p>
 <h1 id="zhi-xiang-cheng-yuan-han-shu-de-zhi-zhen-2-bei-da-xiao">指向成员函数的指针：2 倍大小</h1>
 <p>在 64 位下是 16 字节，因为需要支持虚函数调用。指向成员函数的指针会保存两部分数据：</p>
@@ -1748,7 +1748,7 @@ global variables and static data members should be defined only once across the 
   </entry>
   <entry>
     <title>Cfront 如何插入构造函数</title>
-    <url>/2023/08/12/inside-the-cpp-object-model-Cfront-%E5%A6%82%E4%BD%95%E6%8F%92%E5%85%A5%E6%9E%84%E9%80%A0%E5%87%BD%E6%95%B0/</url>
+    <url>/inside-the-cpp-object-model/cfront-%E5%A6%82%E4%BD%95%E6%8F%92%E5%85%A5%E6%9E%84%E9%80%A0%E5%87%BD%E6%95%B0/</url>
     <content><![CDATA[<p>实际上复制构造函数的插入比较困难，比如在函数返回和传参的时候。由于 C 语言是按位复制（而不是按成员），cfront 会在函数调用前插入返回值变量声明，在函数中使用局部变量运算，并在返回时调用复制构造函数从局部变量复制成员到返回值处。</p>
 <p><strong>NRV</strong> (Named Return Value) 优化则能减少返回时的复制构造：</p>
 <p><img src="../../assets/cc2fdb90393c80df691782129795025a.png" alt=""></p>
@@ -1768,7 +1768,7 @@ global variables and static data members should be defined only once across the 
   </entry>
   <entry>
     <title>new 和 delete</title>
-    <url>/2023/08/12/inside-the-cpp-object-model-new-%E5%92%8C-delete/</url>
+    <url>/inside-the-cpp-object-model/new-%E5%92%8C-delete/</url>
     <content><![CDATA[<h1 id="code-new-code"><code>new</code></h1>
 <p>用 new 申请的内存最少占用 1 个字节——尽管我们申请的可能是 0 个字节。</p>
 <p><img src="../../assets/e06da70dc841cb03e9e0076d20f8f899.png" alt=""></p>
@@ -1790,7 +1790,7 @@ global variables and static data members should be defined only once across the 
   </entry>
   <entry>
     <title>复制构造和赋值运算符</title>
-    <url>/2023/08/12/inside-the-cpp-object-model-%E5%A4%8D%E5%88%B6%E6%9E%84%E9%80%A0%E5%92%8C%E8%B5%8B%E5%80%BC%E8%BF%90%E7%AE%97%E7%AC%A6/</url>
+    <url>/inside-the-cpp-object-model/%E5%A4%8D%E5%88%B6%E6%9E%84%E9%80%A0%E5%92%8C%E8%B5%8B%E5%80%BC%E8%BF%90%E7%AE%97%E7%AC%A6/</url>
     <content><![CDATA[<h1 id="vptr">vptr</h1>
 <p>这个小节没有提到 vptr 的处理。</p>
 <ol>
@@ -1814,7 +1814,7 @@ global variables and static data members should be defined only once across the 
   </entry>
   <entry>
     <title>多继承下的指针转换</title>
-    <url>/2023/08/12/inside-the-cpp-object-model-%E5%A4%9A%E7%BB%A7%E6%89%BF%E4%B8%8B%E7%9A%84%E6%8C%87%E9%92%88%E8%BD%AC%E6%8D%A2/</url>
+    <url>/inside-the-cpp-object-model/%E5%A4%9A%E7%BB%A7%E6%89%BF%E4%B8%8B%E7%9A%84%E6%8C%87%E9%92%88%E8%BD%AC%E6%8D%A2/</url>
     <content><![CDATA[<p>要注意空指针是特殊情况：</p>
 <p><img src="../../assets/b91cf97c72043857b03f7b43bb65feac.png" alt=""></p>
 ]]></content>
@@ -1827,7 +1827,7 @@ global variables and static data members should be defined only once across the 
   </entry>
   <entry>
     <title>多继承下的虚函数</title>
-    <url>/2023/08/12/inside-the-cpp-object-model-%E5%A4%9A%E7%BB%A7%E6%89%BF%E4%B8%8B%E7%9A%84%E8%99%9A%E5%87%BD%E6%95%B0/</url>
+    <url>/inside-the-cpp-object-model/%E5%A4%9A%E7%BB%A7%E6%89%BF%E4%B8%8B%E7%9A%84%E8%99%9A%E5%87%BD%E6%95%B0/</url>
     <content><![CDATA[<h1 id="strong-duo-ji-cheng-xia-zhong-zai-qian-ming-xiang-tong-de-han-shu-strong"><strong>多继承下重载签名相同的函数</strong></h1>
 <p><img src="../../assets/7bd760c39d3ddb901cc71b7795369680.png" alt=""></p>
 <p>结果是<strong>会把基类同签名的所有非 final 虚函数都重写了</strong>，而且实现方式相同。尽管基类的虚函数签名一样，但是他们没有关联性，所以在子类的虚表中占两个槽（slots）（一个槽是一个指针）。同样的，如果 Interface 中有虚函数 foo，而 A 和 B 都继承了 Interface，C 继承了 A 和 B。如果 A 和 B 没有虚拟继承 Interface，那么在 C 的对象调用函数 foo 时将出现 ambiguous 指代错误。如果 C 重写了 foo 函数，那么指代就还是明确的。<strong>或者，如果 A 和 B 都是虚拟继承自 Interface，那么也不会有编译错误</strong>。但这样通过指针/引用调用虚函数 foo 就需要先取虚基类子对象 this 的偏移，修改 this 之后再从 vptr 中读虚函数 foo，开销是 4 次访存（将虚拟继承和虚函数调用的代价累加起来了） 。</p>
@@ -1866,7 +1866,7 @@ global variables and static data members should be defined only once across the 
   </entry>
   <entry>
     <title>多继承给 C++ 带来了哪些设计负担？</title>
-    <url>/2023/08/12/inside-the-cpp-object-model-%E5%A4%9A%E7%BB%A7%E6%89%BF%E7%BB%99-C-%E5%B8%A6%E6%9D%A5%E4%BA%86%E5%93%AA%E4%BA%9B%E8%AE%BE%E8%AE%A1%E8%B4%9F%E6%8B%85%EF%BC%9F/</url>
+    <url>/inside-the-cpp-object-model/%E5%A4%9A%E7%BB%A7%E6%89%BF%E7%BB%99-c-%E5%B8%A6%E6%9D%A5%E4%BA%86%E5%93%AA%E4%BA%9B%E8%AE%BE%E8%AE%A1%E8%B4%9F%E6%8B%85%EF%BC%9F/</url>
     <content><![CDATA[<ol>
 <li>指针偏移本身有少量开销，若需要偏移则得先判空，这样才能保证空指针永远为空。</li>
 <li>指针偏移对设计虚函数表带来了困难。例如 <strong>thunk</strong> 技术用来对 this 指针做适配再调用对应函数。</li>
@@ -1884,7 +1884,7 @@ global variables and static data members should be defined only once across the 
   </entry>
   <entry>
     <title>完整构造函数的初始化顺序</title>
-    <url>/2023/08/12/inside-the-cpp-object-model-%E5%AE%8C%E6%95%B4%E6%9E%84%E9%80%A0%E5%87%BD%E6%95%B0%E7%9A%84%E5%88%9D%E5%A7%8B%E5%8C%96%E9%A1%BA%E5%BA%8F/</url>
+    <url>/inside-the-cpp-object-model/%E5%AE%8C%E6%95%B4%E6%9E%84%E9%80%A0%E5%87%BD%E6%95%B0%E7%9A%84%E5%88%9D%E5%A7%8B%E5%8C%96%E9%A1%BA%E5%BA%8F/</url>
     <content><![CDATA[<p>构造函数分为完整构造函数（Complete Object Constructor）和基类构造函数（Base Object Constructor）。</p>
 <h1 id="chu-shi-hua-shun-xu">初始化顺序</h1>
 <p>显式构造一个对象的时候调用的是完整构造函数。该函数执行的初始化流程如下：</p>
@@ -1911,7 +1911,7 @@ global variables and static data members should be defined only once across the 
   </entry>
   <entry>
     <title>对象布局</title>
-    <url>/2023/08/12/inside-the-cpp-object-model-%E5%AF%B9%E8%B1%A1%E5%B8%83%E5%B1%80/</url>
+    <url>/inside-the-cpp-object-model/%E5%AF%B9%E8%B1%A1%E5%B8%83%E5%B1%80/</url>
     <content><![CDATA[<h1 id="guan-yu-access-section">关于 access section</h1>
 <p>不同 access section 数据不保证按序布局。</p>
 <p><img src="../../assets/a8b2681128b573bd4e51d97c763af9e4.png" alt=""></p>
@@ -1958,7 +1958,7 @@ global variables and static data members should be defined only once across the 
   </entry>
   <entry>
     <title>异常处理</title>
-    <url>/2023/08/12/inside-the-cpp-object-model-%E5%BC%82%E5%B8%B8%E5%A4%84%E7%90%86/</url>
+    <url>/inside-the-cpp-object-model/%E5%BC%82%E5%B8%B8%E5%A4%84%E7%90%86/</url>
     <content><![CDATA[<p>有人说从 Cfront 转向专门的 C++ 编译器的一大原因就是支持异常处理，因为异常处理在 C 语言中很难做。</p>
 <p>一个函数的指令区域分成三种：</p>
 <ol>
@@ -1981,7 +1981,7 @@ global variables and static data members should be defined only once across the 
   </entry>
   <entry>
     <title>指向成员的指针</title>
-    <url>/2023/08/12/inside-the-cpp-object-model-%E6%8C%87%E5%90%91%E6%88%90%E5%91%98%E7%9A%84%E6%8C%87%E9%92%88/</url>
+    <url>/inside-the-cpp-object-model/%E6%8C%87%E5%90%91%E6%88%90%E5%91%98%E7%9A%84%E6%8C%87%E9%92%88/</url>
     <content><![CDATA[<p>参考 <a href="https://itanium-cxx-abi.github.io/cxx-abi/abi.html#member-pointers">https://itanium-cxx-abi.github.io/cxx-abi/abi.html#member-pointers</a>。</p>
 <h1 id="xiang-xia-zhuan-huan-de-neng-li">向下转换的能力！</h1>
 <p>和类的指针/引用的转换不同，指向成员的指针既可以<strong>向下转</strong>，又可以向上转！只需要目的类型拥有对应的成员即可。</p>
@@ -2036,7 +2036,7 @@ global variables and static data members should be defined only once across the 
   </entry>
   <entry>
     <title>按需合成构造函数</title>
-    <url>/2023/08/12/inside-the-cpp-object-model-%E6%8C%89%E9%9C%80%E5%90%88%E6%88%90%E6%9E%84%E9%80%A0%E5%87%BD%E6%95%B0/</url>
+    <url>/inside-the-cpp-object-model/%E6%8C%89%E9%9C%80%E5%90%88%E6%88%90%E6%9E%84%E9%80%A0%E5%87%BD%E6%95%B0/</url>
     <content><![CDATA[<p><img src="../../assets/862beea85cbeacd098f8815be021dd62.png" alt=""></p>
 <p><img src="../../assets/44d6ca6c8f48a441c50cc07501a274e2.png" alt=""></p>
 <p>复制、默认构造都是按需生成的。对于平凡的情况不需要生成，只是在语意上满足“拥有构造函数”的含义。</p>
@@ -2065,7 +2065,7 @@ global variables and static data members should be defined only once across the 
   </entry>
   <entry>
     <title>构造函数的成员初始化列表</title>
-    <url>/2023/08/12/inside-the-cpp-object-model-%E6%9E%84%E9%80%A0%E5%87%BD%E6%95%B0%E7%9A%84%E6%88%90%E5%91%98%E5%88%9D%E5%A7%8B%E5%8C%96%E5%88%97%E8%A1%A8/</url>
+    <url>/inside-the-cpp-object-model/%E6%9E%84%E9%80%A0%E5%87%BD%E6%95%B0%E7%9A%84%E6%88%90%E5%91%98%E5%88%9D%E5%A7%8B%E5%8C%96%E5%88%97%E8%A1%A8/</url>
     <content><![CDATA[<p>初始化会按照变量声明的顺序进行。因此虽然下面的代码想要用 j 的新值初始化 i，但实际上是 <code>i(j)</code> 先被执行，然后才是 <code>j(val)</code>。</p>
 <p><img src="../../assets/06ab52d0a31a5f56f772342fefe137d6.png" alt=""></p>
 <p>不过，构造函数代码块中的初始化过程始终发生于成员初始化列表之后。</p>
@@ -2079,7 +2079,7 @@ global variables and static data members should be defined only once across the 
   </entry>
   <entry>
     <title>析构函数</title>
-    <url>/2023/08/12/inside-the-cpp-object-model-%E6%9E%90%E6%9E%84%E5%87%BD%E6%95%B0/</url>
+    <url>/inside-the-cpp-object-model/%E6%9E%90%E6%9E%84%E5%87%BD%E6%95%B0/</url>
     <content><![CDATA[<p>析构函数和构造函数一样，也分完整析构函数和基类析构函数两种。而且析构函数的工作流程和构造函数相反。</p>
 <p>如果一个类的基类有未实现的析构函数（未提供定义或者是纯虚函数），会导致链接失败。这是因为子类的析构函数有调用基类析构函数的逻辑！</p>
 <h1 id="shi-yao-shi-hou-xu-yao-xu-xi-gou-han-shu">什么时候需要虚析构函数</h1>
@@ -2122,7 +2122,7 @@ global variables and static data members should be defined only once across the 
   </entry>
   <entry>
     <title>虚拟继承和虚函数对比</title>
-    <url>/2023/08/12/inside-the-cpp-object-model-%E8%99%9A%E6%8B%9F%E7%BB%A7%E6%89%BF%E5%92%8C%E8%99%9A%E5%87%BD%E6%95%B0%E5%AF%B9%E6%AF%94/</url>
+    <url>/inside-the-cpp-object-model/%E8%99%9A%E6%8B%9F%E7%BB%A7%E6%89%BF%E5%92%8C%E8%99%9A%E5%87%BD%E6%95%B0%E5%AF%B9%E6%AF%94/</url>
     <content><![CDATA[<ol>
 <li>虚拟继承用来动态访问数据（节约存储空间或保证数据地址唯一），虚函数用来动态访问方法。</li>
 <li>如果 A 类有虚函数，那么 A 类已经有 vptr、是多态类，通过 A 类指针/引用访问虚函数则需要查找虚表。</li>
@@ -2149,7 +2149,7 @@ global variables and static data members should be defined only once across the 
   </entry>
   <entry>
     <title>类定义中的类型名可见性</title>
-    <url>/2023/08/12/inside-the-cpp-object-model-%E7%B1%BB%E5%AE%9A%E4%B9%89%E4%B8%AD%E7%9A%84%E7%B1%BB%E5%9E%8B%E5%90%8D%E5%8F%AF%E8%A7%81%E6%80%A7/</url>
+    <url>/inside-the-cpp-object-model/%E7%B1%BB%E5%AE%9A%E4%B9%89%E4%B8%AD%E7%9A%84%E7%B1%BB%E5%9E%8B%E5%90%8D%E5%8F%AF%E8%A7%81%E6%80%A7/</url>
     <content><![CDATA[<p>尽管现在的编译器能够正确理解数据成员（含有隐式的 this 指针）的使用，并在看到整个类定义之后再查找名字，类型名的查找则发生的很早，导致使用时可能看不到、或者使用了错误的类型声明。</p>
 <p>所以，应该尽可能在类定义的开头写好类型别名。</p>
 <p><img src="../../assets/fde83ca0b85569926f6b3f81c6ef41c2.png" alt=""></p>
@@ -2163,7 +2163,7 @@ global variables and static data members should be defined only once across the 
   </entry>
   <entry>
     <title>虚拟继承</title>
-    <url>/2023/08/12/inside-the-cpp-object-model-%E8%99%9A%E6%8B%9F%E7%BB%A7%E6%89%BF/</url>
+    <url>/inside-the-cpp-object-model/%E8%99%9A%E6%8B%9F%E7%BB%A7%E6%89%BF/</url>
     <content><![CDATA[<h1 id="ji-ben-gai-nian">基本概念</h1>
 <p><img src="../../assets/9af2a15e034c9be3cf15b35c0525e241.png" alt=""></p>
 <p><img src="../../assets/f28a0c3cd8d9c1ba00bb081453f3f9c6.png" alt=""></p>
@@ -2212,7 +2212,7 @@ global variables and static data members should be defined only once across the 
   </entry>
   <entry>
     <title>静态成员函数</title>
-    <url>/2023/08/12/inside-the-cpp-object-model-%E9%9D%99%E6%80%81%E6%88%90%E5%91%98%E5%87%BD%E6%95%B0/</url>
+    <url>/inside-the-cpp-object-model/%E9%9D%99%E6%80%81%E6%88%90%E5%91%98%E5%87%BD%E6%95%B0/</url>
     <content><![CDATA[<h1 id="jing-tai-cheng-yuan-han-shu-chu-xian-zhi-qian">静态成员函数出现之前</h1>
 <p>很久以前没有静态成员函数（直到 Cfront 2.0 才加入），那个时候静态方法可以用这种方式调用：</p>
 <p><img src="../../assets/07580994615633018e06f05426e98683.png" alt=""></p>
@@ -2230,7 +2230,7 @@ global variables and static data members should be defined only once across the 
   </entry>
   <entry>
     <title>(C++23) std::forward_like</title>
-    <url>/2023/08/12/cpplang-C-23-std-forward-like/</url>
+    <url>/cpplang/c-23-std-forward-like/</url>
     <content><![CDATA[<p><code>std::forward</code> 需要我们提供一个模板参数，它能把同类型（不包括值属性）的参数转发出去。</p>
 <p><code>std::forward_like</code> 则有两个模板参数，第一个参数需要显式提供，第二个参数从实参中推导。它从模板参数中获得转发需要使用的引用类型，并将实参转发出去。<strong>这意味着实参和模板参数的类型可以不一致！</strong></p>
 <p><code>std::forward_like</code> 非常适合转发子对象的场合，因为它能让子对象和本身的左右值类型相同。比如在显式对象参数中可以使用。</p>
@@ -2244,7 +2244,7 @@ global variables and static data members should be defined only once across the 
   </entry>
   <entry>
     <title>非自动变量初始化</title>
-    <url>/2023/08/12/inside-the-cpp-object-model-%E9%9D%9E%E8%87%AA%E5%8A%A8%E5%8F%98%E9%87%8F%E5%88%9D%E5%A7%8B%E5%8C%96/</url>
+    <url>/inside-the-cpp-object-model/%E9%9D%9E%E8%87%AA%E5%8A%A8%E5%8F%98%E9%87%8F%E5%88%9D%E5%A7%8B%E5%8C%96/</url>
     <content><![CDATA[<h1 id="c-he-c-de-qu-bie">C++ 和 C 的区别</h1>
 <ol>
 <li>C++ 支持使用非常量表达式对全局或静态变量初始化。对于 local static / thread_local static 变量而言，这项功能使得访问时有同步开销。（像 C 一样用常量表达式初始化就不会有访问开销）</li>
@@ -2316,7 +2316,7 @@ global variables and static data members should be defined only once across the 
   </entry>
   <entry>
     <title>(libstdc++ vs libc++) std::tuple</title>
-    <url>/2023/08/12/cpplang-libstdc-vs-libc-std-tuple/</url>
+    <url>/cpplang/libstdc-vs-libc-std-tuple/</url>
     <content><![CDATA[<h1 id="lie-biao-gou-zao-shun-xu">列表构造顺序</h1>
 <p><code>libstdc++</code> 用的是递归反向构造，尾部的参数先构造。与之对应，<code>libc++</code> 用的是 parameter pack 继承，是正向构造。</p>
 <h1 id="xia-biao-bian-hao">下标编号</h1>
@@ -2344,7 +2344,7 @@ global variables and static data members should be defined only once across the 
   </entry>
   <entry>
     <title>(libstdc++) std::set</title>
-    <url>/2023/08/12/cpplang-libstdc-std-set/</url>
+    <url>/cpplang/libstdc-std-set/</url>
     <content><![CDATA[<p>相关文件：</p>
 <ul>
 <li><code>include/set</code> 头文件按顺序引入了 <code>include/bits/stl_tree.h</code> 和 <code>include/bits/stl_set.h</code>。</li>
@@ -2376,7 +2376,7 @@ global variables and static data members should be defined only once across the 
   </entry>
   <entry>
     <title>(libstdc++) std::function</title>
-    <url>/2023/08/12/cpplang-libstdc-std-function/</url>
+    <url>/cpplang/libstdc-std-function/</url>
     <content><![CDATA[<p><code>libstdc++</code></p>
 <p>文件：<code>bits/std_function.h</code>。</p>
 <p>印象：小对象优化+避免使用虚函数，实际效果略次于虚函数</p>
@@ -2423,7 +2423,7 @@ global variables and static data members should be defined only once across the 
   </entry>
   <entry>
     <title>Aggregate</title>
-    <url>/2023/08/12/cpplang-Aggregate/</url>
+    <url>/cpplang/aggregate/</url>
     <content><![CDATA[<p><img src="../../assets/06486f8b0865616fe9a68551e46d4412.png" alt=""></p>
 <p>注意，有 <strong>bit fields</strong> 或者 <strong>有成员默认值</strong> 或者 <strong>有匿名 union 成员</strong> 也可以是 aggregate。</p>
 <p>对含有 union 成员的聚合类使用 <em>花括号</em> 或 <em>默认的全参数构造函数</em> 初始化时，初始化的是 union 的第一个元素（不管 union 是不是匿名的）。</p>
@@ -2448,7 +2448,7 @@ global variables and static data members should be defined only once across the 
   </entry>
   <entry>
     <title>ADL</title>
-    <url>/2023/08/12/cpplang-ADL/</url>
+    <url>/cpplang/adl/</url>
     <content><![CDATA[<p>例子：</p>
 <figure class="highlight cpp"><table><tr><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;iostream&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;numeric&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;vector&gt;</span></span></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="type">int</span> <span class="title">main</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    std::vector v&#123;<span class="number">1</span>, <span class="number">3</span>, <span class="number">5</span>&#125;; <span class="comment">// 模板类参数推导：T=int</span></span><br><span class="line">    std::cout &lt;&lt; std::<span class="built_in">accumulate</span>(<span class="built_in">begin</span>(v), <span class="built_in">end</span>(v), <span class="number">0</span>);</span><br><span class="line">    <span class="comment">//        ^^                  ^^        ^^ 都是ADL</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 <p>使用 <code>begin</code>、<code>end</code>、<code>swap</code> 等函数模板时，先引入其名字到当前空间中，然后再调用，有助于 ADL 查找到性能更优的函数实现：</p>
@@ -2463,7 +2463,7 @@ global variables and static data members should be defined only once across the 
   </entry>
   <entry>
     <title>Abominable Function</title>
-    <url>/2023/08/12/cpplang-Abominable-Function/</url>
+    <url>/cpplang/abominable-function/</url>
     <content><![CDATA[<p>在 <a href="open-std.org">Abominable Function Types (open-std.org)</a>) 中：</p>
 <blockquote>
 <p>For the purposes of this paper, an <em>abominable</em> function type is the type produced by writing a function type followed by a <em>cv-ref</em> qualifier. Example:<br>
@@ -2482,7 +2482,7 @@ global variables and static data members should be defined only once across the 
   </entry>
   <entry>
     <title>C/C++ 全局定义应该放在 .bss 还是 .data</title>
-    <url>/2023/08/12/cpplang-C-%E5%92%8C-C-%E5%85%A8%E5%B1%80%E5%AE%9A%E4%B9%89%E5%BA%94%E8%AF%A5%E6%94%BE%E5%9C%A8-bss-%E8%BF%98%E6%98%AF-data/</url>
+    <url>/cpplang/c-c-%E5%85%A8%E5%B1%80%E5%AE%9A%E4%B9%89%E5%BA%94%E8%AF%A5%E6%94%BE%E5%9C%A8-bss-%E8%BF%98%E6%98%AF-data/</url>
     <content><![CDATA[<h1 id="c-c-zhong-quan-ju-ding-yi-sheng-ming-de-qu-bie">C/C++ 中全局定义/声明的区别</h1>
 <p>无论在 C 还是 C++，想要仅声明而不在翻译单元中定义全局变量，都需要 extern。</p>
 <p><strong>C语言</strong>：（强弱是方便我叙述引出的概念）</p>
@@ -2504,7 +2504,7 @@ global variables and static data members should be defined only once across the 
   </entry>
   <entry>
     <title>C 语言算术运算的类型提升</title>
-    <url>/2023/11/16/cpplang-C-%E8%AF%AD%E8%A8%80%E7%AE%97%E6%9C%AF%E8%BF%90%E7%AE%97%E7%9A%84%E7%B1%BB%E5%9E%8B%E6%8F%90%E5%8D%87/</url>
+    <url>/cpplang/c-%E8%AF%AD%E8%A8%80%E7%AE%97%E6%9C%AF%E8%BF%90%E7%AE%97%E7%9A%84%E7%B1%BB%E5%9E%8B%E6%8F%90%E5%8D%87/</url>
     <content><![CDATA[<p><a href="https://stackoverflow.com/a/5563131/">https://stackoverflow.com/a/5563131/</a></p>
 <figure class="highlight cpp"><table><tr><td class="code"><pre><span class="line"><span class="keyword">if</span>:</span><br><span class="line">either is      <span class="type">long</span> <span class="type">double</span>       other is promoted &gt;      <span class="type">long</span> <span class="type">double</span></span><br><span class="line">either is           <span class="type">double</span>       other is promoted &gt;           <span class="type">double</span></span><br><span class="line">either is           <span class="type">float</span>        other is promoted &gt;           <span class="type">float</span></span><br><span class="line">either is <span class="type">long</span> <span class="type">long</span> <span class="type">unsigned</span> <span class="type">int</span> other is promoted &gt; <span class="type">long</span> <span class="type">long</span> <span class="type">unsigned</span> <span class="type">int</span></span><br><span class="line">either is <span class="type">long</span> <span class="type">long</span>          <span class="type">int</span> other is promoted &gt; <span class="type">long</span> <span class="type">long</span>          <span class="type">int</span></span><br><span class="line">either is <span class="type">long</span>      <span class="type">unsigned</span> <span class="type">int</span> other is promoted &gt; <span class="type">long</span>      <span class="type">unsigned</span> <span class="type">int</span></span><br><span class="line">either is <span class="type">long</span>               <span class="type">int</span> other is promoted &gt; <span class="type">long</span>               <span class="type">int</span></span><br><span class="line">either is           <span class="type">unsigned</span> <span class="type">int</span> other is promoted &gt;           <span class="type">unsigned</span> <span class="type">int</span></span><br><span class="line">either is                    <span class="type">int</span> other is promoted &gt;                    <span class="type">int</span></span><br><span class="line"></span><br><span class="line">Otherwise:</span><br><span class="line">both operands are promoted to <span class="type">int</span></span><br></pre></td></tr></table></figure>
 ]]></content>
@@ -2517,7 +2517,7 @@ global variables and static data members should be defined only once across the 
   </entry>
   <entry>
     <title>C++ 几种新增类型转换的区别 + 标准库模板函数</title>
-    <url>/2023/08/12/cpplang-C-%E5%87%A0%E7%A7%8D%E6%96%B0%E5%A2%9E%E7%B1%BB%E5%9E%8B%E8%BD%AC%E6%8D%A2%E7%9A%84%E5%8C%BA%E5%88%AB-%E6%A0%87%E5%87%86%E5%BA%93%E6%A8%A1%E6%9D%BF%E5%87%BD%E6%95%B0/</url>
+    <url>/cpplang/c-%E5%87%A0%E7%A7%8D%E6%96%B0%E5%A2%9E%E7%B1%BB%E5%9E%8B%E8%BD%AC%E6%8D%A2%E7%9A%84%E5%8C%BA%E5%88%AB-%E6%A0%87%E5%87%86%E5%BA%93%E6%A8%A1%E6%9D%BF%E5%87%BD%E6%95%B0/</url>
     <content><![CDATA[<h1 id="si-da-guan-jian-zi">四大关键字</h1>
 <ul>
 <li><code>static_cast</code> 大多数转换，包括左右值转换、<strong>父子类指针/引用之间的转换</strong>（不进行安全检查，但会修正指针偏移）。</li>
@@ -2545,7 +2545,7 @@ global variables and static data members should be defined only once across the 
   </entry>
   <entry>
     <title>C++ 模板显式实例化</title>
-    <url>/2024/01/31/cpplang-C-%E6%A8%A1%E6%9D%BF%E6%98%BE%E5%BC%8F%E5%AE%9E%E4%BE%8B%E5%8C%96/</url>
+    <url>/cpplang/c-%E6%A8%A1%E6%9D%BF%E6%98%BE%E5%BC%8F%E5%AE%9E%E4%BE%8B%E5%8C%96/</url>
     <content><![CDATA[<p>头文件：template.hpp</p>
 <figure class="highlight cpp"><table><tr><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">ifndef</span> TEMPLATE_HPP</span></span><br><span class="line"><span class="meta">#<span class="keyword">define</span> TEMPLATE_HPP</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">template</span> &lt;<span class="keyword">typename</span> T&gt;</span><br><span class="line"><span class="function"><span class="type">void</span> <span class="title">println</span><span class="params">(T t)</span></span>;</span><br><span class="line"></span><br><span class="line"><span class="meta">#<span class="keyword">endif</span></span></span><br></pre></td></tr></table></figure>
 <p>源文件：main.cpp</p>
@@ -2580,7 +2580,7 @@ global variables and static data members should be defined only once across the 
   </entry>
   <entry>
     <title>C++ 重定向输出的几种方案：iostream rdbuf、stdio freopen、unix fd</title>
-    <url>/2024/01/31/cpplang-C-%E9%87%8D%E5%AE%9A%E5%90%91%E8%BE%93%E5%87%BA%E7%9A%84%E5%87%A0%E7%A7%8D%E6%96%B9%E6%A1%88%EF%BC%9Aiostream-rdbuf%E3%80%81stdio-freopen%E3%80%81unix-fd/</url>
+    <url>/cpplang/c-%E9%87%8D%E5%AE%9A%E5%90%91%E8%BE%93%E5%87%BA%E7%9A%84%E5%87%A0%E7%A7%8D%E6%96%B9%E6%A1%88%EF%BC%9Aiostream-rdbuf%E3%80%81stdio-freopen%E3%80%81unix-fd/</url>
     <content><![CDATA[<p>在看 Modern CMake for C++ 的时候看到了这段代码：</p>
 <figure class="highlight cpp"><table><tr><td class="code"><pre><span class="line"><span class="function"><span class="type">void</span> <span class="title">RunOutputsCorrectEquations</span><span class="params">()</span> </span>&#123;</span><br><span class="line">  string expected &#123;<span class="string">&quot;2 + 2 = 4\n3 * 3 = 9\n&quot;</span>&#125;;</span><br><span class="line">  stringstream buffer;</span><br><span class="line">  <span class="comment">// redirect cout</span></span><br><span class="line">  <span class="keyword">auto</span> prevcoutbuf = cout.<span class="built_in">rdbuf</span>(buffer.<span class="built_in">rdbuf</span>());</span><br><span class="line">  <span class="built_in">run</span>();</span><br><span class="line">  <span class="keyword">auto</span> output = buffer.<span class="built_in">str</span>();</span><br><span class="line">  <span class="comment">// restore original buffer</span></span><br><span class="line">  cout.<span class="built_in">rdbuf</span>(prevcoutbuf);</span><br><span class="line">  <span class="keyword">if</span> (expected != output)</span><br><span class="line">    <span class="built_in">exit</span>(<span class="number">1</span>);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 <p>看起来 stdio 的 FILE 也能重定向（但是不能保存之前的关联，因而恢复到 stdout 不能跨平台）：</p>
@@ -2601,7 +2601,7 @@ global variables and static data members should be defined only once across the 
   </entry>
   <entry>
     <title>Heterogeneous Lookup</title>
-    <url>/2023/08/12/cpplang-Heterogeneous-Lookup/</url>
+    <url>/cpplang/heterogeneous-lookup/</url>
     <content><![CDATA[<p><a href="https://www.cppstories.com/2021/heterogeneous-access-cpp20/">https://www.cppstories.com/2021/heterogeneous-access-cpp20/</a></p>
 <h1 id="c-14-jia-ru-liao-dui-you-xu-rong-qi-de-yi-zhi-cha-zhao">C++ 14 加入了对有序容器的异质查找</h1>
 <p>用户的工作量很小，对标准库中的类型，只需要加上第三个模板参数：<code>std::less&lt;&gt;</code>（它的默认参数是 void）。<code>std::less&lt;void&gt;</code> 类中申明了 <code>is_transparent</code> 类型，所以可以用于异质查找。</p>
@@ -2622,7 +2622,7 @@ global variables and static data members should be defined only once across the 
   </entry>
   <entry>
     <title>Hidden Friends</title>
-    <url>/2023/08/12/cpplang-Hidden-Friends/</url>
+    <url>/cpplang/hidden-friends/</url>
     <content><![CDATA[<p>下面的代码中，Bar 能够隐式转换成 Foo。想要重载 Foo 的等于运算符至少有三种方案：</p>
 <ol>
 <li>重载全局的 <code>==</code> 运算符</li>
@@ -2642,7 +2642,7 @@ global variables and static data members should be defined only once across the 
   </entry>
   <entry>
     <title>Inheritance</title>
-    <url>/2023/08/12/cpplang-Inheritance/</url>
+    <url>/cpplang/inheritance/</url>
     <content><![CDATA[<table>
 <thead>
 <tr>
@@ -2686,7 +2686,7 @@ global variables and static data members should be defined only once across the 
   </entry>
   <entry>
     <title>P2266R3: Simpler implicit move 对 C++23 函数返回值语义的改变</title>
-    <url>/2023/08/12/cpplang-P2266R3-Simpler-implicit-move-%E5%AF%B9-C-23-%E5%87%BD%E6%95%B0%E8%BF%94%E5%9B%9E%E5%80%BC%E8%AF%AD%E4%B9%89%E7%9A%84%E6%94%B9%E5%8F%98/</url>
+    <url>/cpplang/p2266r3-simpler-implicit-move-%E5%AF%B9-c-23-%E5%87%BD%E6%95%B0%E8%BF%94%E5%9B%9E%E5%80%BC%E8%AF%AD%E4%B9%89%E7%9A%84%E6%94%B9%E5%8F%98/</url>
     <content><![CDATA[<p>可以参考原文 <strong>P2266R3: Simpler implicit move (<a href="http://open-std.org">open-std.org</a>)</strong>。因为 proposal 被修订过，有些链接失效了。</p>
 <p>Implicit Move 指的是函数返回处隐式调用移动构造函数的优化。<strong>和 C++17 加入的 RVO 一样，都是对返回值优化的策略</strong>。其他的返回值优化的策略还包括将右值引用绑定到左值引用上，使得变量生命周期延长（在 C++23 被禁用）等。</p>
 <h1 id="c-11-yun-xu-chun-you-zhi-bian-liang-yin-shi-yi-dong">C++11 允许纯右值变量隐式移动</h1>
@@ -2744,7 +2744,7 @@ global variables and static data members should be defined only once across the 
   </entry>
   <entry>
     <title>POD</title>
-    <url>/2023/08/12/cpplang-POD/</url>
+    <url>/cpplang/pod/</url>
     <content><![CDATA[<p>Plain Old Data</p>
 <p><a href="https://stackoverflow.com/a/4178176/13785815">https://stackoverflow.com/a/4178176</a></p>
 <p>成为 POD 的条件：</p>
@@ -2769,7 +2769,7 @@ global variables and static data members should be defined only once across the 
   </entry>
   <entry>
     <title>Strict Aliasing</title>
-    <url>/2023/08/12/cpplang-Strict-Aliasing/</url>
+    <url>/cpplang/strict-aliasing/</url>
     <content><![CDATA[<p>文章：<a href="github.com">What is Strict Aliasing and Why do we Care? (github.com)</a>)</p>
 <p>所谓 Strict Aliasing 就是指为 aliasing 设定条件，使得编译器大多数场景下认为代码没有 aliasing，从而可以激进优化代码。</p>
 <figure class="highlight cpp"><table><tr><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;iostream&gt;</span></span></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="type">int</span> <span class="title">foo</span><span class="params">( <span class="type">float</span> *f, <span class="type">int</span> *i )</span> </span>&#123;</span><br><span class="line">    *i = <span class="number">1</span>;</span><br><span class="line">    *f = <span class="number">0.f</span>;</span><br><span class="line"></span><br><span class="line">   <span class="keyword">return</span> *i;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="type">int</span> <span class="title">main</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    <span class="type">int</span> x = <span class="number">0</span>;</span><br><span class="line"></span><br><span class="line">    std::cout &lt;&lt; x &lt;&lt; <span class="string">&quot;\n&quot;</span>;   <span class="comment">// Expect 0</span></span><br><span class="line">    x = <span class="built_in">foo</span>(<span class="built_in">reinterpret_cast</span>&lt;<span class="type">float</span>*&gt;(&amp;x), &amp;x);</span><br><span class="line">    std::cout &lt;&lt; x &lt;&lt; <span class="string">&quot;\n&quot;</span>;   <span class="comment">// Expect 0?</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
@@ -2860,7 +2860,7 @@ global variables and static data members should be defined only once across the 
   </entry>
   <entry>
     <title>Pointer to Member</title>
-    <url>/2023/08/12/cpplang-Pointer-to-Member/</url>
+    <url>/cpplang/pointer-to-member/</url>
     <content><![CDATA[<h1 id="shu-ju-cheng-yuan-zhi-zhen-cun-chu-de-shi-pian-yi">数据成员指针存储的是偏移</h1>
 <figure class="highlight cpp"><table><tr><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;iostream&gt;</span></span></span><br><span class="line"><span class="keyword">using</span> <span class="keyword">namespace</span> std;</span><br><span class="line"></span><br><span class="line"><span class="keyword">struct</span> <span class="title class_">Foo</span> &#123;</span><br><span class="line">    <span class="type">int</span> x;</span><br><span class="line">    <span class="type">int</span> y;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="type">int</span> <span class="title">main</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    Foo x&#123;<span class="number">2</span>&#125;;</span><br><span class="line">    <span class="type">int</span> Foo::* px = &amp;Foo::x;</span><br><span class="line">    <span class="type">int</span> Foo::* py = &amp;Foo::y;</span><br><span class="line">    cout &lt;&lt; (<span class="type">unsigned</span> <span class="type">long</span> &amp;)px &lt;&lt; endl; <span class="comment">// 输出0</span></span><br><span class="line">    cout &lt;&lt; (<span class="type">unsigned</span> <span class="type">long</span> &amp;)py &lt;&lt; endl; <span class="comment">// 输出4</span></span><br><span class="line">    cout &lt;&lt; <span class="built_in">sizeof</span>(px) &lt;&lt; endl;          <span class="comment">// gcc输出8</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 <p>数据成员指针的大小和实现相关。</p>
@@ -2887,7 +2887,7 @@ global variables and static data members should be defined only once across the 
   </entry>
   <entry>
     <title>Three-way Comparison =</title>
-    <url>/2023/08/12/cpplang-Three-way-Comparison/</url>
+    <url>/cpplang/three-way-comparison/</url>
     <content><![CDATA[<h1 id="han-yi">含义</h1>
 <p>C++ 20 加入了 <code>&lt;=&gt;</code> 操作符，该操作符会按布局顺序比较成员，比较时会递归使用 <code>&lt;=&gt;</code> 操作符。对于类类型来说，即便默认的 <code>&lt;=&gt;</code> 操作符可用，也必须显式声明为 <code>= default</code>，否则不能使用。</p>
 <blockquote>
@@ -2923,7 +2923,7 @@ global variables and static data members should be defined only once across the 
   </entry>
   <entry>
     <title>UB</title>
-    <url>/2023/08/12/cpplang-UB/</url>
+    <url>/cpplang/ub/</url>
     <content><![CDATA[<p><a href="https://en.cppreference.com/w/cpp/language/ub">Undefined behavior - cppreference.com</a></p>
 <p><em>ill-formed</em>：有语法错误，或者能被检查出的语义错误。必须提供诊断（编译错误）。</p>
 <p><em>ill-formed, <a href="https://en.cppreference.com/w/cpp/language/ndr">no diagnostic required</a></em>：正常编译，但有 UB。</p>
@@ -2977,7 +2977,7 @@ global variables and static data members should be defined only once across the 
   </entry>
   <entry>
     <title>Value Categories</title>
-    <url>/2023/08/12/cpplang-Value-Categories/</url>
+    <url>/cpplang/value-categories/</url>
     <content><![CDATA[<p>左右值的转换要用 <code>static_cast</code> 来实现，<code>reinterpret_cast</code> 做不到。</p>
 <p><a href="https://en.cppreference.com/w/cpp/language/value_category">Value categories - cppreference.com</a> 有更详细的说明。</p>
 <p><img src="../../assets/5910006dfebc9695741390926be5186f.png" alt=""></p>
@@ -2999,7 +2999,7 @@ global variables and static data members should be defined only once across the 
   </entry>
   <entry>
     <title>auto + decltype</title>
-    <url>/2023/08/12/cpplang-auto-decltype/</url>
+    <url>/cpplang/auto-decltype/</url>
     <content><![CDATA[<h1 id="yong-yu-biao-zhu-han-shu-fan-hui-zhi">用于标注函数返回值</h1>
 <p>令人意外的是：C++14 加入的返回值推导是一种特殊的类型，和前向声明并不兼容。</p>
 <figure class="highlight cpp"><table><tr><td class="code"><pre><span class="line"><span class="function"><span class="type">int</span> <span class="title">known</span><span class="params">()</span></span>;</span><br><span class="line"><span class="function"><span class="keyword">auto</span> <span class="title">known</span><span class="params">()</span> </span>&#123; <span class="keyword">return</span> <span class="number">42</span>; &#125; <span class="comment">// 错误：类型不兼容</span></span><br><span class="line"><span class="comment">// int known() &#123; return 42; &#125;         // ok</span></span><br><span class="line"><span class="comment">// auto known() -&gt; int &#123; return 42; &#125; // ok</span></span><br></pre></td></tr></table></figure>
@@ -3016,7 +3016,7 @@ global variables and static data members should be defined only once across the 
   </entry>
   <entry>
     <title>enum class</title>
-    <url>/2023/08/12/cpplang-enum-class/</url>
+    <url>/cpplang/enum-class/</url>
     <content><![CDATA[<p>C 风格枚举和 C++ 新增的 enum class：</p>
 <figure class="highlight cpp"><table><tr><td class="code"><pre><span class="line"><span class="keyword">enum</span> &#123; ITEM_A1, ITEM_A2 &#125;;</span><br><span class="line"><span class="keyword">enum</span> <span class="title class_">B</span> &#123; ITEM_B1, ITEM_B2 &#125;;</span><br><span class="line"><span class="comment">// 从 C 沿用来的语法：</span></span><br><span class="line"><span class="comment">// 1. 底层类型默认为int，但也能手动指定</span></span><br><span class="line"><span class="comment">// 2. 枚举名裸露在外</span></span><br><span class="line"><span class="comment">// 区别：</span></span><br><span class="line"><span class="comment">// C 允许前向声明 enum</span></span><br><span class="line"><span class="comment">// C++ 允许枚举列表为空；允许在表示类型时省略 enum 关键字；虽然枚举名裸露但也能通过限定名访问</span></span><br><span class="line"></span><br><span class="line"><span class="comment">// C++ 新增 enum class</span></span><br><span class="line"><span class="keyword">enum</span> <span class="title class_">C</span> &#123; ITEM_C1, ITEM_C2 &#125;;</span><br><span class="line"><span class="comment">// 类型不再裸露，需要使用限定名访问</span></span><br><span class="line"><span class="comment">// 没有默认底层类型，但是可以手动指定</span></span><br></pre></td></tr></table></figure>
 <p>C++ enum class 禁止了隐式转换，但是用来表示 id 还是不太方便：</p>
@@ -3030,7 +3030,7 @@ global variables and static data members should be defined only once across the 
   </entry>
   <entry>
     <title>cppreference 协程例子理解</title>
-    <url>/2023/08/12/cpplang-cppreference-%E5%8D%8F%E7%A8%8B%E4%BE%8B%E5%AD%90%E7%90%86%E8%A7%A3/</url>
+    <url>/cpplang/cppreference-%E5%8D%8F%E7%A8%8B%E4%BE%8B%E5%AD%90%E7%90%86%E8%A7%A3/</url>
     <content><![CDATA[<p>我的理解是：C++ 的协程是无栈的，这意味着协程只是计算任务，仅在运行时需要栈，在 suspend 之后就会保存状态并脱离栈。要想要跨线程转移计算任务（比如实现工作窃取池），只需要将离栈协程在另外一个线程上 resume 即可。</p>
 <figure class="highlight cpp"><table><tr><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;coroutine&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;iostream&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;stdexcept&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;thread&gt;</span></span></span><br><span class="line"> </span><br><span class="line"><span class="function"><span class="keyword">auto</span> <span class="title">switch_to_new_thread</span><span class="params">(std::jthread&amp; out)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="keyword">struct</span> <span class="title class_">awaitable</span></span><br><span class="line">    &#123;</span><br><span class="line">        std::jthread* p_out;</span><br><span class="line">        <span class="function"><span class="type">bool</span> <span class="title">await_ready</span><span class="params">()</span> </span>&#123; <span class="keyword">return</span> <span class="literal">false</span>; &#125;</span><br><span class="line">        <span class="function"><span class="type">void</span> <span class="title">await_suspend</span><span class="params">(std::coroutine_handle&lt;&gt; h)</span></span></span><br><span class="line"><span class="function">        </span>&#123;</span><br><span class="line">            std::jthread&amp; out = *p_out;</span><br><span class="line">            <span class="keyword">if</span> (out.<span class="built_in">joinable</span>())</span><br><span class="line">                <span class="keyword">throw</span> std::<span class="built_in">runtime_error</span>(<span class="string">&quot;Output jthread parameter not empty&quot;</span>);</span><br><span class="line">            out = std::<span class="built_in">jthread</span>([h] &#123; h.<span class="built_in">resume</span>(); &#125;);</span><br><span class="line">            <span class="comment">// Potential undefined behavior: accessing potentially destroyed *this</span></span><br><span class="line">            <span class="comment">// std::cout &lt;&lt; &quot;New thread ID: &quot; &lt;&lt; p_out-&gt;get_id() &lt;&lt; &#x27;\n&#x27;;</span></span><br><span class="line">            std::cout &lt;&lt; <span class="string">&quot;New thread ID: &quot;</span> &lt;&lt; out.<span class="built_in">get_id</span>() &lt;&lt; <span class="string">&#x27;\n&#x27;</span>; <span class="comment">// this is OK</span></span><br><span class="line">        &#125;</span><br><span class="line">        <span class="function"><span class="type">void</span> <span class="title">await_resume</span><span class="params">()</span> </span>&#123;&#125;</span><br><span class="line">    &#125;;</span><br><span class="line">    <span class="keyword">return</span> awaitable&#123;&amp;out&#125;;</span><br><span class="line">&#125;</span><br><span class="line"> </span><br><span class="line"><span class="keyword">struct</span> <span class="title class_">task</span></span><br><span class="line">&#123;</span><br><span class="line">    <span class="keyword">struct</span> <span class="title class_">promise_type</span></span><br><span class="line">    &#123;</span><br><span class="line">        <span class="function">task <span class="title">get_return_object</span><span class="params">()</span> </span>&#123; <span class="keyword">return</span> &#123;&#125;; &#125;</span><br><span class="line">        <span class="function">std::suspend_never <span class="title">initial_suspend</span><span class="params">()</span> </span>&#123; <span class="keyword">return</span> &#123;&#125;; &#125;</span><br><span class="line">        <span class="function">std::suspend_never <span class="title">final_suspend</span><span class="params">()</span> <span class="keyword">noexcept</span> </span>&#123; <span class="keyword">return</span> &#123;&#125;; &#125;</span><br><span class="line">        <span class="function"><span class="type">void</span> <span class="title">return_void</span><span class="params">()</span> </span>&#123;&#125;</span><br><span class="line">        <span class="function"><span class="type">void</span> <span class="title">unhandled_exception</span><span class="params">()</span> </span>&#123;&#125;</span><br><span class="line">    &#125;;</span><br><span class="line">&#125;;</span><br><span class="line"> </span><br><span class="line"><span class="function">task <span class="title">resuming_on_new_thread</span><span class="params">(std::jthread&amp; out)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    std::cout &lt;&lt; <span class="string">&quot;Coroutine started on thread: &quot;</span> &lt;&lt; std::this_thread::<span class="built_in">get_id</span>() &lt;&lt; <span class="string">&#x27;\n&#x27;</span>;</span><br><span class="line">    <span class="function"><span class="keyword">co_await</span> <span class="title">switch_to_new_thread</span><span class="params">(out)</span></span>;</span><br><span class="line">    <span class="comment">// awaiter destroyed here</span></span><br><span class="line">    std::cout &lt;&lt; <span class="string">&quot;Coroutine resumed on thread: &quot;</span> &lt;&lt; std::this_thread::<span class="built_in">get_id</span>() &lt;&lt; <span class="string">&#x27;\n&#x27;</span>;</span><br><span class="line">&#125;</span><br><span class="line"> </span><br><span class="line"><span class="function"><span class="type">int</span> <span class="title">main</span><span class="params">()</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    std::jthread out;</span><br><span class="line">    <span class="built_in">resuming_on_new_thread</span>(out);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 <p>可能结果：</p>
@@ -3047,7 +3047,7 @@ global variables and static data members should be defined only once across the 
   </entry>
   <entry>
     <title>explicit</title>
-    <url>/2023/08/12/cpplang-explicit/</url>
+    <url>/cpplang/explicit/</url>
     <content><![CDATA[<p>一般认为 <code>explicit</code> 是用在单参数 <code>ctor</code> 上防止隐式类型转换的。但如果参数有多个，explicit 关键字也有其他的作用。</p>
 <h1 id="code-explicit-code-ke-yi-zu-zhi-code-code-tui-dao"><code>explicit</code> 可以阻止 <code>&#123;&#125;</code> 推导</h1>
 <p><a href="https://stackoverflow.com/a/39122237/13785815">https://stackoverflow.com/a/39122237/13785815</a></p>
@@ -3065,7 +3065,7 @@ global variables and static data members should be defined only once across the 
   </entry>
   <entry>
     <title>inline namespace</title>
-    <url>/2023/11/12/cpplang-inline-namespace/</url>
+    <url>/cpplang/inline-namespace/</url>
     <content><![CDATA[<p><a href="https://en.cppreference.com/w/cpp/language/namespace">Namespaces - cppreference.com</a></p>
 <p>inline namespace 既本身存在，又将所有内容引入自己所在的（enclosing）名字空间中。相当于名字空间后面加了一句：<code>using namespace X;</code></p>
 <p>例子：</p>
@@ -3080,7 +3080,7 @@ global variables and static data members should be defined only once across the 
   </entry>
   <entry>
     <title>lambda</title>
-    <url>/2023/08/12/cpplang-lambda/</url>
+    <url>/cpplang/lambda/</url>
     <content><![CDATA[<h1 id="yan-hua">演化</h1>
 <h2 id="c-11" id="C-11">C++11</h2>
 <p>虽然有了 auto 关键字，但是用起来还是需要 trailing return type 声明。</p>
@@ -3119,7 +3119,7 @@ global variables and static data members should be defined only once across the 
   </entry>
   <entry>
     <title>inttypes.h</title>
-    <url>/2023/12/17/cpplang-inttypes-h/</url>
+    <url>/cpplang/inttypes-h/</url>
     <content><![CDATA[<p>包含了 <code>stdint.h</code>，同时还有一些格式字符串宏帮助写可移植的 <code>scanf</code>/<code>printf</code> 代码。</p>
 ]]></content>
       <categories>
@@ -3131,7 +3131,7 @@ global variables and static data members should be defined only once across the 
   </entry>
   <entry>
     <title>noexcept + throw</title>
-    <url>/2023/08/12/cpplang-noexcept-throw/</url>
+    <url>/cpplang/noexcept-throw/</url>
     <content><![CDATA[<p>noexcept 有几个用法：</p>
 <ol>
 <li>在编译期返回一个常量布尔值，评估其表达式是否会抛出异常。</li>
@@ -3150,7 +3150,7 @@ global variables and static data members should be defined only once across the 
   </entry>
   <entry>
     <title>range-for</title>
-    <url>/2023/08/12/cpplang-range-for/</url>
+    <url>/cpplang/range-for/</url>
     <content><![CDATA[<p>以前容易出现引用悬挂的问题。在新的语言标准中得到了改进。</p>
 <p>C++11 只是简单的语法糖，只能保证表达式返回值被临时变量接受并保留到循环结束：(<a href="https://stackoverflow.com/a/51440883">https://stackoverflow.com/a/51440883</a>)</p>
 <figure class="highlight cpp"><table><tr><td class="code"><pre><span class="line">&#123;</span><br><span class="line">    <span class="keyword">auto</span>&amp;&amp; __range = <span class="built_in">f</span>()[<span class="number">5</span>]; <span class="comment">// (*)</span></span><br><span class="line">    <span class="keyword">auto</span> __begin = __range.<span class="built_in">begin</span>(); <span class="comment">// not exactly, but close enough</span></span><br><span class="line">    <span class="keyword">auto</span> __end = __range.<span class="built_in">end</span>();     <span class="comment">// in C++17, these types can be different</span></span><br><span class="line">    <span class="keyword">for</span> (; __begin != __end; ++__begin) &#123;</span><br><span class="line">        <span class="keyword">auto</span> e = *__begin;</span><br><span class="line">        <span class="comment">// rest of body</span></span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
@@ -3167,7 +3167,7 @@ global variables and static data members should be defined only once across the 
   </entry>
   <entry>
     <title>sizeof</title>
-    <url>/2023/08/12/cpplang-sizeof/</url>
+    <url>/cpplang/sizeof/</url>
     <content><![CDATA[<p>下面几个表达式相等：</p>
 <ul>
 <li><code>sizeof(T&amp;)</code></li>
@@ -3185,7 +3185,7 @@ global variables and static data members should be defined only once across the 
   </entry>
   <entry>
     <title>type_index</title>
-    <url>/2023/08/12/cpplang-type-index/</url>
+    <url>/cpplang/type-index/</url>
     <content><![CDATA[<p>例子：bustub lab 0</p>
 <p>可以和 <a href="../../../_archive/cpp/c++/vtable.md">vtable</a> 联系起来看。</p>
 <h1 id="dynamic-cast-he-shi-ke-yi-shi-yong">dynamic_cast 何时可以使用？</h1>
@@ -3257,7 +3257,7 @@ global variables and static data members should be defined only once across the 
   </entry>
   <entry>
     <title>std::lower_bound/upper_bound</title>
-    <url>/2023/08/12/cpplang-std-lower-bound-upper-bound/</url>
+    <url>/cpplang/std-lower-bound-upper-bound/</url>
     <content><![CDATA[<figure class="highlight cpp"><table><tr><td class="code"><pre><span class="line"><span class="keyword">class</span> <span class="title class_">Solution</span> &#123;</span><br><span class="line">   <span class="keyword">public</span>:</span><br><span class="line">    <span class="function">vector&lt;<span class="type">int</span>&gt; <span class="title">searchRange</span><span class="params">(vector&lt;<span class="type">int</span>&gt;&amp; nums, <span class="type">int</span> target)</span> </span>&#123;</span><br><span class="line">        <span class="type">int</span> n = (<span class="type">int</span>)nums.<span class="built_in">size</span>();</span><br><span class="line">        <span class="comment">// lower_bound 的可能实现</span></span><br><span class="line">        <span class="keyword">auto</span> lowerbound = [&amp;](<span class="keyword">auto</span> &amp;&amp;less) &#123;</span><br><span class="line">            <span class="type">int</span> lo = <span class="number">0</span>, hi = n;</span><br><span class="line">            <span class="keyword">while</span> (lo &lt; hi) &#123;</span><br><span class="line">                <span class="type">int</span> mid = (lo + hi) / <span class="number">2</span>;</span><br><span class="line">                <span class="keyword">if</span> (<span class="built_in">less</span>(nums[mid], target)) lo = mid + <span class="number">1</span>;</span><br><span class="line">                <span class="keyword">else</span>                         hi = mid;</span><br><span class="line">            &#125;</span><br><span class="line">            <span class="keyword">return</span> lo;</span><br><span class="line">        &#125;;</span><br><span class="line">        <span class="comment">// std::lower_bound</span></span><br><span class="line">        <span class="type">int</span> left = <span class="built_in">lowerbound</span>(std::less&lt;&gt;&#123;&#125;);</span><br><span class="line">        <span class="comment">// std::upper_bound</span></span><br><span class="line">        <span class="type">int</span> right = <span class="built_in">lowerbound</span>(std::less_equal&lt;&gt;&#123;&#125;);</span><br><span class="line">        <span class="keyword">return</span> (left &lt; n &amp;&amp; nums[left] == target) ? </span><br><span class="line">                vector&lt;<span class="type">int</span>&gt;&#123;left, right<span class="number">-1</span>&#125; : </span><br><span class="line">                vector&lt;<span class="type">int</span>&gt;&#123;<span class="number">-1</span>, <span class="number">-1</span>&#125;;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>]]></content>
       <categories>
         <category>cpplang</category>
@@ -3268,7 +3268,7 @@ global variables and static data members should be defined only once across the 
   </entry>
   <entry>
     <title>vtable</title>
-    <url>/2023/08/12/cpplang-vtable/</url>
+    <url>/cpplang/vtable/</url>
     <content><![CDATA[<h1 id="tl-dr-xing-neng-kai-xiao">TL;DR 性能开销</h1>
 <p>在不开启优化选项时编译：</p>
 <ol>
@@ -3369,7 +3369,7 @@ global variables and static data members should be defined only once across the 
   </entry>
   <entry>
     <title>{ } Syntax</title>
-    <url>/2023/08/12/cpplang-Syntax/</url>
+    <url>/cpplang/syntax/</url>
     <content><![CDATA[<h1 id="dui-code-code-chu-shi-hua-de-li-jie">对 <code>&#123;&#125;</code> 初始化的理解</h1>
 <p>可以对基本类型和聚合类零填充。</p>
 <figure class="highlight cpp"><table><tr><td class="code"><pre><span class="line"><span class="type">int</span> a&#123;&#125;;</span><br><span class="line">array&lt;<span class="type">int</span>, 5&gt; arr&#123;&#125;;</span><br></pre></td></tr></table></figure>
@@ -3396,7 +3396,7 @@ global variables and static data members should be defined only once across the 
   </entry>
   <entry>
     <title>实现简单的花括号插值打印</title>
-    <url>/2023/08/12/cpplang-%E5%AE%9E%E7%8E%B0%E7%AE%80%E5%8D%95%E7%9A%84%E8%8A%B1%E6%8B%AC%E5%8F%B7%E6%8F%92%E5%80%BC%E6%89%93%E5%8D%B0/</url>
+    <url>/cpplang/%E5%AE%9E%E7%8E%B0%E7%AE%80%E5%8D%95%E7%9A%84%E8%8A%B1%E6%8B%AC%E5%8F%B7%E6%8F%92%E5%80%BC%E6%89%93%E5%8D%B0/</url>
     <content><![CDATA[<figure class="highlight cpp"><table><tr><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;iostream&gt;</span></span></span><br><span class="line"><span class="function"><span class="type">void</span> <span class="title">print</span><span class="params">(std::ostream &amp;os, <span class="type">const</span> <span class="type">char</span> *s)</span> </span>&#123;</span><br><span class="line">    <span class="keyword">while</span> (*s) &#123;</span><br><span class="line">        <span class="type">char</span> ch = *s++;</span><br><span class="line">        <span class="comment">// Treat &quot;&#123;&#125;&quot; as a normal substring when no arguments are left</span></span><br><span class="line">        <span class="comment">// if (ch == &#x27;&#123;&#x27; &amp;&amp; *s == &#x27;&#125;&#x27;) &#123;</span></span><br><span class="line">        <span class="comment">// &#125;</span></span><br><span class="line">        <span class="keyword">if</span> ((ch == <span class="string">&#x27;&#123;&#x27;</span> &amp;&amp; *s == <span class="string">&#x27;&#123;&#x27;</span>) || (ch == <span class="string">&#x27;&#125;&#x27;</span> &amp;&amp; *s == <span class="string">&#x27;&#125;&#x27;</span>)) &#123;</span><br><span class="line">            os &lt;&lt; *s++;</span><br><span class="line">        &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">            os &lt;&lt; ch;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">template</span> &lt;<span class="keyword">class</span> <span class="title class_">A</span>, <span class="keyword">class</span>... Ts&gt;</span><br><span class="line"><span class="function"><span class="type">void</span> <span class="title">print</span><span class="params">(std::ostream &amp;os, <span class="type">const</span> <span class="type">char</span> *s, A &amp;&amp;a, Ts &amp;&amp;...args)</span> </span>&#123;</span><br><span class="line">    <span class="keyword">while</span> (*s) &#123;</span><br><span class="line">        <span class="type">char</span> ch = *s++;</span><br><span class="line">        <span class="keyword">if</span> (ch == <span class="string">&#x27;&#123;&#x27;</span> &amp;&amp; *s == <span class="string">&#x27;&#125;&#x27;</span>) &#123;</span><br><span class="line">            os &lt;&lt; a;</span><br><span class="line">            <span class="keyword">break</span>;</span><br><span class="line">        &#125; <span class="keyword">else</span> <span class="keyword">if</span> ((ch == <span class="string">&#x27;&#123;&#x27;</span> &amp;&amp; *s == <span class="string">&#x27;&#123;&#x27;</span>) || (ch == <span class="string">&#x27;&#125;&#x27;</span> &amp;&amp; *s == <span class="string">&#x27;&#125;&#x27;</span>)) &#123;</span><br><span class="line">            os &lt;&lt; *s++;</span><br><span class="line">        &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">            os &lt;&lt; ch;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">if</span> (*s) <span class="built_in">print</span>(os, s + <span class="number">1</span>, std::forward&lt;Ts&gt;(args)...);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="type">int</span> <span class="title">main</span><span class="params">(<span class="type">int</span> argc, <span class="type">char</span> **argv)</span> </span>&#123;</span><br><span class="line">    std::cout &lt;&lt; std::unitbuf;</span><br><span class="line">    <span class="built_in">print</span>(std::cout, <span class="string">&quot;numbers : &#123;&#125; &#123;&#125; &#123;&#125;\\n&quot;</span>, <span class="number">10</span>, <span class="number">5</span>, <span class="number">-7</span>);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 <p>上面的写法依赖了 <code>std::ostream</code>，而且不支持格式指定符。如果能够构造一个模板类 <code>PrintArg</code> 包装 1 个任意类型参数和 1 个输出说明字符串，然后重载 <code>std::ostream</code> 的 <code>&lt;&lt;</code> 操作符，那么可以不用动 print 函数的逻辑。</p>
 ]]></content>
@@ -3409,7 +3409,7 @@ global variables and static data members should be defined only once across the 
   </entry>
   <entry>
     <title>把不初始化的构造函数作为非默认构造函数的尝试</title>
-    <url>/2023/08/12/cpplang-%E6%8A%8A%E4%B8%8D%E5%88%9D%E5%A7%8B%E5%8C%96%E7%9A%84%E6%9E%84%E9%80%A0%E5%87%BD%E6%95%B0%E4%BD%9C%E4%B8%BA%E9%9D%9E%E9%BB%98%E8%AE%A4%E6%9E%84%E9%80%A0%E5%87%BD%E6%95%B0%E7%9A%84%E5%B0%9D%E8%AF%95/</url>
+    <url>/cpplang/%E6%8A%8A%E4%B8%8D%E5%88%9D%E5%A7%8B%E5%8C%96%E7%9A%84%E6%9E%84%E9%80%A0%E5%87%BD%E6%95%B0%E4%BD%9C%E4%B8%BA%E9%9D%9E%E9%BB%98%E8%AE%A4%E6%9E%84%E9%80%A0%E5%87%BD%E6%95%B0%E7%9A%84%E5%B0%9D%E8%AF%95/</url>
     <content><![CDATA[<p>结论：很没有用。</p>
 <h1 id="lei-xing-ding-yi">类型定义</h1>
 <figure class="highlight cpp"><table><tr><td class="code"><pre><span class="line"><span class="keyword">struct</span> <span class="title class_">Point3f</span> &#123;</span><br><span class="line">    <span class="type">float</span> x, y, z;</span><br><span class="line">    </span><br><span class="line">    <span class="built_in">Point3f</span>(): <span class="built_in">x</span>(<span class="number">0.0f</span>), <span class="built_in">y</span>(<span class="number">0.0f</span>), <span class="built_in">z</span>(<span class="number">0.0f</span>) &#123;&#125;</span><br><span class="line">    <span class="built_in">Point3f</span>(<span class="type">float</span> a, <span class="type">float</span> b, <span class="type">float</span> c) : <span class="built_in">x</span>(a), <span class="built_in">y</span>(b), <span class="built_in">z</span>(c) &#123;&#125;</span><br><span class="line">    </span><br><span class="line">    <span class="keyword">struct</span> <span class="title class_">Uninitialized</span> &#123;&#125;;</span><br><span class="line">    <span class="built_in">Point3f</span>(Uninitialized) &#123;&#125; <span class="comment">// &lt;-- 希望不初始化内部元素</span></span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
@@ -3434,7 +3434,7 @@ global variables and static data members should be defined only once across the 
   </entry>
   <entry>
     <title>有符号数算术溢出是实现定义</title>
-    <url>/2024/03/06/cpplang-%E6%9C%89%E7%AC%A6%E5%8F%B7%E6%95%B0%E7%AE%97%E6%9C%AF%E6%BA%A2%E5%87%BA%E6%98%AF%E5%AE%9E%E7%8E%B0%E5%AE%9A%E4%B9%89/</url>
+    <url>/cpplang/%E6%9C%89%E7%AC%A6%E5%8F%B7%E6%95%B0%E7%AE%97%E6%9C%AF%E6%BA%A2%E5%87%BA%E6%98%AF%E5%AE%9E%E7%8E%B0%E5%AE%9A%E4%B9%89/</url>
     <content><![CDATA[<h1 id="shi-yao-shi-xiang-xia-zhuan-huan">什么是向下转换</h1>
 <p>向下转换是可能出现溢出的转换。检查是否为向下转换：</p>
 <figure class="highlight cpp"><table><tr><td class="code"><pre><span class="line"><span class="keyword">template</span> &lt;<span class="keyword">typename</span> To, <span class="keyword">typename</span> From, <span class="keyword">typename</span> = <span class="type">void</span>&gt;</span><br><span class="line"><span class="keyword">struct</span> NotNarrowing: std::false_type &#123;&#125;;</span><br><span class="line"></span><br><span class="line"><span class="keyword">template</span> &lt;<span class="keyword">typename</span> To, <span class="keyword">typename</span> From&gt;</span><br><span class="line"><span class="keyword">struct</span> <span class="title class_">NotNarrowing</span>&lt;To, From, std::<span class="type">void_t</span>&lt;<span class="keyword">decltype</span>(To&#123;std::<span class="built_in">declval</span>&lt;From&gt;()&#125;)&gt;&gt;: std::true_type &#123;&#125;;</span><br></pre></td></tr></table></figure>
@@ -3461,7 +3461,7 @@ global variables and static data members should be defined only once across the 
   </entry>
   <entry>
     <title>用 std::variant 的坑</title>
-    <url>/2023/11/03/cpplang-%E7%94%A8-variant-%E7%9A%84%E5%9D%91/</url>
+    <url>/cpplang/%E7%94%A8-std-variant-%E7%9A%84%E5%9D%91/</url>
     <content><![CDATA[<h1 id="decltype-tui-dao-ke-neng-dai-you-code-amp-code-shu-xing">decltype 推导可能带有 <code>&amp;</code> 属性</h1>
 <p>被 <code>decltype</code> 坑了很多次。推导出来可能有引用类型，想要值类型时需要先去掉！</p>
 <h1 id="bu-tong-de-variant-zai-visitor-de-can-shu-li-bi-xu-du-li">不同的 variant 在 visitor 的参数里必须独立</h1>
@@ -3480,7 +3480,7 @@ global variables and static data members should be defined only once across the 
   </entry>
   <entry>
     <title>用拷贝并交换实现 operator=</title>
-    <url>/2023/08/12/cpplang-%E7%94%A8%E6%8B%B7%E8%B4%9D%E5%B9%B6%E4%BA%A4%E6%8D%A2%E5%AE%9E%E7%8E%B0-operator/</url>
+    <url>/cpplang/%E7%94%A8%E6%8B%B7%E8%B4%9D%E5%B9%B6%E4%BA%A4%E6%8D%A2%E5%AE%9E%E7%8E%B0-operator/</url>
     <content><![CDATA[<p><strong>问：</strong> C++ 中有一种实现赋值运算符的方式：先在栈内用复制/移动构造创建一个新的对象，然后和 *this 交换。不算上标准库或用户实现的 swap 函数的引入，只需要两行代码。请问这种实现方式需要判断赋值运算符的参数指向的对象和 this 相同吗？不判断安全吗？</p>
 <p><strong>答：</strong> 这种实现方式通常被称为&quot;拷贝并交换（copy-and-swap）&quot;，用于实现赋值运算符。在这种实现方式中，确实不需要判断参数指向的对象和 <strong><code>this</code></strong> 是否相同，因为在执行交换之前，会创建一个参数对象的副本，即使它们相同，也不会产生任何问题。</p>
 <p>这种实现方式是安全的，即使参数对象和当前对象是同一个对象。这是因为在执行交换之前，已经创建了参数对象的副本，因此交换操作不会对原始对象产生任何影响。在交换之后，原始对象的资源将被正确释放，而新的副本将具有参数对象的值。</p>
@@ -3498,7 +3498,7 @@ global variables and static data members should be defined only once across the 
   </entry>
   <entry>
     <title>自定义 ostream</title>
-    <url>/2024/03/06/cpplang-%E8%87%AA%E5%AE%9A%E4%B9%89-ostream/</url>
+    <url>/cpplang/%E8%87%AA%E5%AE%9A%E4%B9%89-ostream/</url>
     <content><![CDATA[<p>下面的代码继承了 <code>std::streambuf</code> 改变了 <code>ostream</code> 的行为，并自定义了打印操作将结果送到 <code>stdout</code>，而不是 <code>std::cout</code> 中。</p>
 <p>其中的 <code>print</code> 函数是仿 C++23 <code>std::print</code> 的，功能仅仅是打印参数，在笔记 <strong>实现简单的花括号插值打印</strong> 中实现。</p>
 <figure class="highlight cpp"><table><tr><td class="code"><pre><span class="line"><span class="keyword">struct</span> <span class="title class_">membuf</span> : std::streambuf &#123;</span><br><span class="line">    <span class="built_in">membuf</span>(<span class="type">char</span> *p, <span class="type">size_t</span> n) &#123;</span><br><span class="line">        <span class="built_in">setg</span>(p, p, p + n);  <span class="comment">// set read pointers</span></span><br><span class="line">        <span class="built_in">setp</span>(p, p + n);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="type">void</span> <span class="title">flush</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        <span class="keyword">auto</span> p = <span class="built_in">pbase</span>(), e = <span class="built_in">pptr</span>();</span><br><span class="line">        <span class="built_in">fwrite</span>(p, <span class="number">1</span>, e - p, stdout);</span><br><span class="line">        <span class="built_in">setp</span>(p, e);  <span class="comment">// reset write pointers</span></span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">   <span class="keyword">private</span>:</span><br><span class="line">    <span class="function"><span class="type">int</span> <span class="title">overflow</span><span class="params">(<span class="type">int</span> c)</span> <span class="keyword">override</span> </span>&#123;</span><br><span class="line">        <span class="built_in">flush</span>();</span><br><span class="line">        <span class="keyword">if</span> (c != <span class="string">&#x27;\0&#x27;</span>) <span class="built_in">fputc</span>(c, stdout);</span><br><span class="line">        <span class="keyword">return</span> c;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="comment">// A little slower since we have to maintain a different buffer.</span></span><br><span class="line"><span class="keyword">template</span> &lt;<span class="keyword">class</span>... Ts&gt;</span><br><span class="line"><span class="function"><span class="type">void</span> <span class="title">print_stdout</span><span class="params">(<span class="type">const</span> <span class="type">char</span> *s, Ts... args)</span> </span>&#123;</span><br><span class="line">    <span class="type">char</span> buf[<span class="number">512</span>];</span><br><span class="line">    <span class="function">membuf <span class="title">mbuf</span><span class="params">(buf, <span class="keyword">sizeof</span>(buf))</span></span>;</span><br><span class="line">    <span class="function">std::ostream <span class="title">os</span><span class="params">(&amp;mbuf)</span></span>;</span><br><span class="line">    <span class="built_in">print</span>(os, s, args...);</span><br><span class="line">    mbuf.<span class="built_in">flush</span>();</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
@@ -3512,7 +3512,7 @@ global variables and static data members should be defined only once across the 
   </entry>
   <entry>
     <title>阻止一个模板类被实例化并给出错误信息</title>
-    <url>/2023/11/02/cpplang-%E9%98%BB%E6%AD%A2%E4%B8%80%E4%B8%AA%E6%A8%A1%E6%9D%BF%E7%B1%BB%E8%A2%AB%E5%AE%9E%E4%BE%8B%E5%8C%96%E5%B9%B6%E7%BB%99%E5%87%BA%E9%94%99%E8%AF%AF%E4%BF%A1%E6%81%AF/</url>
+    <url>/cpplang/%E9%98%BB%E6%AD%A2%E4%B8%80%E4%B8%AA%E6%A8%A1%E6%9D%BF%E7%B1%BB%E8%A2%AB%E5%AE%9E%E4%BE%8B%E5%8C%96%E5%B9%B6%E7%BB%99%E5%87%BA%E9%94%99%E8%AF%AF%E4%BF%A1%E6%81%AF/</url>
     <content><![CDATA[<p>注意，这个类作为（不完整）类型出现在别的模板的参数中是可以的，只有访问成员才会出错。</p>
 <figure class="highlight cpp"><table><tr><td class="code"><pre><span class="line"><span class="keyword">template</span> &lt;<span class="keyword">typename</span> Target&gt;</span><br><span class="line"><span class="keyword">struct</span> <span class="title class_">FindValue</span>&lt;Target, TypeList&lt;&gt;&gt; &#123;</span><br><span class="line">  <span class="type">static</span> <span class="keyword">inline</span> <span class="keyword">constexpr</span> <span class="type">bool</span> ALWAYS_FALSE = <span class="built_in">sizeof</span>(Target) == <span class="number">0</span>;</span><br><span class="line">  <span class="built_in">static_assert</span>(ALWAYS_FALSE, <span class="string">&quot;Unsupported type! Check `nexus::detail::DataTypeList`.&quot;</span>);</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
 <p><a href="https://stackoverflow.com/a/40472836/">https://stackoverflow.com/a/40472836/</a></p>
@@ -3527,7 +3527,7 @@ global variables and static data members should be defined only once across the 
   </entry>
   <entry>
     <title>OpenJDK: ConcurrentHashMap</title>
-    <url>/2023/08/12/java-ConcurrentHashMap/</url>
+    <url>/openjdk/openjdk-concurrenthashmap/</url>
     <content><![CDATA[<p>现在已经没有 Segment 概念，并发系数不生效。能支持高效的并发：</p>
 <ol>
 <li>支持懒初始化，第一次写的时候发生，可能需要自旋但不需要加锁。</li>
@@ -3554,7 +3554,7 @@ global variables and static data members should be defined only once across the 
   </entry>
   <entry>
     <title>OpenJDK: CopyOnWriteArrayList</title>
-    <url>/2023/08/12/java-CopyOnWriteArrayList/</url>
+    <url>/openjdk/openjdk-copyonwritearraylist/</url>
     <content><![CDATA[<p>写的时候加锁（因为要替换 array 数组的引用，而且复制的过程比较耗时，不宜自旋），读的时候不用加锁。替换的安全性由 Java volatile 保证。</p>
 ]]></content>
       <categories>
@@ -3566,7 +3566,7 @@ global variables and static data members should be defined only once across the 
   </entry>
   <entry>
     <title>OpenJDK: JUC locks</title>
-    <url>/2023/08/12/java-JUC-locks/</url>
+    <url>/openjdk/openjdk-juc-locks/</url>
     <content><![CDATA[<h1 id="reentrant-lock-gong-ping-suo-he-fei-gong-ping-suo-de-shi-xian">ReentrantLock 公平锁和非公平锁的实现</h1>
 <p><img src="../../assets/d6745452123368b4ec805513d2ac0e8a.svg" alt=""></p>
 <p>如果需要长时间等待，AQS 总是会将等待线程加入到队列尾部，唤醒时总是唤醒队首线程。这样做能够保证已经被睡眠的线程必定按照顺序唤醒。这样做难道不是永远都是公平锁？</p>
@@ -3588,7 +3588,7 @@ global variables and static data members should be defined only once across the 
   </entry>
   <entry>
     <title>OpenJDK: Java Memory Order</title>
-    <url>/2023/08/12/java-Java-Memory-Order/</url>
+    <url>/openjdk/openjdk-java-memory-order/</url>
     <content><![CDATA[<p>CPU 内存屏障：<a href="https://sf-zhou.github.io/programming/memory_barrier.html">https://sf-zhou.github.io/programming/memory_barrier.html</a></p>
 <p>volatile 与内存屏障总结： <a href="https://zhuanlan.zhihu.com/p/43526907">https://zhuanlan.zhihu.com/p/43526907</a> <strong>下面几段都是直接引用的</strong>，但是因为不喜欢引用样式所以没用。</p>
 <p>X86-64 下仅支持一种指令重排：Store-Load ，即读操作可能会重排到写操作前面，同时不同线程的写操作并没有保证全局可见，例子见《Intel® 64 and IA-32 Architectures Software Developer’s Manual》手册 8.6.1、8.2.3.7 节。要注意的是这个问题只能用 mfence 解决，不能靠组合 sfence 和 lfence 解决。（用 sfence+lfence 组合仅可以解决重排问题，但不能解决全局可见性问题，简单理解不如视为 <code>sfence</code> 和 <code>lfence</code> 本身也能乱序重排）</p>
@@ -3648,7 +3648,7 @@ maskmovq，这些指令也使用 Write-Through 内存策略，通常使用在图
   </entry>
   <entry>
     <title>OpenJDK: Project Loom</title>
-    <url>/2023/08/12/java-Project-Loom/</url>
+    <url>/openjdk/openjdk-project-loom/</url>
     <content><![CDATA[<h1 id="hu-chi-suo">互斥：锁</h1>
 <p>现在对象锁不尊重虚拟线程，但是 JUC 下的锁是尊重虚拟线程的。</p>
 <h1 id="gong-xiang-scoped-value">共享：ScopedValue</h1>
@@ -3671,7 +3671,7 @@ maskmovq，这些指令也使用 Write-Through 内存策略，通常使用在图
   </entry>
   <entry>
     <title>读 On Java 8</title>
-    <url>/2023/08/12/java-%E8%AF%BB-On-Java-8/</url>
+    <url>/on-java-8/%E8%AF%BB-on-java-8/</url>
     <content><![CDATA[<h1 id="chapter-00-11">Chapter 00-11</h1>
 <p>Java 对象构造顺序：1、基类 2、所有域 3、初始化块 4、自身的构造函数</p>
 <figure class="highlight jsx"><table><tr><td class="code"><pre><span class="line">jshell&gt; a = <span class="keyword">new</span> <span class="title class_">Foo</span>()</span><br><span class="line"><span class="title class_">Value</span> initialization</span><br><span class="line"><span class="title class_">Initialization</span> block</span><br><span class="line"><span class="title class_">Constructor</span></span><br></pre></td></tr></table></figure>
@@ -3897,7 +3897,7 @@ maskmovq，这些指令也使用 Write-Through 内存策略，通常使用在图
   </entry>
   <entry>
     <title>CUDA by Example: Appendex</title>
-    <url>/2024/02/06/cuda-CUDA-by-Example-appendex/</url>
+    <url>/cuda-by-example/cuda-by-example-appendex/</url>
     <content><![CDATA[<h1 id="zai-ci-kao-lu-dot-ji-suan">再次考虑 dot 计算</h1>
 <p>在第 5 章的 dot 计算中，我们在每个块上做完 reduction 之后就将数据拷贝回到 CPU 了，然后让 CPU 做最后的加法。</p>
 <p>为什么在 compute capability 2.0 之前，<code>atomicAdd</code> 只支持整数？因为原子加法是不能指定计算的发生顺序的，因而每个计算都必须遵守结合律，也就是 $(A+B)+C$ 必须等于 $A+(B+C)$。<strong>但是浮点数因为中间结果的舍入问题，并不能保证这一点</strong>！！</p>
@@ -3933,7 +3933,7 @@ maskmovq，这些指令也使用 Write-Through 内存策略，通常使用在图
   </entry>
   <entry>
     <title>CUDA by Example: Chapter 01-05</title>
-    <url>/2024/02/06/cuda-CUDA-by-Example-chapter01-05/</url>
+    <url>/cuda-by-example/cuda-by-example-chapter-01-05/</url>
     <content><![CDATA[<p>源码可以参考 <a href="https://github.com/yottaawesome/cuda-by-example/">https://github.com/yottaawesome/cuda-by-example/</a> ，官网的源码链接挂了。</p>
 <p>书中的代码有些需要用 opengl 来跑。安装了 <code>freeglut3-dev</code> 和 <code>mesa-utils</code>。（不确定 <code>libgl1-mesa-dev</code> 是否是必要的。）然后 cmake 规则中要 link 对应的库：</p>
 <figure class="highlight cmake"><table><tr><td class="code"><pre><span class="line"><span class="keyword">cmake_minimum_required</span>(VERSION <span class="number">3.20</span>.<span class="number">1</span>)</span><br><span class="line"><span class="keyword">project</span>(chapter3 LANGUAGES CXX CUDA)</span><br><span class="line"><span class="keyword">set</span>(CMAKE_CUDA_STANDARD <span class="number">17</span>)</span><br><span class="line"><span class="keyword">set</span>(CMAKE_CUDA_STANDARD_REQUIRED <span class="keyword">ON</span>)</span><br><span class="line"><span class="keyword">set</span>(CMAKE_CUDA_EXTENSIONS <span class="keyword">OFF</span>)</span><br><span class="line"><span class="keyword">add_executable</span>(ray ray_global.cu)</span><br><span class="line"><span class="keyword">target_link_libraries</span>(ray GL glut)</span><br><span class="line"><span class="comment">#                         ^^^^^^^</span></span><br></pre></td></tr></table></figure>
@@ -4004,7 +4004,7 @@ maskmovq，这些指令也使用 Write-Through 内存策略，通常使用在图
   </entry>
   <entry>
     <title>CUDA by Example: Chapter 06-08</title>
-    <url>/2024/02/06/cuda-CUDA-by-Example-chapter06-08/</url>
+    <url>/cuda-by-example/cuda-by-example-chapter-06-08/</url>
     <content><![CDATA[<h1 id="di-6-zhang-constant-memory-and-events">第 6 章 Constant Memory and Events</h1>
 <h2 id="chang-liang-nei-cun" id="常量内存">常量内存</h2>
 <p>常量内存是在全局区域声明的。如果漏掉了 <code>__constant__</code> 关键字，就会将其定义在全局内存区域，尽管存储方式、分配的时机和用 <code>cudaMalloc</code> 申请的内存有一些差异。</p>
@@ -4085,7 +4085,7 @@ maskmovq，这些指令也使用 Write-Through 内存策略，通常使用在图
   </entry>
   <entry>
     <title>CUDA 程序第一次运行很慢</title>
-    <url>/2024/02/12/cuda-CUDA-%E7%A8%8B%E5%BA%8F%E7%AC%AC%E4%B8%80%E6%AC%A1%E8%BF%90%E8%A1%8C%E5%BE%88%E6%85%A2/</url>
+    <url>/uncategorized/cuda-%E7%A8%8B%E5%BA%8F%E7%AC%AC%E4%B8%80%E6%AC%A1%E8%BF%90%E8%A1%8C%E5%BE%88%E6%85%A2/</url>
     <content><![CDATA[<p><a href="https://developer.nvidia.com/blog/cuda-pro-tip-understand-fat-binaries-jit-caching/">https://developer.nvidia.com/blog/cuda-pro-tip-understand-fat-binaries-jit-caching/</a></p>
 <p>CUDA 程序有两种代码：一是设备无关的 PTX，二是设备有关的二进制代码。在运行之前将 PTX 编译成二进制代码就是 JIT 过程。（当然，nvcc 会在文件系统里面存储 cache。）用 <code>-arch=sm_xx</code> 可以只为给定的架构编译，从而运行时不需要 JIT 这一步。</p>
 <p>禁用 cache（不允许本次运行读取和写入 cache）：</p>
@@ -4106,7 +4106,7 @@ maskmovq，这些指令也使用 Write-Through 内存策略，通常使用在图
   </entry>
   <entry>
     <title>CUDA by Example: Chapter 09-12</title>
-    <url>/2024/02/02/cuda-CUDA-by-Example-chapter09-12/</url>
+    <url>/cuda-by-example/cuda-by-example-chapter-09-12/</url>
     <content><![CDATA[<h1 id="di-9-zhang-yuan-zi-cao-zuo">第 9 章 原子操作</h1>
 <blockquote>
 <p>You should know that atomic operations on <strong>global memory</strong> are supported only on GPUs of compute capability 1.1 or higher. Furthermore, atomic operations on <strong>shared memory</strong> require a GPU of compute capability 1.2 or higher.</p>
