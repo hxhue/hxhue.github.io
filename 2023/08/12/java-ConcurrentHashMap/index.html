@@ -19,7 +19,7 @@
 
 <script id="hexo-configurations">
     var NexT = window.NexT || {};
-    var CONFIG = {"hostname":"hxhue.github.io","root":"/","scheme":"Gemini","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":true,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":true,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":false,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},"path":"search.xml"};
+    var CONFIG = {"hostname":"hxhue.github.io","root":"/","scheme":"Gemini","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":true,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":true,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},"path":"search.xml"};
   </script>
 
   <meta name="description" content="现在已经没有 Segment 概念，并发系数不生效。能支持高效的并发：  支持懒初始化，第一次写的时候发生，可能需要自旋但不需要加锁。 读的时候可能需要自旋，不需要加锁。 写的时候如果遇到正在扩容，则加入一起扩容；如果写时槽位为空，则只需要原子操作；写时操作非空，且不处在特殊状态，则需要加对象锁。因而读写互不阻塞、不同槽位的写不会阻塞、扩容不会阻塞（因为扩容时其他竞争线程也会被分配任务）、仅有单个">
@@ -30,9 +30,9 @@
 <meta property="og:description" content="现在已经没有 Segment 概念，并发系数不生效。能支持高效的并发：  支持懒初始化，第一次写的时候发生，可能需要自旋但不需要加锁。 读的时候可能需要自旋，不需要加锁。 写的时候如果遇到正在扩容，则加入一起扩容；如果写时槽位为空，则只需要原子操作；写时操作非空，且不处在特殊状态，则需要加对象锁。因而读写互不阻塞、不同槽位的写不会阻塞、扩容不会阻塞（因为扩容时其他竞争线程也会被分配任务）、仅有单个">
 <meta property="og:locale" content="zh_CN">
 <meta property="article:published_time" content="2023-08-12T07:17:00.000Z">
-<meta property="article:modified_time" content="2024-03-07T12:14:19.895Z">
+<meta property="article:modified_time" content="2024-03-10T05:17:49.112Z">
 <meta property="article:author" content="Hxhue">
-<meta property="article:tag" content="Java">
+<meta property="article:tag" content="java">
 <meta name="twitter:card" content="summary">
 
 <link rel="canonical" href="https://hxhue.github.io/2023/08/12/java-ConcurrentHashMap/">
@@ -83,7 +83,7 @@
 </head>
 
 <body itemscope itemtype="http://schema.org/WebPage">
-  <div class="container">
+  <div class="container use-motion">
     <div class="headband"></div>
 
     <header class="header" itemscope itemtype="http://schema.org/WPHeader">
@@ -227,7 +227,7 @@
                   <i class="far fa-calendar-check"></i>
                 </span>
                 <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2024-03-07 20:14:19" itemprop="dateModified" datetime="2024-03-07T20:14:19+08:00">2024-03-07</time>
+                <time title="修改时间：2024-03-10 13:17:49" itemprop="dateModified" datetime="2024-03-10T13:17:49+08:00">2024-03-10</time>
               </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
@@ -235,7 +235,7 @@
               </span>
               <span class="post-meta-item-text">分类于</span>
                 <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/OpenJDK/" itemprop="url" rel="index"><span itemprop="name">OpenJDK</span></a>
+                  <a href="/categories/openjdk/" itemprop="url" rel="index"><span itemprop="name">openjdk</span></a>
                 </span>
             </span>
 
@@ -246,6 +246,20 @@
               </span>
               <span class="post-meta-item-text">阅读次数：</span>
               <span id="busuanzi_value_page_pv"></span>
+            </span><br>
+            <span class="post-meta-item" title="本文字数">
+              <span class="post-meta-item-icon">
+                <i class="far fa-file-word"></i>
+              </span>
+                <span class="post-meta-item-text">本文字数：</span>
+              <span>701</span>
+            </span>
+            <span class="post-meta-item" title="阅读时长">
+              <span class="post-meta-item-icon">
+                <i class="far fa-clock"></i>
+              </span>
+                <span class="post-meta-item-text">阅读时长 &asymp;</span>
+              <span>3 分钟</span>
             </span>
 
         </div>
@@ -268,8 +282,9 @@
 <p>💡 这当中有个优化过程：计算 lastRun，称链表尾部一连串对应 bit 相同的结点的起始位置为 lastRun，这系列结点将会被转移到 nextTable 的相同位置，因此会直接被转移，而不会对每个结点重新用头插法插入。头插法不仅需要遍历这一系列结点，还要对每个结点申请空间。</p>
 <p>如果线程 A 正在转移 <code>table</code> 到 <code>nextTable</code>，线程 B 读写链上的结点都会直接反映在被转移到的 <code>nextTable</code> 中。但如果线程 B 新创建了一个链（<code>table[i]</code> 从 <code>null</code> 变成有效），线程 A 如何看到？转移是从大下标开始，向小下标转移。转移后会在上面 CAS 放置 <code>ForwardingNode</code>，这样后来者可以直接写到其中，前来者写的结果会被转移。</p>
 <p>添加或者删除的时候怎么办？</p>
-<h2 id="为什么不允许键值为空？"><a href="#为什么不允许键值为空？" class="headerlink" title="为什么不允许键值为空？"></a>为什么不允许键值为空？</h2><ol>
-<li>键值为空实在是无意义。在 <code>putVal</code> 方法中还检查了结点的键值，即便是普通结点也确保 K&#x2F;V 不为空才进行操作，即存在完善的空检查，所以从效率或实现角度解释不成立。</li>
+<h2 id="wei-shi-yao-bu-yun-xu-jian-zhi-wei-kong" id="为什么不允许键值为空？">为什么不允许键值为空？</h2>
+<ol>
+<li>键值为空实在是无意义。在 <code>putVal</code> 方法中还检查了结点的键值，即便是普通结点也确保 K/V 不为空才进行操作，即存在完善的空检查，所以从效率或实现角度解释不成立。</li>
 <li>get 方法无法通过返回值 <code>null</code> 区分是不存在元素还是值为 <code>null</code>，并发环境下 <code>containsKey</code> 返回的结果在下一次写入时可能就不成立了，因而从 API 设计上 value 最好不是 <code>null</code>。</li>
 </ol>
 
@@ -281,7 +296,7 @@
 
       <footer class="post-footer">
           <div class="post-tags">
-              <a href="/tags/java/" rel="tag"># Java</a>
+              <a href="/tags/java/" rel="tag"># java</a>
           </div>
 
         
@@ -290,12 +305,12 @@
         
     <div class="post-nav">
       <div class="post-nav-item">
-    <a href="/2023/08/12/java-JUC-locks/" rel="prev" title="OpenJDK: JUC locks">
-      <i class="fa fa-chevron-left"></i> OpenJDK: JUC locks
+    <a href="/2023/08/12/java-CopyOnWriteArrayList/" rel="prev" title="OpenJDK: CopyOnWriteArrayList">
+      <i class="fa fa-chevron-left"></i> OpenJDK: CopyOnWriteArrayList
     </a></div>
       <div class="post-nav-item">
-    <a href="/2023/08/12/java-CopyOnWriteArrayList/" rel="next" title="OpenJDK: CopyOnWriteArrayList">
-      OpenJDK: CopyOnWriteArrayList <i class="fa fa-chevron-right"></i>
+    <a href="/2023/08/12/cpplang-%E7%94%A8%E6%8B%B7%E8%B4%9D%E5%B9%B6%E4%BA%A4%E6%8D%A2%E5%AE%9E%E7%8E%B0-operator/" rel="next" title="用拷贝并交换实现 operator=">
+      用拷贝并交换实现 operator= <i class="fa fa-chevron-right"></i>
     </a></div>
     </div>
       </footer>
@@ -355,7 +370,7 @@
 
       <!--noindex-->
       <div class="post-toc-wrap sidebar-panel">
-          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%B8%BA%E4%BB%80%E4%B9%88%E4%B8%8D%E5%85%81%E8%AE%B8%E9%94%AE%E5%80%BC%E4%B8%BA%E7%A9%BA%EF%BC%9F"><span class="nav-number">1.</span> <span class="nav-text">为什么不允许键值为空？</span></a></li></ol></div>
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#wei-shi-yao-bu-yun-xu-jian-zhi-wei-kong"><span class="nav-number">1.</span> <span class="nav-text">为什么不允许键值为空？</span></a></li></ol></div>
       </div>
       <!--/noindex-->
 
@@ -425,6 +440,18 @@
     <i class="fa fa-heart"></i>
   </span>
   <span class="author" itemprop="copyrightHolder">Hxhue</span>
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item-icon">
+      <i class="fa fa-chart-area"></i>
+    </span>
+      <span class="post-meta-item-text">站点总字数：</span>
+    <span title="站点总字数">81k</span>
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item-icon">
+      <i class="fa fa-coffee"></i>
+    </span>
+      <span class="post-meta-item-text">站点阅读时长 &asymp;</span>
+    <span title="站点阅读时长">4:54</span>
 </div>
   <div class="powered-by">由 <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Gemini</a> 强力驱动
   </div><script color="0,0,255" opacity="0.5" zIndex="-1" count="99" src="https://cdn.jsdelivr.net/npm/canvas-nest.js@1/dist/canvas-nest.js"></script>
@@ -465,8 +492,12 @@
   
   <script src="/lib/anime.min.js"></script>
   <script src="//cdn.jsdelivr.net/npm/pangu@4/dist/browser/pangu.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
 
 <script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
 
 
 <script src="/js/schemes/pisces.js"></script>

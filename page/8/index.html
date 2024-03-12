@@ -19,7 +19,7 @@
 
 <script id="hexo-configurations">
     var NexT = window.NexT || {};
-    var CONFIG = {"hostname":"hxhue.github.io","root":"/","scheme":"Gemini","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":true,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":true,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":false,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},"path":"search.xml"};
+    var CONFIG = {"hostname":"hxhue.github.io","root":"/","scheme":"Gemini","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":true,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":true,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},"path":"search.xml"};
   </script>
 
   <meta property="og:type" content="website">
@@ -78,7 +78,7 @@
 </head>
 
 <body itemscope itemtype="http://schema.org/WebPage">
-  <div class="container">
+  <div class="container use-motion">
     <div class="headband"></div>
 
     <header class="header" itemscope itemtype="http://schema.org/WPHeader">
@@ -191,7 +191,7 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="https://hxhue.github.io/2023/08/12/inside-the-cpp-object-model-%E6%9E%90%E6%9E%84%E5%87%BD%E6%95%B0/">
+    <link itemprop="mainEntityOfPage" href="https://hxhue.github.io/2023/08/12/cpplang-%E7%94%A8%E6%8B%B7%E8%B4%9D%E5%B9%B6%E4%BA%A4%E6%8D%A2%E5%AE%9E%E7%8E%B0-operator/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="image" content="/images/avatar.gif">
@@ -205,7 +205,7 @@
       <header class="post-header">
         <h2 class="post-title" itemprop="name headline">
           
-            <a href="/2023/08/12/inside-the-cpp-object-model-%E6%9E%90%E6%9E%84%E5%87%BD%E6%95%B0/" class="post-title-link" itemprop="url">析构函数</a>
+            <a href="/2023/08/12/cpplang-%E7%94%A8%E6%8B%B7%E8%B4%9D%E5%B9%B6%E4%BA%A4%E6%8D%A2%E5%AE%9E%E7%8E%B0-operator/" class="post-title-link" itemprop="url">用拷贝并交换实现 operator=</a>
         </h2>
 
         <div class="post-meta">
@@ -222,7 +222,7 @@
                   <i class="far fa-calendar-check"></i>
                 </span>
                 <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2024-03-06 09:33:58" itemprop="dateModified" datetime="2024-03-06T09:33:58+08:00">2024-03-06</time>
+                <time title="修改时间：2024-03-10 13:15:54" itemprop="dateModified" datetime="2024-03-10T13:15:54+08:00">2024-03-10</time>
               </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
@@ -230,11 +230,25 @@
               </span>
               <span class="post-meta-item-text">分类于</span>
                 <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/inside-the-cpp-object-model-book/" itemprop="url" rel="index"><span itemprop="name">深度探索 C++ 对象模型</span></a>
+                  <a href="/categories/cpplang/" itemprop="url" rel="index"><span itemprop="name">cpplang</span></a>
                 </span>
             </span>
 
-          
+          <br>
+            <span class="post-meta-item" title="本文字数">
+              <span class="post-meta-item-icon">
+                <i class="far fa-file-word"></i>
+              </span>
+                <span class="post-meta-item-text">本文字数：</span>
+              <span>508</span>
+            </span>
+            <span class="post-meta-item" title="阅读时长">
+              <span class="post-meta-item-icon">
+                <i class="far fa-clock"></i>
+              </span>
+                <span class="post-meta-item-text">阅读时长 &asymp;</span>
+              <span>2 分钟</span>
+            </span>
 
         </div>
       </header>
@@ -245,35 +259,13 @@
     <div class="post-body" itemprop="articleBody">
 
       
-          <p>析构函数和构造函数一样，也分完整析构函数和基类析构函数两种。而且析构函数的工作流程和构造函数相反。</p>
-<p>如果一个类的基类有未实现的析构函数（未提供定义或者是纯虚函数），会导致链接失败。这是因为子类的析构函数有调用基类析构函数的逻辑！</p>
-<h1 id="什么时候需要虚析构函数"><a href="#什么时候需要虚析构函数" class="headerlink" title="什么时候需要虚析构函数"></a>什么时候需要虚析构函数</h1><p><a target="_blank" rel="noopener" href="https://stackoverflow.com/a/461237/13785815">https://stackoverflow.com/a/461237</a></p>
-<blockquote>
-<p>Declare destructors virtual in polymorphic base classes. This is Item 7 in Scott Meyers’ <a target="_blank" rel="noopener" href="https://rads.stackoverflow.com/amzn/click/com/0201924889">Effective C++</a>. Meyers goes on to summarize that if a class has <em>any</em> virtual function, it should have a virtual destructor, and that classes not designed to be base classes or not designed to be used polymorphically should <em>not</em> declare virtual destructors.</p>
-</blockquote>
-<p><strong>自动生成的析构函数不是虚函数，但是可以显式声明其为 virtual 然后用 <code>= default</code> 引入。</strong>从基类继承的析构函数后虚实性质保持不变。</p>
-<p>有了虚析构函数，才能正确地通过非本类的指针&#x2F;引用析构或 delete 某个对象。<a href="%E6%A6%82%E5%BF%B5/c++/%E8%AF%BB%E6%B7%B1%E5%BA%A6%E6%8E%A2%E7%B4%A2%20C++%20%E5%AF%B9%E8%B1%A1%E6%A8%A1%E5%9E%8B/%E6%9E%90%E6%9E%84%E5%87%BD%E6%95%B0.md">通过基类指针 delete 子类对象</a> </p>
-<h1 id="虚析构函数如何工作？"><a href="#虚析构函数如何工作？" class="headerlink" title="虚析构函数如何工作？"></a>虚析构函数如何工作？</h1><p>虚析构函数是给类型增加 vptr 的一种方法。有了虚析构函数就能通过不匹配的指针和 delete 关键字删除曾经 new 出的对象。</p>
-<ul>
-<li><strong>complete object destuctor</strong>：该类型对象退出作用域时调用（由于可能会通过指针&#x2F;引用人为调用析构函数——比如说 STL 里面——所以<strong>完整析构函数也会记录在虚表</strong>）。</li>
-<li><strong>base object destructor</strong>：该类型对象被子类处理的时候调用。（在一些场景下和完整析构函数是同一个）</li>
-<li><strong>deleting destructor</strong>：该类型指针被使用 delete 时调用的、通过虚表机制查找到的虚函数。deleting destructor 要负责<strong>修正 this 指针，</strong>调用 complete object destructor 来<strong>析构对象本身</strong>，并最终使用无类型 new <strong>归还空间</strong>。</li>
-</ul>
-<p>可以观察这段代码：<a target="_blank" rel="noopener" href="https://godbolt.org/z/ohePxP9qd">https://godbolt.org/z/ohePxP9qd</a></p>
-<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;iostream&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;cassert&gt;</span></span></span><br><span class="line"><span class="keyword">using</span> <span class="keyword">namespace</span> std;</span><br><span class="line"></span><br><span class="line"><span class="keyword">struct</span> <span class="title class_">A</span> &#123; <span class="keyword">virtual</span> ~<span class="built_in">A</span>() &#123;&#125; &#125;;</span><br><span class="line"><span class="keyword">struct</span> <span class="title class_">B</span> &#123; <span class="keyword">virtual</span> ~<span class="built_in">B</span>() &#123;&#125; &#125;;</span><br><span class="line"><span class="keyword">struct</span> <span class="title class_">C</span>: A, B &#123;  &#125;;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="type">int</span> <span class="title">main</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    C *p = <span class="keyword">new</span> C;</span><br><span class="line">    A *pa = (A *)p;</span><br><span class="line">    B *pb = (B *)p;</span><br><span class="line">    <span class="built_in">assert</span>((<span class="type">void</span> *)pb != (<span class="type">void</span> *)p);</span><br><span class="line">    <span class="keyword">delete</span> pb; <span class="comment">// pb 是 B* 类型，而 B 又有虚表，因此做偏移可以找到真正的指针起始位置</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<h1 id="通过基类指针-delete-子类对象"><a href="#通过基类指针-delete-子类对象" class="headerlink" title="通过基类指针 delete 子类对象"></a>通过基类指针 delete 子类对象</h1><p><strong>基类必须有虚析构函数！</strong>这样才能正确找到应该被析构的对象<strong>。</strong></p>
-<ul>
-<li><p>反例（对象没有被正确析构）</p>
-<p>  下面代码是虚拟继承，由于 A 和 C 不能重合 vptr，C 需要一个新的 vptr。delete 时指针的地址和申请时并不匹配，这能被 -fsanitize&#x3D;address 检查出来。</p>
-  <figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;cstdio&gt;</span></span></span><br><span class="line"></span><br><span class="line"><span class="keyword">struct</span> <span class="title class_">A</span> &#123;</span><br><span class="line">    <span class="type">int</span> a;</span><br><span class="line">    <span class="built_in">A</span>() = <span class="keyword">default</span>;</span><br><span class="line">    <span class="function"><span class="keyword">virtual</span> <span class="type">void</span> <span class="title">f</span><span class="params">()</span> </span>&#123;&#125;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="keyword">struct</span> <span class="title class_">C</span> : <span class="keyword">virtual</span> A &#123;</span><br><span class="line">    <span class="type">int</span> c;</span><br><span class="line">    <span class="built_in">C</span>() = <span class="keyword">default</span>;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="comment">// Compile with gcc 13.1 and option -fsanitize=address,</span></span><br><span class="line"><span class="comment">// and an error will occur.</span></span><br><span class="line"><span class="function"><span class="type">int</span> <span class="title">main</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    C *pc = <span class="keyword">new</span> C;</span><br><span class="line">    A *pa = pc;</span><br><span class="line">    <span class="built_in">fprintf</span>(stderr, <span class="string">&quot;pc=%p\n&quot;</span>, pc);</span><br><span class="line">    <span class="built_in">fprintf</span>(stderr, <span class="string">&quot;pa=%p\n&quot;</span>, pa);</span><br><span class="line">    <span class="keyword">delete</span> pa;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p>  下面这段代码中 A 没有虚析构函数。 A 类型是多态类，delete 时也和原来申请时地址一致（单具体继承就是这样），所以 -fsanitize&#x3D;address 检查不出来问题。但是调用 ~A() 时没有通过虚拟机制调用到 ~C()，这样 C 类中的数据没有被正确析构！编译下面的代码可以发现 ~C() 中的打印语句没有生效。</p>
-  <figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;cstdio&gt;</span></span></span><br><span class="line"></span><br><span class="line"><span class="keyword">struct</span> <span class="title class_">A</span> &#123;</span><br><span class="line">    <span class="type">int</span> a;</span><br><span class="line">    <span class="built_in">A</span>() = <span class="keyword">default</span>;</span><br><span class="line">    <span class="function"><span class="keyword">virtual</span> <span class="type">void</span> <span class="title">f</span><span class="params">()</span> </span>&#123;&#125;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="keyword">struct</span> <span class="title class_">C</span> : A &#123;</span><br><span class="line">    <span class="type">int</span> c;</span><br><span class="line">    <span class="built_in">C</span>() = <span class="keyword">default</span>;</span><br><span class="line">    <span class="keyword">virtual</span> ~<span class="built_in">C</span>() &#123;</span><br><span class="line">        <span class="built_in">puts</span>(<span class="string">&quot;~C()&quot;</span>);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="type">int</span> <span class="title">main</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    C *pc = <span class="keyword">new</span> C;</span><br><span class="line">    A *pa = pc;</span><br><span class="line">    <span class="built_in">fprintf</span>(stderr, <span class="string">&quot;pc=%p\n&quot;</span>, pc);</span><br><span class="line">    <span class="built_in">fprintf</span>(stderr, <span class="string">&quot;pa=%p\n&quot;</span>, pa);</span><br><span class="line">    <span class="keyword">delete</span> pa;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p>  接下来增加 C 类的体积：</p>
-  <figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;cstdio&gt;</span></span></span><br><span class="line"></span><br><span class="line"><span class="keyword">struct</span> <span class="title class_">A</span> &#123;</span><br><span class="line">    <span class="type">int</span> a;</span><br><span class="line">    <span class="built_in">A</span>() = <span class="keyword">default</span>;</span><br><span class="line">    <span class="function"><span class="keyword">virtual</span> <span class="type">void</span> <span class="title">f</span><span class="params">()</span> </span>&#123;&#125;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="keyword">struct</span> <span class="title class_">C</span> : A &#123;</span><br><span class="line">    <span class="type">int</span> c;</span><br><span class="line">    <span class="type">int</span> d; <span class="comment">// &lt;--</span></span><br><span class="line">    <span class="built_in">C</span>() = <span class="keyword">default</span>;</span><br><span class="line">    <span class="keyword">virtual</span> ~<span class="built_in">C</span>() &#123;</span><br><span class="line">        <span class="built_in">puts</span>(<span class="string">&quot;~C()&quot;</span>);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="type">int</span> <span class="title">main</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    C *pc = <span class="keyword">new</span> C;</span><br><span class="line">    A *pa = pc;</span><br><span class="line">    <span class="built_in">fprintf</span>(stderr, <span class="string">&quot;pc=%p\n&quot;</span>, pc);</span><br><span class="line">    <span class="built_in">fprintf</span>(stderr, <span class="string">&quot;pa=%p\n&quot;</span>, pa);</span><br><span class="line">    <span class="keyword">delete</span> pa;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p>  现在 A 的大小是 12 字节，C 的大小是 20 字节。new 和 delete 操作符都将大小对齐到 8 字节再操作，那么用 -fsanitize&#x3D;address 编译就能够检查出来析构类型不匹配的问题。</p>
-</li>
-</ul>
+          <p><strong>问：</strong> C++ 中有一种实现赋值运算符的方式：先在栈内用复制/移动构造创建一个新的对象，然后和 *this 交换。不算上标准库或用户实现的 swap 函数的引入，只需要两行代码。请问这种实现方式需要判断赋值运算符的参数指向的对象和 this 相同吗？不判断安全吗？</p>
+<p><strong>答：</strong> 这种实现方式通常被称为&quot;拷贝并交换（copy-and-swap）&quot;，用于实现赋值运算符。在这种实现方式中，确实不需要判断参数指向的对象和 <strong><code>this</code></strong> 是否相同，因为在执行交换之前，会创建一个参数对象的副本，即使它们相同，也不会产生任何问题。</p>
+<p>这种实现方式是安全的，即使参数对象和当前对象是同一个对象。这是因为在执行交换之前，已经创建了参数对象的副本，因此交换操作不会对原始对象产生任何影响。在交换之后，原始对象的资源将被正确释放，而新的副本将具有参数对象的值。</p>
+<p>下面是一个简单的示例来说明这个过程：</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line">cppCopy code</span><br><span class="line"><span class="keyword">class</span> <span class="title class_">MyClass</span> &#123;</span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">    MyClass&amp; <span class="keyword">operator</span>=(MyClass other) &#123;</span><br><span class="line">        <span class="built_in">swap</span>(*<span class="keyword">this</span>, other); <span class="comment">// 交换当前对象和参数对象</span></span><br><span class="line">        <span class="keyword">return</span> *<span class="keyword">this</span>;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// ... 其他成员函数和数据成员 ...</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">private</span>:</span><br><span class="line">    <span class="comment">// 交换函数</span></span><br><span class="line">    <span class="function"><span class="keyword">friend</span> <span class="type">void</span> <span class="title">swap</span><span class="params">(MyClass&amp; first, MyClass&amp; second)</span> </span>&#123;</span><br><span class="line">        <span class="comment">// 交换数据成员</span></span><br><span class="line">        <span class="comment">// ...</span></span><br><span class="line">    &#125;</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+<p>在这个示例中，赋值运算符接受一个按值传递的参数 <code>other</code>，它会自动调用参数对象的复制构造函数创建一个副本。然后通过调用全局的 <strong><code>swap</code></strong> 函数来交换当前对象和副本的数据成员。这确保了异常安全性和正确资源管理。</p>
+<p>总结起来，拷贝并交换方式的实现不需要判断参数对象和当前对象是否相同，它是一种安全且简洁的赋值运算符实现方式。</p>
 
       
     </div>
@@ -293,7 +285,7 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="https://hxhue.github.io/2023/08/12/inside-the-cpp-object-model-%E6%8C%89%E9%9C%80%E5%90%88%E6%88%90%E6%9E%84%E9%80%A0%E5%87%BD%E6%95%B0/">
+    <link itemprop="mainEntityOfPage" href="https://hxhue.github.io/2023/08/12/java-ConcurrentHashMap/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="image" content="/images/avatar.gif">
@@ -307,7 +299,7 @@
       <header class="post-header">
         <h2 class="post-title" itemprop="name headline">
           
-            <a href="/2023/08/12/inside-the-cpp-object-model-%E6%8C%89%E9%9C%80%E5%90%88%E6%88%90%E6%9E%84%E9%80%A0%E5%87%BD%E6%95%B0/" class="post-title-link" itemprop="url">按需合成构造函数</a>
+            <a href="/2023/08/12/java-ConcurrentHashMap/" class="post-title-link" itemprop="url">OpenJDK: ConcurrentHashMap</a>
         </h2>
 
         <div class="post-meta">
@@ -324,7 +316,7 @@
                   <i class="far fa-calendar-check"></i>
                 </span>
                 <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2024-03-07 16:26:55" itemprop="dateModified" datetime="2024-03-07T16:26:55+08:00">2024-03-07</time>
+                <time title="修改时间：2024-03-10 13:17:49" itemprop="dateModified" datetime="2024-03-10T13:17:49+08:00">2024-03-10</time>
               </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
@@ -332,11 +324,25 @@
               </span>
               <span class="post-meta-item-text">分类于</span>
                 <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/inside-the-cpp-object-model-book/" itemprop="url" rel="index"><span itemprop="name">深度探索 C++ 对象模型</span></a>
+                  <a href="/categories/openjdk/" itemprop="url" rel="index"><span itemprop="name">openjdk</span></a>
                 </span>
             </span>
 
-          
+          <br>
+            <span class="post-meta-item" title="本文字数">
+              <span class="post-meta-item-icon">
+                <i class="far fa-file-word"></i>
+              </span>
+                <span class="post-meta-item-text">本文字数：</span>
+              <span>701</span>
+            </span>
+            <span class="post-meta-item" title="阅读时长">
+              <span class="post-meta-item-icon">
+                <i class="far fa-clock"></i>
+              </span>
+                <span class="post-meta-item-text">阅读时长 &asymp;</span>
+              <span>3 分钟</span>
+            </span>
 
         </div>
       </header>
@@ -347,380 +353,22 @@
     <div class="post-body" itemprop="articleBody">
 
       
-          <p><img src="/assets/862beea85cbeacd098f8815be021dd62.png"></p>
-<p><img src="/assets/44d6ca6c8f48a441c50cc07501a274e2.png"></p>
-<p>复制、默认构造都是按需生成的。对于平凡的情况不需要生成，只是在语意上满足“拥有构造函数”的含义。</p>
-<p><code>x86-64 gcc 13.1 -std=c++20</code></p>
-<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">struct</span> <span class="title class_">Point</span> &#123;</span><br><span class="line">    <span class="type">int</span> x;</span><br><span class="line">    <span class="type">int</span> y;</span><br><span class="line">    <span class="built_in">Point</span>() = <span class="keyword">default</span>; <span class="comment">// 即便显式声明了默认构造函数，也不会合成</span></span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="type">int</span> <span class="title">main</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    <span class="keyword">auto</span> some_point = Point&#123;&#125;; <span class="comment">// &#123;&#125;初始化对聚合类有清零的效果</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">main:</span><br><span class="line">        push    rbp</span><br><span class="line">        mov     rbp, rsp</span><br><span class="line">        mov     DWORD PTR [rbp-8], 0</span><br><span class="line">        mov     DWORD PTR [rbp-4], 0</span><br><span class="line">        mov     eax, 0</span><br><span class="line">        pop     rbp</span><br><span class="line">        ret</span><br></pre></td></tr></table></figure>
-
-<p>修改 Point 的定义：</p>
-<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">struct</span> <span class="title class_">Point</span> &#123;</span><br><span class="line">    <span class="type">int</span> x&#123;&#125;; <span class="comment">// 只修改了这里，结果合成了默认构造函数</span></span><br><span class="line">    <span class="type">int</span> y;</span><br><span class="line">    <span class="built_in">Point</span>() = <span class="keyword">default</span>;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="type">int</span> <span class="title">main</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    <span class="keyword">auto</span> some_point = Point&#123;&#125;;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line">Point::Point() [base object constructor]:</span><br><span class="line">        push    rbp</span><br><span class="line">        mov     rbp, rsp</span><br><span class="line">        mov     QWORD PTR [rbp-8], rdi</span><br><span class="line">        mov     rax, QWORD PTR [rbp-8]</span><br><span class="line">        mov     DWORD PTR [rax], 0</span><br><span class="line">        nop</span><br><span class="line">        pop     rbp</span><br><span class="line">        ret</span><br><span class="line">main:</span><br><span class="line">        push    rbp</span><br><span class="line">        mov     rbp, rsp</span><br><span class="line">        sub     rsp, 16</span><br><span class="line">        mov     DWORD PTR [rbp-8], 0</span><br><span class="line">        mov     DWORD PTR [rbp-4], 0</span><br><span class="line">        lea     rax, [rbp-8]</span><br><span class="line">        mov     rdi, rax</span><br><span class="line">        call    Point::Point() [complete object constructor]</span><br><span class="line">        mov     eax, 0</span><br><span class="line">        leave</span><br><span class="line">        ret</span><br></pre></td></tr></table></figure>
-
-<p>接下来删掉默认构造函数的声明：</p>
-<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">struct</span> <span class="title class_">Point</span> &#123;</span><br><span class="line">    <span class="type">int</span> x&#123;&#125;;</span><br><span class="line">    <span class="type">int</span> y;</span><br><span class="line">        <span class="comment">// 删掉了默认构造函数声明，结果不再合成默认构造函数</span></span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="type">int</span> <span class="title">main</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    <span class="keyword">auto</span> some_point = Point&#123;&#125;;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">main:</span><br><span class="line">        push    rbp</span><br><span class="line">        mov     rbp, rsp</span><br><span class="line">        mov     QWORD PTR [rbp-8], 0</span><br><span class="line">        mov     eax, 0</span><br><span class="line">        pop     rbp</span><br><span class="line">        ret</span><br></pre></td></tr></table></figure>
-
-<p>构造函数和成员默认值同时出现时，就会合成默认构造函数。这个和书中的描述是相符的，因为有成员默认值时，默认构造函数需要特别处理一些内容。</p>
-<p>接下来：</p>
-<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">struct</span> <span class="title class_">Point</span> &#123;</span><br><span class="line">    <span class="type">int</span> x&#123;&#125;;</span><br><span class="line">    <span class="type">int</span> y;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="type">int</span> <span class="title">main</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    <span class="keyword">auto</span> some_point = <span class="built_in">Point</span>(); <span class="comment">// 注意花括号变成了圆括号</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line">Point::Point() [base object constructor]:</span><br><span class="line">        push    rbp</span><br><span class="line">        mov     rbp, rsp</span><br><span class="line">        mov     QWORD PTR [rbp-8], rdi</span><br><span class="line">        mov     rax, QWORD PTR [rbp-8]</span><br><span class="line">        mov     DWORD PTR [rax], 0</span><br><span class="line">        nop</span><br><span class="line">        pop     rbp</span><br><span class="line">        ret</span><br><span class="line">main:</span><br><span class="line">        push    rbp</span><br><span class="line">        mov     rbp, rsp</span><br><span class="line">        sub     rsp, 16</span><br><span class="line">        mov     DWORD PTR [rbp-8], 0</span><br><span class="line">        mov     DWORD PTR [rbp-4], 0</span><br><span class="line">        lea     rax, [rbp-8]</span><br><span class="line">        mov     rdi, rax</span><br><span class="line">        call    Point::Point() [complete object constructor]</span><br><span class="line">        mov     eax, 0</span><br><span class="line">        leave</span><br><span class="line">        ret</span><br></pre></td></tr></table></figure>
-
-<p>显式使用构造函数相当于声明了构造函数。</p>
-<p><strong>不过但凡用上 <code>-O1</code> 级别的优化，空的默认构造函数就可以被内联。</strong></p>
-
-      
-    </div>
-
-    
-    
-    
-      <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  
-  
-  
-
-      
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="https://hxhue.github.io/2023/08/12/inside-the-cpp-object-model-%E7%B1%BB%E5%AE%9A%E4%B9%89%E4%B8%AD%E7%9A%84%E7%B1%BB%E5%9E%8B%E5%90%8D%E5%8F%AF%E8%A7%81%E6%80%A7/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/avatar.gif">
-      <meta itemprop="name" content="Hxhue">
-      <meta itemprop="description" content="">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Hxhue's Blog">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          
-            <a href="/2023/08/12/inside-the-cpp-object-model-%E7%B1%BB%E5%AE%9A%E4%B9%89%E4%B8%AD%E7%9A%84%E7%B1%BB%E5%9E%8B%E5%90%8D%E5%8F%AF%E8%A7%81%E6%80%A7/" class="post-title-link" itemprop="url">类定义中的类型名可见性</a>
-        </h2>
-
-        <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-calendar"></i>
-              </span>
-              <span class="post-meta-item-text">发表于</span>
-
-              <time title="创建时间：2023-08-12 15:17:00" itemprop="dateCreated datePublished" datetime="2023-08-12T15:17:00+08:00">2023-08-12</time>
-            </span>
-              <span class="post-meta-item">
-                <span class="post-meta-item-icon">
-                  <i class="far fa-calendar-check"></i>
-                </span>
-                <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2024-03-06 09:33:53" itemprop="dateModified" datetime="2024-03-06T09:33:53+08:00">2024-03-06</time>
-              </span>
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-folder"></i>
-              </span>
-              <span class="post-meta-item-text">分类于</span>
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/inside-the-cpp-object-model-book/" itemprop="url" rel="index"><span itemprop="name">深度探索 C++ 对象模型</span></a>
-                </span>
-            </span>
-
-          
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          <p>尽管现在的编译器能够正确理解数据成员（含有隐式的 this 指针）的使用，并在看到整个类定义之后再查找名字，类型名的查找则发生的很早，导致使用时可能看不到、或者使用了错误的类型声明。</p>
-<p>所以，应该尽可能在类定义的开头写好类型别名。</p>
-<p><img src="/assets/fde83ca0b85569926f6b3f81c6ef41c2.png"></p>
-<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;iostream&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;type_traits&gt;</span></span></span><br><span class="line"></span><br><span class="line"><span class="keyword">typedef</span> <span class="type">int</span> length;</span><br><span class="line"></span><br><span class="line"><span class="keyword">class</span> <span class="title class_">Point3d</span> &#123;</span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">  **<span class="function"><span class="type">void</span> <span class="title">mumble</span><span class="params">(length val)</span> </span>&#123; _val = val; &#125;</span><br><span class="line">  <span class="function">length <span class="title">mumble</span><span class="params">()</span> </span>&#123; <span class="keyword">return</span> _val; &#125;</span><br><span class="line"></span><br><span class="line">  <span class="built_in">static_assert</span>(std::is_same_v&lt;length, <span class="type">int</span>&gt;);</span><br><span class="line"></span><br><span class="line"><span class="keyword">private</span>:</span><br><span class="line">  <span class="keyword">typedef</span> <span class="type">float</span> length;</span><br><span class="line">  length _val;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="type">int</span> <span class="title">main</span><span class="params">()</span> </span>&#123;&#125;</span><br></pre></td></tr></table></figure>
-      
-    </div>
-
-    
-    
-    
-      <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  
-  
-  
-
-      
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="https://hxhue.github.io/2023/08/12/inside-the-cpp-object-model-%E9%9D%99%E6%80%81%E6%88%90%E5%91%98%E5%87%BD%E6%95%B0/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/avatar.gif">
-      <meta itemprop="name" content="Hxhue">
-      <meta itemprop="description" content="">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Hxhue's Blog">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          
-            <a href="/2023/08/12/inside-the-cpp-object-model-%E9%9D%99%E6%80%81%E6%88%90%E5%91%98%E5%87%BD%E6%95%B0/" class="post-title-link" itemprop="url">静态成员函数</a>
-        </h2>
-
-        <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-calendar"></i>
-              </span>
-              <span class="post-meta-item-text">发表于</span>
-
-              <time title="创建时间：2023-08-12 15:17:00" itemprop="dateCreated datePublished" datetime="2023-08-12T15:17:00+08:00">2023-08-12</time>
-            </span>
-              <span class="post-meta-item">
-                <span class="post-meta-item-icon">
-                  <i class="far fa-calendar-check"></i>
-                </span>
-                <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2024-03-06 09:33:52" itemprop="dateModified" datetime="2024-03-06T09:33:52+08:00">2024-03-06</time>
-              </span>
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-folder"></i>
-              </span>
-              <span class="post-meta-item-text">分类于</span>
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/inside-the-cpp-object-model-book/" itemprop="url" rel="index"><span itemprop="name">深度探索 C++ 对象模型</span></a>
-                </span>
-            </span>
-
-          
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          <h1 id="静态成员函数出现之前"><a href="#静态成员函数出现之前" class="headerlink" title="静态成员函数出现之前"></a>静态成员函数出现之前</h1><p>很久以前没有静态成员函数（直到 Cfront 2.0 才加入），那个时候静态方法可以用这种方式调用：</p>
-<p><img src="/assets/07580994615633018e06f05426e98683.png"></p>
-<p>该方法没有通过 this 访存，因而不会出现段错误。尽管这种方法还在某些编译器上能够使用，<strong>但这种写法在现在是未定义行为</strong>。</p>
-<h1 id="在表达式上调用静态成员函数"><a href="#在表达式上调用静态成员函数" class="headerlink" title="在表达式上调用静态成员函数"></a>在表达式上调用静态成员函数</h1><p>可以在一个表达式上调用静态成员函数。表达式的返回值被忽略，但是有副作用；另外表达式的返回值类型帮助确定了静态成员函数应该在哪里寻找。</p>
-<p><img src="/assets/e6a19b3df1203e1e537bda3c535fda52.png"></p>
-
-      
-    </div>
-
-    
-    
-    
-      <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  
-  
-  
-
-      
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="https://hxhue.github.io/2023/08/12/inside-the-cpp-object-model-%E8%99%9A%E6%8B%9F%E7%BB%A7%E6%89%BF%E5%92%8C%E8%99%9A%E5%87%BD%E6%95%B0%E5%AF%B9%E6%AF%94/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/avatar.gif">
-      <meta itemprop="name" content="Hxhue">
-      <meta itemprop="description" content="">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Hxhue's Blog">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          
-            <a href="/2023/08/12/inside-the-cpp-object-model-%E8%99%9A%E6%8B%9F%E7%BB%A7%E6%89%BF%E5%92%8C%E8%99%9A%E5%87%BD%E6%95%B0%E5%AF%B9%E6%AF%94/" class="post-title-link" itemprop="url">虚拟继承和虚函数对比</a>
-        </h2>
-
-        <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-calendar"></i>
-              </span>
-              <span class="post-meta-item-text">发表于</span>
-
-              <time title="创建时间：2023-08-12 15:17:00" itemprop="dateCreated datePublished" datetime="2023-08-12T15:17:00+08:00">2023-08-12</time>
-            </span>
-              <span class="post-meta-item">
-                <span class="post-meta-item-icon">
-                  <i class="far fa-calendar-check"></i>
-                </span>
-                <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2024-03-06 09:34:02" itemprop="dateModified" datetime="2024-03-06T09:34:02+08:00">2024-03-06</time>
-              </span>
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-folder"></i>
-              </span>
-              <span class="post-meta-item-text">分类于</span>
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/inside-the-cpp-object-model-book/" itemprop="url" rel="index"><span itemprop="name">深度探索 C++ 对象模型</span></a>
-                </span>
-            </span>
-
-          
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          <ol>
-<li>虚拟继承用来动态访问数据（节约存储空间或保证数据地址唯一），虚函数用来动态访问方法。</li>
-<li>如果 A 类有虚函数，那么 A 类已经有 vptr、是多态类，通过 A 类指针&#x2F;引用访问虚函数则需要查找虚表。</li>
-<li>如果 A 类是普通类并且被虚拟继承，那么 vptr 并不会放到 A 类中，通过 A 类指针&#x2F;引用访问虚函数也不会查表。<ol>
-<li><p>考虑 <code>A *pa = new B;</code>，其中 B 类虚拟继承于 A 类，通过 A 类指针 <code>pa</code> 访问到的成员就是真正要找的 A 中的成员，因为从 B 类指针转换到 A 类指针时编译器已经正确处理好了指针偏移问题，从而不需要担心没有 vptr 导致访问不到正确的成员。</p>
-</li>
-<li><p>考虑菱形继承的情况：</p>
- <figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">struct</span> <span class="title class_">A</span> &#123; … &#125;;</span><br><span class="line"><span class="keyword">struct</span> <span class="title class_">B</span> : <span class="keyword">virtual</span> A &#123; … &#125;;</span><br><span class="line"><span class="keyword">struct</span> <span class="title class_">C</span> : <span class="keyword">virtual</span> A &#123; … &#125;;</span><br><span class="line"><span class="keyword">struct</span> <span class="title class_">D</span>: B, C &#123; … &#125;;</span><br></pre></td></tr></table></figure>
-<p> 从指向 D 类真实对象的 B 类指针访问来自 A 中的成员，就会用上 B 类指针所在位置中的 vptr 查找偏置信息。</p>
-</li>
-</ol>
-</li>
-</ol>
-
-      
-    </div>
-
-    
-    
-    
-      <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  
-  
-  
-
-      
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="https://hxhue.github.io/2023/08/12/inside-the-cpp-object-model-%E8%99%9A%E6%8B%9F%E7%BB%A7%E6%89%BF/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/avatar.gif">
-      <meta itemprop="name" content="Hxhue">
-      <meta itemprop="description" content="">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Hxhue's Blog">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          
-            <a href="/2023/08/12/inside-the-cpp-object-model-%E8%99%9A%E6%8B%9F%E7%BB%A7%E6%89%BF/" class="post-title-link" itemprop="url">虚拟继承</a>
-        </h2>
-
-        <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-calendar"></i>
-              </span>
-              <span class="post-meta-item-text">发表于</span>
-
-              <time title="创建时间：2023-08-12 15:17:00" itemprop="dateCreated datePublished" datetime="2023-08-12T15:17:00+08:00">2023-08-12</time>
-            </span>
-              <span class="post-meta-item">
-                <span class="post-meta-item-icon">
-                  <i class="far fa-calendar-check"></i>
-                </span>
-                <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2024-03-06 09:33:59" itemprop="dateModified" datetime="2024-03-06T09:33:59+08:00">2024-03-06</time>
-              </span>
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-folder"></i>
-              </span>
-              <span class="post-meta-item-text">分类于</span>
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/inside-the-cpp-object-model-book/" itemprop="url" rel="index"><span itemprop="name">深度探索 C++ 对象模型</span></a>
-                </span>
-            </span>
-
-          
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          <h1 id="基本概念"><a href="#基本概念" class="headerlink" title="基本概念"></a>基本概念</h1><p><img src="/assets/9af2a15e034c9be3cf15b35c0525e241.png"></p>
-<p><img src="/assets/f28a0c3cd8d9c1ba00bb081453f3f9c6.png"></p>
-<p>cfront 实现</p>
-<p><img src="/assets/9d2a24e047f5cb0385a5aa819156d4db.png"></p>
-<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;iostream&gt;</span></span></span><br><span class="line"></span><br><span class="line"><span class="keyword">struct</span> <span class="title class_">X</span> &#123; <span class="keyword">public</span>: <span class="type">int</span> i; &#125;;       <span class="comment">// size: 4</span></span><br><span class="line"><span class="keyword">struct</span> <span class="title class_">A</span>: <span class="keyword">virtual</span> X &#123; <span class="type">int</span> j; &#125;;    <span class="comment">// size: 16</span></span><br><span class="line"><span class="keyword">struct</span> <span class="title class_">B</span>: <span class="keyword">virtual</span> X &#123; <span class="type">double</span> d; &#125;; <span class="comment">// size: 24</span></span><br><span class="line"><span class="keyword">struct</span> <span class="title class_">C</span>: A, B &#123; <span class="type">int</span> k; &#125;;         <span class="comment">// size: 40</span></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="type">int</span> <span class="title">main</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    C c;</span><br><span class="line">    std::cout &lt;&lt; c.i &lt;&lt; <span class="string">&#x27;\n&#x27;</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<p>如果把 A 或者 B 的 virtual 继承属性删除就会出现 ambiguous 指代错误。因为 virtual 继承只保存基类的一份数据，删掉之后自然就有多份变量 i 了。不过，<strong>virtual 继承并不代表该类为多态类（可用 type traits 判断）</strong>。</p>
-<p>同样的，如果 Interface 中有虚函数 foo，而 A 和 B 都继承了 Interface，C 继承了 A 和 B。如果 A 和 B 没有虚拟继承 Interface，那么在 C 的对象调用函数 foo 时将出现 ambiguous 指代错误。如果 C 重写了 foo 函数，那么指代就还是明确的。<strong>或者，如果 A 和 B 都是虚拟继承自 Interface，那么也不会有编译错误</strong>。但这样通过指针&#x2F;引用调用虚函数 foo 就需要先取虚基类子对象 this 的偏移，修改 this 之后再从 vptr 中读虚函数 foo，开销是 4 次访存（将虚拟继承和虚函数调用的代价累加起来了）。</p>
-<h1 id="虚拟继承下的对象构造"><a href="#虚拟继承下的对象构造" class="headerlink" title="虚拟继承下的对象构造"></a>虚拟继承下的对象构造</h1><p><a target="_blank" rel="noopener" href="https://quuxplusone.github.io/blog/2019/09/30/what-is-the-vtt/#when-we-are-constructing-a-lion">https://quuxplusone.github.io/blog/2019/09/30/what-is-the-vtt/#when-we-are-constructing-a-lion</a></p>
-<p>文章讨论的是 Itanium C++ ABI。Itanium C++ ABI 是事实上的跨平台 C++ ABI，除了 MSVC 之外的大部分编译器都使用它。</p>
-<p>类的构造函数分两种。第一种是  <em>base object constructor，</em>这是一个类型作为基类的时候，子类需要负责调用的构造函数；第二种是 _complete object constructor_，这是构造一个含虚基类的对象时，我们的代码显式调用的构造函数。区分了两类构造函数后，我们在构造一个含有虚基类的对象时就不会错误地初始化一个虚基类多次。如果一个类不含有虚基类，则 BOC 和 COC 是同一个。</p>
-<p>有虚基类也不一定会生成完整对象构造函数。因为构造函数属于特殊函数，按需生成，只有在被使用时才需要被编译器生成。</p>
-<p>相似的情况：类中写完整定义的方法是有内联属性的，编译器会尽量把方法内联，所以在生成的汇编中看不到类定义中诸如 <code>void foo() &#123;&#125;</code> 的方法。</p>
-<p>同一个类的完整对象构造函数可能比基类对象构造函数复杂，因为基类对象构造函数不必考虑初始化其虚基类。基类对象构造函数也可能比完整对象构造函数复杂，因为基类构造函数需要从 VTT 中取得 vptr 的值。（VTT 见下面）</p>
-<p>一个子类的完整构造函数会首先调用所有虚基类（可能是间接虚基类）的 基类对象构造函数，再调用非虚基类的 基类对象构造函数。</p>
-<p><img src="/assets/1087695480416885d170b1fd5470b57b.png"></p>
-<h1 id="虚继承问题-1：如何找到虚基类成员"><a href="#虚继承问题-1：如何找到虚基类成员" class="headerlink" title="虚继承问题 1：如何找到虚基类成员"></a>虚继承问题 1：如何找到虚基类成员</h1><p><a target="_blank" rel="noopener" href="https://quuxplusone.github.io/blog/2019/09/30/what-is-the-vtt/#construction-vtables%5D(https://quuxplusone.github.io/blog/2019/09/30/what-is-the-vtt/#construction-vtables%5D(https://quuxplusone.github.io/blog/2019/09/30/what-is-the-vtt/#construction-vtables">链接</a></p>
-<p>在没有虚基类时，派生对象从基类开始构造，每次调用构造函数前就修改 vptr 的值。这将能保证 vptr 始终和当前的类型对应，尽管在构造函数中调用虚函数时不能展现出<strong>完整的多态性</strong>（因为子类还没开始构造），数据和虚函数的地址查找都是无歧义的。</p>
-<p>但如果一个类有虚基类，且在某个函数中用到了继承自虚基类的数据，则还得知道虚基类子对象在本类中的偏移（对象布局：来自虚基类的数据始终放在最后面）。因而 vtable 的头部要保存这部分信息，这些偏移可以通过当前的 vptr 获得。通过指针或引用的对虚基类成员的访问也是要读取 vtable 的这部分数据的。</p>
-<blockquote>
-<p>有虚基类的类中函数（也包括<code>基类对象构造函数</code>）只靠自己不能知道虚基类的成员位置，因为虚基类数据放在自己对应的<strong>类外</strong>，而不是自己类的开头部分。</p>
-</blockquote>
-<h1 id="虚继承问题-2：如何正确初始化-vptr"><a href="#虚继承问题-2：如何正确初始化-vptr" class="headerlink" title="虚继承问题 2：如何正确初始化 vptr"></a>虚继承问题 2：如何正确初始化 vptr</h1><p>一个<code>完整对象构造函数调用</code>其基类的<code>基类对象构造函数</code>时，<code>基类对象构造函数</code>需要负责正确设置基类子对象的 vptr，但由于<code>基类对象构造函数</code>可能被多个子类的<code>完整对象构造函数</code>调用，<code>基类对象构造函数</code>此时不知道自己应该设置成哪一个虚表，这个信息就需要子类负责传入。该信息由 VTT（virtual table table） 维护。</p>
-<blockquote>
-<p>虚继承导致了同一类型的多份虚表是因为虚表中的<strong>偏置信息不同</strong>，而在普通继承的情况下，一个类型无论被谁继承，其虚表都不需要多份。</p>
-</blockquote>
-<p>construction vtable 和没有虚继承时的 vtable 格式基本一样：</p>
+          <p>现在已经没有 Segment 概念，并发系数不生效。能支持高效的并发：</p>
 <ol>
-<li>开头增加了到各个虚基类子对象的偏置信息。</li>
-<li>虚表中各虚函数地址也都是一样的，但各虚表中指出的到真实对象的偏置不同。</li>
+<li>支持懒初始化，第一次写的时候发生，可能需要自旋但不需要加锁。</li>
+<li>读的时候可能需要自旋，不需要加锁。</li>
+<li>写的时候如果遇到正在扩容，则加入一起扩容；如果写时槽位为空，则只需要原子操作；写时操作非空，且不处在特殊状态，则需要加对象锁。因而读写互不阻塞、不同槽位的写不会阻塞、扩容不会阻塞（因为扩容时其他竞争线程也会被分配任务）、仅有单个槽位的多写需要阻塞。</li>
 </ol>
-<p><img src="/assets/0783d4e0eaece0601012bfdbb770a392.png"></p>
-<p><img src="/assets/3531a06fd66f23ce18058d554ba60450.png"></p>
-<p>VTT 第 0 项是一个类本身的 vtable 表地址。后续多项（若存在）是该类的基类（基类作为子对象嵌入在子类中的那块数据）的 construction vtable，这个 construction vtable 其实就是子类调用基类的 base object constructor 时想要给基类的 vptr 赋的值。<strong>construction</strong> 可能是组分的意思。</p>
-<p><img src="/assets/97db64d8e69aabeabbc798a39b78f906.png"></p>
+<p>为了节省空间，在 <code>Node[]</code> 中用 hash 为负的头结点来表示该拉链处于特殊状态：树结点、转移中、预留等。</p>
+<p>转移的时候会以槽为单位进行，如果看到槽位正在转移中，则当前线程不会去抢夺工作，除非两个线程刚好看到了同一个槽位需要转移，这时会加对象锁处理。在遍历时会按照 (<code>hash_of_key:</code> ph &amp; <code>capacity_of_old_table:</code> n) 计算出给定位，以此来分组（理想的情况会对半分），然后用头插法生成两条新链表转移到 nextTable。</p>
+<p>💡 这当中有个优化过程：计算 lastRun，称链表尾部一连串对应 bit 相同的结点的起始位置为 lastRun，这系列结点将会被转移到 nextTable 的相同位置，因此会直接被转移，而不会对每个结点重新用头插法插入。头插法不仅需要遍历这一系列结点，还要对每个结点申请空间。</p>
+<p>如果线程 A 正在转移 <code>table</code> 到 <code>nextTable</code>，线程 B 读写链上的结点都会直接反映在被转移到的 <code>nextTable</code> 中。但如果线程 B 新创建了一个链（<code>table[i]</code> 从 <code>null</code> 变成有效），线程 A 如何看到？转移是从大下标开始，向小下标转移。转移后会在上面 CAS 放置 <code>ForwardingNode</code>，这样后来者可以直接写到其中，前来者写的结果会被转移。</p>
+<p>添加或者删除的时候怎么办？</p>
+<h2 id="wei-shi-yao-bu-yun-xu-jian-zhi-wei-kong" id="为什么不允许键值为空？">为什么不允许键值为空？</h2>
+<ol>
+<li>键值为空实在是无意义。在 <code>putVal</code> 方法中还检查了结点的键值，即便是普通结点也确保 K/V 不为空才进行操作，即存在完善的空检查，所以从效率或实现角度解释不成立。</li>
+<li>get 方法无法通过返回值 <code>null</code> 区分是不存在元素还是值为 <code>null</code>，并发环境下 <code>containsKey</code> 返回的结果在下一次写入时可能就不成立了，因而从 API 设计上 value 最好不是 <code>null</code>。</li>
+</ol>
 
       
     </div>
@@ -740,7 +388,7 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="https://hxhue.github.io/2023/08/12/inside-the-cpp-object-model-%E9%9D%9E%E8%87%AA%E5%8A%A8%E5%8F%98%E9%87%8F%E5%88%9D%E5%A7%8B%E5%8C%96/">
+    <link itemprop="mainEntityOfPage" href="https://hxhue.github.io/2023/08/12/java-CopyOnWriteArrayList/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="image" content="/images/avatar.gif">
@@ -754,7 +402,7 @@
       <header class="post-header">
         <h2 class="post-title" itemprop="name headline">
           
-            <a href="/2023/08/12/inside-the-cpp-object-model-%E9%9D%9E%E8%87%AA%E5%8A%A8%E5%8F%98%E9%87%8F%E5%88%9D%E5%A7%8B%E5%8C%96/" class="post-title-link" itemprop="url">非自动变量初始化</a>
+            <a href="/2023/08/12/java-CopyOnWriteArrayList/" class="post-title-link" itemprop="url">OpenJDK: CopyOnWriteArrayList</a>
         </h2>
 
         <div class="post-meta">
@@ -771,7 +419,7 @@
                   <i class="far fa-calendar-check"></i>
                 </span>
                 <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2024-03-06 09:33:45" itemprop="dateModified" datetime="2024-03-06T09:33:45+08:00">2024-03-06</time>
+                <time title="修改时间：2024-03-10 13:17:49" itemprop="dateModified" datetime="2024-03-10T13:17:49+08:00">2024-03-10</time>
               </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
@@ -779,11 +427,25 @@
               </span>
               <span class="post-meta-item-text">分类于</span>
                 <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/inside-the-cpp-object-model-book/" itemprop="url" rel="index"><span itemprop="name">深度探索 C++ 对象模型</span></a>
+                  <a href="/categories/openjdk/" itemprop="url" rel="index"><span itemprop="name">openjdk</span></a>
                 </span>
             </span>
 
-          
+          <br>
+            <span class="post-meta-item" title="本文字数">
+              <span class="post-meta-item-icon">
+                <i class="far fa-file-word"></i>
+              </span>
+                <span class="post-meta-item-text">本文字数：</span>
+              <span>51</span>
+            </span>
+            <span class="post-meta-item" title="阅读时长">
+              <span class="post-meta-item-icon">
+                <i class="far fa-clock"></i>
+              </span>
+                <span class="post-meta-item-text">阅读时长 &asymp;</span>
+              <span>1 分钟</span>
+            </span>
 
         </div>
       </header>
@@ -794,69 +456,425 @@
     <div class="post-body" itemprop="articleBody">
 
       
-          <h1 id="C-和-C-的区别"><a href="#C-和-C-的区别" class="headerlink" title="C++ 和 C 的区别"></a>C++ 和 C 的区别</h1><ol>
-<li>C++ 支持使用非常量表达式对全局或静态变量初始化。对于 local static &#x2F; thread_local static 变量而言，这项功能使得访问时有同步开销。（像 C 一样用常量表达式初始化就不会有访问开销）</li>
-<li>C++ 的 thread_local 变量在函数中自动具有 static 属性，C 要手动加。而且 C 的 thread_local 在 C23 之前是个宏。</li>
-</ol>
-<h1 id="全局-static-变量"><a href="#全局-static-变量" class="headerlink" title="全局 (static) 变量"></a>全局 (static) 变量</h1><p>全局区域定义的变量，可以具有 static 属性也可以没有。</p>
-<h2 id="不支持非常量初始化表达式（C-模型）"><a href="#不支持非常量初始化表达式（C-模型）" class="headerlink" title="不支持非常量初始化表达式（C 模型）"></a>不支持非常量初始化表达式（C 模型）</h2><p>编译器会抱怨：initializer element is not constant。</p>
-<h2 id="支持非常量初始化表达式，但只对对象生效（Cfront-1-0-模型）"><a href="#支持非常量初始化表达式，但只对对象生效（Cfront-1-0-模型）" class="headerlink" title="支持非常量初始化表达式，但只对对象生效（Cfront 1.0 模型）"></a><del>支持非常量初始化表达式，但只对对象生效</del>（Cfront 1.0 模型）</h2><p>在用户程序真正运行前插入一段<strong>静态变量初始化代码。</strong></p>
-<p>Cfront 早期对 class object 支持了<strong>非常量的静态初始化</strong>，但<strong>标准类型</strong>（整数、指针等）的静态支持和 C 一样。</p>
-<p><img src="/assets/dd4139cc4c1f5af8a382e9708ca348b5.png"></p>
-<p>考虑下面的代码：</p>
-<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">struct</span> <span class="title class_">Point</span> &#123;</span><br><span class="line">    <span class="type">double</span> x;</span><br><span class="line">    <span class="type">double</span> y;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="keyword">struct</span> <span class="title class_">Point</span> point = &#123;<span class="number">2.4</span>, <span class="number">0.1</span>&#125;;</span><br></pre></td></tr></table></figure>
+          <p>写的时候加锁（因为要替换 array 数组的引用，而且复制的过程比较耗时，不宜自旋），读的时候不用加锁。替换的安全性由 Java volatile 保证。</p>
 
-<p>此代码是合法的 C 或 C++ 代码。它的数据值直接写到 data section 里，不需要静态初始化代码（也就是不需要用非常量表达式对变量初始化）。</p>
-<p>修改这段代码之后就不能作为 C 语言编译了，但是可以作为 C++ 编译：</p>
-<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">struct</span> <span class="title class_">Point</span> &#123;</span><br><span class="line">    <span class="type">double</span> x;</span><br><span class="line">    <span class="type">double</span> y;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="keyword">struct</span> <span class="title class_">Point</span> point = &#123;<span class="number">2.4</span>, <span class="number">0.1</span>&#125;;</span><br><span class="line"><span class="keyword">struct</span> <span class="title class_">Point</span> another_point = point;</span><br></pre></td></tr></table></figure>
+      
+    </div>
 
-<p>初始化 <code>another_point</code> 需要用到 <code>point</code>，这产生了全局变量之间的依赖关系，在编译器看来不是常量表达式，所以这个过程会被放到<strong>静态变量初始化代码</strong>中进行。</p>
-<h2 id="所有类型支持非常量初始化表达式（现在的-C-模型）"><a href="#所有类型支持非常量初始化表达式（现在的-C-模型）" class="headerlink" title="所有类型支持非常量初始化表达式（现在的 C++ 模型）"></a>所有类型支持非常量初始化表达式（现在的 C++ 模型）</h2><p>后来 C++ 对所有类型都支持非常量静态初始化了。这可能是支持虚基类的副产品，因为虚基类和子类之间的指针转换需要知道 offset，而 offset 只能在编译全部完成之后才能确定。</p>
-<p>可以参考：</p>
-<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">class</span> <span class="title class_">Base</span> &#123;&#125;;</span><br><span class="line"><span class="keyword">class</span> <span class="title class_">VirtualBase</span>: <span class="keyword">public</span> <span class="keyword">virtual</span> Base &#123;&#125;;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 不需要静态初始化代码</span></span><br><span class="line"><span class="comment">// Base *pbase = (Base *)0x1000;</span></span><br><span class="line"></span><br><span class="line"><span class="comment">// 从 VirtualBase* 转换成 Base*，需要静态初始化代码</span></span><br><span class="line"><span class="comment">// 如果把虚继承改成具体继承，也不再会需要静态初始化代码</span></span><br><span class="line">Base *pbase2 = (VirtualBase *)<span class="number">0x1000</span>;</span><br></pre></td></tr></table></figure>
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
 
-<h3 id="GPT-对于书中说法的解释"><a href="#GPT-对于书中说法的解释" class="headerlink" title="GPT 对于书中说法的解释"></a>GPT 对于书中说法的解释</h3><p>Consider the following example:</p>
-<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">class</span> <span class="title class_">Base</span> &#123;&#125;;</span><br><span class="line"><span class="keyword">class</span> <span class="title class_">VirtualBase</span>: <span class="keyword">public</span> <span class="keyword">virtual</span> Base &#123;&#125;;</span><br><span class="line"></span><br><span class="line"><span class="keyword">class</span> <span class="title class_">Derived1</span>: <span class="keyword">public</span> VirtualBase &#123;&#125;;</span><br><span class="line"><span class="keyword">class</span> <span class="title class_">Derived2</span>: <span class="keyword">public</span> VirtualBase &#123;&#125;;</span><br></pre></td></tr></table></figure>
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://hxhue.github.io/2023/08/12/java-JUC-locks/">
 
-<p>In this example, we have two separate derived classes, <strong><code>Derived1</code></strong> and <strong><code>Derived2</code></strong>, both inheriting from the same virtual base class <strong><code>VirtualBase</code></strong>.</p>
-<p>Now, when the compiler encounters the definition of <strong><code>Derived1</code></strong> or <strong><code>Derived2</code></strong> in a given translation unit, it doesn’t have information about other derived classes. As a result, the exact offset of the <strong><code>VirtualBase</code></strong> subobject within <strong><code>Derived1</code></strong> or <strong><code>Derived2</code></strong> cannot be determined at that point.</p>
-<p>To handle this situation, the compiler employs static initialization. It generates code that initializes static variables associated with the virtual base class. These static variables store the offset information needed to access the virtual base class subobject. The initialization of these static variables happens at runtime before any objects of the derived classes are created.</p>
-<p>By utilizing static initialization, the compiler ensures that the correct offset information is available at runtime, allowing proper access to the virtual base class subobject.</p>
-<h1 id="局部-static-变量"><a href="#局部-static-变量" class="headerlink" title="局部 static 变量"></a>局部 static 变量</h1><p>这里只讨论 C++，C 没有非常量初始化的功能。</p>
-<p>C++ 保证函数中的静态对象只在其对应函数被调用时初始化，而且仅初始化一次。如果是常量初始化表达式，则在编译时可以初始化，函数中也不需要同步措施；<strong>但如果是非常量初始化表达式，则有同步代价！</strong></p>
-<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;cstdio&gt;</span></span></span><br><span class="line"></span><br><span class="line"><span class="keyword">struct</span> <span class="title class_">Echo</span> &#123;</span><br><span class="line">    <span class="built_in">Echo</span>(<span class="type">const</span> <span class="type">char</span> *s) &#123;</span><br><span class="line">        <span class="built_in">puts</span>(s);</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="type">static</span> Echo *static_member;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 初始化只能放到这里，如果放到上面 Echo 就不是完整对象不能创建</span></span><br><span class="line"><span class="comment">// 前面声明不能加 inline 因为 inline 会让声明变成定义</span></span><br><span class="line"><span class="comment">// 此处定义不能加 static 因为不能多次指定存储类型</span></span><br><span class="line"><span class="keyword">inline</span> Echo *Echo::static_member = <span class="keyword">new</span> Echo &#123;<span class="string">&quot;Echo::static_member&quot;</span>&#125;;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="type">void</span> <span class="title">test_echo</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    <span class="function"><span class="type">static</span> Echo <span class="title">hidden</span><span class="params">(<span class="string">&quot;local static&quot;</span>)</span></span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function">Echo <span class="title">global_echo</span><span class="params">(<span class="string">&quot;global&quot;</span>)</span></span>;</span><br><span class="line"><span class="function"><span class="type">static</span> Echo <span class="title">static_echo</span><span class="params">(<span class="string">&quot;static echo&quot;</span>)</span></span>;</span><br><span class="line"></span><br><span class="line"><span class="keyword">struct</span> <span class="title class_">Foo</span> &#123;</span><br><span class="line">    <span class="type">static</span> <span class="keyword">inline</span> Echo *static_member = <span class="keyword">new</span> Echo &#123;<span class="string">&quot;Foo::static_member&quot;</span>&#125;;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="type">int</span> <span class="title">main</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    <span class="comment">// 试试调用 0/1/2 次</span></span><br><span class="line">    <span class="built_in">test_echo</span>();</span><br><span class="line">    <span class="built_in">test_echo</span>();</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="Hxhue">
+      <meta itemprop="description" content="">
+    </span>
 
-<p>打印结果：</p>
-<figure class="highlight txt"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">Echo::static_member</span><br><span class="line">global</span><br><span class="line">static echo</span><br><span class="line">Foo::static_member</span><br><span class="line">local static</span><br></pre></td></tr></table></figure>
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Hxhue's Blog">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/2023/08/12/java-JUC-locks/" class="post-title-link" itemprop="url">OpenJDK: JUC locks</a>
+        </h2>
 
-<p>上面的代码中如果注释掉 main 函数中的两次调用，则 <code>hidden(&quot;local static&quot;)</code> 不会被初始化！这是汇编，有了同步措施后复杂了不少：</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br></pre></td><td class="code"><pre><span class="line">test_echo():</span><br><span class="line">        push    rbp</span><br><span class="line">        mov     rbp, rsp</span><br><span class="line">        push    r12</span><br><span class="line">        push    rbx</span><br><span class="line">        movzx   eax, BYTE PTR guard variable for test_echo()::hidden[rip]</span><br><span class="line">        test    al, al</span><br><span class="line">        sete    al</span><br><span class="line">        test    al, al</span><br><span class="line">        je      .L7</span><br><span class="line">        mov     edi, OFFSET FLAT:guard variable for test_echo()::hidden</span><br><span class="line">        call    __cxa_guard_acquire</span><br><span class="line">        test    eax, eax</span><br><span class="line">        setne   al</span><br><span class="line">        test    al, al</span><br><span class="line">        je      .L7</span><br><span class="line">        mov     r12d, 0</span><br><span class="line">        mov     esi, OFFSET FLAT:.LC0</span><br><span class="line">        mov     edi, OFFSET FLAT:_ZZ9test_echovE6hidden</span><br><span class="line">        call    Echo::Echo(char const*) [complete object constructor]</span><br><span class="line">        mov     edi, OFFSET FLAT:guard variable for test_echo()::hidden</span><br><span class="line">        call    __cxa_guard_release</span><br><span class="line">        jmp     .L7</span><br><span class="line">        mov     rbx, rax</span><br><span class="line">        test    r12b, r12b</span><br><span class="line">        jne     .L5</span><br><span class="line">        mov     edi, OFFSET FLAT:guard variable for test_echo()::hidden</span><br><span class="line">        call    __cxa_guard_abort</span><br><span class="line">.L5:</span><br><span class="line">        mov     rax, rbx</span><br><span class="line">        mov     rdi, rax</span><br><span class="line">        call    _Unwind_Resume</span><br><span class="line">.L7:</span><br><span class="line">        nop</span><br><span class="line">        pop     rbx</span><br><span class="line">        pop     r12</span><br><span class="line">        pop     rbp</span><br><span class="line">        ret</span><br></pre></td></tr></table></figure>
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
 
-<h1 id="全局-局部-thread-local-变量"><a href="#全局-局部-thread-local-变量" class="headerlink" title="全局&#x2F;局部 thread_local 变量"></a>全局&#x2F;局部 thread_local 变量</h1><h2 id="C-11-thread-local"><a href="#C-11-thread-local" class="headerlink" title="C++11 thread_local"></a>C++11 thread_local</h2><p>访问变量需要使用一个<strong>和线程相关的段寄存器</strong>和固定的变量偏移得到变量的地址，这样不同线程访问的变量地址肯定不同。</p>
-<p>对于全局的 thread_local 变量，每次访问 thread_local 变量 i 会先调用 TLS wrapper function for i，然后该函数调用 TLS init function for i （在 godbolt 过滤的汇编中是 __tls_init）确保变量只被初始化一次，最后返回变量的<strong>地址</strong>。</p>
-<p><a target="_blank" rel="noopener" href="https://godbolt.org/z/Y8a7s4Msz">https://godbolt.org/z/Y8a7s4Msz</a></p>
-<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;iostream&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;thread&gt;</span></span></span><br><span class="line"></span><br><span class="line"><span class="keyword">thread_local</span> <span class="type">int</span> i = <span class="built_in">time</span>(<span class="number">0</span>);</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="type">int</span> <span class="title">main</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    i = <span class="number">7</span>;</span><br><span class="line">    std::thread t&#123;[&amp;]()&#123; i = <span class="number">9</span>; &#125;&#125;;</span><br><span class="line">    t.<span class="built_in">join</span>();</span><br><span class="line">    std::cout &lt;&lt; i &lt;&lt; <span class="string">&quot;\n&quot;</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+              <time title="创建时间：2023-08-12 15:17:00" itemprop="dateCreated datePublished" datetime="2023-08-12T15:17:00+08:00">2023-08-12</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2024-03-10 13:51:44" itemprop="dateModified" datetime="2024-03-10T13:51:44+08:00">2024-03-10</time>
+              </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/openjdk/" itemprop="url" rel="index"><span itemprop="name">openjdk</span></a>
+                </span>
+            </span>
 
-<p>对于局部的 thread_local 变量：</p>
-<p><a target="_blank" rel="noopener" href="https://godbolt.org/z/xdePfv3eM">https://godbolt.org/z/xdePfv3eM</a></p>
-<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;iostream&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;thread&gt;</span></span></span><br><span class="line"></span><br><span class="line"><span class="comment">// 因为 main 入口肯定只有一个，所以尝试把 thread_local 放到其他函数中试试</span></span><br><span class="line"><span class="comment">// 实际上和把 thread_local 变量放在 main 中的效果一样</span></span><br><span class="line"><span class="function"><span class="type">int</span> &amp;<span class="title">get_i</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    <span class="keyword">thread_local</span> <span class="type">int</span> i = <span class="built_in">time</span>(<span class="number">0</span>);</span><br><span class="line">    <span class="keyword">return</span> i;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="type">int</span> <span class="title">main</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    <span class="built_in">get_i</span>() = <span class="number">7</span>;</span><br><span class="line">    std::thread t&#123;[&amp;]()&#123; <span class="built_in">get_i</span>() = <span class="number">9</span>; &#125;&#125;;</span><br><span class="line">    t.<span class="built_in">join</span>();</span><br><span class="line">    std::cout &lt;&lt; <span class="built_in">get_i</span>() &lt;&lt; <span class="string">&quot;\n&quot;</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+          <br>
+            <span class="post-meta-item" title="本文字数">
+              <span class="post-meta-item-icon">
+                <i class="far fa-file-word"></i>
+              </span>
+                <span class="post-meta-item-text">本文字数：</span>
+              <span>370</span>
+            </span>
+            <span class="post-meta-item" title="阅读时长">
+              <span class="post-meta-item-icon">
+                <i class="far fa-clock"></i>
+              </span>
+                <span class="post-meta-item-text">阅读时长 &asymp;</span>
+              <span>1 分钟</span>
+            </span>
 
-<p><code>get_i()</code> 中也有确保变量仅仅初始化一次的逻辑。</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line">get_i()::i:</span><br><span class="line">        .zero   4</span><br><span class="line">guard variable for get_i()::i:</span><br><span class="line">        .zero   8</span><br><span class="line">get_i():</span><br><span class="line">        push    rbp</span><br><span class="line">        mov     rbp, rsp</span><br><span class="line">        mov     rax, QWORD PTR fs:0</span><br><span class="line">        add     rax, OFFSET FLAT:guard variable for get_i()::i@tpoff</span><br><span class="line">        movzx   eax, BYTE PTR [rax]</span><br><span class="line">        test    al, al</span><br><span class="line">        jne     .L11</span><br><span class="line">        mov     edi, 0</span><br><span class="line">        call    time</span><br><span class="line">        mov     DWORD PTR fs:get_i()::i@tpoff, eax</span><br><span class="line">        mov     rax, QWORD PTR fs:0</span><br><span class="line">        add     rax, OFFSET FLAT:guard variable for get_i()::i@tpoff</span><br><span class="line">        mov     BYTE PTR [rax], 1</span><br><span class="line">.L11:</span><br><span class="line">        mov     rax, QWORD PTR fs:0</span><br><span class="line">        add     rax, OFFSET FLAT:get_i()::i@tpoff</span><br><span class="line">        pop     rbp</span><br><span class="line">        ret</span><br></pre></td></tr></table></figure>
+        </div>
+      </header>
 
-<p>所以，全局和局部的 thread_local 变量访问的代价是一样的。只不过如果 thread_local 是局部的，那么同步逻辑就直接放在函数中；如果是全局的，同步逻辑用一个生成的函数实现而已。</p>
-<p>接下来尝试把 time(0) 这种初始化表达式换成一个常量，比如说 2，则访问 thread_local 时不会有同步措施，只是创建线程的时候要复制一份变量而已。</p>
-<h2 id="C11-Thread-local"><a href="#C11-Thread-local" class="headerlink" title="C11 _Thread_local"></a>C11 _Thread_local</h2><p>C11 的头文件 threads.h 中有下面定义：</p>
-<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">define</span> thread_local _Thread_local</span></span><br></pre></td></tr></table></figure>
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
 
-<p>这就和以前的 bool 宏需要引入一样。在 C23 之后，thread_local 就是一个单独的关键字了。</p>
-<p>C11 的 thread_local 是不具备 static 属性的，在函数中使用时要用 thread_local static，而 C++ 中的 thread_local 在函数中自动具备 static 属性，加不加 static 都行。</p>
-<p>C++ 标准：</p>
-<blockquote>
-<p>When thread_local is applied to a variable of block scope the storage-class-specifier static <strong>is implied</strong> if it does not appear explicitly.</p>
-</blockquote>
-<p>2023 年 6 月 15 日：C11 的 threads.h 在 Windows 上没有实现，而且也没有提供像 C++ 的 mutex 一样的同步功能，写 C 语言用线程还是 pthreads.h &#x2F; Win32 API 会比较好一点。</p>
+      
+          <h1 id="reentrant-lock-gong-ping-suo-he-fei-gong-ping-suo-de-shi-xian">ReentrantLock 公平锁和非公平锁的实现</h1>
+<p><img src="../../assets/d6745452123368b4ec805513d2ac0e8a.svg" alt></p>
+<p>如果需要长时间等待，AQS 总是会将等待线程加入到队列尾部，唤醒时总是唤醒队首线程。这样做能够保证已经被睡眠的线程必定按照顺序唤醒。这样做难道不是永远都是公平锁？</p>
+<p>不是！NonfairSync 在 tryAcquire() 时不会检查是否为队首。这意味着如果有队列之外的线程尝试获取锁（发生在刚刚调用 ReentrantLock.lock() 的阶段），可能会先于队首线程获得锁。虽然这种情况的发生非常需要巧合，但也是不公平的； FairSync 对这一巧合下的公平性做出了更高的要求。</p>
+<p>公平和不公平的主要区别在于等待队列外的线程和等待队列上的线程之间的公平性。</p>
+<h1 id="count-down-latch">CountDownLatch</h1>
+<p>只有 countDown() 被调用给定的次数后，await() 才能被唤醒。</p>
+<h1 id="synchronize-guan-jian-zi">synchronize 关键字</h1>
+<p>synchronize 关键字对应的对象锁是不公平的。锁的是对象，信息存储在对象头中。有锁升级过程：偏向锁（JDK 15 中已废弃）、轻量锁、重量锁。</p>
+<h1 id="aqs-shi-xian-ke-zhong-ru-suo">AQS 实现可重入锁</h1>
+          <!--noindex-->
+            <div class="post-button">
+              <a class="btn" href="/2023/08/12/java-JUC-locks/#more" rel="contents">
+                阅读全文 &raquo;
+              </a>
+            </div>
+          <!--/noindex-->
+        
+      
+    </div>
 
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://hxhue.github.io/2023/08/12/java-Java-Memory-Order/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="Hxhue">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Hxhue's Blog">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/2023/08/12/java-Java-Memory-Order/" class="post-title-link" itemprop="url">OpenJDK: Java Memory Order</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2023-08-12 15:17:00" itemprop="dateCreated datePublished" datetime="2023-08-12T15:17:00+08:00">2023-08-12</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2024-03-10 13:17:49" itemprop="dateModified" datetime="2024-03-10T13:17:49+08:00">2024-03-10</time>
+              </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/openjdk/" itemprop="url" rel="index"><span itemprop="name">openjdk</span></a>
+                </span>
+            </span>
+
+          <br>
+            <span class="post-meta-item" title="本文字数">
+              <span class="post-meta-item-icon">
+                <i class="far fa-file-word"></i>
+              </span>
+                <span class="post-meta-item-text">本文字数：</span>
+              <span>1.2k</span>
+            </span>
+            <span class="post-meta-item" title="阅读时长">
+              <span class="post-meta-item-icon">
+                <i class="far fa-clock"></i>
+              </span>
+                <span class="post-meta-item-text">阅读时长 &asymp;</span>
+              <span>4 分钟</span>
+            </span>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <p>CPU 内存屏障：<a target="_blank" rel="noopener" href="https://sf-zhou.github.io/programming/memory_barrier.html">https://sf-zhou.github.io/programming/memory_barrier.html</a></p>
+<p>volatile 与内存屏障总结： <a target="_blank" rel="noopener" href="https://zhuanlan.zhihu.com/p/43526907">https://zhuanlan.zhihu.com/p/43526907</a> <strong>下面几段都是直接引用的</strong>，但是因为不喜欢引用样式所以没用。</p>
+<p>X86-64 下仅支持一种指令重排：Store-Load ，即读操作可能会重排到写操作前面，同时不同线程的写操作并没有保证全局可见，例子见《Intel® 64 and IA-32 Architectures Software Developer’s Manual》手册 8.6.1、8.2.3.7 节。要注意的是这个问题只能用 mfence 解决，不能靠组合 sfence 和 lfence 解决。（用 sfence+lfence 组合仅可以解决重排问题，但不能解决全局可见性问题，简单理解不如视为 <code>sfence</code> 和 <code>lfence</code> 本身也能乱序重排）</p>
+<p>X86-64 一般情况根本不会需要使用 <code>lfence</code> 与 <code>sfence</code> 这两个指令，除非操作 Write-Through 内存或使用 non-temporal 指令（NT 指令，属于 SSE 指令集），比如 <code>movntdq</code>, <code>movnti</code>,<br>
+maskmovq，这些指令也使用 Write-Through 内存策略，通常使用在图形学或视频处理，Linux 编程里就需要使用 GNC 提供的专门的函数（例子见参考资料 13：Memory part 5: What programmers can do）。</p>
+<p>下面是 GNU 中的三种内存屏障定义方法，结合了编译器屏障和三种 CPU 屏障指令</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">define</span> lfence() __asm__ __volatile__(<span class="string">&quot;lfence&quot;</span>: : :<span class="string">&quot;memory&quot;</span>)</span></span><br><span class="line"><span class="meta">#<span class="keyword">define</span> sfence() __asm__ __volatile__(<span class="string">&quot;sfence&quot;</span>: : :<span class="string">&quot;memory&quot;</span>)</span></span><br><span class="line"><span class="meta">#<span class="keyword">define</span> mfence() __asm__ __volatile__(<span class="string">&quot;mfence&quot;</span>: : :<span class="string">&quot;memory&quot;</span>)</span></span><br></pre></td></tr></table></figure>
+<p>代码中仍然使用 <code>lfence()</code> 与 <code>sfence()</code> 这两个内存屏障应该也是一种长远的考虑。按照 Interface 写代码是最保险的，万一 Intel 以后出一个采用弱一致模型的 CPU，遗留代码出问题就不好了。目前在 X86 下面视为编译器屏障即可。</p>
+<h1 id="sun-misc-unsafe">sun.misc.Unsafe</h1>
+<p><code>sun.misc.Unsafe</code> 中出现了 <code>loadFence()</code>/<code>storeFence()</code>/<code>fullFence()</code> 三种创建内存屏障的方法。而这个 Unsafe 又转而调用了 <code>jdk.internel.misc.Unsafe</code> 的方法。</p>
+<h1 id="jdk-internal-misc-unsafe">jdk.internal.misc.Unsafe</h1>
+          <!--noindex-->
+            <div class="post-button">
+              <a class="btn" href="/2023/08/12/java-Java-Memory-Order/#more" rel="contents">
+                阅读全文 &raquo;
+              </a>
+            </div>
+          <!--/noindex-->
+        
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://hxhue.github.io/2023/08/12/java-Project-Loom/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="Hxhue">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Hxhue's Blog">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/2023/08/12/java-Project-Loom/" class="post-title-link" itemprop="url">OpenJDK: Project Loom</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2023-08-12 15:17:00" itemprop="dateCreated datePublished" datetime="2023-08-12T15:17:00+08:00">2023-08-12</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2024-03-10 13:51:44" itemprop="dateModified" datetime="2024-03-10T13:51:44+08:00">2024-03-10</time>
+              </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/openjdk/" itemprop="url" rel="index"><span itemprop="name">openjdk</span></a>
+                </span>
+            </span>
+
+          <br>
+            <span class="post-meta-item" title="本文字数">
+              <span class="post-meta-item-icon">
+                <i class="far fa-file-word"></i>
+              </span>
+                <span class="post-meta-item-text">本文字数：</span>
+              <span>377</span>
+            </span>
+            <span class="post-meta-item" title="阅读时长">
+              <span class="post-meta-item-icon">
+                <i class="far fa-clock"></i>
+              </span>
+                <span class="post-meta-item-text">阅读时长 &asymp;</span>
+              <span>1 分钟</span>
+            </span>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <h1 id="hu-chi-suo">互斥：锁</h1>
+<p>现在对象锁不尊重虚拟线程，但是 JUC 下的锁是尊重虚拟线程的。</p>
+<h1 id="gong-xiang-scoped-value">共享：ScopedValue</h1>
+<p>ThreadLocal 和虚拟线程配合的不是很好，尽管功能上 ThreadLocal 是支持虚拟线程的，但是由于虚拟线程数量众多、生命周期短，使用 ThreadLocal 时虽然保证了线程安全，却创建了大量对象——这个问题在平台线程上就不明显。JEP 429 ScopedValues (Java 20) 是为了解决这个问题的。</p>
+<p>💡 ThreadLocal 和线程池配合的也不是很好，因此短期任务结束后，将线程放回池中之前要及时清理数据。</p>
+<p><img src="../../assets/4511b39ce04195c20d424e568b78a4ba.png" alt></p>
+<p>ScopedValue 用 where 绑定共享变量，用 call 来启动虚拟线程，这样虚拟线程及子虚拟线程能够在调用环境中通过之前捕获的键（图中为 KEY）来获取值，这里使用方式也类似于之前的 ThreadLocal 查表。于是，一些本可以共享的变量实现了共享。</p>
+<p>另外，ScopedValue 没有 remove() 方法，因为 .call() 返回后 KEY 就随着虚拟线程结束而解绑了。如果直接获取而对应值不存在，则会抛出异常；有必要时用 isBound() 来检查。</p>
+<p><img src="../../assets/3f95b7fd45204a961fa510422b67332f.png" alt></p>
+<p>ScopedValue 要么是 unbound，要么是在创建虚拟线程之前就已经确定下来，并且引用不可更改。</p>
+          <!--noindex-->
+            <div class="post-button">
+              <a class="btn" href="/2023/08/12/java-Project-Loom/#more" rel="contents">
+                阅读全文 &raquo;
+              </a>
+            </div>
+          <!--/noindex-->
+        
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://hxhue.github.io/2023/08/12/java-%E8%AF%BB-On-Java-8/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="Hxhue">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Hxhue's Blog">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/2023/08/12/java-%E8%AF%BB-On-Java-8/" class="post-title-link" itemprop="url">读 On Java 8</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2023-08-12 15:17:00" itemprop="dateCreated datePublished" datetime="2023-08-12T15:17:00+08:00">2023-08-12</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2024-03-10 13:51:44" itemprop="dateModified" datetime="2024-03-10T13:51:44+08:00">2024-03-10</time>
+              </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/on-java-8/" itemprop="url" rel="index"><span itemprop="name">on-java-8</span></a>
+                </span>
+            </span>
+
+          <br>
+            <span class="post-meta-item" title="本文字数">
+              <span class="post-meta-item-icon">
+                <i class="far fa-file-word"></i>
+              </span>
+                <span class="post-meta-item-text">本文字数：</span>
+              <span>6.5k</span>
+            </span>
+            <span class="post-meta-item" title="阅读时长">
+              <span class="post-meta-item-icon">
+                <i class="far fa-clock"></i>
+              </span>
+                <span class="post-meta-item-text">阅读时长 &asymp;</span>
+              <span>24 分钟</span>
+            </span>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <h1 id="chapter-00-11">Chapter 00-11</h1>
+<p>Java 对象构造顺序：1、基类 2、所有域 3、初始化块 4、自身的构造函数</p>
+<figure class="highlight jsx"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">jshell&gt; a = <span class="keyword">new</span> <span class="title class_">Foo</span>()</span><br><span class="line"><span class="title class_">Value</span> initialization</span><br><span class="line"><span class="title class_">Initialization</span> block</span><br><span class="line"><span class="title class_">Constructor</span></span><br></pre></td></tr></table></figure>
+<p>为接口提供默认实现：</p>
+<p><img src="../../assets/630546bf2b71cdf127d9f96b76c05aa1.png" alt></p>
+<p>逆变、协变、不变的关系：</p>
+<p><img src="../../assets/3e7c37a37ad6d2386c55e8ac2a421164.png" alt></p>
+<p>在 Java 的子类中 override 了父类的方法，返回一个协变类型也是可以的。比如基类规定的是返回 Object，重写的方法里面是可以写返回任意对象的。</p>
+<p>接口中的属性自动是 final 和 static 的。比如：S 自动就是 final 和 static 的，因为它是在接口中定义的。也正因为这样，接口曾用来方便地定义一组常量，不过 Java5 之后可以用 enum 替代 interface 实现部分功能了。</p>
+<p><img src="../../assets/36392a876786687dcbae4296fabeb60f.png" alt></p>
+          <!--noindex-->
+            <div class="post-button">
+              <a class="btn" href="/2023/08/12/java-%E8%AF%BB-On-Java-8/#more" rel="contents">
+                阅读全文 &raquo;
+              </a>
+            </div>
+          <!--/noindex-->
+        
       
     </div>
 
@@ -906,7 +924,7 @@
                   <i class="far fa-calendar-check"></i>
                 </span>
                 <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2024-03-06 09:25:46" itemprop="dateModified" datetime="2024-03-06T09:25:46+08:00">2024-03-06</time>
+                <time title="修改时间：2024-03-10 13:51:43" itemprop="dateModified" datetime="2024-03-10T13:51:43+08:00">2024-03-10</time>
               </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
@@ -914,11 +932,25 @@
               </span>
               <span class="post-meta-item-text">分类于</span>
                 <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/cpp-templates-the-complete-guide-book/" itemprop="url" rel="index"><span itemprop="name">C++ Templates: The Complete Guide</span></a>
+                  <a href="/categories/cpp-templates-the-complete-guide/" itemprop="url" rel="index"><span itemprop="name">cpp-templates-the-complete-guide</span></a>
                 </span>
             </span>
 
-          
+          <br>
+            <span class="post-meta-item" title="本文字数">
+              <span class="post-meta-item-icon">
+                <i class="far fa-file-word"></i>
+              </span>
+                <span class="post-meta-item-text">本文字数：</span>
+              <span>378</span>
+            </span>
+            <span class="post-meta-item" title="阅读时长">
+              <span class="post-meta-item-icon">
+                <i class="far fa-clock"></i>
+              </span>
+                <span class="post-meta-item-text">阅读时长 &asymp;</span>
+              <span>1 分钟</span>
+            </span>
 
         </div>
       </header>
@@ -930,31 +962,23 @@
 
       
           <p>这一章介绍的大都是用来查询类型属性的 type traits。还有一些其他的工具。</p>
-<h1 id="按数据概念分类"><a href="#按数据概念分类" class="headerlink" title="按数据概念分类"></a>按数据概念分类</h1><p><img src="/assets/d1144640c713ad4c260d6384745dfbfa.png"></p>
+<h1 id="an-shu-ju-gai-nian-fen-lei">按数据概念分类</h1>
+<p><img src="../../assets/d1144640c713ad4c260d6384745dfbfa.png" alt></p>
 <p>下面是基本（primary）类型，范围都是互斥的，而且任何一个类型必然使得下面中的一个且仅有一个评估为真：</p>
-<p><img src="/assets/dcc6d966cfc2ca89b40dd02a0fa1ac0e.png"></p>
+<p><img src="../../assets/dcc6d966cfc2ca89b40dd02a0fa1ac0e.png" alt></p>
 <p>（C++14 之前没有 <code>is_null_pointer</code>，所以那个时候 <code>nullptr</code> 的类型 <code>std:: nullptr_t</code> 是个特例。）</p>
 <p>上面的类型判断的时候会忽略外层的 cv 属性。图来自书中 <strong>Table D.1. Traits to Check the Primary Type Category</strong>。</p>
 <p>还有一些复合分类，这里省略。</p>
 <p><strong>Table D.2. Traits to Check for Composite Type Category</strong></p>
-<h1 id="查询特定属性"><a href="#查询特定属性" class="headerlink" title="查询特定属性"></a>查询特定属性</h1><p><strong>Table D.3. Traits to Test Simple Type Properties</strong></p>
-<p>比如判断是否为 pod、抽象类、final 类等。</p>
-<blockquote>
-<p><code>std::is_pod</code> 被标记为过时，建议使用 <code>is_standard_layout_v</code> &amp;&amp; <code>is_trivial_v</code> 两个 trait 组合起来判断。</p>
-</blockquote>
-<h1 id="查询是否具有某个特定操作"><a href="#查询是否具有某个特定操作" class="headerlink" title="查询是否具有某个特定操作"></a>查询是否具有某个特定操作</h1><p><strong>Table D.4. Traits to Check for Speciﬁc Operations</strong></p>
-<p>比如能够复制构造、能够复制赋值等。</p>
-<h1 id="判断类型之间关系"><a href="#判断类型之间关系" class="headerlink" title="判断类型之间关系"></a>判断类型之间关系</h1><p><strong>Table D.5. Traits to Test Type Relationships</strong></p>
-<p>比如 <code>std::is_base_of</code>。</p>
-<h1 id="类型构造"><a href="#类型构造" class="headerlink" title="类型构造"></a>类型构造</h1><p><strong>Table D.6. Traits for Type Construction</strong></p>
-<p>比如加引用、去掉 cv 属性之类的。得到的是新类型，而不是 true 或 false 的回答。</p>
-<h1 id="其他"><a href="#其他" class="headerlink" title="其他"></a>其他</h1><p><img src="/assets/e18d27c88bd0475c98cb776724bef8ce.png"></p>
-<p>图出自 <strong>Table D.7. Other Type Traits</strong>。</p>
-<h1 id="逻辑运算"><a href="#逻辑运算" class="headerlink" title="逻辑运算"></a>逻辑运算</h1><p><img src="/assets/677fc5b11af4bf047754d1498c697775.png"></p>
-<p>图来自 PDF 第 770 页（书中页码 735 页）。</p>
-<h1 id="非类型萃取工具"><a href="#非类型萃取工具" class="headerlink" title="非类型萃取工具"></a>非类型萃取工具</h1><p><img src="/assets/cc5534873381637edfeb51c6ecf1b5c7.png"></p>
-<p>前者用于创建对应类型的对象用于非评估环境的类型计算；后者用于获取对象的真实地址。</p>
-
+<h1 id="cha-xun-te-ding-shu-xing">查询特定属性</h1>
+          <!--noindex-->
+            <div class="post-button">
+              <a class="btn" href="/2023/08/12/cpp-templates-the-complete-guide-0-D-Standard-Type-Utilities/#more" rel="contents">
+                阅读全文 &raquo;
+              </a>
+            </div>
+          <!--/noindex-->
+        
       
     </div>
 
@@ -1004,7 +1028,7 @@
                   <i class="far fa-calendar-check"></i>
                 </span>
                 <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2024-03-06 09:26:36" itemprop="dateModified" datetime="2024-03-06T09:26:36+08:00">2024-03-06</time>
+                <time title="修改时间：2024-03-10 13:51:43" itemprop="dateModified" datetime="2024-03-10T13:51:43+08:00">2024-03-10</time>
               </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
@@ -1012,11 +1036,25 @@
               </span>
               <span class="post-meta-item-text">分类于</span>
                 <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/cpp-templates-the-complete-guide-book/" itemprop="url" rel="index"><span itemprop="name">C++ Templates: The Complete Guide</span></a>
+                  <a href="/categories/cpp-templates-the-complete-guide/" itemprop="url" rel="index"><span itemprop="name">cpp-templates-the-complete-guide</span></a>
                 </span>
             </span>
 
-          
+          <br>
+            <span class="post-meta-item" title="本文字数">
+              <span class="post-meta-item-icon">
+                <i class="far fa-file-word"></i>
+              </span>
+                <span class="post-meta-item-text">本文字数：</span>
+              <span>1.2k</span>
+            </span>
+            <span class="post-meta-item" title="阅读时长">
+              <span class="post-meta-item-icon">
+                <i class="far fa-clock"></i>
+              </span>
+                <span class="post-meta-item-text">阅读时长 &asymp;</span>
+              <span>4 分钟</span>
+            </span>
 
         </div>
       </header>
@@ -1028,56 +1066,33 @@
 
       
           <p>2023 年 5 月 7 日</p>
-<h1 id="两个-type-traits"><a href="#两个-type-traits" class="headerlink" title="两个 type traits"></a>两个 type traits</h1><p>#type_traits <code>std::decay_t</code> 去引用、去限定符、函数&#x2F;数组变指针；<code>std::common_type_t</code> 用三元运算符获得更“宽泛”类型</p>
-<h1 id="函数模板默认参数"><a href="#函数模板默认参数" class="headerlink" title="函数模板默认参数"></a>函数模板默认参数</h1><p>模板默认参数可以放在最前面，不像普通函数只能把带有默认值的参数放在最后。而且函数模板可以明确指定开头几个参数，让后面的参数由推导规则生成。</p>
-<h1 id="函数重载参数匹配优先级"><a href="#函数重载参数匹配优先级" class="headerlink" title="函数重载参数匹配优先级"></a>函数重载参数匹配优先级</h1><h2 id="优先级排序"><a href="#优先级排序" class="headerlink" title="优先级排序"></a>优先级排序</h2><ol>
+<h1 id="liang-ge-type-traits">两个 type traits</h1>
+<p>std::decay_t<code> 去引用、去限定符、函数/数组变指针；</code>std::common_type_t` 用三元运算符获得更“宽泛”类型</p>
+<h1 id="han-shu-mo-ban-mo-ren-can-shu">函数模板默认参数</h1>
+<p>模板默认参数可以放在最前面，不像普通函数只能把带有默认值的参数放在最后。而且函数模板可以明确指定开头几个参数，让后面的参数由推导规则生成。</p>
+<h1 id="han-shu-zhong-zai-can-shu-pi-pei-you-xian-ji">函数重载参数匹配优先级</h1>
+<h2 id="you-xian-ji-pai-xu">优先级排序</h2>
+<ol>
 <li>perfect match</li>
-<li>decay，或者修改指针的内外层 const 属性（volatile 应该也算吧？）<br>比如 <code>char *</code> 到 <code>char const *</code></li>
-<li>promotion，比 int 小的转到 int 或更大的整数，或者 float 到 double。<br>举例：bool 到 char 不是 promotion，而是 standard conversion</li>
-<li>standard conversion，包括 <strong>int to float</strong>，<strong>子类（值&#x2F;引用&#x2F;指针）向基类（值&#x2F;引用&#x2F;指针）转换</strong></li>
+<li>decay，或者修改指针的内外层 const 属性（volatile 应该也算吧？）<br>
+比如 <code>char *</code> 到 <code>char const *</code></li>
+<li>promotion，比 int 小的转到 int 或更大的整数，或者 float 到 double。<br>
+举例：bool 到 char 不是 promotion，而是 standard conversion</li>
+<li>standard conversion，包括 <strong>int to float</strong>，<strong>子类（值/引用/指针）向基类（值/引用/指针）转换</strong></li>
 <li>用户定义的转换，包括标准库的类</li>
-<li>与可变长参数列表匹配，也就是 <code>(...)</code><br>例外：<code>f(...)</code> <strong>和</strong> <code>f(void)</code> <strong>参数类型是同级别的</strong>，因为没有提供参数，编译器不知道哪一个匹配更合适。</li>
+<li>与可变长参数列表匹配，也就是 <code>(...)</code><br>
+例外：<code>f(...)</code> <strong>和</strong> <code>f(void)</code> <strong>参数类型是同级别的</strong>，因为没有提供参数，编译器不知道哪一个匹配更合适。</li>
 </ol>
 <p>以上参数匹配<strong>不涉及到值类型、左引用、右引用的区别</strong>。只要引用属性能够匹配，就不区分优先级。比如同时匹配到 <code>f(int)</code> 和 <code>f(int &amp;)</code> 编译器就会抱怨函数调用 ambiguous。</p>
 <p>各个参数匹配优先级有差异时：如果一个函数重载的参数组的优先级均不低于另一个函数重载，则前一个函数重载更优先。</p>
-<p>各个参数匹配优先级一样时：</p>
-<ol>
-<li>非模板函数比模板函数更优先。</li>
-<li>特化程度高的模板函数比特化程度低的模板函数更优先。</li>
-<li>一般模板函数比模板参数中带有 parameter pack（实际上匹配为空）的模板函数更优先。</li>
-</ol>
-<p>在传递参数时最多允许一次用户定义转换。<strong>如果函数重载 A 的参数类型转换序列是 B 的子序列，则函数重载 A 的优先级更高。</strong></p>
-<h2 id="standard-conversion-中的指针转换"><a href="#standard-conversion-中的指针转换" class="headerlink" title="standard conversion 中的指针转换"></a>standard conversion 中的指针转换</h2><ol>
-<li>转换成 <code>bool</code></li>
-<li>转换成 <code>void *</code></li>
-<li>子类指针向基类指针的转换</li>
-<li><strong>指向成员指针（pointers to members）从基类向子类的转换</strong></li>
-</ol>
-<p>这几类转换中优先级从 1 到 3 越来越高。第 3 点中，向基类指针转换时跨过的层级越少转换优先级越高。第 4 点也是，转换跨越的层次越少优先级越高。</p>
-<blockquote>
-<p>由于成员是从基类继承下来的，所以从基类向子类转换是合理的。</p>
-</blockquote>
-<h2 id="初始化列表作为实参"><a href="#初始化列表作为实参" class="headerlink" title="初始化列表作为实参"></a>初始化列表作为实参</h2><p><img src="/assets/e4fbc0fe9351908a43237c5100659419.png"></p>
-<p>可以尝试把初始化列表推导成：</p>
-<ol>
-<li><code>std::initializer_list</code></li>
-<li>可以接受 <code>std::initializer_list</code> 作为参数调用构造函数的类</li>
-<li>把初始化列表当成 uniform initialization 调用构造函数的类</li>
-<li>aggregate 的初始化</li>
-</ol>
-<p>如果推导为 <code>std::initializer_list&lt;T&gt;</code>，那么本次匹配的优先级由初始化列表中各参数类型转换的最差优先级决定。比如 <code>&#123;&#39;a&#39;, &#39;b&#39;, 0&#125;</code> 在推导成 <code>std::initializer_list&lt;char&gt;</code> 时，需要 0 从 int 转换成 char（标准转换）；推导成 <code>std::initializer_list&lt;int&gt;</code> 时，需要前面的字符从 char 转换成 int（integer promotion）。因而匹配 <code>f(std::initializer_list&lt;int&gt;)</code> 比 匹配 <code>f(std::initializer_list&lt;char&gt;)</code> 优先级更高。</p>
-<p>如果推导成 2 或 3（同一类），优先级如下：</p>
-<ol>
-<li>如果初始化列表为空，且类具有可调用的默认构造函数，则匹配默认构造函数</li>
-<li>考虑第 2 类</li>
-<li>考虑第 3 类的所有其他构造函数</li>
-</ol>
-<h2 id="Surrogate-Function"><a href="#Surrogate-Function" class="headerlink" title="Surrogate Function"></a>Surrogate Function</h2><p><img src="/assets/e227b1aec68720e2114c3fc519a7657e.png"></p>
-<p>可以想象函数本身也是参数中的一个。上面的 <code>funcObj</code> 是一个 <code>const</code> 引用，不过 <code>operator FuncType*</code> 也恰好可以在 <code>const</code> 属性的 this 指针上调用，因而转换是可行的。由于需要额外的转换，所以第二个函数在参数 0 位置不如第一个函数匹配程度高（按照 <code>IndirectFunctor</code> 中的两个函数的顺序）。但是在参数 2 位置，<code>FuncType</code> 接受 <code>int</code>，比第一个函数匹配程度高，这就导致了两个函数无法决出优先级。</p>
-<h1 id="函数重载时名字可见性"><a href="#函数重载时名字可见性" class="headerlink" title="函数重载时名字可见性"></a>函数重载时名字可见性</h1><p>#lookup 在模板中使用了其他函数时，可以参与重载决议的函数必须在此之前。即便后面有匹配度更高的函数也无法使用。P19</p>
-<h1 id="std-ref"><a href="#std-ref" class="headerlink" title="std::ref"></a><code>std::ref</code></h1><p>书中的一个观点是：函数模板的参数可以使用值类型，如果确实需要传递引用，由用户调用 std::ref 或者 std::cref 即可。P20</p>
-<p>这个观点比较有意思，但是函数模板使用起来会比较麻烦。</p>
-
+          <!--noindex-->
+            <div class="post-button">
+              <a class="btn" href="/2023/08/12/cpp-templates-the-complete-guide-01-Function-Templates/#more" rel="contents">
+                阅读全文 &raquo;
+              </a>
+            </div>
+          <!--/noindex-->
+        
       
     </div>
 
@@ -1127,7 +1142,7 @@
                   <i class="far fa-calendar-check"></i>
                 </span>
                 <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2024-03-07 16:26:55" itemprop="dateModified" datetime="2024-03-07T16:26:55+08:00">2024-03-07</time>
+                <time title="修改时间：2024-03-10 13:14:31" itemprop="dateModified" datetime="2024-03-10T13:14:31+08:00">2024-03-10</time>
               </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
@@ -1135,11 +1150,25 @@
               </span>
               <span class="post-meta-item-text">分类于</span>
                 <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/cpp-templates-the-complete-guide-book/" itemprop="url" rel="index"><span itemprop="name">C++ Templates: The Complete Guide</span></a>
+                  <a href="/categories/cpp-templates-the-complete-guide/" itemprop="url" rel="index"><span itemprop="name">cpp-templates-the-complete-guide</span></a>
                 </span>
             </span>
 
-          
+          <br>
+            <span class="post-meta-item" title="本文字数">
+              <span class="post-meta-item-icon">
+                <i class="far fa-file-word"></i>
+              </span>
+                <span class="post-meta-item-text">本文字数：</span>
+              <span>1.2k</span>
+            </span>
+            <span class="post-meta-item" title="阅读时长">
+              <span class="post-meta-item-icon">
+                <i class="far fa-clock"></i>
+              </span>
+                <span class="post-meta-item-text">阅读时长 &asymp;</span>
+              <span>4 分钟</span>
+            </span>
 
         </div>
       </header>
@@ -1151,53 +1180,23 @@
 
       
           <p>2023 年 5 月 7 日</p>
-<h1 id="定义位置"><a href="#定义位置" class="headerlink" title="定义位置"></a>定义位置</h1><p>类模板只能在全局或者类声明中定义，不能在块或者函数中定义。</p>
-<h1 id="类模板外函数定义的写法"><a href="#类模板外函数定义的写法" class="headerlink" title="类模板外函数定义的写法"></a>类模板外函数定义的写法</h1><p>类模板中定义函数，T 类型参数可以省略；在类模板中声明，但在外提供函数定义，就需要在定义处给出完整的类型参数：</p>
+<h1 id="ding-yi-wei-zhi">定义位置</h1>
+<p>类模板只能在全局或者类声明中定义，不能在块或者函数中定义。</p>
+<h1 id="lei-mo-ban-wai-han-shu-ding-yi-de-xie-fa">类模板外函数定义的写法</h1>
+<p>类模板中定义函数，T 类型参数可以省略；在类模板中声明，但在外提供函数定义，就需要在定义处给出完整的类型参数：</p>
 <p><code>template&lt;typename T&gt; void Stack&lt;T /* 不能省略 */&gt;::push (T const&amp; elem) &#123; /* impl */ &#125;</code></p>
 <p>一个例外是析构函数和构造函数的名称处，因为这里不表类型，而是表示函数名。</p>
 <figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">template</span>&lt;<span class="keyword">typename</span> T&gt; <span class="type">void</span> Stack&lt;T&gt;::<span class="built_in">Stack</span>() &#123; <span class="comment">/* impl */</span> &#125;</span><br><span class="line"><span class="comment">//                                   ^^^^ 这里不能加参数T</span></span><br></pre></td></tr></table></figure>
-
 <p>P30 处理友元函数，比如向输出流打印。最简单的还是<strong>直接在类模板</strong>中提供定义：</p>
 <figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">friend</span> std::ostream&amp; <span class="keyword">operator</span>&lt;&lt;(std::ostream&amp; os, Stack <span class="type">const</span>&amp; s) &#123;</span><br><span class="line">    <span class="keyword">for</span> (<span class="keyword">auto</span> <span class="type">const</span>&amp; i : s.elems) os &lt;&lt; i &lt;&lt; <span class="string">&#x27; &#x27;</span>;</span><br><span class="line">    <span class="keyword">return</span> os;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<p>如果只在类模板中写声明，要么 ① 把函数写成模板函数，并使用不同的类型参数符号，然后在类外补上定义：</p>
-<p><code>template &lt;class U&gt; friend std::ostream&amp; operator&lt;&lt;(std::ostream&amp; os, Stack&lt;U&gt; const&amp; s);</code></p>
-<p>② 要么先声明类模板，再声明这个模板函数，然后在类中写：</p>
-<p><code>friend std::ostream&amp; operator&lt;&lt; &lt;&gt;(std::ostream&amp; os, Stack const&amp; s);</code></p>
-<p>其中<code>&lt;&gt;</code>表示函数需要匹配某个模板。最后在类外补上定义。</p>
-<h1 id="按需实例化"><a href="#按需实例化" class="headerlink" title="按需实例化"></a>按需实例化</h1><p>类模板只会实例化那些被用到的成员函数。这虽然降低了空间开销，但也使得一些问题很难被发现，比如常常在添加新的功能（调用之前没被调用的函数）后才发现旧代码无法编译的问题。</p>
-<h1 id="特化"><a href="#特化" class="headerlink" title="特化"></a>特化</h1><p>可以用 <code>template &lt;&gt;</code> 特化类模板。<strong>若特化类模板要在外给出函数定义，只需要把他当成普通的类，不要再加</strong> <code>template &lt;&gt;</code><strong>。</strong></p>
-<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">template</span>&lt;&gt; <span class="keyword">class</span> <span class="title class_">Stack</span>&lt;std::string&gt; &#123; <span class="comment">/* impl */</span> &#125;;</span><br><span class="line"><span class="type">void</span> Stack&lt;std::string&gt;::<span class="built_in">push</span> (std::string <span class="type">const</span>&amp; elem) <span class="comment">/* impl */</span></span><br></pre></td></tr></table></figure>
-
-<h1 id="偏特化"><a href="#偏特化" class="headerlink" title="偏特化"></a>偏特化</h1><figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">template</span>&lt;<span class="keyword">typename</span> T&gt;</span><br><span class="line"><span class="keyword">class</span> <span class="title class_">Stack</span>&lt;T*&gt; &#123; <span class="comment">/* impl */</span> &#125;</span><br><span class="line"><span class="comment">//         ^^^ 注意这个尖括号是相对类模板的定义多出来的</span></span><br></pre></td></tr></table></figure>
-
-<p>偏特化任何模板时不能再提供<strong>默认模板参数</strong>，省略会导致继承默认参数，不省略则可以额外指定。特化函数模板时不能再提供<strong>函数默认参数值</strong>，但也不能省略参数声明。（一个是写在尖括号 <code>&lt;&gt;</code> 里的，一个是写在小括号 <code>()</code> 里面的。）</p>
-<p>偏特化是可以有更多的模板参数的，这样才能表达更加复杂和具体的结构，比如任意一个指向成员的指针至少需要两个模板参数来精确表达：</p>
-<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">template</span>&lt;<span class="keyword">typename</span> T, <span class="keyword">typename</span> C&gt;</span><br><span class="line"><span class="keyword">class</span> <span class="title class_">List</span>&lt;T* C::*&gt; &#123;</span><br><span class="line">    <span class="comment">// 略</span></span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
-
-<h1 id="默认参数"><a href="#默认参数" class="headerlink" title="默认参数"></a>默认参数</h1><p>类模板的默认参数应该放到靠后的位置，因为类模板是不能通过参数推导的。这个和模板函数注意对比。</p>
-<h1 id="Alias-Templates"><a href="#Alias-Templates" class="headerlink" title="Alias Templates"></a>Alias Templates</h1><figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">namespace</span> std &#123;</span><br><span class="line">    <span class="keyword">template</span>&lt;<span class="keyword">typename</span> T&gt; <span class="keyword">using</span> <span class="type">add_const_t</span> = <span class="keyword">typename</span> add_const&lt;T&gt;::type;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<p>#alias alias templates 不能被特化。</p>
-<h1 id="C-17-省略类模板参数"><a href="#C-17-省略类模板参数" class="headerlink" title="C++ 17 省略类模板参数"></a>C++ 17 省略类模板参数</h1><figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">Stack&lt;<span class="type">int</span>&gt; intStack1;</span><br><span class="line">Stack&lt;<span class="type">int</span>&gt; intStack2 = intStack1;</span><br><span class="line">Stack intStack3 = intStack1; <span class="comment">// 能推断出类型参数是 int</span></span><br></pre></td></tr></table></figure>
-
-<p>由于推导的类型不一定是我们想要的，我们有时应该尽量在成员函数中写成接受值（而不是引用）的形式，从而使得数组能退化成首元素指针。P41</p>
-<p>存在疑问时，类模板参数推导倾向于拷贝，而不是将参数作为子元素。P43</p>
-<p>C++ 类模板在推导参数时不支持偏特化。就算是空参数也不行（空参数是 Java 的语法）。比如 <code>Stack stk &#123;&quot;2&quot;&#125;;</code> 正确，而 <code>Stack&lt;&gt; stk &#123;&quot;2&quot;&#125;;</code> 错误。</p>
-<h1 id="Deduction-Guide"><a href="#Deduction-Guide" class="headerlink" title="Deduction Guide"></a>Deduction Guide</h1><p><code>Stack(char const*) -&gt; Stackstd::string;</code></p>
-<p>对于聚合类模板也可以定义推导规则，比如：</p>
-<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">template</span>&lt;<span class="keyword">typename</span> T&gt;</span><br><span class="line"><span class="keyword">struct</span> <span class="title class_">ValueWithComment</span> &#123;</span><br><span class="line">    T value;</span><br><span class="line">    std::string comment;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="built_in">ValueWithComment</span>(<span class="type">char</span> <span class="type">const</span>*, <span class="type">char</span> <span class="type">const</span>*)</span><br><span class="line">  -&gt; ValueWithComment&lt;std::string&gt;;</span><br></pre></td></tr></table></figure>
-
-<p>这样 <code>ValueWithComment vc2 = &#123;&quot;hello&quot;, &quot;initial value&quot;&#125;;</code> 就会被推导规则引导。如果没有这条规则，代码就无法通过编译，因为推导是根据类模板构造函数的参数进行的，而聚合类没有构造函数。</p>
-<p>注意，C++20 不需要 deduction guide 也可以编译上面的代码，应该是聚合类的定义、类模板参数推导要求有改动。</p>
-<p>其他：</p>
-<ul>
-<li>还能对推导规则添加 explicit 关键字。</li>
-<li>deduction guide 本身可以是模板：<code>template&lt;typename T&gt; S(T) -&gt; S&lt;T&gt;;</code></li>
-<li>和 auto 一样，当模板类参数被省略时，想要在同一语句中声明两个变量，必须保证他们的参数类型一致。</li>
-<li>deduction guide 本身只用于引导参数推导，不用于实际调用。因此对于多个引用类型（左引、右引）的构造函数，只需要写一个“值类型作为参数”的推导规则。</li>
-</ul>
-
+          <!--noindex-->
+            <div class="post-button">
+              <a class="btn" href="/2023/08/12/cpp-templates-the-complete-guide-02-Class-Templates/#more" rel="contents">
+                阅读全文 &raquo;
+              </a>
+            </div>
+          <!--/noindex-->
+        
       
     </div>
 
@@ -1337,6 +1336,18 @@
     <i class="fa fa-heart"></i>
   </span>
   <span class="author" itemprop="copyrightHolder">Hxhue</span>
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item-icon">
+      <i class="fa fa-chart-area"></i>
+    </span>
+      <span class="post-meta-item-text">站点总字数：</span>
+    <span title="站点总字数">81k</span>
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item-icon">
+      <i class="fa fa-coffee"></i>
+    </span>
+      <span class="post-meta-item-text">站点阅读时长 &asymp;</span>
+    <span title="站点阅读时长">4:54</span>
 </div>
   <div class="powered-by">由 <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Gemini</a> 强力驱动
   </div><script color="0,0,255" opacity="0.5" zIndex="-1" count="99" src="https://cdn.jsdelivr.net/npm/canvas-nest.js@1/dist/canvas-nest.js"></script>
@@ -1377,8 +1388,12 @@
   
   <script src="/lib/anime.min.js"></script>
   <script src="//cdn.jsdelivr.net/npm/pangu@4/dist/browser/pangu.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
 
 <script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
 
 
 <script src="/js/schemes/pisces.js"></script>

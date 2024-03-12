@@ -19,7 +19,7 @@
 
 <script id="hexo-configurations">
     var NexT = window.NexT || {};
-    var CONFIG = {"hostname":"hxhue.github.io","root":"/","scheme":"Gemini","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":true,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":true,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":false,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},"path":"search.xml"};
+    var CONFIG = {"hostname":"hxhue.github.io","root":"/","scheme":"Gemini","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":true,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":true,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},"path":"search.xml"};
   </script>
 
   <meta property="og:type" content="website">
@@ -78,7 +78,7 @@
 </head>
 
 <body itemscope itemtype="http://schema.org/WebPage">
-  <div class="container">
+  <div class="container use-motion">
     <div class="headband"></div>
 
     <header class="header" itemscope itemtype="http://schema.org/WPHeader">
@@ -191,7 +191,7 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="https://hxhue.github.io/2023/08/12/cpp-templates-the-complete-guide-17-Future-Directions/">
+    <link itemprop="mainEntityOfPage" href="https://hxhue.github.io/2023/08/12/cpp-templates-the-complete-guide-13-Names-in-Templates/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="image" content="/images/avatar.gif">
@@ -205,7 +205,7 @@
       <header class="post-header">
         <h2 class="post-title" itemprop="name headline">
           
-            <a href="/2023/08/12/cpp-templates-the-complete-guide-17-Future-Directions/" class="post-title-link" itemprop="url">CTTCG 17 Future Directions</a>
+            <a href="/2023/08/12/cpp-templates-the-complete-guide-13-Names-in-Templates/" class="post-title-link" itemprop="url">CTTCG 13 Names in Templates</a>
         </h2>
 
         <div class="post-meta">
@@ -222,7 +222,7 @@
                   <i class="far fa-calendar-check"></i>
                 </span>
                 <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2024-03-06 09:31:48" itemprop="dateModified" datetime="2024-03-06T09:31:48+08:00">2024-03-06</time>
+                <time title="修改时间：2024-03-10 13:51:43" itemprop="dateModified" datetime="2024-03-10T13:51:43+08:00">2024-03-10</time>
               </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
@@ -230,11 +230,25 @@
               </span>
               <span class="post-meta-item-text">分类于</span>
                 <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/cpp-templates-the-complete-guide-book/" itemprop="url" rel="index"><span itemprop="name">C++ Templates: The Complete Guide</span></a>
+                  <a href="/categories/cpp-templates-the-complete-guide/" itemprop="url" rel="index"><span itemprop="name">cpp-templates-the-complete-guide</span></a>
                 </span>
             </span>
 
-          
+          <br>
+            <span class="post-meta-item" title="本文字数">
+              <span class="post-meta-item-icon">
+                <i class="far fa-file-word"></i>
+              </span>
+                <span class="post-meta-item-text">本文字数：</span>
+              <span>1.5k</span>
+            </span>
+            <span class="post-meta-item" title="阅读时长">
+              <span class="post-meta-item-icon">
+                <i class="far fa-clock"></i>
+              </span>
+                <span class="post-meta-item-text">阅读时长 &asymp;</span>
+              <span>6 分钟</span>
+            </span>
 
         </div>
       </header>
@@ -245,13 +259,24 @@
     <div class="post-body" itemprop="articleBody">
 
       
-          <p>这一章讲的是对未来的展望。</p>
-<h1 id="浮点数和字符串作为模板参数"><a href="#浮点数和字符串作为模板参数" class="headerlink" title="浮点数和字符串作为模板参数"></a>浮点数和字符串作为模板参数</h1><p>浮点数在 gcc C++20 是可以作为非类型模板参数（NTTP）的；clang 不支持。目前 <a target="_blank" rel="noopener" href="https://en.cppreference.com/w/cpp/compiler_support">C++ compiler support - cppreference.com</a> 上也看不到相关的支持项目。</p>
-<p>字符串字面量在 C++20 只能通过隐式转换成简单的对象实现模板参数。<u>15&#x2F;特例：变参列表&#x2F;参数包</u>  一节有描述。字符数组则是早就可以作为模板参数，尽管作为引用其 linkage 在 C++11 和 C++14 有额外的要求。</p>
-<p>当前 class type 和浮点数没有作为非模板参数得到全面的支持，原因很可能是<strong>相等性比较</strong>在<strong>链接</strong>阶段很难进行（浮点数的标准可能不同，或者因为精度缺失会误判；类可能会重载比较操作符）。</p>
-<h1 id="减少类模板-pack-expansion-的限制"><a href="#减少类模板-pack-expansion-的限制" class="headerlink" title="减少类模板 pack expansion 的限制"></a>减少类模板 pack expansion 的限制</h1><p>目前不能在类模板参数中使用多个 pack expansion，而且使用时也必须把它放在最末尾的位置；不仅模板参数声明是这样，填充类模板参数也是这样。</p>
-<h1 id="将-void-作为一种常态类型"><a href="#将-void-作为一种常态类型" class="headerlink" title="将 void 作为一种常态类型"></a>将 <code>void</code> 作为一种常态类型</h1><p>其他章节中提到了当函数返回值是 void 时，不能将其绑定在变量上，即便这个变量今后不会被使用。Kotlin 就用了 <code>Unit</code> 类型来处理这个问题，C++ 很难改这一点了。</p>
-
+          <h1 id="ming-zi-cha-zhao-pu-tong-cha-zhao-he-adl">名字查找：普通查找和 ADL</h1>
+<p>普通查找和 ADL 是同时进行的，不存在优先级差异。这些被找到的函数被放在一起参与重载决议。如果没有因为一般性的重载决议规则决出优劣，则会引发 ambiguous 指代错误。</p>
+<h2 id="strong-ordinary-lookup-strong-nei-bu-ming-cheng-zhe-gai-wai-bu-ming-cheng-de-gui-ze"><strong>ordinary lookup</strong>: 内部名称遮盖外部名称的规则</h2>
+<p><img src="../../assets/a3588f0047d856bc7a0c4194c5b57fb5.png" alt></p>
+<h2 id="strong-adl-strong-kao-lu-can-shu-lei-xing-suo-zai-ming-zi-kong-jian-de-han-shu-he-cao-zuo-fu-zhong-zai"><strong>ADL:</strong> 考虑参数类型所在名字空间的函数和操作符重载</h2>
+<p>相关类型有很多规则，比如指针会引入其指向类型的名字空间、类会引入外围类（如果是一个内部类）和基类的名字空间、函数会引入其参数和返回值的名字空间等（P219）。特例是 hidden friends，可以直接定义在类中。</p>
+<p>ADL 失效的情况：① 调用前给函数名加上括号，这样就必须先找到函数。② 函数模板在 C++20 之前除非在外部声明函数模板（参数列表可以不同），否则也无法被找到。因为在还没有看参数的情况下，函数模板没有被引入；还没有看参数列表的情况下不知道这个是函数模板；不知道这个是函数模板的情况下会把参数列表的头尾理解成大于和小于操作符。这是一种鸡生蛋蛋生鸡的问题。③ <b>ADL 会忽略 using 声明，只考虑真正存在于名字空间的函数。</b></p>
+<p>ADL 只会通过参数（也就是显式调用）引入额外的函数和操作符，其他情况下这些名称是不会被自动引入的，比如取一个和参数相关的函数指针。</p>
+<p><img src="../../assets/c643642b58573546cdc3c12a6cfadacf.png" alt></p>
+<h1 id="ming-cheng-zhu-ru">名称注入</h1>
+          <!--noindex-->
+            <div class="post-button">
+              <a class="btn" href="/2023/08/12/cpp-templates-the-complete-guide-13-Names-in-Templates/#more" rel="contents">
+                阅读全文 &raquo;
+              </a>
+            </div>
+          <!--/noindex-->
+        
       
     </div>
 
@@ -301,7 +326,7 @@
                   <i class="far fa-calendar-check"></i>
                 </span>
                 <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2024-03-07 16:26:55" itemprop="dateModified" datetime="2024-03-07T16:26:55+08:00">2024-03-07</time>
+                <time title="修改时间：2024-03-10 13:51:43" itemprop="dateModified" datetime="2024-03-10T13:51:43+08:00">2024-03-10</time>
               </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
@@ -309,11 +334,25 @@
               </span>
               <span class="post-meta-item-text">分类于</span>
                 <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/cpp-templates-the-complete-guide-book/" itemprop="url" rel="index"><span itemprop="name">C++ Templates: The Complete Guide</span></a>
+                  <a href="/categories/cpp-templates-the-complete-guide/" itemprop="url" rel="index"><span itemprop="name">cpp-templates-the-complete-guide</span></a>
                 </span>
             </span>
 
-          
+          <br>
+            <span class="post-meta-item" title="本文字数">
+              <span class="post-meta-item-icon">
+                <i class="far fa-file-word"></i>
+              </span>
+                <span class="post-meta-item-text">本文字数：</span>
+              <span>3.5k</span>
+            </span>
+            <span class="post-meta-item" title="阅读时长">
+              <span class="post-meta-item-icon">
+                <i class="far fa-clock"></i>
+              </span>
+                <span class="post-meta-item-text">阅读时长 &asymp;</span>
+              <span>13 分钟</span>
+            </span>
 
         </div>
       </header>
@@ -325,158 +364,31 @@
 
       
           <p>2023 年 5 月 17 日</p>
-<h1 id="推导上下文：Deduced-Context"><a href="#推导上下文：Deduced-Context" class="headerlink" title="推导上下文：Deduced Context"></a>推导上下文：Deduced Context</h1><p>P272 书上</p>
+<h1 id="tui-dao-shang-xia-wen-deduced-context">推导上下文：Deduced Context</h1>
+<p>P272 书上</p>
 <ul>
 <li>依赖于模板类型的子类型不是推导上下文。比如 <code>typename X&lt;N&gt;::I</code> 不是。而 <code>X&lt;N&gt;::*</code> 这样的指向成员的指针没有用到子类型，所以是推导上下文。</li>
 <li>非类型模板参数的非平凡表达式不是推导上下文。比如模板 <code>S</code> 和参数 <code>I</code>，<code>S&lt;I+1&gt;</code> 无法提供推导信息。</li>
 </ul>
-<h1 id="如何推导出模板参数"><a href="#如何推导出模板参数" class="headerlink" title="如何推导出模板参数"></a>如何推导出模板参数</h1><ol>
+<h1 id="ru-he-tui-dao-chu-mo-ban-can-shu">如何推导出模板参数</h1>
+<ol>
 <li>从参数列表中推导（推导能力是有限制的，比如不能从 <code>typename T::iterator</code> 参数中推出 <code>T</code> 的类型）</li>
 <li>函数模板被取地址时，可以从要求的返回值类型推导：</li>
 </ol>
 <figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">template</span>&lt;<span class="keyword">typename</span> T&gt;</span></span><br><span class="line"><span class="function"><span class="type">void</span> <span class="title">f</span><span class="params">(T, T)</span></span>;</span><br><span class="line"></span><br><span class="line"><span class="built_in">void</span> (*pf)(<span class="type">char</span>, <span class="type">char</span>) = &amp;f; <span class="comment">// f的参数T由函数指针的类型确定</span></span><br></pre></td></tr></table></figure>
-
 <ol>
 <li><strong>隐式转换操作符模板</strong>的类型参数 T 由需要转换时所需的类型决定。</li>
 </ol>
 <p><em>模板尝试匹配的时候不适用 common type。</em> 比如两个 T 类型分别被认为是 int 和 double 时，会导致模板替换失败，而不是把 T 认为是 double。比如</p>
 <figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">template</span> &lt;<span class="keyword">class</span> <span class="title class_">T</span>&gt; <span class="function">T <span class="title">max</span><span class="params">(T a, T b)</span> </span>&#123; <span class="keyword">return</span> a &gt; b ? a : b; &#125;</span><br></pre></td></tr></table></figure>
-
-<p>调用 <code>max(1, 3.0)</code> 就会失败，而调用 <code>max&lt;double&gt;(1, 3.0)</code> 才能成功（模板参数被人为指定之后就允许隐式类型转换了）。</p>
-<h1 id="特例：初始化列表"><a href="#特例：初始化列表" class="headerlink" title="特例：初始化列表"></a>特例：初始化列表</h1><p>初始化列表没有确定的类型，因此不能绑定在参数类型 T 上面。但是如果参数类型为 <code>std::initializer_list&lt;T&gt;</code>，则能够尝试绑定（当所有元素类型相同时成功）。</p>
-<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;initializer_list&gt;</span></span></span><br><span class="line"></span><br><span class="line"><span class="comment">// 如果把参数类型从初始化列表改成 T 就会推导失败</span></span><br><span class="line"><span class="function"><span class="keyword">template</span>&lt;<span class="keyword">typename</span> T&gt; <span class="type">void</span> <span class="title">f</span><span class="params">(std::initializer_list&lt;T&gt;)</span> </span>&#123;&#125;</span><br><span class="line"><span class="function"><span class="type">int</span> <span class="title">main</span><span class="params">()</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="built_in">f</span>(&#123;<span class="number">2</span>, <span class="number">3</span>, <span class="number">5</span>, <span class="number">7</span>, <span class="number">9</span>&#125;);               <span class="comment">// OK: T is deduced to int</span></span><br><span class="line">    <span class="built_in">f</span>(&#123;’a’, ’e’, ’i’, ’o’, ’u’, <span class="number">42</span>&#125;); <span class="comment">// ERROR: T deduced to both char and int</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<p>同时，<code>auto primes = &#123; 2, 3, 5, 7 &#125;;</code> 创建的是 <code>std::initializer_list&lt;int&gt;</code> 类型的数据。在 C++17 之后，去掉其中的 <code>=</code> 就无法编译。C++17 对去掉 <code>=</code> 的 <code>auto x&#123;?&#125;;</code> 初始化倾向于推导为单个元素，而之前统一推导为 <code>std::initializer&lt;?&gt;</code> ：</p>
-<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">auto</span> oops &#123; <span class="number">0</span>, <span class="number">8</span>, <span class="number">15</span> &#125;; <span class="comment">// ERROR in C++17. OK before C++17</span></span><br><span class="line"><span class="keyword">auto</span> val &#123; <span class="number">2</span> &#125;;         <span class="comment">// OK: val has type int in C++17,</span></span><br><span class="line">                        <span class="comment">// or type std::intializer_list&lt;int&gt; before C++17</span></span><br></pre></td></tr></table></figure>
-
-<p>在函数中使用 <code>auto</code> 推导，同时又返回初始化列表，则无法编译，因为无法确定具体类型。</p>
-<h1 id="特例：变参列表-参数包"><a href="#特例：变参列表-参数包" class="headerlink" title="特例：变参列表&#x2F;参数包"></a>特例：变参列表&#x2F;参数包</h1><p>简单情景：匹配 0 或多个剩余参数。</p>
-<p>pack expansion：</p>
-<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">template</span>&lt;<span class="keyword">typename</span> T, <span class="keyword">typename</span> U&gt; <span class="keyword">class</span> <span class="title class_">pair</span> &#123; &#125;;</span><br><span class="line"></span><br><span class="line"><span class="comment">// **匹配能力**：第一参数相同的零个或多个 pair</span></span><br><span class="line"><span class="function"><span class="keyword">template</span>&lt;<span class="keyword">typename</span> T, <span class="keyword">typename</span>... Rest&gt;</span></span><br><span class="line"><span class="function"><span class="type">void</span> <span class="title">h1</span><span class="params">(pair&lt;T, Rest&gt; <span class="type">const</span>&amp;...)</span></span>;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 由于 pack expansion 中有两个 parameter pack，因此 Ts 和 Rest 的参数数量必须一致</span></span><br><span class="line"><span class="comment">// **匹配能力**：任意参数的零个或多个 pair</span></span><br><span class="line"><span class="function"><span class="keyword">template</span>&lt;<span class="keyword">typename</span>... Ts, <span class="keyword">typename</span>... Rest&gt;</span></span><br><span class="line"><span class="function"><span class="type">void</span> <span class="title">h2</span><span class="params">(pair&lt;Ts, Rest&gt; <span class="type">const</span>&amp;...)</span></span>;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="type">void</span> <span class="title">foo</span><span class="params">(pair&lt;<span class="type">int</span>, <span class="type">float</span>&gt; pif, pair&lt;<span class="type">int</span>, <span class="type">double</span>&gt; pid, pair&lt;<span class="type">double</span>, <span class="type">double</span>&gt; pdd)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="built_in">h1</span>(pif, pid);</span><br><span class="line">    <span class="comment">// OK: deduces T to int, Rest to &#123;float, double&#125;</span></span><br><span class="line">    <span class="built_in">h2</span>(pif, pid);</span><br><span class="line">    <span class="comment">// OK: deduces Ts to &#123;int, int&#125;, Rest to &#123;float, double&#125;</span></span><br><span class="line">    <span class="built_in">h1</span>(pif, pdd);</span><br><span class="line">    <span class="comment">// ERROR: T deduced to int from the 1st arg, but to double from the 2nd</span></span><br><span class="line">    <span class="built_in">h2</span>(pif, pdd);</span><br><span class="line">    <span class="comment">// OK: deduces Ts to &#123;int, double&#125;, Rest to &#123;float, double&#125;</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<p>传递变参，而不是做 pack expansion：</p>
-<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">template</span>&lt;<span class="keyword">typename</span>... Types&gt; <span class="keyword">class</span> <span class="title class_">Tuple</span> &#123; &#125;;</span><br><span class="line"></span><br><span class="line"><span class="comment">// **匹配能力**：参数完全相同的2个tuple</span></span><br><span class="line"><span class="function"><span class="keyword">template</span>&lt;<span class="keyword">typename</span>... Types&gt;</span></span><br><span class="line"><span class="function"><span class="type">bool</span> <span class="title">f1</span><span class="params">(Tuple&lt;Types...&gt;, Tuple&lt;Types...&gt;)</span></span>;</span><br><span class="line"></span><br><span class="line"><span class="comment">// **匹配能力**：任意参数的2个tuple</span></span><br><span class="line"><span class="function"><span class="keyword">template</span>&lt;<span class="keyword">typename</span>... Types1, <span class="keyword">typename</span>... Types2&gt;</span></span><br><span class="line"><span class="function"><span class="type">bool</span> <span class="title">f2</span><span class="params">(Tuple&lt;Types1...&gt;, Tuple&lt;Types2...&gt;)</span></span>;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="type">void</span> <span class="title">bar</span><span class="params">(Tuple&lt;<span class="type">short</span>, <span class="type">int</span>, <span class="type">long</span>&gt; sv,</span></span></span><br><span class="line"><span class="params"><span class="function">         Tuple&lt;<span class="type">unsigned</span> <span class="type">short</span>, <span class="type">unsigned</span>, <span class="type">unsigned</span> <span class="type">long</span>&gt; uv)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="built_in">f1</span>(sv, sv); <span class="comment">// OK: Types is deduced to &#123;short, int, long&#125;</span></span><br><span class="line">    <span class="built_in">f2</span>(sv, sv); <span class="comment">// OK: Types1 is deduced to &#123;short, int, long&#125;,</span></span><br><span class="line">                <span class="comment">// Types2 is deduced to &#123;short, int, long&#125;</span></span><br><span class="line">    <span class="built_in">f1</span>(sv, uv); <span class="comment">// ERROR: Types is deduced to &#123;short, int, long&#125; from the 1st arg, but</span></span><br><span class="line">                <span class="comment">// to &#123;unsigned short, unsigned, unsigned long&#125; from the 2nd</span></span><br><span class="line">    <span class="built_in">f2</span>(sv, uv); <span class="comment">// OK: Types1 is deduced to &#123;short, int, long&#125;,</span></span><br><span class="line">                <span class="comment">// Types2 is deduced to &#123;unsigned short, unsigned, unsigned long&#125;</span></span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<p>这个比上面一组代码容易理解一点。</p>
-<p>还能为参数包显式指定前几个参数类型：</p>
-<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">template</span> <span class="type">void</span> <span class="title">f</span><span class="params">(Ts ... ps)</span> </span>&#123;&#125;</span><br><span class="line"><span class="function"><span class="type">int</span> <span class="title">main</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    <span class="built_in">f</span>&lt;<span class="type">double</span>, <span class="type">int</span>&gt;(<span class="number">1</span>, <span class="number">2</span>, <span class="number">3</span>); <span class="comment">// OK</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<p>这是一个偏特化。第一个参数被转换成了 <code>1.0</code>。</p>
-<h1 id="特例：字面量操作符模板"><a href="#特例：字面量操作符模板" class="headerlink" title="特例：字面量操作符模板"></a>特例：字面量操作符模板</h1><p>字面量有四类：整数、浮点数、字符串、字符。字面量操作符匹配的前提是字面量本身合法（如果不是合法数字，就需要用字符串表示），匹配的优先级则如下：</p>
-<h2 id="整数-n"><a href="#整数-n" class="headerlink" title="整数 n"></a>整数 n</h2><ol>
-<li><p>找接受参数 <code>unsigned long long</code> 的重载，若有则调用 <code>operator &quot;&quot;X(n ULL)</code>。</p>
-</li>
-<li><p>找 _a raw literal operator or a numeric literal operator template, but not both_。</p>
-<p>前者参数为 <code>const char *</code>，调用形式为 <code>operator&quot;&quot;X(&quot;n&quot;)</code>。后者模板参数是 <code>&lt;char ...&gt;</code> ，调用形式为 <code>operator&quot;&quot;X&lt;&#39;c1&#39;, &#39;c 2&#39;, &#39;c3&#39;..., &#39;ck &#39;&gt;()</code>，也就是把字面量的每个字符拆开的变参模板。</p>
-<p>两者不得同时被找到，否则无法区分优劣。</p>
-</li>
-</ol>
-<p>类型匹配 &gt; 当成字符串 &#x3D; 拆成字符传入模板。</p>
-<h2 id="浮点数-f"><a href="#浮点数-f" class="headerlink" title="浮点数 f"></a>浮点数 f</h2><ol>
-<li>找接受参数 <code>long double</code> 的重载，若有则调用 <code>operator &quot;&quot;X(f L)</code>。</li>
-<li>剩余过程和整数的 2、3 相同。</li>
-</ol>
-<h2 id="字符串-str，长度为-len"><a href="#字符串-str，长度为-len" class="headerlink" title="字符串 str，长度为 len"></a>字符串 str，长度为 len</h2><ol>
-<li>C++20：如果有参数能够和字符串字面量匹配，可以直接调用这个模板 <code>operator &quot;&quot;X&lt;str&gt;()</code>。</li>
-<li>尝试 <code>operator &quot;&quot;X (str, len)</code>。</li>
-</ol>
-<p>注意整数和浮点数可以匹配上形如 <code>unsigned operator &quot;&quot;_w(const char*);</code> 的重载，但是因为该重载没有长度参数，所以字符串匹配不上。</p>
-<p>C++20 新增的匹配规则构造起来也比较困难：</p>
-<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;array&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;iostream&gt;</span></span></span><br><span class="line"><span class="keyword">template</span> &lt;<span class="type">size_t</span> N&gt;</span><br><span class="line"><span class="keyword">struct</span> <span class="title class_">string_literal</span> &#123;</span><br><span class="line">    std::array&lt;<span class="type">char</span>, N&gt; arr_&#123;&#125;;</span><br><span class="line">    <span class="function"><span class="keyword">constexpr</span> <span class="title">string_literal</span><span class="params">(<span class="type">const</span> <span class="type">char</span> (&amp;in)[N])</span> </span>&#123;</span><br><span class="line">        std::<span class="built_in">copy</span>(in, in + N, arr_.<span class="built_in">begin</span>());</span><br><span class="line">    &#125;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="keyword">template</span> &lt;string_literal str&gt;</span><br><span class="line"><span class="keyword">auto</span> <span class="keyword">operator</span><span class="string">&quot;&quot;</span> _len() &#123;</span><br><span class="line">    <span class="built_in">static_assert</span>(str.arr_.<span class="built_in">size</span>() &gt; <span class="number">0</span>);</span><br><span class="line">    <span class="keyword">return</span> str.arr_.<span class="built_in">size</span>() - <span class="number">1</span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="type">int</span> <span class="title">main</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    std::cout &lt;&lt; <span class="string">&quot;34&quot;</span>_len &lt;&lt; <span class="string">&#x27;\n&#x27;</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<p>如果使用普通的数组去匹配字符串字面量，就匹配不上。（C++17 可以采用预先分配 constexpr 字符数组的方式进行一些模板操作，而且 C++17 也没有 linkage 要求，但是这不能被直接用在字面量上，所以操作起来很麻烦）。</p>
-<p>其实这条新规则不重要吧？除非需要覆盖原规则，把第二条规则定义为 constexpr 就行了。（<code>std::string</code> 不能作为 consteval 函数的返回值，但是 <code>std::string_view</code> 可以）但是 C++20 这样就允许（用一种曲折的方式）把字符串字面量直接作为模板参数了。</p>
-<h2 id="字符-ch"><a href="#字符-ch" class="headerlink" title="字符 ch"></a>字符 ch</h2><p>尝试 <code>operator &quot;&quot;X(ch)</code>。</p>
-<h1 id="特例：默认参数"><a href="#特例：默认参数" class="headerlink" title="特例：默认参数"></a>特例：默认参数</h1><p>默认参数不能用于推导参数：</p>
-<p><img src="/assets/f7479b8da246316d6819d3674ab5e98d.png"></p>
-<h1 id="引用类型"><a href="#引用类型" class="headerlink" title="引用类型"></a>引用类型</h1><ol>
-<li>不可以直接引用引用：</li>
-</ol>
-<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="type">int</span> <span class="type">const</span>&amp; r = <span class="number">42</span>;</span><br><span class="line"><span class="type">int</span> <span class="type">const</span>&amp; &amp; ref2ref = i; <span class="comment">// ERROR: reference to reference is invalid</span></span><br><span class="line"><span class="comment">// 注意编译会认出这是对引用的引用，而不是认为它是右值引用</span></span><br></pre></td></tr></table></figure>
-
-<ol>
-<li>通过 decltype、类型别名、模板等方式得到的引用可以参与引用坍塌。</li>
-<li>对引用类型的 cv 限定相当于不限定，并不会报错。（<code>const</code> &#x2F; <code>volatile</code>）</li>
-</ol>
-<h1 id="完美转发"><a href="#完美转发" class="headerlink" title="完美转发"></a>完美转发</h1><h2 id="类型推导"><a href="#类型推导" class="headerlink" title="类型推导"></a>类型推导</h2><p>完美转发之前会对类型进行推导，这相当于禁止了类型之间的隐式转换，这可能会导致一些问题：</p>
-<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="type">void</span> <span class="title">g</span><span class="params">(<span class="type">int</span>*)</span></span>;</span><br><span class="line"><span class="function"><span class="type">void</span> <span class="title">g</span><span class="params">(...)</span></span>; <span class="comment">// 应当是最次的选择</span></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">template</span>&lt;<span class="keyword">typename</span> T&gt; <span class="type">void</span> <span class="title">forwardToG</span><span class="params">(T&amp;&amp; x)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="built_in">g</span>(std::forward&lt;T&gt;(x)); <span class="comment">// forward x to g()</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="type">void</span> <span class="title">foo</span><span class="params">()</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="built_in">g</span>(<span class="number">0</span>);          <span class="comment">// calls g(int*)</span></span><br><span class="line">    forwardToG(<span class="number">0</span>); <span class="comment">// eventually calls g(...)</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<p>上面代码中经过模板捕获后参数 <code>T</code> 的类型认为是 <code>int</code>，而 <code>x</code> 的类型被认为是 <code>int &amp;&amp;</code>。<code>int</code> 类型不能和函数 <code>g</code> 的第一个重载版本匹配。这和直接调用 <code>g(0)</code> 效果不同。<strong>C++11 引入的</strong> <code>nullptr</code> <strong>本身具有类型，用在这种情况更加合适</strong>。</p>
-<p>本小节提到的对 <code>decltype(auto)</code> 的使用可以参考前面的章节。<a href="%E6%A6%82%E5%BF%B5/c++/%E8%AF%BB%20C++%20Templates_%20The%20Complete%20Guide/11%20Generic%20Libraries%20-%20%E5%90%AB%E5%AE%8C%E7%BE%8E%E8%BD%AC%E5%8F%91.md#%E5%AE%8C%E7%BE%8E%E8%BD%AC%E5%8F%91"></a></p>
-<h2 id="禁用完美转发"><a href="#禁用完美转发" class="headerlink" title="禁用完美转发"></a>禁用完美转发</h2><p><code>T&amp;&amp;</code> 形式用来表达完美转发，那么怎么表达单纯的右值引用呢？可以用 <code>std::enable_if</code> 来判断：</p>
-<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">template</span>&lt;<span class="keyword">typename</span> T&gt;</span><br><span class="line"><span class="keyword">typename</span> std::enable_if&lt;!std::is_lvalue_reference&lt;T&gt;::value&gt;::<span class="function">type</span></span><br><span class="line"><span class="function"><span class="title">rvalues</span><span class="params">(T&amp;&amp;)</span></span>;</span><br></pre></td></tr></table></figure>
-
-<h1 id="立即上下文（immediate-context）"><a href="#立即上下文（immediate-context）" class="headerlink" title="立即上下文（immediate context）"></a>立即上下文（immediate context）</h1><p>摘自原文：</p>
-<p><img src="/assets/5ffedbd0cc91ad5dbbc9ae38a044d43f.png"></p>
-<p><strong>在立即上下文中发生的替代错误不是错误（SFINAE）</strong>，不在其中发生的错误被视作真正的错误，无法编译。</p>
-<h2 id="类模板定义不是立即上下文"><a href="#类模板定义不是立即上下文" class="headerlink" title="类模板定义不是立即上下文"></a>类模板定义不是立即上下文</h2><figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">template</span>&lt;<span class="keyword">typename</span> T&gt;</span><br><span class="line"><span class="keyword">class</span> <span class="title class_">Array</span> &#123;</span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">    <span class="keyword">using</span> iterator = T*;</span><br><span class="line">&#125;;</span><br><span class="line"><span class="function"><span class="keyword">template</span>&lt;<span class="keyword">typename</span> T&gt;</span></span><br><span class="line"><span class="function"><span class="type">void</span> <span class="title">f</span><span class="params">(<span class="keyword">typename</span> Array&lt;T&gt;::iterator first, <span class="keyword">typename</span> Array&lt;T&gt;::iterator last)</span> </span>&#123;&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">template</span>&lt;<span class="keyword">typename</span> T&gt;</span></span><br><span class="line"><span class="function"><span class="type">void</span> <span class="title">f</span><span class="params">(T*, T*)</span> </span>&#123;&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="type">int</span> <span class="title">main</span><span class="params">()</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="built_in">f</span>&lt;<span class="type">int</span>&amp;&gt;(<span class="number">0</span>, <span class="number">0</span>); <span class="comment">// ERROR</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<p>第一个 <code>f</code> 把 <code>T</code> 类型作为参数传给了另外一个模板 <code>Array</code>，又由于这个模板可能被特化，因而不能确定其 <code>iterator</code> 的具体类型。<em>这个模板声明中对</em> <code>T</code> _的类型没有任何约束，同时也不能从参数中推导出来 T 的类型，只有通过显式传入模板参数才可能启用_。第二个 <code>f</code> 要求可以 <code>T</code> 类型有对应的指针类型。</p>
-<p>上面的代码中手动选择了 <code>int &amp;</code> 类型，该类型和函数模板的第二个形式无法匹配，却和第一个能够匹配（因为第一个 <code>f</code> 对 <code>T</code> 没有任何要求）。但是在实例化时又遇到了 <code>int &amp;*</code> 这样的非法类型，因而会出现编译错误。<em>这种出错的情况好像无论是用 enable_if 还是用 concept 都无法回避。</em> 用 type traits 和 concept 能够处理的只有对 current instantiation 的判断。</p>
-<p>如果添加一个和第二个 <code>f</code> 相似，但是参数列表改成 <code>(...)</code> 的函数模板，则也能够在给定参数类型时匹配（不给就同样无法推导类型），但是由于 <code>varargs</code> 的优先级太低，所以编译器仍然会选中第一个 <code>f</code> ，然后在实例化时编译错误。</p>
-<h2 id="异常声明不是立即上下文"><a href="#异常声明不是立即上下文" class="headerlink" title="异常声明不是立即上下文"></a>异常声明不是立即上下文</h2><figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">template</span> <span class="type">void</span> <span class="title">f</span><span class="params">(T, <span class="type">int</span>)</span> <span class="title">noexcept</span><span class="params">(nonexistent(T()))</span></span>; <span class="comment">// #1</span></span><br><span class="line"><span class="comment">// 用 throw(typename T::Nonexistent) 也是被选中但是不能编译</span></span><br><span class="line"><span class="comment">// 不过显式异常声明已经在 C++17 被移除了</span></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">template</span> <span class="type">void</span> <span class="title">f</span><span class="params">(T, ...)</span></span>; <span class="comment">// #2 (C-style vararg function)</span></span><br><span class="line"><span class="function"><span class="type">void</span> <span class="title">test</span><span class="params">(<span class="type">int</span> i)</span> </span>&#123;</span><br><span class="line">    <span class="built_in">f</span>(i, i); <span class="comment">// ERROR: chooses #1 , but the expression nonexistent(T()) is ill-formed</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<p>上面代码中 <code>#1</code> 会被选中，因为异常声明不是立即上下文。</p>
-<h1 id="auto-关键字"><a href="#auto-关键字" class="headerlink" title="auto 关键字"></a>auto 关键字</h1><p>C++17 允许在模板中使用 auto 关键字。就算不在模板中使用，<code>auto</code> 本身也多少带点模板推导的意味。</p>
-<h2 id="构造一个能够操作对象成员自增的-handle"><a href="#构造一个能够操作对象成员自增的-handle" class="headerlink" title="构造一个能够操作对象成员自增的 handle"></a>构造一个能够操作对象成员自增的 handle</h2><p><img src="/assets/15885c4217279a0cdf53e2064b5c49fb.png"></p>
-<p><img src="/assets/163bf876df84759769551820439b10ae.png"></p>
-<h2 id="强制-auto-推导中所有参数类型一致"><a href="#强制-auto-推导中所有参数类型一致" class="headerlink" title="强制 auto... 推导中所有参数类型一致"></a>强制 <code>auto...</code> 推导中所有参数类型一致</h2><p><img src="/assets/10c1cbc02178d0f6d25296ab8c56cf6f.png"></p>
-<p>缺点是不能表达空参数。</p>
-<h2 id="decltype-auto"><a href="#decltype-auto" class="headerlink" title="decltype(auto)"></a><code>decltype(auto)</code></h2><figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;type_traits&gt;</span></span></span><br><span class="line"><span class="type">const</span> <span class="type">int</span> four = <span class="number">4</span>;</span><br><span class="line"><span class="function"><span class="type">int</span> <span class="title">main</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    <span class="keyword">auto</span> f = [<span class="number">15</span> Template Argument Deduction](%E6%A6%<span class="number">82</span>%E5%BF%B5/c++/%E8%AF%BB%<span class="number">20</span>C++%<span class="number">20</span>Templates_%<span class="number">20</span>The%<span class="number">20</span>Complete%<span class="number">20</span>Guide/<span class="number">15</span>%<span class="number">20</span>Template%<span class="number">20</span>Argument%<span class="number">20</span>Deduction.md) -&gt; <span class="type">int</span> &#123; <span class="keyword">return</span> <span class="number">5</span>; &#125;;</span><br><span class="line">    std::<span class="type">add_const_t</span>&lt;<span class="keyword">decltype</span>(<span class="built_in">f</span>())&gt; x = <span class="built_in">f</span>();</span><br><span class="line">    <span class="keyword">decltype</span>(<span class="keyword">auto</span>) y = <span class="built_in">f</span>();</span><br><span class="line">    <span class="comment">// decltype(auto) const z = f(); // error</span></span><br><span class="line">    <span class="keyword">decltype</span>(<span class="keyword">auto</span>) a = (four);</span><br><span class="line">    <span class="keyword">decltype</span>(<span class="keyword">auto</span>) b = four;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<ul>
-<li><code>decltype(auto)</code> 只能直接使用，不能添加 <code>const</code> 之类的修饰符（<code>auto</code> 可以）。</li>
-<li>加括号会相当于从 <code>T</code> 到 <code>T &amp;</code> 的变换。比如 <code>a</code> 是 <code>const int &amp;</code> 类型，而 <code>b</code> 是 <code>const int</code> 类型。</li>
-</ul>
-<h2 id="使用一个-auto-声明多个变量"><a href="#使用一个-auto-声明多个变量" class="headerlink" title="使用一个 auto 声明多个变量"></a>使用一个 <code>auto</code> 声明多个变量</h2><p>不推荐，因为会共享同一个参数 <code>T</code>。</p>
-<p><img src="/assets/f369bf78c8c9fc1e1635fb7191277855.png"></p>
-<p>上面第三行推导失败，因为字符类型做算数运算会被整型提升，然后 e 和 f 的类型就不匹配了。</p>
-<h2 id="返回值用-auto-推导，但函数有多个分支"><a href="#返回值用-auto-推导，但函数有多个分支" class="headerlink" title="返回值用 auto 推导，但函数有多个分支"></a>返回值用 <code>auto</code> 推导，但函数有多个分支</h2><p><img src="/assets/70abb13ded526610a99c2975e853ed49.png"></p>
-<p>类型无法推导。</p>
-<h2 id="auto-类型推导构成循环依赖"><a href="#auto-类型推导构成循环依赖" class="headerlink" title="auto 类型推导构成循环依赖"></a><code>auto</code> 类型推导构成循环依赖</h2><p><img src="/assets/feab583f2cedeb032daacf73cd454706.png"></p>
-<h1 id="结构化绑定（Structured-Binding）"><a href="#结构化绑定（Structured-Binding）" class="headerlink" title="结构化绑定（Structured Binding）"></a>结构化绑定（Structured Binding）</h1><p><a href="since%20C++17">Structured binding declaration (since C++17) - cppreference.com</a>%20-%20cppreference.com)</p>
-<p><strong>结构化绑定的要求比聚合类的限制要弱一些</strong>，需要满足三个条件之一：</p>
-<ol>
-<li>C-style 数组。</li>
-<li>提供了模板方法重载，使得类型能够表现得像 tuple 一样的那些类。</li>
-<li>其他满足条件的类：<ul>
-<li>不能有匿名 union 成员。</li>
-<li>如果类型有非 public 成员，需要上下文有访问权限（e.g. 子类方法访 protected 成员，友元函数等）。</li>
-</ul>
-</li>
-</ol>
-<p><img src="/assets/1a0439f3069b768a3386ba415946732a.png"></p>
-<p>可以绑定数组或者对数组的引用：</p>
-<p><img src="/assets/4c173a6ec5f48dcf85b0815731d237bd.png"></p>
-<p>可以绑定 <em>std::tuple-like classes</em> 。比如为类 <code>M</code> 添加绑定，需要增加：</p>
-<ol>
-<li><code>template&lt;&gt; struct std::tuple_size&lt;M&gt; &#123; ? value = ?; &#125;;</code> 即 <code>std::tuple_size</code> 类模板的特化，使用静态常量提供元组的长度。</li>
-<li><code>template&lt;&gt; struct std::tuple_element&lt;0, M&gt; &#123; using type = ?; &#125;;</code> 即为每个元素说明类型。这里只说明了第 0 个元素类型，后面的省略了。使用偏特化则可以同时说明多个类型。（不过一行一个类型复制粘贴真的很简单）</li>
-<li>特化 <code>get</code> 函数模板：</li>
-</ol>
-<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">template</span>&lt;<span class="type">int</span>&gt; <span class="keyword">auto</span> <span class="title">get</span><span class="params">(M)</span></span>;</span><br><span class="line"><span class="keyword">template</span>&lt;&gt; <span class="keyword">auto</span> <span class="built_in">get</span>&lt;<span class="number">0</span>&gt;(M) &#123; <span class="keyword">return</span> <span class="number">42</span>; &#125;</span><br><span class="line"><span class="keyword">template</span>&lt;&gt; <span class="keyword">auto</span> <span class="built_in">get</span>&lt;<span class="number">1</span>&gt;(M) &#123; <span class="keyword">return</span> <span class="number">7.0</span>; &#125;</span><br></pre></td></tr></table></figure>
-
-<p>实际代码看上去还是比较紧凑的：</p>
-<p><img src="/assets/0d5d1096f56a07a271fe3f835d028923.png"></p>
-<h1 id="Class-template-argument-deduction-CTAD"><a href="#Class-template-argument-deduction-CTAD" class="headerlink" title="Class template argument deduction (CTAD)"></a>Class template argument deduction (CTAD)</h1><p><a href="CTAD">Class template argument deduction (CTAD) (since C++17) - cppreference.com</a>%20(since%20C++17)%20-%20cppreference.com)</p>
-<p>这让创建一些类型变得更加简单：</p>
-<p><a target="_blank" rel="noopener" href="https://en.cppreference.com/w/cpp/utility/pair">std::pair</a> <code>p(2, 4.5); // deduces to std::pair&lt;int, double&gt; p(2, 4.5);</code></p>
-<p><a target="_blank" rel="noopener" href="https://en.cppreference.com/w/cpp/utility/tuple">std::tuple</a> <code>t(4, 3, 2.5); // same as auto t = std::make_tuple(4, 3, 2.5);</code></p>
-<p>关于 deduction guide 见：<a href="%E6%A6%82%E5%BF%B5/c++/%E8%AF%BB%20C++%20Templates_%20The%20Complete%20Guide/02%20Class%20Templates.md#Deduction%20Guide"></a></p>
-<h2 id="单括号初始化更偏向复制-移动构造"><a href="#单括号初始化更偏向复制-移动构造" class="headerlink" title="单括号初始化更偏向复制&#x2F;移动构造"></a>单括号初始化更偏向复制&#x2F;移动构造</h2><p>单元素的括号初始化（brace initializer）和多元素的括号初始化推导规则不同。单元素的会优先推导成模板类以确保复制或移动行为的发生：</p>
-<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">std::vector v&#123;<span class="number">1</span>, <span class="number">2</span>, <span class="number">3</span>&#125;; <span class="comment">// vector&lt;int&gt;, not surprising</span></span><br><span class="line">std::vector w2&#123;v, v&#125;;   <span class="comment">// vector&lt;vector&lt;int&gt;&gt;</span></span><br><span class="line">std::vector w1&#123;v&#125;;      <span class="comment">// **vector&lt;int&gt;** !!!</span></span><br></pre></td></tr></table></figure>
-
-<h2 id="原始模板类有隐式推导规则"><a href="#原始模板类有隐式推导规则" class="headerlink" title="原始模板类有隐式推导规则"></a>原始模板类有隐式推导规则</h2><p>每个原始类模板（primary class template）的构造函数都有隐式的 deduction guide，除非参数不在 deduced context 中。（即便显式声明了这样的推导规则，也无法匹配上；也可以认为是每个原始类模板都有规则，只是匹配失败了。）</p>
-<h2 id="Injected-Class-Names"><a href="#Injected-Class-Names" class="headerlink" title="Injected Class Names"></a>Injected Class Names</h2><p><img src="/assets/c3de7e86b0aba0681f1fd0901a5af562.png"></p>
-<p>在 C++14 中带注释行的 <code>X</code> 指的是被注入的类名。但是按照 C++17 的 <code>CTAD</code> 也可以指隐式推导的类名 <code>X</code>，这样其参数就不一定和注入类名一致。<strong>为了不和原来的代码冲突，此时规定一律使用注入的类名。</strong></p>
-<h2 id="Forwarding-References"><a href="#Forwarding-References" class="headerlink" title="Forwarding References"></a>Forwarding References</h2><p>假设有两条规则：</p>
-<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">template</span>&lt;<span class="keyword">typename</span> T&gt; <span class="title">Y</span><span class="params">(T <span class="type">const</span>&amp;)</span> -&gt; Y&lt;T&gt;</span>; <span class="comment">// #1</span></span><br><span class="line"><span class="function"><span class="keyword">template</span>&lt;<span class="keyword">typename</span> T&gt; <span class="title">Y</span><span class="params">(T&amp;&amp;)</span> -&gt; Y&lt;T&gt;</span>;      <span class="comment">// #2</span></span><br></pre></td></tr></table></figure>
-
-<p>在面对非 <code>const</code> 左值引用时，<code>#2</code> 的匹配度更高（<code>#1</code> 需要添加 <code>const</code> 属性），这有时候会有意外的结果。因此在 <code>T</code> 本身为类模板的参数时禁用了其对引用的匹配（P319）：</p>
-<blockquote>
-<p>The C++ standardization committee therefore decided to disable the special deduction rule for T&amp;&amp; when performing deduction for implicit deduction guides if the T was originally a class template parameter (as opposed to a constructor template parameter; for those, the special deduction rule remains).</p>
-</blockquote>
-
+          <!--noindex-->
+            <div class="post-button">
+              <a class="btn" href="/2023/08/12/cpp-templates-the-complete-guide-15-Template-Argument-Deduction/#more" rel="contents">
+                阅读全文 &raquo;
+              </a>
+            </div>
+          <!--/noindex-->
+        
       
     </div>
 
@@ -526,7 +438,7 @@
                   <i class="far fa-calendar-check"></i>
                 </span>
                 <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2024-03-06 09:29:11" itemprop="dateModified" datetime="2024-03-06T09:29:11+08:00">2024-03-06</time>
+                <time title="修改时间：2024-03-10 13:14:31" itemprop="dateModified" datetime="2024-03-10T13:14:31+08:00">2024-03-10</time>
               </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
@@ -534,11 +446,25 @@
               </span>
               <span class="post-meta-item-text">分类于</span>
                 <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/cpp-templates-the-complete-guide-book/" itemprop="url" rel="index"><span itemprop="name">C++ Templates: The Complete Guide</span></a>
+                  <a href="/categories/cpp-templates-the-complete-guide/" itemprop="url" rel="index"><span itemprop="name">cpp-templates-the-complete-guide</span></a>
                 </span>
             </span>
 
-          
+          <br>
+            <span class="post-meta-item" title="本文字数">
+              <span class="post-meta-item-icon">
+                <i class="far fa-file-word"></i>
+              </span>
+                <span class="post-meta-item-text">本文字数：</span>
+              <span>19</span>
+            </span>
+            <span class="post-meta-item" title="阅读时长">
+              <span class="post-meta-item-icon">
+                <i class="far fa-clock"></i>
+              </span>
+                <span class="post-meta-item-text">阅读时长 &asymp;</span>
+              <span>1 分钟</span>
+            </span>
 
         </div>
       </header>
@@ -550,6 +476,102 @@
 
       
           <p>大部分都不需要专门总结，因此这一小节为空。</p>
+
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://hxhue.github.io/2023/08/12/cpp-templates-the-complete-guide-17-Future-Directions/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="Hxhue">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Hxhue's Blog">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/2023/08/12/cpp-templates-the-complete-guide-17-Future-Directions/" class="post-title-link" itemprop="url">CTTCG 17 Future Directions</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2023-08-12 00:00:00" itemprop="dateCreated datePublished" datetime="2023-08-12T00:00:00+08:00">2023-08-12</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2024-03-10 13:14:31" itemprop="dateModified" datetime="2024-03-10T13:14:31+08:00">2024-03-10</time>
+              </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/cpp-templates-the-complete-guide/" itemprop="url" rel="index"><span itemprop="name">cpp-templates-the-complete-guide</span></a>
+                </span>
+            </span>
+
+          <br>
+            <span class="post-meta-item" title="本文字数">
+              <span class="post-meta-item-icon">
+                <i class="far fa-file-word"></i>
+              </span>
+                <span class="post-meta-item-text">本文字数：</span>
+              <span>365</span>
+            </span>
+            <span class="post-meta-item" title="阅读时长">
+              <span class="post-meta-item-icon">
+                <i class="far fa-clock"></i>
+              </span>
+                <span class="post-meta-item-text">阅读时长 &asymp;</span>
+              <span>1 分钟</span>
+            </span>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <p>这一章讲的是对未来的展望。</p>
+<h1 id="fu-dian-shu-he-zi-fu-chuan-zuo-wei-mo-ban-can-shu">浮点数和字符串作为模板参数</h1>
+<p>浮点数在 gcc C++20 是可以作为非类型模板参数（NTTP）的；clang 不支持。目前 <a target="_blank" rel="noopener" href="https://en.cppreference.com/w/cpp/compiler_support">C++ compiler support - cppreference.com</a> 上也看不到相关的支持项目。</p>
+<p>字符串字面量在 C++20 只能通过隐式转换成简单的对象实现模板参数。<u>15/特例：变参列表/参数包</u>  一节有描述。字符数组则是早就可以作为模板参数，尽管作为引用其 linkage 在 C++11 和 C++14 有额外的要求。</p>
+<p>当前 class type 和浮点数没有作为非模板参数得到全面的支持，原因很可能是<strong>相等性比较</strong>在<strong>链接</strong>阶段很难进行（浮点数的标准可能不同，或者因为精度缺失会误判；类可能会重载比较操作符）。</p>
+<h1 id="jian-shao-lei-mo-ban-pack-expansion-de-xian-zhi">减少类模板 pack expansion 的限制</h1>
+<p>目前不能在类模板参数中使用多个 pack expansion，而且使用时也必须把它放在最末尾的位置；不仅模板参数声明是这样，填充类模板参数也是这样。</p>
+<h1 id="jiang-code-void-code-zuo-wei-yi-chong-chang-tai-lei-xing">将 <code>void</code> 作为一种常态类型</h1>
+<p>其他章节中提到了当函数返回值是 void 时，不能将其绑定在变量上，即便这个变量今后不会被使用。Kotlin 就用了 <code>Unit</code> 类型来处理这个问题，C++ 很难改这一点了。</p>
 
       
     </div>
@@ -600,7 +622,7 @@
                   <i class="far fa-calendar-check"></i>
                 </span>
                 <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2024-03-06 09:29:19" itemprop="dateModified" datetime="2024-03-06T09:29:19+08:00">2024-03-06</time>
+                <time title="修改时间：2024-03-10 13:14:31" itemprop="dateModified" datetime="2024-03-10T13:14:31+08:00">2024-03-10</time>
               </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
@@ -608,11 +630,25 @@
               </span>
               <span class="post-meta-item-text">分类于</span>
                 <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/cpp-templates-the-complete-guide-book/" itemprop="url" rel="index"><span itemprop="name">C++ Templates: The Complete Guide</span></a>
+                  <a href="/categories/cpp-templates-the-complete-guide/" itemprop="url" rel="index"><span itemprop="name">cpp-templates-the-complete-guide</span></a>
                 </span>
             </span>
 
-          
+          <br>
+            <span class="post-meta-item" title="本文字数">
+              <span class="post-meta-item-icon">
+                <i class="far fa-file-word"></i>
+              </span>
+                <span class="post-meta-item-text">本文字数：</span>
+              <span>76</span>
+            </span>
+            <span class="post-meta-item" title="阅读时长">
+              <span class="post-meta-item-icon">
+                <i class="far fa-clock"></i>
+              </span>
+                <span class="post-meta-item-text">阅读时长 &asymp;</span>
+              <span>1 分钟</span>
+            </span>
 
         </div>
       </header>
@@ -624,219 +660,6 @@
 
       
           <p>C++ 的多态有两类：bounded <strong>dynamic</strong> polymorphism 和 unbounded <strong>static</strong> polymorphism。前者 bounded 指的是虚函数有基类的接口，其行为有一定约束；后者 unbounded 指的是模板采用类型替换的方式生成代码。为了给静态多态提供约束，可以使用 enable_if 或 concept。</p>
-
-      
-    </div>
-
-    
-    
-    
-      <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  
-  
-  
-
-      
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="https://hxhue.github.io/2023/08/12/cpp-templates-the-complete-guide-13-Names-in-Templates/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/avatar.gif">
-      <meta itemprop="name" content="Hxhue">
-      <meta itemprop="description" content="">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Hxhue's Blog">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          
-            <a href="/2023/08/12/cpp-templates-the-complete-guide-13-Names-in-Templates/" class="post-title-link" itemprop="url">CTTCG 13 Names in Templates</a>
-        </h2>
-
-        <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-calendar"></i>
-              </span>
-              <span class="post-meta-item-text">发表于</span>
-
-              <time title="创建时间：2023-08-12 00:00:00" itemprop="dateCreated datePublished" datetime="2023-08-12T00:00:00+08:00">2023-08-12</time>
-            </span>
-              <span class="post-meta-item">
-                <span class="post-meta-item-icon">
-                  <i class="far fa-calendar-check"></i>
-                </span>
-                <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2024-03-06 09:29:07" itemprop="dateModified" datetime="2024-03-06T09:29:07+08:00">2024-03-06</time>
-              </span>
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-folder"></i>
-              </span>
-              <span class="post-meta-item-text">分类于</span>
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/cpp-templates-the-complete-guide-book/" itemprop="url" rel="index"><span itemprop="name">C++ Templates: The Complete Guide</span></a>
-                </span>
-            </span>
-
-          
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          <h1 id="名字查找：普通查找和-ADL"><a href="#名字查找：普通查找和-ADL" class="headerlink" title="名字查找：普通查找和 ADL"></a>名字查找：普通查找和 ADL</h1><p>普通查找和 ADL 是同时进行的，不存在优先级差异。这些被找到的函数被放在一起参与重载决议。如果没有因为一般性的重载决议规则决出优劣，则会引发 ambiguous 指代错误。</p>
-<h2 id="ordinary-lookup-内部名称遮盖外部名称的规则"><a href="#ordinary-lookup-内部名称遮盖外部名称的规则" class="headerlink" title="ordinary lookup: 内部名称遮盖外部名称的规则"></a><strong>ordinary lookup</strong>: 内部名称遮盖外部名称的规则</h2><p><img src="/assets/a3588f0047d856bc7a0c4194c5b57fb5.png"></p>
-<h2 id="ADL-考虑参数类型所在名字空间的函数和操作符重载"><a href="#ADL-考虑参数类型所在名字空间的函数和操作符重载" class="headerlink" title="ADL: 考虑参数类型所在名字空间的函数和操作符重载"></a><strong>ADL:</strong> 考虑参数类型所在名字空间的函数和操作符重载</h2><p>相关类型有很多规则，比如指针会引入其指向类型的名字空间、类会引入外围类（如果是一个内部类）和基类的名字空间、函数会引入其参数和返回值的名字空间等（P219）。特例是 hidden friends，可以直接定义在类中。</p>
-<p>ADL 失效的情况：① 调用前给函数名加上括号，这样就必须先找到函数。② 函数模板在 C++20 之前除非在外部声明函数模板（参数列表可以不同），否则也无法被找到。因为在还没有看参数的情况下，函数模板没有被引入；还没有看参数列表的情况下不知道这个是函数模板；不知道这个是函数模板的情况下会把参数列表的头尾理解成大于和小于操作符。这是一种鸡生蛋蛋生鸡的问题。③ <b>ADL 会忽略 using 声明，只考虑真正存在于名字空间的函数。</b></p>
-<p>ADL 只会通过参数（也就是显式调用）引入额外的函数和操作符，其他情况下这些名称是不会被自动引入的，比如取一个和参数相关的函数指针。</p>
-<p><img src="/assets/c643642b58573546cdc3c12a6cfadacf.png"></p>
-<h1 id="名称注入"><a href="#名称注入" class="headerlink" title="名称注入"></a>名称注入</h1><h2 id="术语"><a href="#术语" class="headerlink" title="术语"></a>术语</h2><p>在名字查找中，enclosing scope 指在同一个层级的名字空间。</p>
-<p>非限定名（non-qualified）指的是没有 <code>::</code> <code>-&gt;</code> 等限制的名称。</p>
-<h2 id="friend-name-injection（友元函数）"><a href="#friend-name-injection（友元函数）" class="headerlink" title="friend name injection（友元函数）"></a>friend name injection（友元函数）</h2><p>hidden friends 就是友元名注入中完全把函数定义写在类中的特例。但事实上 friend name injection 只对 ADL 有效，并不会真的注入到 enclosing scope 中。</p>
-<h2 id="class-name-injection"><a href="#class-name-injection" class="headerlink" title="class name injection"></a>class name injection</h2><p>定义一个类时，类名会被向内注入到类的定义体中，可以作为非限定名被访问（限定名 <code>T::T</code> 则用来表示构造函数名）。</p>
-<p>BTW，sizeof 优先找到变量名而不是类名：</p>
-<p><img src="/assets/3fd464551c61673e991dc1af8755b36e.png"></p>
-<p>类模板的情况会复杂一些。向内注入的非限定名既可以指模板，又可以指模板类。如果想要显式表示模板，可以使用限定名。</p>
-<p><img src="/assets/230f2f886ccbd81faf39f147b26c6d5a.png"></p>
-<h2 id="current-instantiation-和-unknown-specialization"><a href="#current-instantiation-和-unknown-specialization" class="headerlink" title="current instantiation 和 unknown specialization"></a>current instantiation 和 unknown specialization</h2><p>💡 current instantiation 对模板参数有依赖（比如隐式的 <code>T</code>）。unknown specialization 对模板参数不一定有依赖，但是因为不知道是否有特化存在所以本次无法生成（比如 <code>C&lt;int&gt;</code>）。</p>
-<p>类模板中省略参数，或者使用与本类模板完全一致的参数，被称为 current instantiation。而使用其他参数被称为 unknown specialization。因为类模板可以特化，在链接完成之前，不知道其他参数的类有什么内容，无法做出假定。比如：</p>
-<p><img src="/assets/9f5c0897d7b5a66758451a592db99407.png"></p>
-<p>类模板 C 可以被特化，因而其中的 I 和 J 可以被给出完全不同的定义，<code>C&lt;T&gt;::J</code> 中的 <code>I* i;</code> 语句也不知道指的是什么样的 <code>I</code>。</p>
-<h1 id="依赖名"><a href="#依赖名" class="headerlink" title="依赖名"></a>依赖名</h1><p>依赖于模板参数的名就叫依赖名。</p>
-<p>💡 非限定名可以很明显的看出来是否依赖模板参数，要么被解释成依赖名在第二阶段处理，要么作为非依赖名在第一阶段处理。限定名如果可能存在依赖，则作为依赖名在第二阶段处理；否则作为非依赖名在第一阶段处理。P240</p>
-<p>如果类模板的基类中有依赖于模板参数的，则显式 this 指针（限定名）也构成一种依赖。</p>
-<h2 id="使用-typename-和-template-关键字标注依赖名"><a href="#使用-typename-和-template-关键字标注依赖名" class="headerlink" title="使用 typename 和 template 关键字标注依赖名"></a>使用 typename 和 template 关键字标注依赖名</h2><p>由于不知道模板参数，类模板编译时无法对类模板的成员做出判断，现在的解决方法是把类型依赖名理解成值，除非用 typename 前缀显式表示类型，或者用 template 前缀显式表示模板。下图中灰色表示是否使用 typename 都是可以的，黄色表示必须使用，删除线表示不能使用：</p>
-<p><img src="/assets/c4d656ed125f00bc58e508eb00e1c09e.png"></p>
-<p>一个例外是 using 声明。依赖类模板参数的 using 声明中可以使用 typename 关键字，但是不能使用 template 关键字。一种迂回的方式是创建一个 alias template 完成相同的事情。</p>
-<p>💡 <code>namespace a = b;</code> 对名字空间重命名，<code>using c = d;</code> 对类型重命名。而对模板重命名需要使用 alias template，这比前两个更复杂一点。</p>
-<h2 id="依赖的类型、两阶段查找"><a href="#依赖的类型、两阶段查找" class="headerlink" title="依赖的类型、两阶段查找"></a>依赖的类型、两阶段查找</h2><p><img src="/assets/58aaf0e18f055c33740d5a4d6575e5fb.png"></p>
-<p>type dependent 指的是类型和模板参数有关；value dependent 指的是值和模板参数有关；instantiation dependent 指的是实例化与模板参数有关。</p>
-<p>类型依赖是最严格的，遇到类型依赖时，该表达式只能在 two-phase lookup 的第二阶段进行翻译。对于其他依赖在第一阶段能被检查出来的错误，编译器可以报也可以等到实例化再报，没有强制要求。非依赖非限定名必须在第一阶段查找到。在类模板的成员函数中写上 this 指针就得到了依赖名，从而能够在依赖的基类中启用查找（必须先有一个依赖基类否则不会进去找）。</p>
-<p><strong>实例化依赖例 1</strong></p>
-<p><img src="/assets/11f55f9888a553090dfcd530ca104fa2.png"></p>
-<p>上面出现了实例化依赖，因为 sizeof() 操作符要求参数为完整类型。如果实例化这里时 T 不是一个完整的类型，就无法通过编译。</p>
-<p><strong>实例化依赖例 2</strong></p>
-<p><img src="/assets/1f107d762dd2099865d39348988530e8.png"></p>
-<p>尽管值都能够被计算出来，但我们知道实例化上面代码时数组的长度会是负数，这不能编译。</p>
-<h1 id="继承"><a href="#继承" class="headerlink" title="继承"></a>继承</h1><p>从模板类从非依赖的基类继承的类型名会覆盖模板参数名。所以非模板参数使用 T 这样的类型声明比较危险。</p>
-
-      
-    </div>
-
-    
-    
-    
-      <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  
-  
-  
-
-      
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="https://hxhue.github.io/2023/08/12/cpp-templates-the-complete-guide-19-1-%E7%94%A8-SFINAE-%E5%AE%9E%E7%8E%B0-Traits/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/avatar.gif">
-      <meta itemprop="name" content="Hxhue">
-      <meta itemprop="description" content="">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Hxhue's Blog">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          
-            <a href="/2023/08/12/cpp-templates-the-complete-guide-19-1-%E7%94%A8-SFINAE-%E5%AE%9E%E7%8E%B0-Traits/" class="post-title-link" itemprop="url">CTTCG 19.1 用 SFINAE 实现 Traits</a>
-        </h2>
-
-        <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-calendar"></i>
-              </span>
-              <span class="post-meta-item-text">发表于</span>
-
-              <time title="创建时间：2023-08-12 00:00:00" itemprop="dateCreated datePublished" datetime="2023-08-12T00:00:00+08:00">2023-08-12</time>
-            </span>
-              <span class="post-meta-item">
-                <span class="post-meta-item-icon">
-                  <i class="far fa-calendar-check"></i>
-                </span>
-                <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2024-03-07 16:26:55" itemprop="dateModified" datetime="2024-03-07T16:26:55+08:00">2024-03-07</time>
-              </span>
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-folder"></i>
-              </span>
-              <span class="post-meta-item-text">分类于</span>
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/cpp-templates-the-complete-guide-book/" itemprop="url" rel="index"><span itemprop="name">C++ Templates: The Complete Guide</span></a>
-                </span>
-            </span>
-
-          
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          <p>原理是用 SFINAE 机制安全地匹配几个函数或函数模板，然后再通过函数匹配信息将结果（true or false）嵌入 Trait 类中。Trait 约束条件被包含在函数模板的声明中。</p>
-<p>实现 traits 最核心的要点是<strong>模拟</strong>被替换类型的行为，然后让行为不满足的那些替换被 SFINAE 筛掉。</p>
-<h1 id="函数返回基本类型-→-静态常量定义"><a href="#函数返回基本类型-→-静态常量定义" class="headerlink" title="函数返回基本类型 → 静态常量定义"></a>函数返回基本类型 → 静态常量定义</h1><p>类模板实例化时会调用 <code>test</code> 函数，如果条件命中则优先匹配 <code>char test(void *)</code>，否则匹配另外一个。通过判断匹配到的函数的返回值类型可以确定条件是否被命中。这里的条件是类型 <code>T</code> 可以默认构造。</p>
-<p><img src="/assets/0380dc83afe69c80f565536ffb2d9cae.png"></p>
-<p>⚠ 如果把第一个 <code>test</code> 的参数 <code>U</code> 去掉，默认参数改成 <code>typename = decltype(T())</code>，就无法编译。因为 T 会在实例化时被替代过去，导致函数模板本身定义有错误。这个过程没有发生在函数模板匹配阶段，不会受到 SFINAE 的保护。</p>
-<p>也有通过判断返回值的类型大小确认是否命中的实现。但是在有些低性能设备上所有的整型可能具有相同的大小，因此有必要使用 <code>char</code> 和 <code>char (&amp;)[2]</code> 等手段来保证返回值的大小不同。</p>
-<h1 id="函数返回标准库的常量-Trait-→-alias-模板"><a href="#函数返回标准库的常量-Trait-→-alias-模板" class="headerlink" title="函数返回标准库的常量 Trait → alias 模板"></a>函数返回标准库的常量 Trait → alias 模板</h1><p><img src="/assets/cc34342d5b468afa39dce99660e34e2a.png"></p>
-<p>这里的 <code>IsDefaultConstructibleHelper</code> 包装了 <code>Type</code>。所以还需要继承一次取得和 C++ 标准库相同形式的 Trait 类。</p>
-<p>如果上面的工具方法裸露在外面，就能用 alias template 直接得到 Trait 类：</p>
-<p><img src="/assets/e58d6c4d1ba9a2e73d64507f68e5342e.png"></p>
-<p>打印的结果是 <code>0</code> 和 <code>1</code>（各占一行）。</p>
-<h1 id="（最简单）偏特化-继承常量-Trait"><a href="#（最简单）偏特化-继承常量-Trait" class="headerlink" title="（最简单）偏特化 + 继承常量 Trait"></a>（最简单）偏特化 + 继承常量 Trait</h1><p>这种用法也是在标准库中大量出现的。</p>
-<p><img src="/assets/521cd7e688293960e5489609e7827e67.png"></p>
-<p>上面通过偏特化和继承直接达到了目的。这种写法更加简单，因为判断只有二元性，因此只需要提供原始模板 1 次，然后偏特化 1 次。C++17 已经有了 <code>std::void_t</code> 模板，能够达到和上面的 <code>VoidT</code> 相似的效果。</p>
-<p>在这个原始模板中，模板参数默认值可以直接写成 <code>typename = void</code>，不用写 <code>typename = VoidT&lt;&gt;</code>。</p>
-<blockquote>
-<p>__cpp_lib_void_t 是一个编译器宏。C++标准倡导编译器使用类似的宏以标志是否已经实现某一个语言特性。</p>
-</blockquote>
-<h1 id="（最通用）用-generic-lambda-构造-Traits-工厂"><a href="#（最通用）用-generic-lambda-构造-Traits-工厂" class="headerlink" title="（最通用）用 generic lambda 构造 Traits 工厂"></a>（最通用）用 generic lambda 构造 Traits 工厂</h1><figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">template</span>&lt;<span class="keyword">typename</span> F, <span class="keyword">typename</span>... Args,</span><br><span class="line"><span class="keyword">typename</span> = <span class="keyword">decltype</span>(std::<span class="built_in">declval</span>&lt;F&gt;()(std::<span class="built_in">declval</span>&lt;Args&amp;&amp;&gt;()...))&gt;</span><br><span class="line">std::true_type <span class="built_in">isValidImpl</span>(<span class="type">void</span>*);</span><br><span class="line"></span><br><span class="line"><span class="comment">// fallback if helper SFINAE’d out:</span></span><br><span class="line"><span class="function"><span class="keyword">template</span>&lt;<span class="keyword">typename</span> F, <span class="keyword">typename</span>... Args&gt;</span></span><br><span class="line"><span class="function">std::false_type <span class="title">isValidImpl</span><span class="params">(...)</span></span>;</span><br><span class="line"></span><br><span class="line"><span class="comment">// define a lambda that takes a lambda f and returns</span></span><br><span class="line"><span class="comment">// whether calling f with args is valid</span></span><br><span class="line"><span class="keyword">inline</span> <span class="keyword">constexpr</span></span><br><span class="line"><span class="keyword">auto</span> isValid = [<span class="keyword">auto</span> f](<span class="keyword">auto</span>%<span class="number">20f</span>) &#123;</span><br><span class="line">    <span class="keyword">return</span> [<span class="keyword">auto</span>&amp;&amp;... args](<span class="keyword">auto</span>&amp;&amp;...%<span class="number">20</span>args) &#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="keyword">decltype</span>(</span><br><span class="line">            <span class="built_in">isValidImpl</span>&lt;<span class="keyword">decltype</span>(f), <span class="keyword">decltype</span>(args)&amp;&amp;...&gt;(<span class="literal">nullptr</span>)</span><br><span class="line">        )&#123;&#125;;</span><br><span class="line">    &#125;;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="comment">// helper template to represent a type as a value</span></span><br><span class="line"><span class="keyword">template</span>&lt;<span class="keyword">typename</span> T&gt;</span><br><span class="line"><span class="keyword">struct</span> <span class="title class_">TypeT</span> &#123;</span><br><span class="line">    <span class="keyword">using</span> Type = T;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="comment">// helper to wrap a type as a value</span></span><br><span class="line"><span class="keyword">template</span>&lt;<span class="keyword">typename</span> T&gt;</span><br><span class="line"><span class="keyword">constexpr</span> <span class="keyword">auto</span> type = TypeT&lt;T&gt;&#123;&#125;;</span><br><span class="line"></span><br><span class="line"><span class="comment">// helper to unwrap a wrapped type in unevaluated contexts</span></span><br><span class="line"><span class="function"><span class="keyword">template</span>&lt;<span class="keyword">typename</span> T&gt;</span></span><br><span class="line"><span class="function">T <span class="title">valueT</span><span class="params">(TypeT&lt;T&gt;)</span></span>; <span class="comment">// no definition needed</span></span><br></pre></td></tr></table></figure>
-
-<ul>
-<li>后面三个和 Type 相关的定义都是为了把类型完整地保留起来（直接传值会遇到 decay 的情况）。</li>
-<li>第二个 <code>isValidImpl</code> 的实现是一个保险，这个和前面非工厂的思路是一样的；第一个 <code>isValidImpl</code> 的实现要求函数 <code>f</code> 的声明和参数 <code>Args...</code> 是相合的。传入 nullptr 是想要让 <code>(void *)</code> 版本被优先匹配，而 <code>(...)</code> 版本被低优先级考虑；不传入任何值时是 <code>void</code> 和 <code>...</code> 进行比较，这时没有优劣之分。</li>
-<li>在 <code>isValid</code> 中传入声明中带有约束的函数对象，可以构造检查特定约束的函数对象。</li>
-</ul>
-<p><img src="/assets/1340fad52eea3000017b4593da65bc58.png"></p>
-<p><code>x</code> 的类型是 <code>TypeT</code>，所以使用前需要使用 <code>valueT</code> 来提取其包含的真实类型。上图代码传入的 lambda 检查了特定类型是否能够默认构造。现在可以这样使用：</p>
-<p><img src="/assets/f1d4d799e9e50d7c920e611057bbc1b9.png"></p>
-<p>不过还需要用户显式调用使用 <code>type</code> 模板。接下来可以构造 alias，使得用法更贴近标准库：</p>
-<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">template</span>&lt;<span class="keyword">typename</span> T&gt;</span><br><span class="line"><span class="keyword">using</span> IsDefaultConstructibleT = <span class="keyword">decltype</span>(<span class="built_in">isDefaultConstructible</span>(std::<span class="built_in">declval</span>&lt;T&gt;()));</span><br></pre></td></tr></table></figure>
-
-<p><em>构造 alias 还解决了参数数量检查的问题。</em><code>isValid</code> 装饰器返回的函数对象是接受多个参数的。我们提供的约束本身也可能会需要多个参数，所以从这一点上看没有问题。但是如果参数数量不对，编译并不会报错，而是会因为 SFINAE 而得到 <code>std::false_type</code>。如果还需要对参数数量做严格检查，则只应该直接调用 <code>IsDefaultConstructibleT</code>，而不是上面的 <code>isDefaultConstrutible</code>。</p>
 
       
     </div>
@@ -887,7 +710,7 @@
                   <i class="far fa-calendar-check"></i>
                 </span>
                 <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2024-03-06 09:32:12" itemprop="dateModified" datetime="2024-03-06T09:32:12+08:00">2024-03-06</time>
+                <time title="修改时间：2024-03-10 13:51:43" itemprop="dateModified" datetime="2024-03-10T13:51:43+08:00">2024-03-10</time>
               </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
@@ -895,11 +718,25 @@
               </span>
               <span class="post-meta-item-text">分类于</span>
                 <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/cpp-templates-the-complete-guide-book/" itemprop="url" rel="index"><span itemprop="name">C++ Templates: The Complete Guide</span></a>
+                  <a href="/categories/cpp-templates-the-complete-guide/" itemprop="url" rel="index"><span itemprop="name">cpp-templates-the-complete-guide</span></a>
                 </span>
             </span>
 
-          
+          <br>
+            <span class="post-meta-item" title="本文字数">
+              <span class="post-meta-item-icon">
+                <i class="far fa-file-word"></i>
+              </span>
+                <span class="post-meta-item-text">本文字数：</span>
+              <span>2k</span>
+            </span>
+            <span class="post-meta-item" title="阅读时长">
+              <span class="post-meta-item-icon">
+                <i class="far fa-clock"></i>
+              </span>
+                <span class="post-meta-item-text">阅读时长 &asymp;</span>
+              <span>7 分钟</span>
+            </span>
 
         </div>
       </header>
@@ -910,75 +747,28 @@
     <div class="post-body" itemprop="articleBody">
 
       
-          <h1 id="Trait-分类"><a href="#Trait-分类" class="headerlink" title="Trait 分类"></a>Trait 分类</h1><p>不一定大家都这么叫，但是为了方便，我规定下面的术语：</p>
+          <h1 id="trait-fen-lei">Trait 分类</h1>
+<p>不一定大家都这么叫，但是为了方便，我规定下面的术语：</p>
 <ul>
 <li>Type Trait：包含一个 type alias。</li>
 <li>Value Trait：包含一个 value 静态成员，可以是任何基本类型，含义和具体 Trait 相关。</li>
 <li>Predicate Trait：包含一个 value 静态成员，类型为 bool，含义为条件是否被满足。</li>
 </ul>
 <p>书中有分为 property trait 和 policy trait 两大类。前者包含我所称的 type trait 和 value trait，含义是类型本身的固有信息；后者表示根据一个特定类型选择某种映射，其含义和要实现的行为有关，文中的例子是对 size 小的参数选择原类型，对 size 大的参数选择引用类型。</p>
-<h1 id="Traits-v-s-Policies"><a href="#Traits-v-s-Policies" class="headerlink" title="Traits v.s. Policies"></a>Traits v.s. Policies</h1><p>例子是累加算法的模板实现。</p>
+<h1 id="traits-v-s-policies">Traits v.s. Policies</h1>
+<p>例子是累加算法的模板实现。</p>
 <p>Traits 一般表示和类型有关的静态的信息；Policies 表示行为。累加例子中 Traits 包含加法结果的类型，而 Policies 则包含了加法的执行过程。</p>
-<h1 id="std-iterator-traits"><a href="#std-iterator-traits" class="headerlink" title="std::iterator_traits"></a><code>std::iterator_traits</code></h1><p>标准库中的一个工具类模板。</p>
-<p><img src="/assets/f0210fb615529b7bb759b281f1a61167.png"></p>
-<p>可以看出它能提供迭代器的各种信息，方便我们用函数模板实现算法。</p>
-<h1 id="Transformation-Traits"><a href="#Transformation-Traits" class="headerlink" title="Transformation Traits"></a>Transformation Traits</h1><ol>
-<li>可以加减引用（加引用的时候需要区分左右引用，去引用的时候不区分）、volatile、const、decay 等等。</li>
-<li>C++20 新增了 <code>std::remove_cvref_t</code>，是对原来 <code>std::remove_reference_t</code> 和 <code>std::remove_cv_t</code> 的组合。</li>
-<li><code>std::decay_t</code> 相当于：<strong>函数退化</strong> + <strong>数组退化</strong> + <code>std::remove_cvref_t</code></li>
-</ol>
-<h1 id="技巧：通过-public-继承减少代码量"><a href="#技巧：通过-public-继承减少代码量" class="headerlink" title="技巧：通过 public 继承减少代码量"></a>技巧：通过 <code>public</code> 继承减少代码量</h1><p>由于 <code>type</code> 或者 <code>value</code> 这些在 type traits 中需要的属性是作为静态成员提供的，因此可以提前写好 trait 可能的几种匹配结果，然后用 <code>public</code> 继承简化代码，这样基类的 trait 属性就会在子类（提供出来的接口）中可见。</p>
-<h1 id="Predicate-Traits"><a href="#Predicate-Traits" class="headerlink" title="Predicate Traits"></a>Predicate Traits</h1><p>可以获取 <code>true</code> 或 <code>false</code> 的值。就算不获取值，其<em>包装类型</em> 的 <code>std::true_type</code> 和 <code>std::false_type</code> 也可以进行 tag dispatching。_需要注意 C++17 才引入非类型模板参数_，所以更早的版本用的都是类型作为 tag。</p>
-<blockquote>
-<p>包装类型：通过 type traits 获取的信息都是在模板类中的，需要访问 type 或者 value 来获得，或者通过 alias template 获得。</p>
-</blockquote>
-<h1 id="用-SFINAE-实现-Traits"><a href="#用-SFINAE-实现-Traits" class="headerlink" title="用 SFINAE 实现 Traits"></a>用 SFINAE 实现 Traits</h1><p><a href="%E6%A6%82%E5%BF%B5/c++/%E8%AF%BB%20C++%20Templates_%20The%20Complete%20Guide/19.1%20%E7%94%A8%20SFINAE%20%E5%AE%9E%E7%8E%B0%20Traits.md">19.1 用 SFINAE 实现 Traits</a></p>
-<h1 id="SFINAE-Friendly-Traits"><a href="#SFINAE-Friendly-Traits" class="headerlink" title="SFINAE-Friendly Traits"></a>SFINAE-Friendly Traits</h1><p>讨论 Trait 实现的安全性（safety）：Trait 本身不应该引发编译错误，所以需要确保被 SFINAE 保护。比如我们要实现一个 <code>PlusResult</code> 的 Type Trait 类，如果直接使用 <code>using</code> 声明 <code>Type</code> 为某两个值用 <code>+</code> 操作符相加的结果的类型，则可能在类模板被实例化时因为找不到匹配的 <code>+</code> 操作符而编译失败。</p>
-<p>安全的 Trait 类模板通常先用一个 Predicate Trait 检查，再<strong>结合类模板偏特化，把条件不通过的部分给筛掉</strong>。_这样的实现方式中一种形式的表达式经常需要出现两次_（一次是先检查存在性，第二次是真正使用）。</p>
-<p><strong>除了类模板偏特化之外，函数模板重载也能提供安全性。</strong> 但是要小心避免同时匹配上多个函数且无法区分优先级，这样会让函数重载选择失败（ambiguous）。</p>
-<h1 id="std-enable-if-t-和-std-void-t"><a href="#std-enable-if-t-和-std-void-t" class="headerlink" title="std::enable_if_t 和 std::void_t"></a><code>std::enable_if_t</code> 和 <code>std::void_t</code></h1><h2 id="用-std-void-t-检查表达式合法性或类型存在性"><a href="#用-std-void-t-检查表达式合法性或类型存在性" class="headerlink" title="用 std::void_t 检查表达式合法性或类型存在性"></a>用 <code>std::void_t</code> 检查表达式合法性或类型存在性</h2><p><code>std::void_t</code> 只有 <code>_t</code> 后缀版本，是 gnu++11 或 C++17 才加入的。它的定义相当简单，是一个对于任何 parameter pack，都生成 void 类型的 alias template。但是它能够用于对表达式或类型合法性进行筛选：</p>
-<ul>
-<li>实现表达式筛选时，表达式可以用 <code>decltype</code> 转为类型。</li>
-<li>对于类型存在性检查，可以用 <code>std::void_t&lt;typename T::SomeTypeAlias&gt;</code>。</li>
-<li>对于成员存在性检查，可以用 <code>std::void_t&lt;decltype(std::declval&lt;T&gt;().AnyMember)&gt;</code>。</li>
-<li><code>std::void_t</code> 接受多个参数，所以可以一次写多个约束条件！</li>
-</ul>
-<p>多个约束条件的例子：</p>
-<p><img src="/assets/7be6808e60651589676e79fcd48b196e.png"></p>
-<p>常常被用来实现 Predicate Trait。</p>
-<h2 id="检查类型完整性"><a href="#检查类型完整性" class="headerlink" title="检查类型完整性"></a>检查类型完整性</h2><p>用 <code>decltype</code> 来推导类型时，并不要求得到的类型是一个完整类型。如果还需要加上“类型完整”这个约束，<strong>可以在</strong> <code>decltype</code> <strong>里面加上</strong> <code>sizeof</code> <strong>运算符</strong>。</p>
-<p><strong>书中给出的解决办法是</strong> <code>decltype(Expr, 0)</code>，即：使用逗号表达式要求前面的非引用非指针非 void 表达式必须具有完整类型。实测 <code>decltype</code> 对 <code>std::declval</code> 有特殊处理，如果是 <code>declval</code> 的返回值不完整，且用到了形如 <code>decltype(Expr, 0)</code> 的表达式，<code>Expr</code> 会被忽略；如果是 <code>declval</code> 返回结果上再做成员访问，则不完整性可以被检查出来。而使用 <code>sizeof</code> 约束则更加严格。</p>
-<h2 id="用-std-enable-if-进行条件筛选"><a href="#用-std-enable-if-进行条件筛选" class="headerlink" title="用 std::enable_if 进行条件筛选"></a>用 <code>std::enable_if</code> 进行条件筛选</h2><p><code>std::enable_if_t</code> 是基于 <code>std::enable_if</code> 的 alias template，能够对条件（predicates）进行筛选。 常常借助 Predicate Trait 工作。</p>
-<p>为什么要实现 Predicate Trait？<code>std::void_t</code> 也能够直接被嵌入在模板参数内，这样就没有必要再专门写一个 Predicate Trait。但是通过实现一些经常被使用的 Predicate Trait，通过 <code>std::enable_if</code> 的组合，可以使得代码更易读，写起来也更容易。</p>
-<h1 id="类名注入也会影响类型存在性查询"><a href="#类名注入也会影响类型存在性查询" class="headerlink" title="类名注入也会影响类型存在性查询"></a>类名注入也会影响类型存在性查询</h1><p>假设我们想要实现一个判断类中是否有一个名为 <code>size_type</code> 的 type alias。如果有个类的基类是 size_type，由于类名注入，改 Trait 也应该会将其判断为 <code>std::true_type</code>。</p>
-<h1 id="std-conditional-模板的安全使用"><a href="#std-conditional-模板的安全使用" class="headerlink" title="std::conditional 模板的安全使用"></a><code>std::conditional</code> 模板的安全使用</h1><p>条件模板通过一个 bool 条件来选择类型。但是由于本质上是模板，需要确定下来所有的参数，所以 <code>std::conditional</code> 必须要先把两个分支都计算一次！这会导致那些仅在条件成立的情况下良构（well-formed）的分支在条件不成立时 ill-formed。比如：</p>
-<p><img src="/assets/4d73345fac38a474c970f57afc5090c9.png"></p>
-<p><code>std::make_unsigned</code> 模板对参数 T 有要求，其中之一是 T 不能是 bool 类型，否则是 ill-formed。但是在上面的代码中，这个类型是始终需要被计算的。</p>
-<p><img src="/assets/8921c2919039d1bb0891a383f4856572.png"></p>
-<p>上面的代码将 <code>std::make_unsigend</code> 的使用包装在了 <code>MakeUnsignedT</code> 模板中。这样只有模板类型本身被评估。其成员只有真正访问时才评估，确保了程序是 well-formed 的。</p>
-<blockquote>
-<p>问：为什么要写一个 MakeUnsignedT，直接用 std::make_unsigned 但是延缓对 type 的访问不行吗？</p>
-<p>不行，因为 C++ 标准明确规定了连这个 Type Trait （不仅仅是 alias template）在其他情况下使用都是 undefined (C++20 以前) &#x2F; ill-formed (C++20) 的。</p>
-</blockquote>
-<h1 id="判断-T-是否为函数"><a href="#判断-T-是否为函数" class="headerlink" title="判断 T 是否为函数"></a>判断 T 是否为函数</h1><p>gcc 标准库的实现方式是：</p>
-<ol>
-<li>尝试给 T 加 const，加成功了（被 <code>is_const</code> 认定成功）就不是函数，否则就是函数。</li>
-<li>特例是左值引用和右值引用一定不是函数。</li>
-</ol>
-<p>在这个实现中，指向函数的指针不是函数。作为比较，书中指出的偏特化方法实现起来很累，因为有一大堆修饰 this 的 Abominable 函数。</p>
-<h1 id="判断-T-是否为-Class-Type"><a href="#判断-T-是否为-Class-Type" class="headerlink" title="判断 T 是否为 Class Type"></a>判断 T 是否为 Class Type</h1><p>union 也是 class type，但不是 class。因而 union 也能有指向成员的指针。比如：</p>
-<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;iostream&gt;</span></span></span><br><span class="line"><span class="keyword">union</span> <span class="title class_">X</span> &#123;</span><br><span class="line">    <span class="type">int</span> a;</span><br><span class="line">    <span class="type">unsigned</span> b;</span><br><span class="line">&#125;;</span><br><span class="line"><span class="function"><span class="type">int</span> <span class="title">main</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    <span class="keyword">auto</span> p = &amp;X::a;</span><br><span class="line">    X x&#123;.a = <span class="number">1</span>&#125;;</span><br><span class="line">    x.*p = <span class="number">4</span>; <span class="comment">// 注意指向成员指针的用法！！</span></span><br><span class="line">    std::cout &lt;&lt; x.a &lt;&lt; <span class="string">&#x27;\n&#x27;</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<p>输出为 4。除此之外，还能给 union 定义成员函数。</p>
-<p>gcc 标准库中有内置的判断是否为 class、union 等的模板，而且 C++ 标准库的 <code>std::is_class</code> 不是指 class type，所以严格不包含 union。通过在偏特化参数中构造指向成员的指针只能做到判断是否为 class type，比起内置实现效率和稳健性上都要差了很多。</p>
-<h1 id="判断是否-T-为枚举类型"><a href="#判断是否-T-为枚举类型" class="headerlink" title="判断是否 T 为枚举类型"></a>判断是否 T 为枚举类型</h1><p>可以通过大量谓词做排除。</p>
-<h1 id="一些非常特殊的-Traits"><a href="#一些非常特殊的-Traits" class="headerlink" title="一些非常特殊的 Traits"></a>一些非常特殊的 Traits</h1><ul>
-<li><code>std::char_traits</code></li>
-<li><code>std::iterator_traits</code></li>
-<li><code>std::numeric_limits</code></li>
-<li><code>std::allocator_traits</code></li>
-</ul>
-
+<h1 id="code-std-iterator-traits-code"><code>std::iterator_traits</code></h1>
+<p>标准库中的一个工具类模板。</p>
+<p><img src="../../assets/f0210fb615529b7bb759b281f1a61167.png" alt></p>
+          <!--noindex-->
+            <div class="post-button">
+              <a class="btn" href="/2023/08/12/cpp-templates-the-complete-guide-19-Implementing-Traits/#more" rel="contents">
+                阅读全文 &raquo;
+              </a>
+            </div>
+          <!--/noindex-->
+        
       
     </div>
 
@@ -997,7 +787,7 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="https://hxhue.github.io/2023/08/12/cpp-templates-the-complete-guide-21-Templates-and-Inheritance/">
+    <link itemprop="mainEntityOfPage" href="https://hxhue.github.io/2023/08/12/cpp-templates-the-complete-guide-19-1-%E7%94%A8-SFINAE-%E5%AE%9E%E7%8E%B0-Traits/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="image" content="/images/avatar.gif">
@@ -1011,7 +801,7 @@
       <header class="post-header">
         <h2 class="post-title" itemprop="name headline">
           
-            <a href="/2023/08/12/cpp-templates-the-complete-guide-21-Templates-and-Inheritance/" class="post-title-link" itemprop="url">CTTCG 21 Templates and Inheritance</a>
+            <a href="/2023/08/12/cpp-templates-the-complete-guide-19-1-%E7%94%A8-SFINAE-%E5%AE%9E%E7%8E%B0-Traits/" class="post-title-link" itemprop="url">CTTCG 19.1 用 SFINAE 实现 Traits</a>
         </h2>
 
         <div class="post-meta">
@@ -1028,7 +818,7 @@
                   <i class="far fa-calendar-check"></i>
                 </span>
                 <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2024-03-07 16:26:55" itemprop="dateModified" datetime="2024-03-07T16:26:55+08:00">2024-03-07</time>
+                <time title="修改时间：2024-03-10 13:51:43" itemprop="dateModified" datetime="2024-03-10T13:51:43+08:00">2024-03-10</time>
               </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
@@ -1036,11 +826,25 @@
               </span>
               <span class="post-meta-item-text">分类于</span>
                 <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/cpp-templates-the-complete-guide-book/" itemprop="url" rel="index"><span itemprop="name">C++ Templates: The Complete Guide</span></a>
+                  <a href="/categories/cpp-templates-the-complete-guide/" itemprop="url" rel="index"><span itemprop="name">cpp-templates-the-complete-guide</span></a>
                 </span>
             </span>
 
-          
+          <br>
+            <span class="post-meta-item" title="本文字数">
+              <span class="post-meta-item-icon">
+                <i class="far fa-file-word"></i>
+              </span>
+                <span class="post-meta-item-text">本文字数：</span>
+              <span>1.1k</span>
+            </span>
+            <span class="post-meta-item" title="阅读时长">
+              <span class="post-meta-item-icon">
+                <i class="far fa-clock"></i>
+              </span>
+                <span class="post-meta-item-text">阅读时长 &asymp;</span>
+              <span>4 分钟</span>
+            </span>
 
         </div>
       </header>
@@ -1051,170 +855,24 @@
     <div class="post-body" itemprop="articleBody">
 
       
-          <h1 id="零开销继承：空基类优化（EBCO）"><a href="#零开销继承：空基类优化（EBCO）" class="headerlink" title="零开销继承：空基类优化（EBCO）"></a>零开销继承：空基类优化（EBCO）</h1><p>The Empty Base Class Optimization (EBCO)</p>
-<p>C++ 没有真正零大小的类，因为在数组等场景需要用地址区分元素。一般编译器上空类的大小是 1 个字节。不过，当基类为空时，EBCO 会使得基类在子类中不占空间。但是 EBCO 的适用有条件。下面的场景是从实践中观察出来的，可能并没有被标准定义，但它演示了 EBCO 失效：</p>
-<ol>
-<li>定义“空基类组”的概念：如果空类型 B 继承了空类型 A，那么 B 和 A 可以存在于同一个空基类组（看成并查集会比较好理解）。和其他空类型不相关的类型可以认为自为一组。</li>
-<li>某类型 C 继承了一个大小为 N 的空基类组，那么它至少具有 N 个字节。如果这个类型 C 不是空类型，则还有对齐要求。</li>
-<li>继承多个空基类组，对子类对象所占用空间的要求等效于继承于最大的那个空基类组。</li>
-</ol>
-<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">struct</span> <span class="title class_">E1</span> &#123;&#125;;</span><br><span class="line"><span class="keyword">struct</span> <span class="title class_">E2</span> : E1 &#123;&#125;;</span><br><span class="line"><span class="keyword">struct</span> <span class="title class_">E20</span> &#123;&#125;;</span><br><span class="line"><span class="keyword">struct</span> <span class="title class_">E21</span> : E20 &#123;&#125;;</span><br><span class="line"><span class="keyword">struct</span> <span class="title class_">E22</span> : E20 &#123;&#125;;</span><br><span class="line"><span class="keyword">struct</span> <span class="title class_">E23</span> : E20 &#123;&#125;;</span><br><span class="line"><span class="keyword">struct</span> <span class="title class_">E24</span> : E20 &#123;&#125;;</span><br><span class="line"></span><br><span class="line"><span class="keyword">struct</span> <span class="title class_">B</span> : E1, E2, E20, E21, E22 &#123;</span><br><span class="line">    <span class="comment">// int a;</span></span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="type">int</span> <span class="title">main</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    std::cout &lt;&lt; <span class="string">&quot;sizeof(d): &quot;</span> &lt;&lt; <span class="built_in">sizeof</span>(B) &lt;&lt; <span class="string">&#x27;\n&#x27;</span>;</span><br><span class="line">    <span class="comment">// 输出为 3</span></span><br><span class="line">    <span class="comment">// 如果 B 中还有个整形元素 a，输出为 4</span></span><br><span class="line">    <span class="comment">// 如果 B 中还有个整形元素 a，并再继承空类 E23 和 E24，输出为 8（5对齐到4的倍数）</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<h1 id="空成员优化"><a href="#空成员优化" class="headerlink" title="空成员优化"></a>空成员优化</h1><p>如果类中有一个空类的对象，那么它将无法适用 EBCO。将其改造为继承可以节约空间。</p>
-<p>类模板由于事先不能确定参数类型，很难保证能够安全继承参数类型（比如参数类型可能是不可继承的、多个参数的实际类型相同因而引发了多次继承的编译错误等）。</p>
-<p>下面的类模板把一个参数作为基类，一个参数作为成员，避免了多次继承同一类型的错误。而且这个类型也是可以被继承的。<strong>唯一的要求就是 Base 对应的类型可以继承</strong>。</p>
-<p><img src="/assets/d41fba78ac0a6bb5f3bb275de2e3d478.png"></p>
-<p>第 25 章的元组实现会继续探讨相似的话题。</p>
-<h1 id="The-Curiously-Recurring-Template-Pattern-CRTP"><a href="#The-Curiously-Recurring-Template-Pattern-CRTP" class="headerlink" title="The Curiously Recurring Template Pattern (CRTP)"></a>The Curiously Recurring Template Pattern (CRTP)</h1><p>Barton-Nackman trick：和过去友元函数的定义查找有关系，现在查找方式改变了，用处变小了。</p>
-<p><strong>CRTP 的形式为</strong> <code>class T: CRTP&lt;T&gt; &#123;...&#125;;</code><strong>，能够向子类注入一大堆东西</strong>。在子访父的场景下，被注入的东西可以成为搭建子类功能的基石，极大地简化了代码；在父访子的场景下，则可以实现外观模式。</p>
-<h2 id="类型相关函数"><a href="#类型相关函数" class="headerlink" title="类型相关函数"></a><strong>类型相关函数</strong></h2><p>举例：使用 <code>==</code> 比较运算符生成 <code>!=</code> 比较运算符（比较运算符一般被实现成 hidden friends）。</p>
-<h2 id="外观模式"><a href="#外观模式" class="headerlink" title="外观模式"></a><strong>外观模式</strong></h2><p>则是由 CRTP 基类提供外观，并假设子类会实现某些操作，然后通过调用这些操作完成功能（父访子的场景）。<strong>实际上使用虚函数就能够很方便完成这个操作，但是这样可能会有比较大的性能代价。</strong></p>
-<p>举个例子：标准库迭代器要求一堆 type aliases 和方法，写起来繁琐，还容易因为看错了要求而使得迭代器功能不完全正常。可以构造标准库支持的迭代器的外观模板简化迭代器的实现。迭代器外观模板可能会要求子类提供 <code>deref()</code> 、<code>advance(int)</code> 等函数。</p>
-<h2 id="要点：怎么实现父访子？"><a href="#要点：怎么实现父访子？" class="headerlink" title="要点：怎么实现父访子？"></a>要点：怎么实现父访子？</h2><figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">template</span> &lt;<span class="keyword">class</span> <span class="title class_">T</span>&gt; <span class="keyword">struct</span> <span class="title class_">CRTP</span> &#123;</span><br><span class="line">    <span class="function"><span class="type">void</span> <span class="title">print</span><span class="params">()</span> </span>&#123; std::cout &lt;&lt; <span class="built_in">asDerived</span>().value &lt;&lt; <span class="string">&#x27;\n&#x27;</span>; &#125;</span><br><span class="line"></span><br><span class="line">  <span class="keyword">private</span>:</span><br><span class="line">    <span class="function">T <span class="type">const</span> &amp;<span class="title">asDerived</span><span class="params">()</span> <span class="type">const</span> </span>&#123; <span class="keyword">return</span> *<span class="built_in">static_cast</span>&lt;T <span class="type">const</span> *&gt;(<span class="keyword">this</span>); &#125;</span><br><span class="line">    <span class="function">T       &amp;<span class="title">asDerived</span><span class="params">()</span>       </span>&#123; <span class="keyword">return</span> *<span class="built_in">static_cast</span>&lt;T *&gt;(<span class="keyword">this</span>);       &#125;</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
-
-<p>这段代码将 <code>*this</code> 转换成了子类的引用。由于这<strong>构成了类型依赖</strong>，这段代码的 <code>print</code> 函数将在第二阶段被检查。（使用 <code>this-&gt;value</code> 也会导致编译失败，因为这个类模板并没有继承任何有依赖的基类，虽然构成了限定名但不构成依赖。）</p>
-<h2 id="享元"><a href="#享元" class="headerlink" title="享元"></a>享元</h2><p>通常子类的成员会被设计成私有，以防使用方透过外观访问实现细节。可以把外观模板类声明为子类的友元，但是这样外观模板类就有访问子类所有部分的权限。使用<strong>享元模式</strong>可以约定外观类模板对子类的访问权限。</p>
-<p><img src="/assets/5b3595c18c845b5529f6f7bb3c4cead0.png"></p>
-<p>这样外观模板虽然无法直接访问子类的任何成员，但是可以拿到子类的引用，并借助享元访问子类。由于不需要在外观模板中对子类的成员做假设，上面那个构建类型依赖的技巧（<a href="about:blank#%E8%A6%81%E7%82%B9%EF%BC%9A%E6%80%8E%E4%B9%88%E5%AE%9E%E7%8E%B0%E7%88%B6%E8%AE%BF%E5%AD%90%EF%BC%9F%5D(about:blank#%E8%A6%81%E7%82%B9%EF%BC%9A%E6%80%8E%E4%B9%88%E5%AE%9E%E7%8E%B0%E7%88%B6%E8%AE%BF%E5%AD%90%EF%BC%9F%5D(about:blank#"></a>）也不再需要了。</p>
-<h2 id="std-enable-shared-from-this"><a href="#std-enable-shared-from-this" class="headerlink" title="std::enable_shared_from_this"></a><code>std::enable_shared_from_this</code></h2><p>这也是一个 CRTP 模板，里面包含一个 weak_ptr，长度为两个指针大小（对象指针和引用控制块指针）。子类通过继承这个模板可以使用 <code>shared_from_this()</code> 和 <code>weak_from_this()</code> 函数。前者本质上是从 weak_ptr 生成 shared_ptr，必须保证对象被包裹在 <code>std::shared_ptr</code> 对象中（共享环境）才能使用；在 C++17 之前若不在共享环境中访问 <code>shared_from_this()</code> 是 UB，现在则会抛出异常。</p>
-<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">class</span> <span class="title class_">Best</span> : <span class="keyword">public</span> std::enable_shared_from_this&lt;Best&gt;</span><br><span class="line">&#123;</span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">    <span class="function">std::shared_ptr&lt;Best&gt; <span class="title">getptr</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="built_in">shared_from_this</span>();</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="comment">// No public constructor, only a factory function,</span></span><br><span class="line">    <span class="comment">// so there&#x27;s no way to have getptr return nullptr.</span></span><br><span class="line">    [nodiscard](nodiscard) <span class="function"><span class="type">static</span> std::shared_ptr&lt;Best&gt; <span class="title">create</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        <span class="comment">// Not using std::make_shared&lt;Best&gt; because the c&#x27;tor is private.</span></span><br><span class="line">        <span class="keyword">return</span> std::<span class="built_in">shared_ptr</span>&lt;Best&gt;(<span class="keyword">new</span> <span class="built_in">Best</span>());</span><br><span class="line">    &#125;</span><br><span class="line"><span class="keyword">private</span>:</span><br><span class="line">    <span class="built_in">Best</span>() = <span class="keyword">default</span>;</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
-
-<p>在 <code>create()</code> 方法中创建了一个新的 Best 对象，该对象包含了一个控制块指针，初始计数为 0。<code>std::shared_ptr</code> 的构造函数能识别 esft（enable shared from this）对象指针，会和其 weak_ptr 中的控制块关联并将控制块的计数增 1。</p>
-<blockquote>
-<p>题外话：std::shared_ptr 的缺点</p>
-</blockquote>
-<ol>
-<li>额外的 weak_ptr 导致对象变大（64 位机器上是 16 字节）</li>
-<li>传染性</li>
-<li>原子计数在单线程比较慢</li>
-</ol>
-<p>类型刚创建时，如果不在共享环境中，则 <code>weak_ptr</code> 会被初始化成一个安全的空值，不会被分配控制块，进而也不需要再申请空间。</p>
-<h1 id="Mixin"><a href="#Mixin" class="headerlink" title="Mixin"></a>Mixin</h1><p>Mixin 也是另外一种同时使用继承和模板的技术。和 CRTP 相比：CRTP 希望向子类注入一些功能和属性，因而希望作为基类被继承；Mixin 希望获得某些特性，因而希望用户提供基类。</p>
-<blockquote>
-<p>一般面对对象是别人提供了一个基类，你可以去继承。但是由于基类是别人写好的，不能去继承还没写好的东西（也就是库类没法继承用户提供的类）。 Mixin 提供一个模板。用户通过传入参数指定要继承的基类，从而实现库类继承用户类。</p>
-</blockquote>
-<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">template</span>&lt;<span class="keyword">typename</span>... Mixins&gt;</span><br><span class="line"><span class="keyword">class</span> <span class="title class_">Point</span> : <span class="keyword">public</span> Mixins...</span><br><span class="line">&#123;</span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">    <span class="type">double</span> x, y;</span><br><span class="line">    <span class="built_in">Point</span>() : <span class="built_in">Mixins</span>()..., <span class="built_in">x</span>(<span class="number">0.0</span>), <span class="built_in">y</span>(<span class="number">0.0</span>) &#123; &#125;</span><br><span class="line">    <span class="built_in">Point</span>(<span class="type">double</span> x, <span class="type">double</span> y) : <span class="built_in">Mixins</span>()..., <span class="built_in">x</span>(x), <span class="built_in">y</span>(y) &#123; &#125;</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
-
-<p>上面代码可以允许用户给 <code>Point</code> 类型添加额外的属性。在功能提供方来看，只需要实现支持任意模板参数的 <code>Point</code> 模板类即可。</p>
-<h2 id="Curious-Mixins"><a href="#Curious-Mixins" class="headerlink" title="Curious Mixins"></a>Curious Mixins</h2><p>将 CRTP 和 Mixin 结合：</p>
-<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">template</span>&lt;<span class="keyword">template</span>&lt;<span class="keyword">typename</span>&gt;... Mixins&gt;</span><br><span class="line"><span class="keyword">class</span> <span class="title class_">Point</span> : <span class="keyword">public</span> Mixins&lt;Point&gt;...</span><br><span class="line">&#123;</span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">    <span class="type">double</span> x, y;</span><br><span class="line">    <span class="built_in">Point</span>() : <span class="built_in">Mixins</span>&lt;Point&gt;()..., <span class="built_in">x</span>(<span class="number">0.0</span>), <span class="built_in">y</span>(<span class="number">0.0</span>) &#123; &#125;</span><br><span class="line">    <span class="built_in">Point</span>(<span class="type">double</span> x, <span class="type">double</span> y) : <span class="built_in">Mixins</span>&lt;Point&gt;()..., <span class="built_in">x</span>(x), <span class="built_in">y</span>(y) &#123; &#125;</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
-
-<p>上面的代码从接受普通类改成了接受模板类。</p>
-<h2 id="保持函数的虚实性"><a href="#保持函数的虚实性" class="headerlink" title="保持函数的虚实性"></a>保持函数的虚实性</h2><p>从 Mixins 继承时，其中的虚函数和普通函数都会被保留下来。重新声明相同的函数，但省略不写 <code>virtual</code>，则在基类声明该函数为虚函数时，这个函数被认为是虚函数；在基类声明该函数不是虚函数时，这个函数会覆盖基类的定义。</p>
-<blockquote>
-<p>这种用法非常少，也不推荐。</p>
-</blockquote>
-<h1 id="Named-Template-Arguments"><a href="#Named-Template-Arguments" class="headerlink" title="Named Template Arguments"></a>Named Template Arguments</h1><p>目前 C++ 标准不支持声明时不按顺序指定模板参数（尽管 C++20 的指定初始化对于变量定义已经可用了）。P512 讨论了一种策略选择方案，使得参数位置无关。</p>
-<h1 id="防止继承同一基类多次导致的编译错误"><a href="#防止继承同一基类多次导致的编译错误" class="headerlink" title="防止继承同一基类多次导致的编译错误"></a>防止继承同一基类多次导致的编译错误</h1><p>不成熟的方案：</p>
-<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">template</span> &lt;<span class="type">size_t</span> Index, <span class="keyword">typename</span> A&gt; <span class="keyword">struct</span> <span class="title class_">UniqueBase</span> : A &#123;&#125;;</span><br><span class="line"></span><br><span class="line"><span class="keyword">template</span> &lt;<span class="type">size_t</span> Index, <span class="keyword">typename</span>...&gt; <span class="keyword">struct</span> <span class="title class_">UniqueIndex</span> &#123;&#125;;</span><br><span class="line"></span><br><span class="line"><span class="keyword">template</span> &lt;<span class="type">size_t</span> Index, <span class="keyword">typename</span> A, <span class="keyword">typename</span>... Ts&gt;</span><br><span class="line"><span class="keyword">struct</span> <span class="title class_">UniqueIndex</span>&lt;Index, A, Ts...&gt; :</span><br><span class="line">    UniqueBase&lt;Index, A&gt;, UniqueIndex&lt;Index + <span class="number">1</span>, Ts...&gt; &#123;&#125;;</span><br><span class="line"></span><br><span class="line"><span class="keyword">template</span> &lt;<span class="keyword">typename</span>... Ts&gt; <span class="keyword">struct</span> <span class="title class_">Unique</span> : UniqueIndex&lt;<span class="number">0</span>, Ts...&gt; &#123;&#125;;</span><br><span class="line"></span><br><span class="line"><span class="keyword">template</span> &lt;<span class="keyword">class</span>... Bases&gt; <span class="keyword">class</span> <span class="title class_">Mixin</span> : <span class="keyword">public</span> Unique&lt;Bases...&gt; &#123;</span><br><span class="line">  <span class="keyword">public</span>:</span><br><span class="line">    <span class="function"><span class="type">void</span> <span class="title">print</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        std::cout &lt;&lt; <span class="string">&quot;Mixin size: &quot;</span> &lt;&lt; <span class="built_in">sizeof</span>(<span class="keyword">decltype</span>(*<span class="keyword">this</span>)) &lt;&lt; <span class="string">&#x27;\n&#x27;</span>;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="keyword">struct</span> <span class="title class_">AddX</span> &#123; <span class="type">int</span> x&#123;&#125;; &#125;;</span><br><span class="line"><span class="keyword">struct</span> <span class="title class_">AddY</span> &#123; <span class="type">int</span> y&#123;&#125;; &#125;;</span><br><span class="line"><span class="keyword">struct</span> <span class="title class_">AddPoint</span>: AddX, AddY &#123;&#125;;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="type">int</span> <span class="title">main</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    <span class="keyword">using</span> MixinResult = Mixin&lt;AddX, AddX <span class="comment">/* 同一基类 */</span>, AddPoint&gt;;</span><br><span class="line">    MixinResult&#123;&#125;.<span class="built_in">print</span>(); <span class="comment">// 打印16，说明空间没有共用</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<p>给每个类型参数加上编号包装，可以避免继承同一基类导致编译错误。但是这样构成的菱形继承会导致基类数据成员重复占用空间（尽管名字查找时会覆盖基类定义）。</p>
-<p><a target="_blank" rel="noopener" href="https://www.fluentcpp.com/2018/08/28/removing-duplicates-crtp-base-classes/">https://www.fluentcpp.com/2018/08/28/removing-duplicates-crtp-base-classes/</a> 的评论区有人提出了一种思考方向类似，但是更为成熟的方案，可以减少数据成员 shadow 的空间浪费。</p>
-
-      
-    </div>
-
-    
-    
-    
-      <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  
-  
-  
-
-      
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="https://hxhue.github.io/2023/08/12/cpp-templates-the-complete-guide-22-Bridging-Static-and-Dynamic-Polymorphism/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/avatar.gif">
-      <meta itemprop="name" content="Hxhue">
-      <meta itemprop="description" content="">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Hxhue's Blog">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          
-            <a href="/2023/08/12/cpp-templates-the-complete-guide-22-Bridging-Static-and-Dynamic-Polymorphism/" class="post-title-link" itemprop="url">CTTCG 22 Bridging Static and Dynamic Polymorphism</a>
-        </h2>
-
-        <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-calendar"></i>
-              </span>
-              <span class="post-meta-item-text">发表于</span>
-
-              <time title="创建时间：2023-08-12 00:00:00" itemprop="dateCreated datePublished" datetime="2023-08-12T00:00:00+08:00">2023-08-12</time>
-            </span>
-              <span class="post-meta-item">
-                <span class="post-meta-item-icon">
-                  <i class="far fa-calendar-check"></i>
-                </span>
-                <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2024-03-06 09:29:29" itemprop="dateModified" datetime="2024-03-06T09:29:29+08:00">2024-03-06</time>
-              </span>
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-folder"></i>
-              </span>
-              <span class="post-meta-item-text">分类于</span>
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/cpp-templates-the-complete-guide-book/" itemprop="url" rel="index"><span itemprop="name">C++ Templates: The Complete Guide</span></a>
-                </span>
-            </span>
-
-          
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          <h1 id="类型擦除"><a href="#类型擦除" class="headerlink" title="类型擦除"></a>类型擦除</h1><p>主要讲的是<strong>类型擦除</strong>，例子是 <code>std::function</code> 类模板。特殊情况：<code>std::function&lt;void(void)&gt;</code> 和 <code>std::function&lt;void()&gt;</code> 是同一个类型。</p>
-<h1 id="实现思路"><a href="#实现思路" class="headerlink" title="实现思路"></a>实现思路</h1><ol>
-<li><code>std::function</code> 原始模板捕获了函数类型。</li>
-</ol>
-<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">template</span>&lt;<span class="keyword">typename</span> Signature&gt;</span><br><span class="line"><span class="keyword">class</span> <span class="title class_">FunctionPtr</span>;</span><br></pre></td></tr></table></figure>
-
-<ol>
-<li><code>std::function</code> 的偏特化能够获得函数的返回值和函数参数包的类型。</li>
-</ol>
-<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">template</span>&lt;<span class="keyword">typename</span> R, <span class="keyword">typename</span>... Args&gt;</span><br><span class="line"><span class="keyword">class</span> <span class="title class_">FunctionPtr</span>&lt;<span class="built_in">R</span>(Args...)&gt; &#123; ... &#125;</span><br></pre></td></tr></table></figure>
-
-<ol>
-<li><code>std::function</code> 包含了一个<strong>函数对象基类</strong>的指针，这个基类指针有一个 <code>invoke</code> 虚函数，返回值和函数参数类型与模板参数对应。<code>std::function</code> 被调用时，会将调用转发到这个函数对象上。</li>
-<li>实现构造模板函数、赋值模板操作符时，捕获传入的<strong>对象</strong>，生成一个继承于<strong>函数对象基类</strong>（之前提到过）的子类对象，其 <code>invoke</code> 虚函数的实现就是转而调用这个<strong>对象</strong>的<code>()</code>操作符。</li>
-</ol>
-<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">template</span>&lt;<span class="keyword">typename</span> Functor, <span class="keyword">typename</span> R, <span class="keyword">typename</span>... Args&gt;</span><br><span class="line"><span class="keyword">class</span> <span class="title class_">SpecificFunctorBridge</span> : <span class="keyword">public</span> FunctorBridge&lt;R, Args...&gt; &#123;</span><br><span class="line">    Functor functor;</span><br><span class="line">    ...</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<p>子类对象就是通过上面的模板创建的。模板参数 <code>Functor</code> 对应于捕获对象的存储类型，书中的定义为 <code>using Functor = std::decay_t&lt;F&gt;</code>（<code>F</code> 为捕获对象的真实类型）。</p>
-<p>书中还实现了 <code>FunctionPtr</code> 的比较操作符，当捕获对象不支持 <code>==</code> 时，将会在运行时抛出异常。<code>std::function</code> 只对和空指针的比较实现了 <code>==</code> 操作符。</p>
-<h1 id="性能"><a href="#性能" class="headerlink" title="性能"></a>性能</h1><p>主要考虑<strong>动态分配内存</strong>和<strong>虚函数调用</strong>两个环节。</p>
-<h1 id="约束检查"><a href="#约束检查" class="headerlink" title="约束检查"></a>约束检查</h1><p>类型擦除不代表将静态语言变成动态语言。使用 Boost 的 <code>TypeErasure</code> 库：</p>
-<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">using</span> AnyPrintable = any&lt;mpl::vector&lt;</span><br><span class="line">                           copy_constructible&lt;&gt;,</span><br><span class="line">                           typeid_&lt;&gt;,</span><br><span class="line">                           ostreamable&lt;&gt;</span><br><span class="line">                        &gt;&gt;;</span><br></pre></td></tr></table></figure>
-
-<p>这对里面可包含的类型进行了约束检查，不满足约束的类型赋值（或构造）会在编译期被拒绝。</p>
-<h1 id="实现细节-用-swap-实现赋值操作符"><a href="#实现细节-用-swap-实现赋值操作符" class="headerlink" title="实现细节: 用 swap 实现赋值操作符"></a>实现细节: 用 <code>swap</code> 实现赋值操作符</h1><p>可以<strong>复用构造函数</strong>：</p>
-<ol>
-<li>创建临时对象（在移动赋值且参数类型与目的类型相同时可以省略这一步）</li>
-<li>引入 <code>std::swap</code>（可选）</li>
-<li>调用 <code>swap</code></li>
-</ol>
-<h1 id="libstdc-中的-std-function-实现"><a href="#libstdc-中的-std-function-实现" class="headerlink" title="libstdc++ 中的 std::function 实现"></a><code>libstdc++</code> 中的 <code>std::function</code> 实现</h1><p>参考另外一篇笔记。</p>
-
+          <p>原理是用 SFINAE 机制安全地匹配几个函数或函数模板，然后再通过函数匹配信息将结果（true or false）嵌入 Trait 类中。Trait 约束条件被包含在函数模板的声明中。</p>
+<p>实现 traits 最核心的要点是<strong>模拟</strong>被替换类型的行为，然后让行为不满足的那些替换被 SFINAE 筛掉。</p>
+<h1 id="han-shu-fan-hui-ji-ben-lei-xing-jing-tai-chang-liang-ding-yi">函数返回基本类型 → 静态常量定义</h1>
+<p>类模板实例化时会调用 <code>test</code> 函数，如果条件命中则优先匹配 <code>char test(void *)</code>，否则匹配另外一个。通过判断匹配到的函数的返回值类型可以确定条件是否被命中。这里的条件是类型 <code>T</code> 可以默认构造。</p>
+<p><img src="../../assets/0380dc83afe69c80f565536ffb2d9cae.png" alt></p>
+<p>⚠ 如果把第一个 <code>test</code> 的参数 <code>U</code> 去掉，默认参数改成 <code>typename = decltype(T())</code>，就无法编译。因为 T 会在实例化时被替代过去，导致函数模板本身定义有错误。这个过程没有发生在函数模板匹配阶段，不会受到 SFINAE 的保护。</p>
+<p>也有通过判断返回值的类型大小确认是否命中的实现。但是在有些低性能设备上所有的整型可能具有相同的大小，因此有必要使用 <code>char</code> 和 <code>char (&amp;)[2]</code> 等手段来保证返回值的大小不同。</p>
+<h1 id="han-shu-fan-hui-biao-zhun-ku-de-chang-liang-trait-alias-mo-ban">函数返回标准库的常量 Trait → alias 模板</h1>
+<p><img src="../../assets/cc34342d5b468afa39dce99660e34e2a.png" alt></p>
+<p>这里的 <code>IsDefaultConstructibleHelper</code> 包装了 <code>Type</code>。所以还需要继承一次取得和 C++ 标准库相同形式的 Trait 类。</p>
+          <!--noindex-->
+            <div class="post-button">
+              <a class="btn" href="/2023/08/12/cpp-templates-the-complete-guide-19-1-%E7%94%A8-SFINAE-%E5%AE%9E%E7%8E%B0-Traits/#more" rel="contents">
+                阅读全文 &raquo;
+              </a>
+            </div>
+          <!--/noindex-->
+        
       
     </div>
 
@@ -1264,7 +922,7 @@
                   <i class="far fa-calendar-check"></i>
                 </span>
                 <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2024-03-07 16:26:55" itemprop="dateModified" datetime="2024-03-07T16:26:55+08:00">2024-03-07</time>
+                <time title="修改时间：2024-03-10 13:51:43" itemprop="dateModified" datetime="2024-03-10T13:51:43+08:00">2024-03-10</time>
               </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
@@ -1272,11 +930,25 @@
               </span>
               <span class="post-meta-item-text">分类于</span>
                 <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/cpp-templates-the-complete-guide-book/" itemprop="url" rel="index"><span itemprop="name">C++ Templates: The Complete Guide</span></a>
+                  <a href="/categories/cpp-templates-the-complete-guide/" itemprop="url" rel="index"><span itemprop="name">cpp-templates-the-complete-guide</span></a>
                 </span>
             </span>
 
-          
+          <br>
+            <span class="post-meta-item" title="本文字数">
+              <span class="post-meta-item-icon">
+                <i class="far fa-file-word"></i>
+              </span>
+                <span class="post-meta-item-text">本文字数：</span>
+              <span>1.8k</span>
+            </span>
+            <span class="post-meta-item" title="阅读时长">
+              <span class="post-meta-item-icon">
+                <i class="far fa-clock"></i>
+              </span>
+                <span class="post-meta-item-text">阅读时长 &asymp;</span>
+              <span>6 分钟</span>
+            </span>
 
         </div>
       </header>
@@ -1287,7 +959,8 @@
     <div class="post-body" itemprop="articleBody">
 
       
-          <h1 id="TLDR：几种-SFINAE-的模式"><a href="#TLDR：几种-SFINAE-的模式" class="headerlink" title="TLDR：几种 SFINAE 的模式"></a>TLDR：几种 SFINAE 的模式</h1><ol>
+          <h1 id="tldr-ji-chong-sfinae-de-mo-shi">TLDR：几种 SFINAE 的模式</h1>
+<ol>
 <li>对于<strong>函数参数列表非空</strong>的函数模板，可以用非 varargs 函数实现功能，varargs 作为 fallback。</li>
 <li>类模板可以用偏特化实现功能重载，用带模板默认参数的原始模板作为 fallback。</li>
 <li>模板用 tag dispatching 不会有重复定义的问题。</li>
@@ -1301,61 +974,234 @@
 <li>找到了多个能匹配且优先级不能区分的函数（ambiguous）：需要设计互斥条件。</li>
 <li>重复定义同一模板（只有模板默认参数不同）：<code>std::enable_if</code> 使用不当。可以再增加一个默认参数缓解问题，或者把 <code>std::enable_if</code> 放在返回值位置上。</li>
 </ol>
-<h1 id="函数模板的重载"><a href="#函数模板的重载" class="headerlink" title="函数模板的重载"></a>函数模板的重载</h1><h2 id="简单提供参数不同的重载"><a href="#简单提供参数不同的重载" class="headerlink" title="简单提供参数不同的重载"></a>简单提供参数不同的重载</h2><p><img src="/assets/4a2d335dbfcb745748f3f9ed238ca55a.png"></p>
-<p><img src="/assets/eaeb707e938f2938d24b4e73e223d799.png"></p>
+<h1 id="han-shu-mo-ban-de-zhong-zai">函数模板的重载</h1>
+<h2 id="jian-dan-ti-gong-can-shu-bu-tong-de-zhong-zai">简单提供参数不同的重载</h2>
+<p><img src="../../assets/4a2d335dbfcb745748f3f9ed238ca55a.png" alt></p>
+<p><img src="../../assets/eaeb707e938f2938d24b4e73e223d799.png" alt></p>
 <p>这种方式只能直接对类型本身匹配，不能对行为或类型背后的含义提出要求。</p>
-<h2 id="Tag-Dispatching-和-std-enable-if"><a href="#Tag-Dispatching-和-std-enable-if" class="headerlink" title="Tag Dispatching 和 std::enable_if"></a>Tag Dispatching 和 <code>std::enable_if</code></h2><p>本节讨论了两者的在算法特化场景下的区别。<strong>前者能够做到完全互斥，但是写起来可能会比较冗长。后者判断更加灵活，但是需要注意保证互斥性</strong>（否则 ambiguous），每次添加一个新的特化都要去检查之前的特化是否需要修改；同时还要考虑重复声明的问题。</p>
-<p>举例是标准库的迭代器就有 5 类，而且还有继承关系。这意味着我们可以用 <code>std::is_convertible</code> 作条件。</p>
-<p><img src="/assets/743b473e33717f167c001c0a59c0a210.png"></p>
-<h2 id="std-enable-if-的重复声明问题"><a href="#std-enable-if-的重复声明问题" class="headerlink" title="std::enable_if 的重复声明问题"></a><code>std::enable_if</code> 的重复声明问题</h2><p>默认参数的指定在函数模板定义时是不被考虑的。如果有两个模板函数使用了 <code>template &lt;typename T, typename = std::enable_if_t&lt;...&gt;&gt;</code> 的模板参数，就会有重定义错误。一个缓解的方法是再加一个默认参数：</p>
-<p><img src="/assets/5c475d8c5e719480120ff175750090f1.png"></p>
-<blockquote>
-<p>是不是可以结合两者的优势做一个适配器 Trait，将几种 Trait 用 std::conditional 嵌套归类（比如在不使用后向迭代功能时，将双向迭代器归类为前向迭代器），然后再去实现特定 tag 的算法呢？</p>
-<p>进行条件判断时要注意安全：&#96;<a href="19.%20Implementing%20Traits.md#%60std%20conditional%60%20%E6%A8%A1%E6%9D%BF%E7%9A%84%E5%AE%89%E5%85%A8%E4%BD%BF%E7%94%A8"></a></p>
-</blockquote>
-<p><strong>另外一种解决方案是把</strong> <code>std::enable_if</code> <strong>放在返回值的位置</strong>，而不是模板的默认参数上。缺点是返回值会看起来很冗长。可能看起来像这样？</p>
-<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">template</span> &lt;<span class="keyword">class</span> <span class="title class_">T</span>&gt;</span><br><span class="line">std::<span class="type">enable_if_t</span>&lt;std::is_same_v&lt;T, <span class="type">int</span>&gt;,</span><br><span class="line"><span class="type">int</span>&gt; <span class="built_in">three</span>(T) &#123;</span><br><span class="line">    <span class="keyword">return</span> <span class="number">3</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+          <!--noindex-->
+            <div class="post-button">
+              <a class="btn" href="/2023/08/12/cpp-templates-the-complete-guide-20-Overloading-on-Type-Properties/#more" rel="contents">
+                阅读全文 &raquo;
+              </a>
+            </div>
+          <!--/noindex-->
+        
+      
+    </div>
 
-<p>第三行是返回值。就是这种格式化方案非常奇怪。</p>
-<p><strong>还有一种是将</strong> <code>std::enable_if</code> <strong>所在参数选定为非类型模板参数，并为其提供默认值</strong>：</p>
-<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">template</span> &lt;<span class="keyword">class</span> <span class="title class_">T</span>, std::<span class="type">enable_if_t</span>&lt;std::is_integral_v&lt;T&gt;, <span class="type">int</span>&gt; = <span class="number">0</span>&gt;</span><br><span class="line">T <span class="built_in">create</span>() &#123;</span><br><span class="line">    <span class="keyword">return</span> &#123;&#125;;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">template</span> &lt;<span class="keyword">class</span> <span class="title class_">T</span>, std::<span class="type">enable_if_t</span>&lt;!std::is_integral_v&lt;T&gt;, <span class="type">int</span>&gt; = <span class="number">1</span>&gt;</span><br><span class="line">T <span class="built_in">create</span>() &#123;</span><br><span class="line">    <span class="keyword">return</span> &#123;&#125;;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="type">int</span> <span class="title">main</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    <span class="keyword">auto</span> y = <span class="built_in">create</span>&lt;<span class="type">int</span>&gt;();</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
 
-<p>在完全评估 <code>std::enable_if</code> 之前，编译器不能确定两组模板参数相等，而评估完成之后，就会有不满足的分支被淘汰，所以不会遇到重定义错误。</p>
-<h2 id="第四种方案：if-constexpr"><a href="#第四种方案：if-constexpr" class="headerlink" title="第四种方案：if constexpr"></a>第四种方案：<code>if constexpr</code></h2><p>更加简洁。不过也有缺点：</p>
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://hxhue.github.io/2023/08/12/cpp-templates-the-complete-guide-21-Templates-and-Inheritance/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="Hxhue">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Hxhue's Blog">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/2023/08/12/cpp-templates-the-complete-guide-21-Templates-and-Inheritance/" class="post-title-link" itemprop="url">CTTCG 21 Templates and Inheritance</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2023-08-12 00:00:00" itemprop="dateCreated datePublished" datetime="2023-08-12T00:00:00+08:00">2023-08-12</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2024-03-10 13:51:43" itemprop="dateModified" datetime="2024-03-10T13:51:43+08:00">2024-03-10</time>
+              </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/cpp-templates-the-complete-guide/" itemprop="url" rel="index"><span itemprop="name">cpp-templates-the-complete-guide</span></a>
+                </span>
+            </span>
+
+          <br>
+            <span class="post-meta-item" title="本文字数">
+              <span class="post-meta-item-icon">
+                <i class="far fa-file-word"></i>
+              </span>
+                <span class="post-meta-item-text">本文字数：</span>
+              <span>2.2k</span>
+            </span>
+            <span class="post-meta-item" title="阅读时长">
+              <span class="post-meta-item-icon">
+                <i class="far fa-clock"></i>
+              </span>
+                <span class="post-meta-item-text">阅读时长 &asymp;</span>
+              <span>8 分钟</span>
+            </span>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <h1 id="ling-kai-xiao-ji-cheng-kong-ji-lei-you-hua-ebco">零开销继承：空基类优化（EBCO）</h1>
+<p>The Empty Base Class Optimization (EBCO)</p>
+<p>C++ 没有真正零大小的类，因为在数组等场景需要用地址区分元素。一般编译器上空类的大小是 1 个字节。不过，当基类为空时，EBCO 会使得基类在子类中不占空间。但是 EBCO 的适用有条件。下面的场景是从实践中观察出来的，可能并没有被标准定义，但它演示了 EBCO 失效：</p>
 <ol>
-<li>算法被写成了一个大函数。</li>
-<li><strong>可能缺少 SFINAE 安全性保证</strong>。在 if constexpr 中发生的匹配失败会导致编译错误。</li>
+<li>定义“空基类组”的概念：如果空类型 B 继承了空类型 A，那么 B 和 A 可以存在于同一个空基类组（看成并查集会比较好理解）。和其他空类型不相关的类型可以认为自为一组。</li>
+<li>某类型 C 继承了一个大小为 N 的空基类组，那么它至少具有 N 个字节。如果这个类型 C 不是空类型，则还有对齐要求。</li>
+<li>继承多个空基类组，对子类对象所占用空间的要求等效于继承于最大的那个空基类组。</li>
 </ol>
-<h2 id="第五种方案：Concept"><a href="#第五种方案：Concept" class="headerlink" title="第五种方案：Concept"></a>第五种方案：Concept</h2><p>功能和 <code>std::enable_if</code> 是等效的，但是由语言直接支持。好处是：</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">struct</span> <span class="title class_">E1</span> &#123;&#125;;</span><br><span class="line"><span class="keyword">struct</span> <span class="title class_">E2</span> : E1 &#123;&#125;;</span><br><span class="line"><span class="keyword">struct</span> <span class="title class_">E20</span> &#123;&#125;;</span><br><span class="line"><span class="keyword">struct</span> <span class="title class_">E21</span> : E20 &#123;&#125;;</span><br><span class="line"><span class="keyword">struct</span> <span class="title class_">E22</span> : E20 &#123;&#125;;</span><br><span class="line"><span class="keyword">struct</span> <span class="title class_">E23</span> : E20 &#123;&#125;;</span><br><span class="line"><span class="keyword">struct</span> <span class="title class_">E24</span> : E20 &#123;&#125;;</span><br><span class="line"></span><br><span class="line"><span class="keyword">struct</span> <span class="title class_">B</span> : E1, E2, E20, E21, E22 &#123;</span><br><span class="line">    <span class="comment">// int a;</span></span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="type">int</span> <span class="title">main</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    std::cout &lt;&lt; <span class="string">&quot;sizeof(d): &quot;</span> &lt;&lt; <span class="built_in">sizeof</span>(B) &lt;&lt; <span class="string">&#x27;\n&#x27;</span>;</span><br><span class="line">    <span class="comment">// 输出为 3</span></span><br><span class="line">    <span class="comment">// 如果 B 中还有个整形元素 a，输出为 4</span></span><br><span class="line">    <span class="comment">// 如果 B 中还有个整形元素 a，并再继承空类 E23 和 E24，输出为 8（5对齐到4的倍数）</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h1 id="kong-cheng-yuan-you-hua">空成员优化</h1>
+<p>如果类中有一个空类的对象，那么它将无法适用 EBCO。将其改造为继承可以节约空间。</p>
+<p>类模板由于事先不能确定参数类型，很难保证能够安全继承参数类型（比如参数类型可能是不可继承的、多个参数的实际类型相同因而引发了多次继承的编译错误等）。</p>
+<p>下面的类模板把一个参数作为基类，一个参数作为成员，避免了多次继承同一类型的错误。而且这个类型也是可以被继承的。<strong>唯一的要求就是 Base 对应的类型可以继承</strong>。</p>
+<p><img src="../../assets/d41fba78ac0a6bb5f3bb275de2e3d478.png" alt></p>
+          <!--noindex-->
+            <div class="post-button">
+              <a class="btn" href="/2023/08/12/cpp-templates-the-complete-guide-21-Templates-and-Inheritance/#more" rel="contents">
+                阅读全文 &raquo;
+              </a>
+            </div>
+          <!--/noindex-->
+        
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://hxhue.github.io/2023/08/12/cpp-templates-the-complete-guide-23-Metaprogramming/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="Hxhue">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Hxhue's Blog">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/2023/08/12/cpp-templates-the-complete-guide-23-Metaprogramming/" class="post-title-link" itemprop="url">CTTCG 23 Metaprogramming</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2023-08-12 00:00:00" itemprop="dateCreated datePublished" datetime="2023-08-12T00:00:00+08:00">2023-08-12</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2024-03-10 13:14:31" itemprop="dateModified" datetime="2024-03-10T13:14:31+08:00">2024-03-10</time>
+              </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/cpp-templates-the-complete-guide/" itemprop="url" rel="index"><span itemprop="name">cpp-templates-the-complete-guide</span></a>
+                </span>
+            </span>
+
+          <br>
+            <span class="post-meta-item" title="本文字数">
+              <span class="post-meta-item-icon">
+                <i class="far fa-file-word"></i>
+              </span>
+                <span class="post-meta-item-text">本文字数：</span>
+              <span>620</span>
+            </span>
+            <span class="post-meta-item" title="阅读时长">
+              <span class="post-meta-item-icon">
+                <i class="far fa-clock"></i>
+              </span>
+                <span class="post-meta-item-text">阅读时长 &asymp;</span>
+              <span>2 分钟</span>
+            </span>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <h1 id="fen-lei">分类</h1>
+<p>现在值元编程已经能够很好地被 <code>constexpr</code> 函数取代。</p>
+<p>类型元编程例子：<code>std::chrono</code> 中的时间单位用分数表示，两个时间单位的加和的单位可以在运行时确定——尽管分母很可能会变化。</p>
+<p>混合元编程例子：</p>
 <ol>
-<li>表达更直接，代码易读。</li>
-<li><code>requires</code> 语法能用在<strong>模板类</strong>的<strong>非模板函数</strong>上：</li>
+<li>时间的相加。时间单位可以最终确定，但是由于给单位施加的量在运行时确定，所以需要运行时计算。同时除了量之外，其他的表达式都可以在编译期得到简化。</li>
+<li>强制循环展开。比如：</li>
 </ol>
-<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">template</span>&lt;<span class="keyword">typename</span> T&gt;</span><br><span class="line"><span class="keyword">class</span> <span class="title class_">Container</span> &#123;</span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line"><span class="comment">// ...</span></span><br><span class="line"><span class="function"><span class="keyword">requires</span> HasLess&lt;T&gt;</span></span><br><span class="line"><span class="function"><span class="type">void</span> <span class="title">sort</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    <span class="comment">// ...</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
-
-<ol>
-<li>不会出现 <code>std::enable_if</code> 那样<strong>占用默认值结果导致函数模板重复定义</strong>的情况。见 &#96;<a href="20.%20Overloading%20on%20Type%20Properties.md#%60std%20enable_if%60%20%E7%9A%84%E9%87%8D%E5%A4%8D%E5%A3%B0%E6%98%8E%E9%97%AE%E9%A2%98"></a>。</li>
-</ol>
-<h1 id="类模板的重载"><a href="#类模板的重载" class="headerlink" title="类模板的重载"></a>类模板的重载</h1><p>类模板有一种稳定的解决重复定义（函数模板有这个问题）的方式：偏特化。不过偏特化还是要求不能 ambiguous。</p>
-<p><strong>首先提供一个预留有一个默认参数的 fallback</strong>。假定类模板需要两个参数，就加第三个参数，给它一个默认值，比如 <code>typename = int</code>，或者 <code>int = 0</code>，实际上我们不会用到这个参数。</p>
-<p><strong>然后给预留的默认参数提供偏特化</strong>，用上 <code>std::enable_if</code> 等技巧。</p>
-<p>尽管类模板有偏特化解决重复定义的方式，类模板中的函数模板（构造函数模板、成员或静态函数模板）不能使用偏特化，所以也有和类模板外的函数模板一样的问题。</p>
-<h2 id="如何选择-tag？"><a href="#如何选择-tag？" class="headerlink" title="如何选择 tag？"></a>如何选择 tag？</h2><p>在标准库迭代器中，双向迭代器是前向迭代器。如果我们不需要向后迭代，写出来的模板的某一个版本会希望匹配到所有的前向迭代器，包括双向迭代器。但是我们又不希望把双向迭代器和前向迭代器 tag 的匹配情况都写一遍，因为这样可能会有两个模板，导致代码膨胀。</p>
-<p>除开条件判断之外，还有一种方法是使用递归继承囊括所有 <code>T(T)</code> 形式的函数重载：</p>
-<p><img src="/assets/13f492bfd83a46683758462adf03bb2b.png"></p>
-<p>然后用这个模板类的 <code>match</code> 方法去匹配具体的参数，判断被选中函数的返回值类型，从而能够将一个 tag 概括入最贴近的范围。举个例子，如果 <code>MatchOverloads</code> 的模板参数是输入迭代器、前向迭代器和随机访问迭代器，那么对双向迭代器进行匹配，会将其归为前向迭代器。</p>
-<blockquote>
-<p>问题：这是否会有更大的编译开销？感觉不如简单写一个 Trait 类，对几种迭代器做一个匹配。</p>
-</blockquote>
-<h1 id="处理-bool-的上下文转换（contextual-conversion）"><a href="#处理-bool-的上下文转换（contextual-conversion）" class="headerlink" title="处理 bool 的上下文转换（contextual conversion）"></a>处理 bool 的上下文转换（contextual conversion）</h1><figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">struct</span> <span class="title class_">BoolLike</span> &#123;</span><br><span class="line">    <span class="function"><span class="keyword">explicit</span> <span class="keyword">operator</span> <span class="title">bool</span><span class="params">()</span> <span class="type">const</span> </span>&#123; <span class="keyword">return</span> <span class="literal">true</span>; &#125; <span class="comment">// explicit conversion to bool</span></span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
-
-<p>这样的类型会被标准库的 <code>std::is_convertable_v</code> 判断成无法转换成 <code>bool</code>，因为标准库的这个 trait 只能判定隐式转换。而事实上 bool 类型还支持特殊的上下文转换：当一个类型被用在条件语句中时，就算其 <code>bool</code> 转换操作符被标志为 <code>explicit</code>，也能够进行转换。书中原文：</p>
-<blockquote>
-<p>An explicit conversion to bool can be used implicitly in certain contexts, including in Boolean conditions for control-ﬂow statements (if, while, for, and do), the built-in !, &amp;&amp;, and || operators, and the ternary operator ?:.</p>
-</blockquote>
-<p>如果我们用是否能够隐式转换作为依据，对于 bool 的判断则而可能过于严格。如果我们只把 bool 对象作为条件使用，可以在模板函数重载上嵌入三元表达式：</p>
-<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;utility&gt;</span>     <span class="comment">// for declval()</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;type_traits&gt;</span> <span class="comment">// for true_typeand false_type</span></span></span><br><span class="line"></span><br><span class="line"><span class="keyword">template</span>&lt;<span class="keyword">typename</span> T&gt;</span><br><span class="line"><span class="keyword">class</span> <span class="title class_">IsContextualBoolT</span> &#123;</span><br><span class="line"><span class="keyword">private</span>:</span><br><span class="line">    <span class="keyword">template</span>&lt;<span class="keyword">typename</span> T&gt; <span class="keyword">struct</span> <span class="title class_">Identity</span>;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">template</span>&lt;<span class="keyword">typename</span> U&gt; <span class="type">static</span> std::true_type</span></span><br><span class="line"><span class="function">    <span class="title">test</span><span class="params">(Identity&lt;<span class="keyword">decltype</span>(declval&lt;U&gt;() ? <span class="number">0</span> : <span class="number">1</span>)&gt;*)</span></span>; <span class="comment">// HERE</span></span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">template</span>&lt;<span class="keyword">typename</span> U&gt; <span class="type">static</span> std::false_type</span></span><br><span class="line"><span class="function">    <span class="title">test</span><span class="params">(...)</span></span>;</span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">    <span class="type">static</span> <span class="keyword">constexpr</span> <span class="type">bool</span> value = <span class="keyword">decltype</span>(<span class="built_in">test</span>&lt;T&gt;(<span class="literal">nullptr</span>))::value;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="keyword">template</span>&lt;<span class="keyword">typename</span> T&gt;</span><br><span class="line"><span class="keyword">constexpr</span> <span class="type">bool</span> IsContextualBool = IsContextualBoolT&lt;T&gt;::value;</span><br></pre></td></tr></table></figure>
-
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">template</span> &lt;<span class="keyword">typename</span> T, std::<span class="type">size_t</span> N&gt;</span><br><span class="line"><span class="keyword">struct</span> <span class="title class_">DotProductT</span> &#123;</span><br><span class="line">    <span class="function"><span class="type">static</span> <span class="keyword">inline</span> T <span class="title">result</span><span class="params">(T *a, T *b)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">return</span> *a * *b + DotProductT&lt;T, N<span class="number">-1</span>&gt;::<span class="built_in">result</span>(a+<span class="number">1</span>, b+<span class="number">1</span>);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">template</span> &lt;<span class="keyword">typename</span> T&gt;</span><br><span class="line"><span class="keyword">struct</span> <span class="title class_">DotProductT</span>&lt;T, <span class="number">0</span>&gt; &#123; <span class="comment">// 偏特化</span></span><br><span class="line">    <span class="function"><span class="type">static</span> <span class="keyword">inline</span> T <span class="title">result</span><span class="params">(T *, T *)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">return</span> T&#123;&#125;;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>在这个例子中尽管 <code>a</code> 和 <code>b</code> 两个数组的值是不知道的，但是能够知道迭代的次数（<code>N</code>），从而将 <code>result</code> 函数展开为一个非常长的计算表达式（这个函数本身是内联函数）。当然手动循环展开可能不如编译器决定更有效，而且 <code>inline</code> 也不一定能保证必定内联。</p>
+<h1 id="mo-ban-di-gui-shi-li-hua-de-dai-jie">模板递归实例化的代价</h1>
+<p>对于二分查找的模板，递归复杂度按理来为 <code>O(log(N))</code>。但决定分支的时候需要注意：</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="type">static</span> <span class="keyword">inline</span> <span class="keyword">constexpr</span> <span class="keyword">auto</span> value = std::conditional&lt;(N &lt; mid * mid),</span><br><span class="line">    Sqrt&lt;N, LO, mid<span class="number">-1</span>&gt;::value, Sqrt&lt;N, mid, HI&gt;::value&gt;;</span><br></pre></td></tr></table></figure>
+          <!--noindex-->
+            <div class="post-button">
+              <a class="btn" href="/2023/08/12/cpp-templates-the-complete-guide-23-Metaprogramming/#more" rel="contents">
+                阅读全文 &raquo;
+              </a>
+            </div>
+          <!--/noindex-->
+        
       
     </div>
 
@@ -1495,6 +1341,18 @@
     <i class="fa fa-heart"></i>
   </span>
   <span class="author" itemprop="copyrightHolder">Hxhue</span>
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item-icon">
+      <i class="fa fa-chart-area"></i>
+    </span>
+      <span class="post-meta-item-text">站点总字数：</span>
+    <span title="站点总字数">81k</span>
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item-icon">
+      <i class="fa fa-coffee"></i>
+    </span>
+      <span class="post-meta-item-text">站点阅读时长 &asymp;</span>
+    <span title="站点阅读时长">4:54</span>
 </div>
   <div class="powered-by">由 <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Gemini</a> 强力驱动
   </div><script color="0,0,255" opacity="0.5" zIndex="-1" count="99" src="https://cdn.jsdelivr.net/npm/canvas-nest.js@1/dist/canvas-nest.js"></script>
@@ -1535,8 +1393,12 @@
   
   <script src="/lib/anime.min.js"></script>
   <script src="//cdn.jsdelivr.net/npm/pangu@4/dist/browser/pangu.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
 
 <script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
 
 
 <script src="/js/schemes/pisces.js"></script>
