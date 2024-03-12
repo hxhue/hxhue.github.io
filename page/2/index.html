@@ -19,7 +19,7 @@
 
 <script id="hexo-configurations">
     var NexT = window.NexT || {};
-    var CONFIG = {"hostname":"hxhue.github.io","root":"/","scheme":"Gemini","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":true,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":true,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":false,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},"path":"search.xml"};
+    var CONFIG = {"hostname":"hxhue.github.io","root":"/","scheme":"Gemini","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"always","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":true,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":true,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":false,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},"path":"search.xml"};
   </script>
 
   <meta property="og:type" content="website">
@@ -947,7 +947,7 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="https://hxhue.github.io/cpplang/c-23-std-forward-like/">
+    <link itemprop="mainEntityOfPage" href="https://hxhue.github.io/inside-the-cpp-object-model/cfront-%E5%A6%82%E4%BD%95%E6%8F%92%E5%85%A5%E6%9E%84%E9%80%A0%E5%87%BD%E6%95%B0/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="image" content="/images/avatar.gif">
@@ -961,97 +961,7 @@
       <header class="post-header">
         <h2 class="post-title" itemprop="name headline">
           
-            <a href="/cpplang/c-23-std-forward-like/" class="post-title-link" itemprop="url">(C++23) std::forward_like</a>
-        </h2>
-
-        <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-calendar"></i>
-              </span>
-              <span class="post-meta-item-text">发表于</span>
-
-              <time title="创建时间：2023-08-12 15:17:00" itemprop="dateCreated datePublished" datetime="2023-08-12T15:17:00+08:00">2023-08-12</time>
-            </span>
-              <span class="post-meta-item">
-                <span class="post-meta-item-icon">
-                  <i class="far fa-calendar-check"></i>
-                </span>
-                <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2024-03-10 13:16:09" itemprop="dateModified" datetime="2024-03-10T13:16:09+08:00">2024-03-10</time>
-              </span>
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-folder"></i>
-              </span>
-              <span class="post-meta-item-text">分类于</span>
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/cpplang/" itemprop="url" rel="index"><span itemprop="name">cpplang</span></a>
-                </span>
-            </span>
-
-          <br>
-            <span class="post-meta-item" title="本文字数">
-              <span class="post-meta-item-icon">
-                <i class="far fa-file-word"></i>
-              </span>
-                <span class="post-meta-item-text">本文字数：</span>
-              <span>159</span>
-            </span>
-            <span class="post-meta-item" title="阅读时长">
-              <span class="post-meta-item-icon">
-                <i class="far fa-clock"></i>
-              </span>
-                <span class="post-meta-item-text">阅读时长 &asymp;</span>
-              <span>1 分钟</span>
-            </span>
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          <p><code>std::forward</code> 需要我们提供一个模板参数，它能把同类型（不包括值属性）的参数转发出去。</p>
-<p><code>std::forward_like</code> 则有两个模板参数，第一个参数需要显式提供，第二个参数从实参中推导。它从模板参数中获得转发需要使用的引用类型，并将实参转发出去。<strong>这意味着实参和模板参数的类型可以不一致！</strong></p>
-<p><code>std::forward_like</code> 非常适合转发子对象的场合，因为它能让子对象和本身的左右值类型相同。比如在显式对象参数中可以使用。</p>
-
-      
-    </div>
-
-    
-    
-    
-      <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  
-  
-  
-
-      
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="https://hxhue.github.io/cpplang/libstdc-vs-libc-std-tuple/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/avatar.gif">
-      <meta itemprop="name" content="Hxhue">
-      <meta itemprop="description" content="">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Hxhue's Blog">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          
-            <a href="/cpplang/libstdc-vs-libc-std-tuple/" class="post-title-link" itemprop="url">(libstdc++ vs libc++) std::tuple</a>
+            <a href="/inside-the-cpp-object-model/cfront-%E5%A6%82%E4%BD%95%E6%8F%92%E5%85%A5%E6%9E%84%E9%80%A0%E5%87%BD%E6%95%B0/" class="post-title-link" itemprop="url">Cfront 如何插入构造函数</a>
         </h2>
 
         <div class="post-meta">
@@ -1076,7 +986,7 @@
               </span>
               <span class="post-meta-item-text">分类于</span>
                 <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/cpplang/" itemprop="url" rel="index"><span itemprop="name">cpplang</span></a>
+                  <a href="/categories/inside-the-cpp-object-model/" itemprop="url" rel="index"><span itemprop="name">inside-the-cpp-object-model</span></a>
                 </span>
             </span>
 
@@ -1086,14 +996,14 @@
                 <i class="far fa-file-word"></i>
               </span>
                 <span class="post-meta-item-text">本文字数：</span>
-              <span>446</span>
+              <span>172</span>
             </span>
             <span class="post-meta-item" title="阅读时长">
               <span class="post-meta-item-icon">
                 <i class="far fa-clock"></i>
               </span>
                 <span class="post-meta-item-text">阅读时长 &asymp;</span>
-              <span>2 分钟</span>
+              <span>1 分钟</span>
             </span>
 
         </div>
@@ -1105,19 +1015,115 @@
     <div class="post-body" itemprop="articleBody">
 
       
-          <h1 id="lie-biao-gou-zao-shun-xu">列表构造顺序</h1>
-<p><code>libstdc++</code> 用的是递归反向构造，尾部的参数先构造。与之对应，<code>libc++</code> 用的是 parameter pack 继承，是正向构造。</p>
-<h1 id="xia-biao-bian-hao">下标编号</h1>
-<p>两者都使用了下标编号。这样即便 <code>std::tuple</code> 的某两个参数类型相同，也能通过不同的下标把两个元素区分开。</p>
-<h1 id="ebco">EBCO</h1>
-<p>两者都有 EBCO 技术。假定 <code>Base&lt;T, bool = InheritableEmptyBase&lt;T&gt;::value&gt;</code> 为两个库所用的元素包装类，<code>Base</code> 在参数为空类且能够被继承时，采用继承的方式存储元素，否则用成员变量存储元素。</p>
-<p>但是由于元组参数构造顺序不同，两种库实现占用的空间也可能不同。考虑类型 <code>std::tuple&lt;A, char, A, char, B&gt;</code>，其中 <code>A</code> 和 <code>B</code> 都是空类型，它在 libc++ 中只需要占用 2 个字节。</p>
-<p>而 libstdc++ 中同样的类型需要占用 3 个字节：</p>
-<p>如图，最后一次继承的时候先继承 <code>TupleImpl&lt;char, A, char, B&gt;</code>（假设 <code>TupleImpl</code> 是递归继承功能的实现模板），后继承 <code>Base&lt;A&gt;</code>，但由于地址 0 处已经有 <code>A</code> 类型，所以只能放在地址 2 处。（EBCO 失效之后只能跨过整个基类，不能摆在基类的中间地址。）</p>
-<p><img src="../../assets/a9ab4e97e8b420a649deed55a5905d87.png" alt></p>
+          <p>实际上复制构造函数的插入比较困难，比如在函数返回和传参的时候。由于 C 语言是按位复制（而不是按成员），cfront 会在函数调用前插入返回值变量声明，在函数中使用局部变量运算，并在返回时调用复制构造函数从局部变量复制成员到返回值处。</p>
+<p><strong>NRV</strong> (Named Return Value) 优化则能减少返回时的复制构造：</p>
+<p><img src="../../assets/cc2fdb90393c80df691782129795025a.png" alt=""></p>
+<h1 id="guan-yu-fan-hui-zhi-you-hua">关于返回值优化</h1>
+<p><img src="../../assets/91e5f009f558bdd67bca51ca0d3776de.png" alt=""></p>
+<p>RVO（<strong>在返回值上构造，也就是临时变量</strong>的优化，不过多个分支下 return 也是可以优化的）：</p>
+<p><img src="../../assets/f0dd4f2b4cb038186ac5a8e9d6687282.png" alt=""></p>
+<p>NRVO（具名局部变量的返回的优化）：</p>
+<p><img src="../../assets/87aa8de6c40b1ec9d484b7ccf3880a88.png" alt=""></p>
+
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://hxhue.github.io/inside-the-cpp-object-model/c-%E5%AF%B9%E8%B1%A1%E6%A8%A1%E5%9E%8B%E5%BC%80%E9%94%80%E6%80%BB%E7%BB%93/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="Hxhue">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Hxhue's Blog">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/inside-the-cpp-object-model/c-%E5%AF%B9%E8%B1%A1%E6%A8%A1%E5%9E%8B%E5%BC%80%E9%94%80%E6%80%BB%E7%BB%93/" class="post-title-link" itemprop="url">C++ 对象模型开销总结</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2023-08-12 15:17:00" itemprop="dateCreated datePublished" datetime="2023-08-12T15:17:00+08:00">2023-08-12</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2024-03-10 13:51:44" itemprop="dateModified" datetime="2024-03-10T13:51:44+08:00">2024-03-10</time>
+              </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/inside-the-cpp-object-model/" itemprop="url" rel="index"><span itemprop="name">inside-the-cpp-object-model</span></a>
+                </span>
+            </span>
+
+          <br>
+            <span class="post-meta-item" title="本文字数">
+              <span class="post-meta-item-icon">
+                <i class="far fa-file-word"></i>
+              </span>
+                <span class="post-meta-item-text">本文字数：</span>
+              <span>1.9k</span>
+            </span>
+            <span class="post-meta-item" title="阅读时长">
+              <span class="post-meta-item-icon">
+                <i class="far fa-clock"></i>
+              </span>
+                <span class="post-meta-item-text">阅读时长 &asymp;</span>
+              <span>7 分钟</span>
+            </span>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <p><strong>下面都是用的 Itanium C++ ABI。机器字长为 64 位。</strong></p>
+<h1 id="zhi-xiang-cheng-yuan-han-shu-de-zhi-zhen-2-bei-da-xiao">指向成员函数的指针：2 倍大小</h1>
+<p>在 64 位下是 16 字节，因为需要支持虚函数调用。指向成员函数的指针会保存两部分数据：</p>
+<p><code>ptr</code>：非虚函数则存储函数地址。虚函数则存储虚表中偏置加 1（1 plus the virtual table offset (in bytes) of the function, represented as a <code>ptrdiff_t</code>）</p>
+<p><code>adj</code>：存储对 this 指针的调整量。</p>
+<p><img src="../../assets/330ad93e6e502a485f38a465497e5685.png" alt></p>
+<p>用 <code>指向成员函数的指针</code> 调用函数时，需要在传入的 this 指针上添加偏置（在多继承中有用），偏置信息就存储在该指针内。下一节“调用虚函数的开销”也描述了如何在跨平台 C++ ABI 上装配一个 指向成员函数的指针。</p>
+<h1 id="diao-yong-xu-han-shu-duo-fang-cun-2-ci">调用虚函数：多访存 2 次</h1>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;cstdio&gt;</span></span></span><br><span class="line"></span><br><span class="line"><span class="keyword">struct</span> <span class="title class_">BaseObject</span> &#123;</span><br><span class="line">    <span class="function"><span class="keyword">virtual</span> <span class="type">int</span> <span class="title">f</span><span class="params">()</span> </span>&#123; <span class="keyword">return</span> <span class="number">13</span>; &#125;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="keyword">struct</span> <span class="title class_">DerivedObject</span> : BaseObject &#123;</span><br><span class="line">    <span class="function"><span class="type">int</span> <span class="title">f</span><span class="params">()</span> <span class="keyword">override</span> </span>&#123; <span class="keyword">return</span> <span class="number">4000</span>; &#125;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="type">int</span> <span class="title">main</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    BaseObject *p = <span class="keyword">new</span> DerivedObject;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 访存两次得到虚函数（感觉 long 类型比 char*/void* 模拟汇编更加合适）</span></span><br><span class="line">    <span class="type">long</span> vptr = *(<span class="type">long</span> *)p;</span><br><span class="line">    <span class="type">long</span> func = *(<span class="type">long</span> *)(vptr + <span class="number">0</span>);</span><br><span class="line">    </span><br><span class="line">    <span class="comment">// 把 this 指针作为第一个参数传入</span></span><br><span class="line">    <span class="keyword">auto</span> method = (<span class="built_in">int</span> (*)(BaseObject *))func;</span><br><span class="line">    <span class="type">int</span> result = <span class="built_in">method</span>(p);</span><br><span class="line">    </span><br><span class="line">    <span class="comment">// 尽管也可以按照 Itanium C++ ABI 装配成员函数指针，</span></span><br><span class="line">    <span class="comment">// 但实际上调用时还是会动态查找，相当于上面的访存操作白做了。</span></span><br><span class="line">    <span class="comment">// int (BaseObject::*method)();</span></span><br><span class="line">    <span class="comment">// auto &amp;manip = (long (&amp;)[2])method;</span></span><br><span class="line">    <span class="comment">// manip[0] = (long)func;</span></span><br><span class="line">    <span class="comment">// manip[1] = 0; // single inheritance</span></span><br><span class="line">    <span class="comment">// int result = (p-&gt;*method)();</span></span><br><span class="line"></span><br><span class="line">    <span class="built_in">printf</span>(<span class="string">&quot;result: %d\n&quot;</span>, result);</span><br><span class="line">    <span class="comment">// 打印结果：result: 4000</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h1 id="fang-wen-ji-cheng-zi-xu-ji-lei-de-cheng-yuan-duo-fang-cun-2-ci">访问继承自虚基类的成员：多访存 2 次</h1>
           <!--noindex-->
             <div class="post-button">
-              <a class="btn" href="/cpplang/libstdc-vs-libc-std-tuple/#more" rel="contents">
+              <a class="btn" href="/inside-the-cpp-object-model/c-%E5%AF%B9%E8%B1%A1%E6%A8%A1%E5%9E%8B%E5%BC%80%E9%94%80%E6%80%BB%E7%BB%93/#more" rel="contents">
                 阅读全文 &raquo;
               </a>
             </div>
