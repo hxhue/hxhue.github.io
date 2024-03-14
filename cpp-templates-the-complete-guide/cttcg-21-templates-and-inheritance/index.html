@@ -22,17 +22,17 @@
     var CONFIG = {"hostname":"hxhue.github.io","root":"/","scheme":"Gemini","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"always","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":true,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":true,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":false,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},"path":"search.xml"};
   </script>
 
-  <meta name="description" content="零开销继承：空基类优化（EBCO） The Empty Base Class Optimization (EBCO) C++ 没有真正零大小的类，因为在数组等场景需要用地址区分元素。一般编译器上空类的大小是 1 个字节。不过，当基类为空时，EBCO 会使得基类在子类中不占空间。但是 EBCO 的适用有条件。下面的场景是从实践中观察出来的，可能并没有被标准定义，但它演示了 EBCO 失效：  定义“">
+  <meta name="description" content="零开销继承：空基类优化（EBCO）The Empty Base Class Optimization (EBCO) C++ 没有真正零大小的类，因为在数组等场景需要用地址区分元素。一般编译器上空类的大小是 1 个字节。不过，当基类为空时，EBCO 会使得基类在子类中不占空间。但是 EBCO 的适用有条件。下面的场景是从实践中观察出来的，可能并没有被标准定义，但它演示了 EBCO 失效：  定义“空">
 <meta property="og:type" content="article">
 <meta property="og:title" content="CTTCG 21 Templates and Inheritance">
 <meta property="og:url" content="https://hxhue.github.io/cpp-templates-the-complete-guide/cttcg-21-templates-and-inheritance/index.html">
 <meta property="og:site_name" content="Hxhue&#39;s Blog">
-<meta property="og:description" content="零开销继承：空基类优化（EBCO） The Empty Base Class Optimization (EBCO) C++ 没有真正零大小的类，因为在数组等场景需要用地址区分元素。一般编译器上空类的大小是 1 个字节。不过，当基类为空时，EBCO 会使得基类在子类中不占空间。但是 EBCO 的适用有条件。下面的场景是从实践中观察出来的，可能并没有被标准定义，但它演示了 EBCO 失效：  定义“">
+<meta property="og:description" content="零开销继承：空基类优化（EBCO）The Empty Base Class Optimization (EBCO) C++ 没有真正零大小的类，因为在数组等场景需要用地址区分元素。一般编译器上空类的大小是 1 个字节。不过，当基类为空时，EBCO 会使得基类在子类中不占空间。但是 EBCO 的适用有条件。下面的场景是从实践中观察出来的，可能并没有被标准定义，但它演示了 EBCO 失效：  定义“空">
 <meta property="og:locale" content="zh_CN">
 <meta property="og:image" content="https://hxhue.github.io/assets/d41fba78ac0a6bb5f3bb275de2e3d478.png">
 <meta property="og:image" content="https://hxhue.github.io/assets/5b3595c18c845b5529f6f7bb3c4cead0.png">
 <meta property="article:published_time" content="2023-08-11T16:00:00.000Z">
-<meta property="article:modified_time" content="2024-03-10T05:51:43.889Z">
+<meta property="article:modified_time" content="2024-03-14T07:12:11.813Z">
 <meta property="article:author" content="Hxhue">
 <meta property="article:tag" content="cpp">
 <meta name="twitter:card" content="summary">
@@ -122,27 +122,27 @@
   <ul id="menu" class="main-menu menu">
         <li class="menu-item menu-item-home">
 
-    <a href="/" rel="section"><i class="home fa-fw"></i>首页</a>
+    <a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a>
 
   </li>
         <li class="menu-item menu-item-archives">
 
-    <a href="/archives/" rel="section"><i class="archive fa-fw"></i>归档</a>
+    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档</a>
 
   </li>
         <li class="menu-item menu-item-about">
 
-    <a href="/about/" rel="section"><i class="user fa-fw"></i>关于</a>
+    <a href="/about/" rel="section"><i class="fa fa-user fa-fw"></i>关于</a>
 
   </li>
         <li class="menu-item menu-item-tags">
 
-    <a href="/tags/" rel="section"><i class="tags fa-fw"></i>标签</a>
+    <a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>标签</a>
 
   </li>
         <li class="menu-item menu-item-categories">
 
-    <a href="/categories/" rel="section"><i class="th fa-fw"></i>分类</a>
+    <a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>分类</a>
 
   </li>
       <li class="menu-item menu-item-search">
@@ -230,7 +230,7 @@
                   <i class="far fa-calendar-check"></i>
                 </span>
                 <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2024-03-10 13:51:43" itemprop="dateModified" datetime="2024-03-10T13:51:43+08:00">2024-03-10</time>
+                <time title="修改时间：2024-03-14 15:12:11" itemprop="dateModified" datetime="2024-03-14T15:12:11+08:00">2024-03-14</time>
               </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
@@ -242,14 +242,7 @@
                 </span>
             </span>
 
-          
-            <span class="post-meta-item" title="阅读次数" id="busuanzi_container_page_pv" style="display: none;">
-              <span class="post-meta-item-icon">
-                <i class="eye"></i>
-              </span>
-              <span class="post-meta-item-text">阅读次数：</span>
-              <span id="busuanzi_value_page_pv"></span>
-            </span><br>
+          <br>
             <span class="post-meta-item" title="本文字数">
               <span class="post-meta-item-icon">
                 <i class="far fa-file-word"></i>
@@ -274,8 +267,7 @@
     <div class="post-body" itemprop="articleBody">
 
       
-        <h1 id="ling-kai-xiao-ji-cheng-kong-ji-lei-you-hua-ebco">零开销继承：空基类优化（EBCO）</h1>
-<p>The Empty Base Class Optimization (EBCO)</p>
+        <h1 id="零开销继承：空基类优化（EBCO）"><a href="#零开销继承：空基类优化（EBCO）" class="headerlink" title="零开销继承：空基类优化（EBCO）"></a>零开销继承：空基类优化（EBCO）</h1><p>The Empty Base Class Optimization (EBCO)</p>
 <p>C++ 没有真正零大小的类，因为在数组等场景需要用地址区分元素。一般编译器上空类的大小是 1 个字节。不过，当基类为空时，EBCO 会使得基类在子类中不占空间。但是 EBCO 的适用有条件。下面的场景是从实践中观察出来的，可能并没有被标准定义，但它演示了 EBCO 失效：</p>
 <ol>
 <li>定义“空基类组”的概念：如果空类型 B 继承了空类型 A，那么 B 和 A 可以存在于同一个空基类组（看成并查集会比较好理解）。和其他空类型不相关的类型可以认为自为一组。</li>
@@ -283,30 +275,26 @@
 <li>继承多个空基类组，对子类对象所占用空间的要求等效于继承于最大的那个空基类组。</li>
 </ol>
 <figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">struct</span> <span class="title class_">E1</span> &#123;&#125;;</span><br><span class="line"><span class="keyword">struct</span> <span class="title class_">E2</span> : E1 &#123;&#125;;</span><br><span class="line"><span class="keyword">struct</span> <span class="title class_">E20</span> &#123;&#125;;</span><br><span class="line"><span class="keyword">struct</span> <span class="title class_">E21</span> : E20 &#123;&#125;;</span><br><span class="line"><span class="keyword">struct</span> <span class="title class_">E22</span> : E20 &#123;&#125;;</span><br><span class="line"><span class="keyword">struct</span> <span class="title class_">E23</span> : E20 &#123;&#125;;</span><br><span class="line"><span class="keyword">struct</span> <span class="title class_">E24</span> : E20 &#123;&#125;;</span><br><span class="line"></span><br><span class="line"><span class="keyword">struct</span> <span class="title class_">B</span> : E1, E2, E20, E21, E22 &#123;</span><br><span class="line">    <span class="comment">// int a;</span></span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="type">int</span> <span class="title">main</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    std::cout &lt;&lt; <span class="string">&quot;sizeof(d): &quot;</span> &lt;&lt; <span class="built_in">sizeof</span>(B) &lt;&lt; <span class="string">&#x27;\n&#x27;</span>;</span><br><span class="line">    <span class="comment">// 输出为 3</span></span><br><span class="line">    <span class="comment">// 如果 B 中还有个整形元素 a，输出为 4</span></span><br><span class="line">    <span class="comment">// 如果 B 中还有个整形元素 a，并再继承空类 E23 和 E24，输出为 8（5对齐到4的倍数）</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<h1 id="kong-cheng-yuan-you-hua">空成员优化</h1>
-<p>如果类中有一个空类的对象，那么它将无法适用 EBCO。将其改造为继承可以节约空间。</p>
+
+<h1 id="空成员优化"><a href="#空成员优化" class="headerlink" title="空成员优化"></a>空成员优化</h1><p>如果类中有一个空类的对象，那么它将无法适用 EBCO。将其改造为继承可以节约空间。</p>
 <p>类模板由于事先不能确定参数类型，很难保证能够安全继承参数类型（比如参数类型可能是不可继承的、多个参数的实际类型相同因而引发了多次继承的编译错误等）。</p>
 <p>下面的类模板把一个参数作为基类，一个参数作为成员，避免了多次继承同一类型的错误。而且这个类型也是可以被继承的。<strong>唯一的要求就是 Base 对应的类型可以继承</strong>。</p>
-<p><img src="../../assets/d41fba78ac0a6bb5f3bb275de2e3d478.png" alt=""></p>
+<p><img src="/../../assets/d41fba78ac0a6bb5f3bb275de2e3d478.png"></p>
 <p>第 25 章的元组实现会继续探讨相似的话题。</p>
-<h1 id="the-curiously-recurring-template-pattern-crtp">The Curiously Recurring Template Pattern (CRTP)</h1>
-<p>Barton-Nackman trick：和过去友元函数的定义查找有关系，现在查找方式改变了，用处变小了。</p>
+<h1 id="The-Curiously-Recurring-Template-Pattern-CRTP"><a href="#The-Curiously-Recurring-Template-Pattern-CRTP" class="headerlink" title="The Curiously Recurring Template Pattern (CRTP)"></a>The Curiously Recurring Template Pattern (CRTP)</h1><p>Barton-Nackman trick：和过去友元函数的定义查找有关系，现在查找方式改变了，用处变小了。</p>
 <p><strong>CRTP 的形式为</strong> <code>class T: CRTP&lt;T&gt; &#123;...&#125;;</code><strong>，能够向子类注入一大堆东西</strong>。在子访父的场景下，被注入的东西可以成为搭建子类功能的基石，极大地简化了代码；在父访子的场景下，则可以实现外观模式。</p>
-<h2 id="strong-lei-xing-xiang-guan-han-shu-strong" id="类型相关函数"><strong>类型相关函数</strong></h2>
-<p>举例：使用 <code>==</code> 比较运算符生成 <code>!=</code> 比较运算符（比较运算符一般被实现成 hidden friends）。</p>
-<h2 id="strong-wai-guan-mo-shi-strong" id="外观模式"><strong>外观模式</strong></h2>
-<p>则是由 CRTP 基类提供外观，并假设子类会实现某些操作，然后通过调用这些操作完成功能（父访子的场景）。<strong>实际上使用虚函数就能够很方便完成这个操作，但是这样可能会有比较大的性能代价。</strong></p>
+<h2 id="类型相关函数"><a href="#类型相关函数" class="headerlink" title="类型相关函数"></a><strong>类型相关函数</strong></h2><p>举例：使用 <code>==</code> 比较运算符生成 <code>!=</code> 比较运算符（比较运算符一般被实现成 hidden friends）。</p>
+<h2 id="外观模式"><a href="#外观模式" class="headerlink" title="外观模式"></a><strong>外观模式</strong></h2><p>则是由 CRTP 基类提供外观，并假设子类会实现某些操作，然后通过调用这些操作完成功能（父访子的场景）。<strong>实际上使用虚函数就能够很方便完成这个操作，但是这样可能会有比较大的性能代价。</strong></p>
 <p>举个例子：标准库迭代器要求一堆 type aliases 和方法，写起来繁琐，还容易因为看错了要求而使得迭代器功能不完全正常。可以构造标准库支持的迭代器的外观模板简化迭代器的实现。迭代器外观模板可能会要求子类提供 <code>deref()</code> 、<code>advance(int)</code> 等函数。</p>
-<h2 id="yao-dian-zen-yao-shi-xian-fu-fang-zi" id="要点：怎么实现父访子？">要点：怎么实现父访子？</h2>
-<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">template</span> &lt;<span class="keyword">class</span> <span class="title class_">T</span>&gt; <span class="keyword">struct</span> <span class="title class_">CRTP</span> &#123;</span><br><span class="line">    <span class="function"><span class="type">void</span> <span class="title">print</span><span class="params">()</span> </span>&#123; std::cout &lt;&lt; <span class="built_in">asDerived</span>().value &lt;&lt; <span class="string">&#x27;\n&#x27;</span>; &#125;</span><br><span class="line"></span><br><span class="line">  <span class="keyword">private</span>:</span><br><span class="line">    <span class="function">T <span class="type">const</span> &amp;<span class="title">asDerived</span><span class="params">()</span> <span class="type">const</span> </span>&#123; <span class="keyword">return</span> *<span class="built_in">static_cast</span>&lt;T <span class="type">const</span> *&gt;(<span class="keyword">this</span>); &#125;</span><br><span class="line">    <span class="function">T       &amp;<span class="title">asDerived</span><span class="params">()</span>       </span>&#123; <span class="keyword">return</span> *<span class="built_in">static_cast</span>&lt;T *&gt;(<span class="keyword">this</span>);       &#125;</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+<h2 id="要点：怎么实现父访子？"><a href="#要点：怎么实现父访子？" class="headerlink" title="要点：怎么实现父访子？"></a>要点：怎么实现父访子？</h2><figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">template</span> &lt;<span class="keyword">class</span> <span class="title class_">T</span>&gt; <span class="keyword">struct</span> <span class="title class_">CRTP</span> &#123;</span><br><span class="line">    <span class="function"><span class="type">void</span> <span class="title">print</span><span class="params">()</span> </span>&#123; std::cout &lt;&lt; <span class="built_in">asDerived</span>().value &lt;&lt; <span class="string">&#x27;\n&#x27;</span>; &#125;</span><br><span class="line"></span><br><span class="line">  <span class="keyword">private</span>:</span><br><span class="line">    <span class="function">T <span class="type">const</span> &amp;<span class="title">asDerived</span><span class="params">()</span> <span class="type">const</span> </span>&#123; <span class="keyword">return</span> *<span class="built_in">static_cast</span>&lt;T <span class="type">const</span> *&gt;(<span class="keyword">this</span>); &#125;</span><br><span class="line">    <span class="function">T       &amp;<span class="title">asDerived</span><span class="params">()</span>       </span>&#123; <span class="keyword">return</span> *<span class="built_in">static_cast</span>&lt;T *&gt;(<span class="keyword">this</span>);       &#125;</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+
 <p>这段代码将 <code>*this</code> 转换成了子类的引用。由于这<strong>构成了类型依赖</strong>，这段代码的 <code>print</code> 函数将在第二阶段被检查。（使用 <code>this-&gt;value</code> 也会导致编译失败，因为这个类模板并没有继承任何有依赖的基类，虽然构成了限定名但不构成依赖。）</p>
-<h2 id="xiang-yuan" id="享元">享元</h2>
-<p>通常子类的成员会被设计成私有，以防使用方透过外观访问实现细节。可以把外观模板类声明为子类的友元，但是这样外观模板类就有访问子类所有部分的权限。使用<strong>享元模式</strong>可以约定外观类模板对子类的访问权限。</p>
-<p><img src="../../assets/5b3595c18c845b5529f6f7bb3c4cead0.png" alt=""></p>
-<p>这样外观模板虽然无法直接访问子类的任何成员，但是可以拿到子类的引用，并借助享元访问子类。由于不需要在外观模板中对子类的成员做假设，上面那个构建类型依赖的技巧（[](about:blank#%E8%A6%81%E7%82%B9%EF%BC%9A%E6%80%8E%E4%B9%88%E5%AE%9E%E7%8E%B0%E7%88%B6%E8%AE%BF%E5%AD%90%EF%BC%9F%5D(about:blank#%E8%A6%81%E7%82%B9%EF%BC%9A%E6%80%8E%E4%B9%88%E5%AE%9E%E7%8E%B0%E7%88%B6%E8%AE%BF%E5%AD%90%EF%BC%9F%5D(about:blank#)）也不再需要了。</p>
-<h2 id="code-std-enable-shared-from-this-code" id="std-enable-shared-from-this"><code>std::enable_shared_from_this</code></h2>
-<p>这也是一个 CRTP 模板，里面包含一个 weak_ptr，长度为两个指针大小（对象指针和引用控制块指针）。子类通过继承这个模板可以使用 <code>shared_from_this()</code> 和 <code>weak_from_this()</code> 函数。前者本质上是从 weak_ptr 生成 shared_ptr，必须保证对象被包裹在 <code>std::shared_ptr</code> 对象中（共享环境）才能使用；在 C++17 之前若不在共享环境中访问 <code>shared_from_this()</code> 是 UB，现在则会抛出异常。</p>
+<h2 id="享元"><a href="#享元" class="headerlink" title="享元"></a>享元</h2><p>通常子类的成员会被设计成私有，以防使用方透过外观访问实现细节。可以把外观模板类声明为子类的友元，但是这样外观模板类就有访问子类所有部分的权限。使用<strong>享元模式</strong>可以约定外观类模板对子类的访问权限。</p>
+<p><img src="/../../assets/5b3595c18c845b5529f6f7bb3c4cead0.png"></p>
+<p>这样外观模板虽然无法直接访问子类的任何成员，但是可以拿到子类的引用，并借助享元访问子类。由于不需要在外观模板中对子类的成员做假设，上面那个构建类型依赖的技巧（<a href="about:blank#%E8%A6%81%E7%82%B9%EF%BC%9A%E6%80%8E%E4%B9%88%E5%AE%9E%E7%8E%B0%E7%88%B6%E8%AE%BF%E5%AD%90%EF%BC%9F%5D(about:blank#%E8%A6%81%E7%82%B9%EF%BC%9A%E6%80%8E%E4%B9%88%E5%AE%9E%E7%8E%B0%E7%88%B6%E8%AE%BF%E5%AD%90%EF%BC%9F%5D(about:blank#"></a>）也不再需要了。</p>
+<h2 id="std-enable-shared-from-this"><a href="#std-enable-shared-from-this" class="headerlink" title="std::enable_shared_from_this"></a><code>std::enable_shared_from_this</code></h2><p>这也是一个 CRTP 模板，里面包含一个 weak_ptr，长度为两个指针大小（对象指针和引用控制块指针）。子类通过继承这个模板可以使用 <code>shared_from_this()</code> 和 <code>weak_from_this()</code> 函数。前者本质上是从 weak_ptr 生成 shared_ptr，必须保证对象被包裹在 <code>std::shared_ptr</code> 对象中（共享环境）才能使用；在 C++17 之前若不在共享环境中访问 <code>shared_from_this()</code> 是 UB，现在则会抛出异常。</p>
 <figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">class</span> <span class="title class_">Best</span> : <span class="keyword">public</span> std::enable_shared_from_this&lt;Best&gt;</span><br><span class="line">&#123;</span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">    <span class="function">std::shared_ptr&lt;Best&gt; <span class="title">getptr</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="built_in">shared_from_this</span>();</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="comment">// No public constructor, only a factory function,</span></span><br><span class="line">    <span class="comment">// so there&#x27;s no way to have getptr return nullptr.</span></span><br><span class="line">    [nodiscard](nodiscard) <span class="function"><span class="type">static</span> std::shared_ptr&lt;Best&gt; <span class="title">create</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        <span class="comment">// Not using std::make_shared&lt;Best&gt; because the c&#x27;tor is private.</span></span><br><span class="line">        <span class="keyword">return</span> std::<span class="built_in">shared_ptr</span>&lt;Best&gt;(<span class="keyword">new</span> <span class="built_in">Best</span>());</span><br><span class="line">    &#125;</span><br><span class="line"><span class="keyword">private</span>:</span><br><span class="line">    <span class="built_in">Best</span>() = <span class="keyword">default</span>;</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+
 <p>在 <code>create()</code> 方法中创建了一个新的 Best 对象，该对象包含了一个控制块指针，初始计数为 0。<code>std::shared_ptr</code> 的构造函数能识别 esft（enable shared from this）对象指针，会和其 weak_ptr 中的控制块关联并将控制块的计数增 1。</p>
 <blockquote>
 <p>题外话：std::shared_ptr 的缺点</p>
@@ -317,27 +305,25 @@
 <li>原子计数在单线程比较慢</li>
 </ol>
 <p>类型刚创建时，如果不在共享环境中，则 <code>weak_ptr</code> 会被初始化成一个安全的空值，不会被分配控制块，进而也不需要再申请空间。</p>
-<h1 id="mixin">Mixin</h1>
-<p>Mixin 也是另外一种同时使用继承和模板的技术。和 CRTP 相比：CRTP 希望向子类注入一些功能和属性，因而希望作为基类被继承；Mixin 希望获得某些特性，因而希望用户提供基类。</p>
+<h1 id="Mixin"><a href="#Mixin" class="headerlink" title="Mixin"></a>Mixin</h1><p>Mixin 也是另外一种同时使用继承和模板的技术。和 CRTP 相比：CRTP 希望向子类注入一些功能和属性，因而希望作为基类被继承；Mixin 希望获得某些特性，因而希望用户提供基类。</p>
 <blockquote>
 <p>一般面对对象是别人提供了一个基类，你可以去继承。但是由于基类是别人写好的，不能去继承还没写好的东西（也就是库类没法继承用户提供的类）。 Mixin 提供一个模板。用户通过传入参数指定要继承的基类，从而实现库类继承用户类。</p>
 </blockquote>
 <figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">template</span>&lt;<span class="keyword">typename</span>... Mixins&gt;</span><br><span class="line"><span class="keyword">class</span> <span class="title class_">Point</span> : <span class="keyword">public</span> Mixins...</span><br><span class="line">&#123;</span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">    <span class="type">double</span> x, y;</span><br><span class="line">    <span class="built_in">Point</span>() : <span class="built_in">Mixins</span>()..., <span class="built_in">x</span>(<span class="number">0.0</span>), <span class="built_in">y</span>(<span class="number">0.0</span>) &#123; &#125;</span><br><span class="line">    <span class="built_in">Point</span>(<span class="type">double</span> x, <span class="type">double</span> y) : <span class="built_in">Mixins</span>()..., <span class="built_in">x</span>(x), <span class="built_in">y</span>(y) &#123; &#125;</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+
 <p>上面代码可以允许用户给 <code>Point</code> 类型添加额外的属性。在功能提供方来看，只需要实现支持任意模板参数的 <code>Point</code> 模板类即可。</p>
-<h2 id="curious-mixins" id="Curious-Mixins">Curious Mixins</h2>
-<p>将 CRTP 和 Mixin 结合：</p>
+<h2 id="Curious-Mixins"><a href="#Curious-Mixins" class="headerlink" title="Curious Mixins"></a>Curious Mixins</h2><p>将 CRTP 和 Mixin 结合：</p>
 <figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">template</span>&lt;<span class="keyword">template</span>&lt;<span class="keyword">typename</span>&gt;... Mixins&gt;</span><br><span class="line"><span class="keyword">class</span> <span class="title class_">Point</span> : <span class="keyword">public</span> Mixins&lt;Point&gt;...</span><br><span class="line">&#123;</span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">    <span class="type">double</span> x, y;</span><br><span class="line">    <span class="built_in">Point</span>() : <span class="built_in">Mixins</span>&lt;Point&gt;()..., <span class="built_in">x</span>(<span class="number">0.0</span>), <span class="built_in">y</span>(<span class="number">0.0</span>) &#123; &#125;</span><br><span class="line">    <span class="built_in">Point</span>(<span class="type">double</span> x, <span class="type">double</span> y) : <span class="built_in">Mixins</span>&lt;Point&gt;()..., <span class="built_in">x</span>(x), <span class="built_in">y</span>(y) &#123; &#125;</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+
 <p>上面的代码从接受普通类改成了接受模板类。</p>
-<h2 id="bao-chi-han-shu-de-xu-shi-xing" id="保持函数的虚实性">保持函数的虚实性</h2>
-<p>从 Mixins 继承时，其中的虚函数和普通函数都会被保留下来。重新声明相同的函数，但省略不写 <code>virtual</code>，则在基类声明该函数为虚函数时，这个函数被认为是虚函数；在基类声明该函数不是虚函数时，这个函数会覆盖基类的定义。</p>
+<h2 id="保持函数的虚实性"><a href="#保持函数的虚实性" class="headerlink" title="保持函数的虚实性"></a>保持函数的虚实性</h2><p>从 Mixins 继承时，其中的虚函数和普通函数都会被保留下来。重新声明相同的函数，但省略不写 <code>virtual</code>，则在基类声明该函数为虚函数时，这个函数被认为是虚函数；在基类声明该函数不是虚函数时，这个函数会覆盖基类的定义。</p>
 <blockquote>
 <p>这种用法非常少，也不推荐。</p>
 </blockquote>
-<h1 id="named-template-arguments">Named Template Arguments</h1>
-<p>目前 C++ 标准不支持声明时不按顺序指定模板参数（尽管 C++20 的指定初始化对于变量定义已经可用了）。P512 讨论了一种策略选择方案，使得参数位置无关。</p>
-<h1 id="fang-zhi-ji-cheng-tong-yi-ji-lei-duo-ci-dao-zhi-de-bian-yi-cuo-wu">防止继承同一基类多次导致的编译错误</h1>
-<p>不成熟的方案：</p>
+<h1 id="Named-Template-Arguments"><a href="#Named-Template-Arguments" class="headerlink" title="Named Template Arguments"></a>Named Template Arguments</h1><p>目前 C++ 标准不支持声明时不按顺序指定模板参数（尽管 C++20 的指定初始化对于变量定义已经可用了）。P512 讨论了一种策略选择方案，使得参数位置无关。</p>
+<h1 id="防止继承同一基类多次导致的编译错误"><a href="#防止继承同一基类多次导致的编译错误" class="headerlink" title="防止继承同一基类多次导致的编译错误"></a>防止继承同一基类多次导致的编译错误</h1><p>不成熟的方案：</p>
 <figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">template</span> &lt;<span class="type">size_t</span> Index, <span class="keyword">typename</span> A&gt; <span class="keyword">struct</span> <span class="title class_">UniqueBase</span> : A &#123;&#125;;</span><br><span class="line"></span><br><span class="line"><span class="keyword">template</span> &lt;<span class="type">size_t</span> Index, <span class="keyword">typename</span>...&gt; <span class="keyword">struct</span> <span class="title class_">UniqueIndex</span> &#123;&#125;;</span><br><span class="line"></span><br><span class="line"><span class="keyword">template</span> &lt;<span class="type">size_t</span> Index, <span class="keyword">typename</span> A, <span class="keyword">typename</span>... Ts&gt;</span><br><span class="line"><span class="keyword">struct</span> <span class="title class_">UniqueIndex</span>&lt;Index, A, Ts...&gt; :</span><br><span class="line">    UniqueBase&lt;Index, A&gt;, UniqueIndex&lt;Index + <span class="number">1</span>, Ts...&gt; &#123;&#125;;</span><br><span class="line"></span><br><span class="line"><span class="keyword">template</span> &lt;<span class="keyword">typename</span>... Ts&gt; <span class="keyword">struct</span> <span class="title class_">Unique</span> : UniqueIndex&lt;<span class="number">0</span>, Ts...&gt; &#123;&#125;;</span><br><span class="line"></span><br><span class="line"><span class="keyword">template</span> &lt;<span class="keyword">class</span>... Bases&gt; <span class="keyword">class</span> <span class="title class_">Mixin</span> : <span class="keyword">public</span> Unique&lt;Bases...&gt; &#123;</span><br><span class="line">  <span class="keyword">public</span>:</span><br><span class="line">    <span class="function"><span class="type">void</span> <span class="title">print</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        std::cout &lt;&lt; <span class="string">&quot;Mixin size: &quot;</span> &lt;&lt; <span class="built_in">sizeof</span>(<span class="keyword">decltype</span>(*<span class="keyword">this</span>)) &lt;&lt; <span class="string">&#x27;\n&#x27;</span>;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="keyword">struct</span> <span class="title class_">AddX</span> &#123; <span class="type">int</span> x&#123;&#125;; &#125;;</span><br><span class="line"><span class="keyword">struct</span> <span class="title class_">AddY</span> &#123; <span class="type">int</span> y&#123;&#125;; &#125;;</span><br><span class="line"><span class="keyword">struct</span> <span class="title class_">AddPoint</span>: AddX, AddY &#123;&#125;;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="type">int</span> <span class="title">main</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    <span class="keyword">using</span> MixinResult = Mixin&lt;AddX, AddX <span class="comment">/* 同一基类 */</span>, AddPoint&gt;;</span><br><span class="line">    MixinResult&#123;&#125;.<span class="built_in">print</span>(); <span class="comment">// 打印16，说明空间没有共用</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
 <p>给每个类型参数加上编号包装，可以避免继承同一基类导致编译错误。但是这样构成的菱形继承会导致基类数据成员重复占用空间（尽管名字查找时会覆盖基类定义）。</p>
 <p><a target="_blank" rel="noopener" href="https://www.fluentcpp.com/2018/08/28/removing-duplicates-crtp-base-classes/">https://www.fluentcpp.com/2018/08/28/removing-duplicates-crtp-base-classes/</a> 的评论区有人提出了一种思考方向类似，但是更为成熟的方案，可以减少数据成员 shadow 的空间浪费。</p>
 
@@ -423,7 +409,7 @@
 
       <!--noindex-->
       <div class="post-toc-wrap sidebar-panel">
-          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#ling-kai-xiao-ji-cheng-kong-ji-lei-you-hua-ebco"><span class="nav-number">1.</span> <span class="nav-text">零开销继承：空基类优化（EBCO）</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#kong-cheng-yuan-you-hua"><span class="nav-number">2.</span> <span class="nav-text">空成员优化</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#the-curiously-recurring-template-pattern-crtp"><span class="nav-number">3.</span> <span class="nav-text">The Curiously Recurring Template Pattern (CRTP)</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#strong-lei-xing-xiang-guan-han-shu-strong"><span class="nav-number">3.1.</span> <span class="nav-text">类型相关函数</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#strong-wai-guan-mo-shi-strong"><span class="nav-number">3.2.</span> <span class="nav-text">外观模式</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#yao-dian-zen-yao-shi-xian-fu-fang-zi"><span class="nav-number">3.3.</span> <span class="nav-text">要点：怎么实现父访子？</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#xiang-yuan"><span class="nav-number">3.4.</span> <span class="nav-text">享元</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#code-std-enable-shared-from-this-code"><span class="nav-number">3.5.</span> <span class="nav-text">std::enable_shared_from_this</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#mixin"><span class="nav-number">4.</span> <span class="nav-text">Mixin</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#curious-mixins"><span class="nav-number">4.1.</span> <span class="nav-text">Curious Mixins</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#bao-chi-han-shu-de-xu-shi-xing"><span class="nav-number">4.2.</span> <span class="nav-text">保持函数的虚实性</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#named-template-arguments"><span class="nav-number">5.</span> <span class="nav-text">Named Template Arguments</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#fang-zhi-ji-cheng-tong-yi-ji-lei-duo-ci-dao-zhi-de-bian-yi-cuo-wu"><span class="nav-number">6.</span> <span class="nav-text">防止继承同一基类多次导致的编译错误</span></a></li></ol></div>
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#%E9%9B%B6%E5%BC%80%E9%94%80%E7%BB%A7%E6%89%BF%EF%BC%9A%E7%A9%BA%E5%9F%BA%E7%B1%BB%E4%BC%98%E5%8C%96%EF%BC%88EBCO%EF%BC%89"><span class="nav-text">零开销继承：空基类优化（EBCO）</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E7%A9%BA%E6%88%90%E5%91%98%E4%BC%98%E5%8C%96"><span class="nav-text">空成员优化</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#The-Curiously-Recurring-Template-Pattern-CRTP"><span class="nav-text">The Curiously Recurring Template Pattern (CRTP)</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E7%B1%BB%E5%9E%8B%E7%9B%B8%E5%85%B3%E5%87%BD%E6%95%B0"><span class="nav-text">类型相关函数</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%A4%96%E8%A7%82%E6%A8%A1%E5%BC%8F"><span class="nav-text">外观模式</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E8%A6%81%E7%82%B9%EF%BC%9A%E6%80%8E%E4%B9%88%E5%AE%9E%E7%8E%B0%E7%88%B6%E8%AE%BF%E5%AD%90%EF%BC%9F"><span class="nav-text">要点：怎么实现父访子？</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%BA%AB%E5%85%83"><span class="nav-text">享元</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#std-enable-shared-from-this"><span class="nav-text">std::enable_shared_from_this</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Mixin"><span class="nav-text">Mixin</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#Curious-Mixins"><span class="nav-text">Curious Mixins</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%BF%9D%E6%8C%81%E5%87%BD%E6%95%B0%E7%9A%84%E8%99%9A%E5%AE%9E%E6%80%A7"><span class="nav-text">保持函数的虚实性</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Named-Template-Arguments"><span class="nav-text">Named Template Arguments</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E9%98%B2%E6%AD%A2%E7%BB%A7%E6%89%BF%E5%90%8C%E4%B8%80%E5%9F%BA%E7%B1%BB%E5%A4%9A%E6%AC%A1%E5%AF%BC%E8%87%B4%E7%9A%84%E7%BC%96%E8%AF%91%E9%94%99%E8%AF%AF"><span class="nav-text">防止继承同一基类多次导致的编译错误</span></a></li></ol></div>
       </div>
       <!--/noindex-->
 
@@ -437,20 +423,20 @@
       <div class="site-state-item site-state-posts">
           <a href="/archives/">
         
-          <span class="site-state-item-count">106</span>
+          <span class="site-state-item-count">123</span>
           <span class="site-state-item-name">日志</span>
         </a>
       </div>
       <div class="site-state-item site-state-categories">
             <a href="/categories/">
           
-        <span class="site-state-item-count">6</span>
+        <span class="site-state-item-count">11</span>
         <span class="site-state-item-name">分类</span></a>
       </div>
       <div class="site-state-item site-state-tags">
             <a href="/tags/">
           
-        <span class="site-state-item-count">3</span>
+        <span class="site-state-item-count">9</span>
         <span class="site-state-item-name">标签</span></a>
       </div>
   </nav>
@@ -460,7 +446,7 @@
         <a href="https://github.com/hxhue" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;hxhue" rel="noopener" target="_blank"><i class="fab fa-github fa-fw"></i></a>
       </span>
       <span class="links-of-author-item">
-        <a href="https://stackoverflow.com/users/13785815" title="S.O. → https:&#x2F;&#x2F;stackoverflow.com&#x2F;users&#x2F;13785815" rel="noopener" target="_blank"><i class="fab fa-stack-overflow fa-fw"></i></a>
+        <a href="https://stackoverflow.com/users/13785815" title="StackOverflow → https:&#x2F;&#x2F;stackoverflow.com&#x2F;users&#x2F;13785815" rel="noopener" target="_blank"><i class="fab fa-stack-overflow fa-fw"></i></a>
       </span>
       <span class="links-of-author-item">
         <a href="mailto:simooncake@gmail.com" title="Email → mailto:simooncake@gmail.com" rel="noopener" target="_blank"><i class="fa fa-envelope fa-fw"></i></a>
@@ -498,38 +484,18 @@
       <i class="fa fa-chart-area"></i>
     </span>
       <span class="post-meta-item-text">站点总字数：</span>
-    <span title="站点总字数">81k</span>
+    <span title="站点总字数">84k</span>
     <span class="post-meta-divider">|</span>
     <span class="post-meta-item-icon">
       <i class="fa fa-coffee"></i>
     </span>
       <span class="post-meta-item-text">站点阅读时长 &asymp;</span>
-    <span title="站点阅读时长">4:54</span>
+    <span title="站点阅读时长">5:07</span>
 </div>
   <div class="powered-by">由 <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Gemini</a> 强力驱动
   </div><script color="0,0,255" opacity="0.5" zIndex="-1" count="99" src="https://cdn.jsdelivr.net/npm/canvas-nest.js@1/dist/canvas-nest.js"></script>
 
         
-<div class="busuanzi-count">
-  <script async src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
-    <span class="post-meta-item" id="busuanzi_container_site_uv" style="display: none;">
-      <span class="post-meta-item-icon">
-        <i class="user"></i>
-      </span>
-      <span class="site-uv" title="总访客量">
-        <span id="busuanzi_value_site_uv"></span>
-      </span>
-    </span>
-    <span class="post-meta-divider">|</span>
-    <span class="post-meta-item" id="busuanzi_container_site_pv" style="display: none;">
-      <span class="post-meta-item-icon">
-        <i class="eye"></i>
-      </span>
-      <span class="site-pv" title="总访问量">
-        <span id="busuanzi_value_site_pv"></span>
-      </span>
-    </span>
-</div>
 
 
 

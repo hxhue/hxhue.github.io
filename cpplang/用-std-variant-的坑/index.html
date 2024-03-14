@@ -22,15 +22,15 @@
     var CONFIG = {"hostname":"hxhue.github.io","root":"/","scheme":"Gemini","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"always","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":true,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":true,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":false,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},"path":"search.xml"};
   </script>
 
-  <meta name="description" content="decltype 推导可能带有 &amp; 属性 被 decltype 坑了很多次。推导出来可能有引用类型，想要值类型时需要先去掉！ 不同的 variant 在 visitor 的参数里必须独立 std::visit 的多个参数必须独立和模板参数匹配（或者 lambda 和 C++20 函数的 auto），所以即便是要求两个类型相等，也必须写成这样： 1234template &lt;typena">
+  <meta name="description" content="decltype 推导可能带有 &amp; 属性被 decltype 坑了很多次。推导出来可能有引用类型，想要值类型时需要先去掉！ 不同的 variant 在 visitor 的参数里必须独立std::visit 的多个参数必须独立和模板参数匹配（或者 lambda 和 C++20 函数的 auto），所以即便是要求两个类型相等，也必须写成这样： 1234template &lt;typename">
 <meta property="og:type" content="article">
 <meta property="og:title" content="用 std::variant 的坑">
 <meta property="og:url" content="https://hxhue.github.io/cpplang/%E7%94%A8-std-variant-%E7%9A%84%E5%9D%91/index.html">
 <meta property="og:site_name" content="Hxhue&#39;s Blog">
-<meta property="og:description" content="decltype 推导可能带有 &amp; 属性 被 decltype 坑了很多次。推导出来可能有引用类型，想要值类型时需要先去掉！ 不同的 variant 在 visitor 的参数里必须独立 std::visit 的多个参数必须独立和模板参数匹配（或者 lambda 和 C++20 函数的 auto），所以即便是要求两个类型相等，也必须写成这样： 1234template &lt;typena">
+<meta property="og:description" content="decltype 推导可能带有 &amp; 属性被 decltype 坑了很多次。推导出来可能有引用类型，想要值类型时需要先去掉！ 不同的 variant 在 visitor 的参数里必须独立std::visit 的多个参数必须独立和模板参数匹配（或者 lambda 和 C++20 函数的 auto），所以即便是要求两个类型相等，也必须写成这样： 1234template &lt;typename">
 <meta property="og:locale" content="zh_CN">
 <meta property="article:published_time" content="2023-11-03T08:43:00.000Z">
-<meta property="article:modified_time" content="2024-03-10T05:23:36.925Z">
+<meta property="article:modified_time" content="2024-03-14T02:21:51.897Z">
 <meta property="article:author" content="Hxhue">
 <meta property="article:tag" content="cpp">
 <meta name="twitter:card" content="summary">
@@ -119,27 +119,27 @@
   <ul id="menu" class="main-menu menu">
         <li class="menu-item menu-item-home">
 
-    <a href="/" rel="section"><i class="home fa-fw"></i>首页</a>
+    <a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a>
 
   </li>
         <li class="menu-item menu-item-archives">
 
-    <a href="/archives/" rel="section"><i class="archive fa-fw"></i>归档</a>
+    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档</a>
 
   </li>
         <li class="menu-item menu-item-about">
 
-    <a href="/about/" rel="section"><i class="user fa-fw"></i>关于</a>
+    <a href="/about/" rel="section"><i class="fa fa-user fa-fw"></i>关于</a>
 
   </li>
         <li class="menu-item menu-item-tags">
 
-    <a href="/tags/" rel="section"><i class="tags fa-fw"></i>标签</a>
+    <a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>标签</a>
 
   </li>
         <li class="menu-item menu-item-categories">
 
-    <a href="/categories/" rel="section"><i class="th fa-fw"></i>分类</a>
+    <a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>分类</a>
 
   </li>
       <li class="menu-item menu-item-search">
@@ -227,7 +227,7 @@
                   <i class="far fa-calendar-check"></i>
                 </span>
                 <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2024-03-10 13:23:36" itemprop="dateModified" datetime="2024-03-10T13:23:36+08:00">2024-03-10</time>
+                <time title="修改时间：2024-03-14 10:21:51" itemprop="dateModified" datetime="2024-03-14T10:21:51+08:00">2024-03-14</time>
               </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
@@ -239,14 +239,7 @@
                 </span>
             </span>
 
-          
-            <span class="post-meta-item" title="阅读次数" id="busuanzi_container_page_pv" style="display: none;">
-              <span class="post-meta-item-icon">
-                <i class="eye"></i>
-              </span>
-              <span class="post-meta-item-text">阅读次数：</span>
-              <span id="busuanzi_value_page_pv"></span>
-            </span><br>
+          <br>
             <span class="post-meta-item" title="本文字数">
               <span class="post-meta-item-icon">
                 <i class="far fa-file-word"></i>
@@ -271,14 +264,12 @@
     <div class="post-body" itemprop="articleBody">
 
       
-        <h1 id="decltype-tui-dao-ke-neng-dai-you-code-amp-code-shu-xing">decltype 推导可能带有 <code>&amp;</code> 属性</h1>
-<p>被 <code>decltype</code> 坑了很多次。推导出来可能有引用类型，想要值类型时需要先去掉！</p>
-<h1 id="bu-tong-de-variant-zai-visitor-de-can-shu-li-bi-xu-du-li">不同的 variant 在 visitor 的参数里必须独立</h1>
-<p><code>std::visit</code> 的多个参数必须独立和模板参数匹配（或者 lambda 和 C++20 函数的 auto），所以即便是要求两个类型相等，也必须写成这样：</p>
+        <h1 id="decltype-推导可能带有-属性"><a href="#decltype-推导可能带有-属性" class="headerlink" title="decltype 推导可能带有 &amp; 属性"></a>decltype 推导可能带有 <code>&amp;</code> 属性</h1><p>被 <code>decltype</code> 坑了很多次。推导出来可能有引用类型，想要值类型时需要先去掉！</p>
+<h1 id="不同的-variant-在-visitor-的参数里必须独立"><a href="#不同的-variant-在-visitor-的参数里必须独立" class="headerlink" title="不同的 variant 在 visitor 的参数里必须独立"></a>不同的 variant 在 visitor 的参数里必须独立</h1><p><code>std::visit</code> 的多个参数必须独立和模板参数匹配（或者 lambda 和 C++20 函数的 auto），所以即便是要求两个类型相等，也必须写成这样：</p>
 <figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">template</span> &lt;<span class="keyword">typename</span> DType1, <span class="keyword">typename</span> DType2&gt;</span><br><span class="line"><span class="function"><span class="type">void</span> <span class="title">f</span><span class="params">(DType1* input, DType2* output)</span> </span>&#123;</span><br><span class="line">  <span class="comment">// DType1 and DType2 are actually the same type.</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
 <p>如果确定两个类型一样，也可以少传入一个 variant，使用 <code>void *</code> 传入类型，然后手动做转换。</p>
-<h1 id="if-constexpr-de-bian-yi-wen-ti">if constexpr 的编译问题</h1>
-<p><strong>if constexpr 只在模板代码中才有去除分支的作用</strong>，在普通代码中是不行的，此时不能用来剔除不能编译的分支。</p>
+<h1 id="if-constexpr-的编译问题"><a href="#if-constexpr-的编译问题" class="headerlink" title="if constexpr 的编译问题"></a>if constexpr 的编译问题</h1><p><strong>if constexpr 只在模板代码中才有去除分支的作用</strong>，在普通代码中是不行的，此时不能用来剔除不能编译的分支。</p>
 
     </div>
 
@@ -301,8 +292,8 @@
       <i class="fa fa-chevron-left"></i> 阻止一个模板类被实例化并给出错误信息
     </a></div>
       <div class="post-nav-item">
-    <a href="/cpplang/inline-namespace/" rel="next" title="inline namespace">
-      inline namespace <i class="fa fa-chevron-right"></i>
+    <a href="/python/python-re-match/" rel="next" title="Python re.match">
+      Python re.match <i class="fa fa-chevron-right"></i>
     </a></div>
     </div>
       </footer>
@@ -362,7 +353,7 @@
 
       <!--noindex-->
       <div class="post-toc-wrap sidebar-panel">
-          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#decltype-tui-dao-ke-neng-dai-you-code-amp-code-shu-xing"><span class="nav-number">1.</span> <span class="nav-text">decltype 推导可能带有 &amp; 属性</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#bu-tong-de-variant-zai-visitor-de-can-shu-li-bi-xu-du-li"><span class="nav-number">2.</span> <span class="nav-text">不同的 variant 在 visitor 的参数里必须独立</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#if-constexpr-de-bian-yi-wen-ti"><span class="nav-number">3.</span> <span class="nav-text">if constexpr 的编译问题</span></a></li></ol></div>
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#decltype-%E6%8E%A8%E5%AF%BC%E5%8F%AF%E8%83%BD%E5%B8%A6%E6%9C%89-%E5%B1%9E%E6%80%A7"><span class="nav-text">decltype 推导可能带有 &amp; 属性</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E4%B8%8D%E5%90%8C%E7%9A%84-variant-%E5%9C%A8-visitor-%E7%9A%84%E5%8F%82%E6%95%B0%E9%87%8C%E5%BF%85%E9%A1%BB%E7%8B%AC%E7%AB%8B"><span class="nav-text">不同的 variant 在 visitor 的参数里必须独立</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#if-constexpr-%E7%9A%84%E7%BC%96%E8%AF%91%E9%97%AE%E9%A2%98"><span class="nav-text">if constexpr 的编译问题</span></a></li></ol></div>
       </div>
       <!--/noindex-->
 
@@ -376,20 +367,20 @@
       <div class="site-state-item site-state-posts">
           <a href="/archives/">
         
-          <span class="site-state-item-count">106</span>
+          <span class="site-state-item-count">123</span>
           <span class="site-state-item-name">日志</span>
         </a>
       </div>
       <div class="site-state-item site-state-categories">
             <a href="/categories/">
           
-        <span class="site-state-item-count">6</span>
+        <span class="site-state-item-count">11</span>
         <span class="site-state-item-name">分类</span></a>
       </div>
       <div class="site-state-item site-state-tags">
             <a href="/tags/">
           
-        <span class="site-state-item-count">3</span>
+        <span class="site-state-item-count">9</span>
         <span class="site-state-item-name">标签</span></a>
       </div>
   </nav>
@@ -399,7 +390,7 @@
         <a href="https://github.com/hxhue" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;hxhue" rel="noopener" target="_blank"><i class="fab fa-github fa-fw"></i></a>
       </span>
       <span class="links-of-author-item">
-        <a href="https://stackoverflow.com/users/13785815" title="S.O. → https:&#x2F;&#x2F;stackoverflow.com&#x2F;users&#x2F;13785815" rel="noopener" target="_blank"><i class="fab fa-stack-overflow fa-fw"></i></a>
+        <a href="https://stackoverflow.com/users/13785815" title="StackOverflow → https:&#x2F;&#x2F;stackoverflow.com&#x2F;users&#x2F;13785815" rel="noopener" target="_blank"><i class="fab fa-stack-overflow fa-fw"></i></a>
       </span>
       <span class="links-of-author-item">
         <a href="mailto:simooncake@gmail.com" title="Email → mailto:simooncake@gmail.com" rel="noopener" target="_blank"><i class="fa fa-envelope fa-fw"></i></a>
@@ -437,38 +428,18 @@
       <i class="fa fa-chart-area"></i>
     </span>
       <span class="post-meta-item-text">站点总字数：</span>
-    <span title="站点总字数">81k</span>
+    <span title="站点总字数">84k</span>
     <span class="post-meta-divider">|</span>
     <span class="post-meta-item-icon">
       <i class="fa fa-coffee"></i>
     </span>
       <span class="post-meta-item-text">站点阅读时长 &asymp;</span>
-    <span title="站点阅读时长">4:54</span>
+    <span title="站点阅读时长">5:07</span>
 </div>
   <div class="powered-by">由 <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Gemini</a> 强力驱动
   </div><script color="0,0,255" opacity="0.5" zIndex="-1" count="99" src="https://cdn.jsdelivr.net/npm/canvas-nest.js@1/dist/canvas-nest.js"></script>
 
         
-<div class="busuanzi-count">
-  <script async src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
-    <span class="post-meta-item" id="busuanzi_container_site_uv" style="display: none;">
-      <span class="post-meta-item-icon">
-        <i class="user"></i>
-      </span>
-      <span class="site-uv" title="总访客量">
-        <span id="busuanzi_value_site_uv"></span>
-      </span>
-    </span>
-    <span class="post-meta-divider">|</span>
-    <span class="post-meta-item" id="busuanzi_container_site_pv" style="display: none;">
-      <span class="post-meta-item-icon">
-        <i class="eye"></i>
-      </span>
-      <span class="site-pv" title="总访问量">
-        <span id="busuanzi_value_site_pv"></span>
-      </span>
-    </span>
-</div>
 
 
 

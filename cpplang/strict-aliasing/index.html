@@ -33,7 +33,7 @@
 <meta property="og:image" content="https://hxhue.github.io/assets/b706c07f3b79287bcabc594362b1e5c2.png">
 <meta property="og:image" content="https://hxhue.github.io/assets/f012dc7d5ba56e6a5a1549e0a3b67b81.png">
 <meta property="article:published_time" content="2023-08-12T07:17:00.000Z">
-<meta property="article:modified_time" content="2024-03-11T10:05:44.591Z">
+<meta property="article:modified_time" content="2024-03-14T07:12:11.892Z">
 <meta property="article:author" content="Hxhue">
 <meta property="article:tag" content="cpp">
 <meta name="twitter:card" content="summary">
@@ -123,27 +123,27 @@
   <ul id="menu" class="main-menu menu">
         <li class="menu-item menu-item-home">
 
-    <a href="/" rel="section"><i class="home fa-fw"></i>首页</a>
+    <a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a>
 
   </li>
         <li class="menu-item menu-item-archives">
 
-    <a href="/archives/" rel="section"><i class="archive fa-fw"></i>归档</a>
+    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档</a>
 
   </li>
         <li class="menu-item menu-item-about">
 
-    <a href="/about/" rel="section"><i class="user fa-fw"></i>关于</a>
+    <a href="/about/" rel="section"><i class="fa fa-user fa-fw"></i>关于</a>
 
   </li>
         <li class="menu-item menu-item-tags">
 
-    <a href="/tags/" rel="section"><i class="tags fa-fw"></i>标签</a>
+    <a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>标签</a>
 
   </li>
         <li class="menu-item menu-item-categories">
 
-    <a href="/categories/" rel="section"><i class="th fa-fw"></i>分类</a>
+    <a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>分类</a>
 
   </li>
       <li class="menu-item menu-item-search">
@@ -231,7 +231,7 @@
                   <i class="far fa-calendar-check"></i>
                 </span>
                 <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2024-03-11 18:05:44" itemprop="dateModified" datetime="2024-03-11T18:05:44+08:00">2024-03-11</time>
+                <time title="修改时间：2024-03-14 15:12:11" itemprop="dateModified" datetime="2024-03-14T15:12:11+08:00">2024-03-14</time>
               </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
@@ -243,14 +243,7 @@
                 </span>
             </span>
 
-          
-            <span class="post-meta-item" title="阅读次数" id="busuanzi_container_page_pv" style="display: none;">
-              <span class="post-meta-item-icon">
-                <i class="eye"></i>
-              </span>
-              <span class="post-meta-item-text">阅读次数：</span>
-              <span id="busuanzi_value_page_pv"></span>
-            </span><br>
+          <br>
             <span class="post-meta-item" title="本文字数">
               <span class="post-meta-item-icon">
                 <i class="far fa-file-word"></i>
@@ -278,22 +271,21 @@
         <p>文章：<a href="github.com">What is Strict Aliasing and Why do we Care? (github.com)</a>)</p>
 <p>所谓 Strict Aliasing 就是指为 aliasing 设定条件，使得编译器大多数场景下认为代码没有 aliasing，从而可以激进优化代码。</p>
 <figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;iostream&gt;</span></span></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="type">int</span> <span class="title">foo</span><span class="params">( <span class="type">float</span> *f, <span class="type">int</span> *i )</span> </span>&#123;</span><br><span class="line">    *i = <span class="number">1</span>;</span><br><span class="line">    *f = <span class="number">0.f</span>;</span><br><span class="line"></span><br><span class="line">   <span class="keyword">return</span> *i;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="type">int</span> <span class="title">main</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    <span class="type">int</span> x = <span class="number">0</span>;</span><br><span class="line"></span><br><span class="line">    std::cout &lt;&lt; x &lt;&lt; <span class="string">&quot;\n&quot;</span>;   <span class="comment">// Expect 0</span></span><br><span class="line">    x = <span class="built_in">foo</span>(<span class="built_in">reinterpret_cast</span>&lt;<span class="type">float</span>*&gt;(&amp;x), &amp;x);</span><br><span class="line">    std::cout &lt;&lt; x &lt;&lt; <span class="string">&quot;\n&quot;</span>;   <span class="comment">// Expect 0?</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
 <p>上述代码在 <code>gcc 13.1 -O2</code> 下编译，第二行打印结果为 1。编译器认为 f 和 i 指针必定不重合，所以直接返回了 1。</p>
-<h1 id="shi-yao-shi-hou-aliasing-shi-yun-xu-de">什么时候 Aliasing 是允许的？</h1>
-<p>比较复杂，而且 C 和 C++ 的要求不同。在 alias 可用时，编译器不会像上面那样激进优化。下面只提到了一部分规则。</p>
+<h1 id="什么时候-Aliasing-是允许的？"><a href="#什么时候-Aliasing-是允许的？" class="headerlink" title="什么时候 Aliasing 是允许的？"></a>什么时候 Aliasing 是允许的？</h1><p>比较复杂，而且 C 和 C++ 的要求不同。在 alias 可用时，编译器不会像上面那样激进优化。下面只提到了一部分规则。</p>
 <p><strong>允许同类指针</strong>，而且两者都允许给指针加 cv 限定，但是 C++17 还允许 unsigned 和 signed 对应类型之间的别名，C11 不允许（尽管 gcc 和 clang 都是按照允许的方式实现的）。</p>
 <p>最基本的保证是：无论指针如何变化，只要目的类型是对象的真实类型，就能正常使用。但是如何开启一个新对象的生命周期则有区别。<strong>C 语言中只要写入就已经可以按照写入类型启用一个新的生命周期。而在 C++ 必须保存用于写入的指针并在之后始终使用该指针！（C++17 新增了</strong> <code>std::launder</code><strong>，可以不必再保存指针但是要洗一下）</strong></p>
-<p><img src="../../assets/b7cb646b10cbc680cd7416f06f677cf2.png" alt=""></p>
+<p><img src="/../../assets/b7cb646b10cbc680cd7416f06f677cf2.png"></p>
 <blockquote>
 <p>问题：保存 memcpy 返回的指针可以吗？</p>
 </blockquote>
-<h1 id="c-yu-yan-de-restrict-guan-jian-zi">C 语言的 restrict 关键字</h1>
-<p><a target="_blank" rel="noopener" href="https://stackoverflow.com/a/30827311/13785815">https://stackoverflow.com/a/30827311/13785815</a></p>
+<h1 id="C-语言的-restrict-关键字"><a href="#C-语言的-restrict-关键字" class="headerlink" title="C 语言的 restrict 关键字"></a>C 语言的 restrict 关键字</h1><p><a target="_blank" rel="noopener" href="https://stackoverflow.com/a/30827311/13785815">https://stackoverflow.com/a/30827311/13785815</a></p>
 <p>restrict 关键字是指针的属性，写在指针的右侧、变量名之前，它保证了一个指针和其他指针变量没有重叠（没有 aliasing），以便编译器在 aliasing 可用时仍激进优化（<strong>可以理解为优化同类指针，但实际上是兼容类型的都可以</strong>）。</p>
-<h1 id="type-punning">Type Punning</h1>
-<p>把一种类型当成另一种来使用，即存 A 取 B。</p>
+<h1 id="Type-Punning"><a href="#Type-Punning" class="headerlink" title="Type Punning"></a>Type Punning</h1><p>把一种类型当成另一种来使用，即存 A 取 B。</p>
 <p><strong>文章提出：安全无误的 type punning 可以用</strong> <code>memcpy</code><strong>。</strong></p>
 <figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="type">void</span> <span class="title">func1</span><span class="params">( <span class="type">double</span> d )</span> </span>&#123;</span><br><span class="line">  std::<span class="type">int64_t</span> n;</span><br><span class="line">  std::<span class="built_in">memcpy</span>(&amp;n, &amp;d, <span class="keyword">sizeof</span> d);</span><br><span class="line">  <span class="comment">//...</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
 <p>在这种比较简单的赋值场景下，只要没有用 <code>-fno-builtin</code> 禁止内置函数优化，<code>memcpy</code> 调用就能直接被优化掉，对于主流编译器来说即便是 <code>-O0</code> 也是如此！</p>
 <p>memcpy 复制了值，不再使用指针，从而不受限于 aliasing 规则。</p>
 <p>在访问目标的 alignment 和 size 都相同时，我认为 type punning 的不安全之处还是在于<strong>通过转换后指针对目标的修改，对于使用转换前指针的读可以是不可见的</strong>。复制值后当然就只能读不能写了。最开始的代码要是返回的是从 f 强转成 <code>int *</code> 之后再读取的，也不会出现这种情况。</p>
@@ -303,14 +295,14 @@
 </blockquote>
 <p>下面是对非聚合类使用 memcpy：</p>
 <figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;cstdio&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;cstring&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;cassert&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;vector&gt;</span></span></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="type">int</span> <span class="title">main</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    <span class="built_in">static_assert</span>(<span class="built_in">sizeof</span>(std::vector&lt;<span class="type">int</span>&gt;) == <span class="number">24</span>);</span><br><span class="line"></span><br><span class="line">    std::vector&lt;<span class="type">int</span>&gt; v&#123;<span class="number">1</span>, <span class="number">2</span>, <span class="number">3</span>&#125;;</span><br><span class="line">    <span class="type">long</span> <span class="type">long</span> buf[<span class="built_in">sizeof</span>(v) / <span class="built_in">sizeof</span>(<span class="type">long</span> <span class="type">long</span>)];</span><br><span class="line">    <span class="built_in">memcpy</span>(buf, &amp;v, <span class="built_in">sizeof</span>(v));</span><br><span class="line"></span><br><span class="line">    <span class="built_in">printf</span>(<span class="string">&quot;%lld %lld %lld\n&quot;</span>, buf[<span class="number">0</span>], buf[<span class="number">1</span>], buf[<span class="number">2</span>]);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
 <p><a target="_blank" rel="noopener" href="https://godbolt.org/z/zM4cY1b5n">https://godbolt.org/z/zM4cY1b5n</a></p>
 <p>尽管在 <code>-O0</code> 时显式调用了 <code>memcpy</code>，但是 <code>-O1</code> 时就能内联成简单复制。</p>
 <blockquote>
 <p>如果不想复制怎么办？这种做法对于大对象合适吗？</p>
 </blockquote>
 <p>C++ 20 有 <code>std::bit_cast</code>，是对这种特殊情况下 std::memcpy 的替代方案。也是值语义复制，而且要求目的类型和参数类型所占空间一致，而且两种类型都是 <code>trivially copyable</code> 的。</p>
-<h1 id="common-initial-sequence">Common initial Sequence</h1>
-<blockquote>
+<h1 id="Common-initial-Sequence"><a href="#Common-initial-Sequence" class="headerlink" title="Common initial Sequence"></a>Common initial Sequence</h1><blockquote>
 <p>It says that we are allowed to read the non-static data member of the non-active member if it is part of the common initial sequence of the the structs [class.mem.general]p26.</p>
 </blockquote>
 <p>看上去这条规则没有什么用，但是：</p>
@@ -318,15 +310,15 @@
 <p>It Is likely the common initial sequence rule was put in place to allow discriminated union without having the discriminator outside the the union and therefore likely have padding between the discriminator and the union itself e.g.</p>
 </blockquote>
 <figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">union</span> &#123; <span class="keyword">struct</span> &#123; <span class="type">char</span> kind; ... &#125; a; <span class="keyword">struct</span> &#123; <span class="type">char</span> kind; ... &#125; b; ... &#125;;</span><br></pre></td></tr></table></figure>
+
 <p>根据文章，这可能使得我们可以在 union 中利用 padding 存储 index，以提供 discriminated union 的功能。</p>
-<h1 id="c-code-std-launder-code">C++ <code>std::launder</code></h1>
-<p><code>std::launder</code> 有什么用呢？表面含义是洗，也就是让指针的来源难以追溯，目的是<strong>抑制非同类指针的激进优化</strong>。但实际上 <code>std::launder</code> 的作用还是非常局限的，因为它的使用有一些必须满足的条件（<strong>其中就包含指针的类型必须和其真实类型对应，以及不能传入 void 指针和函数指针</strong>）。</p>
+<h1 id="C-std-launder"><a href="#C-std-launder" class="headerlink" title="C++ std::launder"></a>C++ <code>std::launder</code></h1><p><code>std::launder</code> 有什么用呢？表面含义是洗，也就是让指针的来源难以追溯，目的是<strong>抑制非同类指针的激进优化</strong>。但实际上 <code>std::launder</code> 的作用还是非常局限的，因为它的使用有一些必须满足的条件（<strong>其中就包含指针的类型必须和其真实类型对应，以及不能传入 void 指针和函数指针</strong>）。</p>
 <p><a target="_blank" rel="noopener" href="https://en.cppreference.com/w/cpp/utility/launder">std::launder - cppreference.com</a></p>
-<p><img src="../../assets/b706c07f3b79287bcabc594362b1e5c2.png" alt=""></p>
+<p><img src="/../../assets/b706c07f3b79287bcabc594362b1e5c2.png"></p>
 <p>典型的用法是用 placement new 在一块字符数组上面创建对象，然后用 <code>std::launder</code> 洗字符数组的首元素指针。</p>
 <p>如果不这样做，按照 strict aliasing 的规则，也可以保存 placement new 的返回值到一个变量，然后每次都利用这个变量做操作。</p>
 <p><a target="_blank" rel="noopener" href="https://stackoverflow.com/a/63003406">https://stackoverflow.com/a/63003406</a></p>
-<p><img src="../../assets/f012dc7d5ba56e6a5a1549e0a3b67b81.png" alt=""></p>
+<p><img src="/../../assets/f012dc7d5ba56e6a5a1549e0a3b67b81.png"></p>
 <ol>
 <li>初始化，u.x 被激活。</li>
 <li>赋值，u.f 被激活，u.x 失活。</li>
@@ -335,17 +327,17 @@
 <li>虽然是访问失活的元素，但是洗了指针。</li>
 <li>直接访问失活元素，UB。</li>
 </ol>
-<h1 id="hui-dao-zui-kai-shi-de-li-zi">回到最开始的例子</h1>
-<p>这一部分实际上都没洗成功。</p>
+<h1 id="回到最开始的例子"><a href="#回到最开始的例子" class="headerlink" title="回到最开始的例子"></a>回到最开始的例子</h1><p>这一部分实际上都没洗成功。</p>
 <p>将第一个部分的 C++ 代码改造如下：</p>
 <p><a target="_blank" rel="noopener" href="https://godbolt.org/z/ME4PTa74b">https://godbolt.org/z/ME4PTa74b</a></p>
 <figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;iostream&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;new&gt;</span></span></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="type">int</span> <span class="title">foo</span><span class="params">( <span class="type">float</span> *f, <span class="type">int</span> *i )</span> </span>&#123;</span><br><span class="line">    *i = <span class="number">1</span>;</span><br><span class="line">    *f = <span class="number">0.f</span>;</span><br><span class="line"></span><br><span class="line">   <span class="keyword">return</span> *std::<span class="built_in">launder</span>(i);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="type">int</span> <span class="title">main</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    <span class="type">int</span> x = <span class="number">0</span>;</span><br><span class="line"></span><br><span class="line">    std::cout &lt;&lt; x &lt;&lt; <span class="string">&quot;\n&quot;</span>;   <span class="comment">// Expect 0</span></span><br><span class="line">    x = <span class="built_in">foo</span>(<span class="built_in">reinterpret_cast</span>&lt;<span class="type">float</span> *&gt;(&amp;x), &amp;x);</span><br><span class="line">    std::cout &lt;&lt; x &lt;&lt; <span class="string">&quot;\n&quot;</span>;   <span class="comment">// Expect 0?</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
 <p>没有洗成功。编译器预先假设了 f 和 i 无关，这样洗还是它还是觉得返回值只和 i 有关。想要 f 的结果被编译器看到，则必须让返回值和 f 建立起来联系。实际上，在 cppreference 对 <code>std::launder</code> 的用法说明中上面的例子就不满足条件，因为对象的真实类型是 float（<code>*f = 0.f)</code>，而要使用的类型却是 int。</p>
 <p>还可以在中间穿插对其他 volatile 变量的访问（会禁止指令重排）。也可以直接用 volatile 访问目标数据。</p>
 <figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;string.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;stdio.h&gt;</span></span></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="type">int</span> <span class="title">foo</span><span class="params">( <span class="type">float</span> *f, <span class="type">int</span> *i )</span> </span>&#123;</span><br><span class="line">    *i = <span class="number">1</span>;</span><br><span class="line">    *f = <span class="number">0.f</span>;</span><br><span class="line">    <span class="keyword">return</span> *(<span class="type">int</span> <span class="keyword">volatile</span> *)i;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="type">int</span> <span class="title">main</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    <span class="type">int</span> x = <span class="number">0</span>;</span><br><span class="line"></span><br><span class="line">    <span class="built_in">printf</span>(<span class="string">&quot;%d\n&quot;</span>, x);   <span class="comment">// Expect 0</span></span><br><span class="line">    x = <span class="built_in">foo</span>((<span class="type">float</span> *)(&amp;x), &amp;x);</span><br><span class="line">    <span class="built_in">printf</span>(<span class="string">&quot;%d\n&quot;</span>, x);   <span class="comment">// Yes, it&#x27;s 0</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
 <p>每次用 volatile 访存显然是 overkill，观察汇编得知比开启 <code>-fno-strict-aliasing</code> 生成的代码稍差。</p>
-<h1 id="zong-jie">总结</h1>
-<p>避免 strict aliasing violation 的方法：</p>
+<h1 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h1><p>避免 strict aliasing violation 的方法：</p>
 <ol>
 <li>用 <code>memcpy</code> 或 <code>std::bit_cast</code> 复制数据。</li>
 <li>禁用编译器的 strict aliasing 功能。</li>
@@ -353,7 +345,7 @@
 </ol>
 <blockquote>
 <p>“保存函数或操作符的返回值”：这样后续操作就对返回值产生了依赖性，不需要洗指针。</p>
-<p>The Linux kernel is compiled with <code>-fno-strict-aliasing</code>. Linus justifies this in <a target="_blank" rel="noopener" href="https://www.mail-archive.com/linux-btrfs@vger.kernel.org/msg01647.html">https://www.mail-archive.com/linux-btrfs@vger.kernel.org/msg01647.html</a> .</p>
+<p>The Linux kernel is compiled with <code>-fno-strict-aliasing</code>. Linus justifies this in <a target="_blank" rel="noopener" href="https://www.mail-archive.com/linux-btrfs@vger.kernel.org/msg01647.html">https:&#x2F;&#x2F;www.mail-archive.com&#x2F;linux-btrfs@vger.kernel.org/msg01647.html</a> .</p>
 </blockquote>
 
     </div>
@@ -373,12 +365,12 @@
         
     <div class="post-nav">
       <div class="post-nav-item">
-    <a href="/cpplang/ub/" rel="prev" title="UB">
-      <i class="fa fa-chevron-left"></i> UB
+    <a href="/cpplang/pointer-to-member/" rel="prev" title="Pointer to Member">
+      <i class="fa fa-chevron-left"></i> Pointer to Member
     </a></div>
       <div class="post-nav-item">
-    <a href="/cpplang/pointer-to-member/" rel="next" title="Pointer to Member">
-      Pointer to Member <i class="fa fa-chevron-right"></i>
+    <a href="/cpplang/pod/" rel="next" title="POD">
+      POD <i class="fa fa-chevron-right"></i>
     </a></div>
     </div>
       </footer>
@@ -438,7 +430,7 @@
 
       <!--noindex-->
       <div class="post-toc-wrap sidebar-panel">
-          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#shi-yao-shi-hou-aliasing-shi-yun-xu-de"><span class="nav-number">1.</span> <span class="nav-text">什么时候 Aliasing 是允许的？</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#c-yu-yan-de-restrict-guan-jian-zi"><span class="nav-number">2.</span> <span class="nav-text">C 语言的 restrict 关键字</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#type-punning"><span class="nav-number">3.</span> <span class="nav-text">Type Punning</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#common-initial-sequence"><span class="nav-number">4.</span> <span class="nav-text">Common initial Sequence</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#c-code-std-launder-code"><span class="nav-number">5.</span> <span class="nav-text">C++ std::launder</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#hui-dao-zui-kai-shi-de-li-zi"><span class="nav-number">6.</span> <span class="nav-text">回到最开始的例子</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#zong-jie"><span class="nav-number">7.</span> <span class="nav-text">总结</span></a></li></ol></div>
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#%E4%BB%80%E4%B9%88%E6%97%B6%E5%80%99-Aliasing-%E6%98%AF%E5%85%81%E8%AE%B8%E7%9A%84%EF%BC%9F"><span class="nav-text">什么时候 Aliasing 是允许的？</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#C-%E8%AF%AD%E8%A8%80%E7%9A%84-restrict-%E5%85%B3%E9%94%AE%E5%AD%97"><span class="nav-text">C 语言的 restrict 关键字</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Type-Punning"><span class="nav-text">Type Punning</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Common-initial-Sequence"><span class="nav-text">Common initial Sequence</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#C-std-launder"><span class="nav-text">C++ std::launder</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%9B%9E%E5%88%B0%E6%9C%80%E5%BC%80%E5%A7%8B%E7%9A%84%E4%BE%8B%E5%AD%90"><span class="nav-text">回到最开始的例子</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E6%80%BB%E7%BB%93"><span class="nav-text">总结</span></a></li></ol></div>
       </div>
       <!--/noindex-->
 
@@ -452,20 +444,20 @@
       <div class="site-state-item site-state-posts">
           <a href="/archives/">
         
-          <span class="site-state-item-count">106</span>
+          <span class="site-state-item-count">123</span>
           <span class="site-state-item-name">日志</span>
         </a>
       </div>
       <div class="site-state-item site-state-categories">
             <a href="/categories/">
           
-        <span class="site-state-item-count">6</span>
+        <span class="site-state-item-count">11</span>
         <span class="site-state-item-name">分类</span></a>
       </div>
       <div class="site-state-item site-state-tags">
             <a href="/tags/">
           
-        <span class="site-state-item-count">3</span>
+        <span class="site-state-item-count">9</span>
         <span class="site-state-item-name">标签</span></a>
       </div>
   </nav>
@@ -475,7 +467,7 @@
         <a href="https://github.com/hxhue" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;hxhue" rel="noopener" target="_blank"><i class="fab fa-github fa-fw"></i></a>
       </span>
       <span class="links-of-author-item">
-        <a href="https://stackoverflow.com/users/13785815" title="S.O. → https:&#x2F;&#x2F;stackoverflow.com&#x2F;users&#x2F;13785815" rel="noopener" target="_blank"><i class="fab fa-stack-overflow fa-fw"></i></a>
+        <a href="https://stackoverflow.com/users/13785815" title="StackOverflow → https:&#x2F;&#x2F;stackoverflow.com&#x2F;users&#x2F;13785815" rel="noopener" target="_blank"><i class="fab fa-stack-overflow fa-fw"></i></a>
       </span>
       <span class="links-of-author-item">
         <a href="mailto:simooncake@gmail.com" title="Email → mailto:simooncake@gmail.com" rel="noopener" target="_blank"><i class="fa fa-envelope fa-fw"></i></a>
@@ -513,38 +505,18 @@
       <i class="fa fa-chart-area"></i>
     </span>
       <span class="post-meta-item-text">站点总字数：</span>
-    <span title="站点总字数">81k</span>
+    <span title="站点总字数">84k</span>
     <span class="post-meta-divider">|</span>
     <span class="post-meta-item-icon">
       <i class="fa fa-coffee"></i>
     </span>
       <span class="post-meta-item-text">站点阅读时长 &asymp;</span>
-    <span title="站点阅读时长">4:54</span>
+    <span title="站点阅读时长">5:07</span>
 </div>
   <div class="powered-by">由 <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Gemini</a> 强力驱动
   </div><script color="0,0,255" opacity="0.5" zIndex="-1" count="99" src="https://cdn.jsdelivr.net/npm/canvas-nest.js@1/dist/canvas-nest.js"></script>
 
         
-<div class="busuanzi-count">
-  <script async src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
-    <span class="post-meta-item" id="busuanzi_container_site_uv" style="display: none;">
-      <span class="post-meta-item-icon">
-        <i class="user"></i>
-      </span>
-      <span class="site-uv" title="总访客量">
-        <span id="busuanzi_value_site_uv"></span>
-      </span>
-    </span>
-    <span class="post-meta-divider">|</span>
-    <span class="post-meta-item" id="busuanzi_container_site_pv" style="display: none;">
-      <span class="post-meta-item-icon">
-        <i class="eye"></i>
-      </span>
-      <span class="site-pv" title="总访问量">
-        <span id="busuanzi_value_site_pv"></span>
-      </span>
-    </span>
-</div>
 
 
 

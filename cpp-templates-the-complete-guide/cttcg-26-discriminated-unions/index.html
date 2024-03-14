@@ -22,18 +22,18 @@
     var CONFIG = {"hostname":"hxhue.github.io","root":"/","scheme":"Gemini","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"always","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":true,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":true,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":false,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},"path":"search.xml"};
   </script>
 
-  <meta name="description" content="本章想要实现的类模板相当于 std::variant。 可以用递归 union 模板，也可以用字符数组存储，本章选用的是后者。 使用字符数组存储未知元素，需要注意：   使用 alignas(Types...) 属性标识字符数组的对齐大小，否则强制类型转换后对齐大小和目的类型可能不相符。   使用 返回 后的指针。std::launder 可以提示编译器某个地址中的值发生了改变，甚至类型都可能变化">
+  <meta name="description" content="本章想要实现的类模板相当于 std::variant。 可以用递归 union 模板，也可以用字符数组存储，本章选用的是后者。 使用字符数组存储未知元素，需要注意：  使用 alignas(Types...) 属性标识字符数组的对齐大小，否则强制类型转换后对齐大小和目的类型可能不相符。  使用 返回 后的指针。std::launder 可以提示编译器某个地址中的值发生了改变，甚至类型都可能变化了，">
 <meta property="og:type" content="article">
 <meta property="og:title" content="CTTCG 26 Discriminated Unions">
 <meta property="og:url" content="https://hxhue.github.io/cpp-templates-the-complete-guide/cttcg-26-discriminated-unions/index.html">
 <meta property="og:site_name" content="Hxhue&#39;s Blog">
-<meta property="og:description" content="本章想要实现的类模板相当于 std::variant。 可以用递归 union 模板，也可以用字符数组存储，本章选用的是后者。 使用字符数组存储未知元素，需要注意：   使用 alignas(Types...) 属性标识字符数组的对齐大小，否则强制类型转换后对齐大小和目的类型可能不相符。   使用 返回 后的指针。std::launder 可以提示编译器某个地址中的值发生了改变，甚至类型都可能变化">
+<meta property="og:description" content="本章想要实现的类模板相当于 std::variant。 可以用递归 union 模板，也可以用字符数组存储，本章选用的是后者。 使用字符数组存储未知元素，需要注意：  使用 alignas(Types...) 属性标识字符数组的对齐大小，否则强制类型转换后对齐大小和目的类型可能不相符。  使用 返回 后的指针。std::launder 可以提示编译器某个地址中的值发生了改变，甚至类型都可能变化了，">
 <meta property="og:locale" content="zh_CN">
 <meta property="og:image" content="https://hxhue.github.io/assets/620830742aaa7bdd5388d0f111e9c8f0.png">
 <meta property="og:image" content="https://hxhue.github.io/assets/85f88cb4a71df02837a9d64c0967137d.png">
 <meta property="og:image" content="https://hxhue.github.io/assets/0df161f74765ae6012204bddbcb1b172.png">
 <meta property="article:published_time" content="2023-08-11T16:00:00.000Z">
-<meta property="article:modified_time" content="2024-03-10T05:51:43.914Z">
+<meta property="article:modified_time" content="2024-03-14T07:12:11.819Z">
 <meta property="article:author" content="Hxhue">
 <meta property="article:tag" content="cpp">
 <meta name="twitter:card" content="summary">
@@ -123,27 +123,27 @@
   <ul id="menu" class="main-menu menu">
         <li class="menu-item menu-item-home">
 
-    <a href="/" rel="section"><i class="home fa-fw"></i>首页</a>
+    <a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a>
 
   </li>
         <li class="menu-item menu-item-archives">
 
-    <a href="/archives/" rel="section"><i class="archive fa-fw"></i>归档</a>
+    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档</a>
 
   </li>
         <li class="menu-item menu-item-about">
 
-    <a href="/about/" rel="section"><i class="user fa-fw"></i>关于</a>
+    <a href="/about/" rel="section"><i class="fa fa-user fa-fw"></i>关于</a>
 
   </li>
         <li class="menu-item menu-item-tags">
 
-    <a href="/tags/" rel="section"><i class="tags fa-fw"></i>标签</a>
+    <a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>标签</a>
 
   </li>
         <li class="menu-item menu-item-categories">
 
-    <a href="/categories/" rel="section"><i class="th fa-fw"></i>分类</a>
+    <a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>分类</a>
 
   </li>
       <li class="menu-item menu-item-search">
@@ -231,7 +231,7 @@
                   <i class="far fa-calendar-check"></i>
                 </span>
                 <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2024-03-10 13:51:43" itemprop="dateModified" datetime="2024-03-10T13:51:43+08:00">2024-03-10</time>
+                <time title="修改时间：2024-03-14 15:12:11" itemprop="dateModified" datetime="2024-03-14T15:12:11+08:00">2024-03-14</time>
               </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
@@ -243,14 +243,7 @@
                 </span>
             </span>
 
-          
-            <span class="post-meta-item" title="阅读次数" id="busuanzi_container_page_pv" style="display: none;">
-              <span class="post-meta-item-icon">
-                <i class="eye"></i>
-              </span>
-              <span class="post-meta-item-text">阅读次数：</span>
-              <span id="busuanzi_value_page_pv"></span>
-            </span><br>
+          <br>
             <span class="post-meta-item" title="本文字数">
               <span class="post-meta-item-icon">
                 <i class="far fa-file-word"></i>
@@ -278,19 +271,16 @@
         <p>本章想要实现的类模板相当于 <code>std::variant</code>。 可以用递归 union 模板，也可以用字符数组存储，本章选用的是后者。</p>
 <p>使用字符数组存储未知元素，需要注意：</p>
 <ol>
-<li>
-<p>使用 <code>alignas(Types...)</code> 属性标识字符数组的对齐大小，否则强制类型转换后对齐大小和目的类型可能不相符。</p>
+<li><p>使用 <code>alignas(Types...)</code> 属性标识字符数组的对齐大小，否则强制类型转换后对齐大小和目的类型可能不相符。</p>
 </li>
-<li>
-<p>使用 返回 后的指针。<code>std::launder</code> 可以提示编译器某个地址中的值发生了改变，甚至类型都可能变化了，以避免编译器分析变量的生命周期并进行激进的优化。</p>
+<li><p>使用 返回 后的指针。<code>std::launder</code> 可以提示编译器某个地址中的值发生了改变，甚至类型都可能变化了，以避免编译器分析变量的生命周期并进行激进的优化。</p>
 <p><a target="_blank" rel="noopener" href="https://stackoverflow.com/a/39382728/">https://stackoverflow.com/a/39382728/</a></p>
 </li>
 </ol>
 <blockquote>
-<p>[basic.life]/8 tells us that, if you allocate a new object in the storage of the old one, you cannot access the new object through pointers to the old. launder allows us to side-step that.</p>
+<p>[basic.life]&#x2F;8 tells us that, if you allocate a new object in the storage of the old one, you cannot access the new object through pointers to the old. launder allows us to side-step that.</p>
 </blockquote>
-<h1 id="shu-ju-jie-gou">数据结构</h1>
-<p>书中的实现是让 <code>Variant</code> 继承了 <code>VariantStorage</code> 模板和 <code>VariantChoice</code> 模板。</p>
+<h1 id="数据结构"><a href="#数据结构" class="headerlink" title="数据结构"></a>数据结构</h1><p>书中的实现是让 <code>Variant</code> 继承了 <code>VariantStorage</code> 模板和 <code>VariantChoice</code> 模板。</p>
 <ol>
 <li>前者提供存储空间、<code>discriminator</code>（标识当前存储的是哪个类型）和转换成任何指针的能力（通过 <code>std::launder</code> 禁止激进优化）。</li>
 <li>后者使用 CRTP 提供一堆构造、赋值函数（Variant 中需要用 <code>using</code> pack expansion 导入），以及析构所用的 <code>destory()</code> 函数。为了让 CRTP 正常工作，<code>Variant</code> 模板需要将 <code>VariantChoice</code> 模板声明为友元。</li>
@@ -298,35 +288,26 @@
 <blockquote>
 <p>Each VariantChoice base class is responsible for handling the initialization, assignment, and destruction when the active value has type T.</p>
 </blockquote>
-<h1 id="gong-neng-shi-xian">功能实现</h1>
-<h2 id="code-is-lt-t-gt-code" id="is-T"><code>is&lt;T&gt;()</code></h2>
-<p>用来判断是否为对应类型。获取 <code>discriminator</code> 和 <code>T</code> 类型所在的 index 比较即可（找一个类型所在的 index 和在 Typelist 和 Tuple 实现是一样的）。</p>
-<h2 id="code-get-lt-t-gt-code" id="get-T"><code>get&lt;T&gt;()</code></h2>
-<p>用来获取某个类型的值。首先检查是否为指定的类型，如果不是，则抛出异常，是则通过 <code>VariantStorage</code> 提供的方法将字符数组首地址强制转换成对应类型的指针，然后再解引用。</p>
+<h1 id="功能实现"><a href="#功能实现" class="headerlink" title="功能实现"></a>功能实现</h1><h2 id="is"><a href="#is" class="headerlink" title="is&lt;T&gt;()"></a><code>is&lt;T&gt;()</code></h2><p>用来判断是否为对应类型。获取 <code>discriminator</code> 和 <code>T</code> 类型所在的 index 比较即可（找一个类型所在的 index 和在 Typelist 和 Tuple 实现是一样的）。</p>
+<h2 id="get"><a href="#get" class="headerlink" title="get&lt;T&gt;()"></a><code>get&lt;T&gt;()</code></h2><p>用来获取某个类型的值。首先检查是否为指定的类型，如果不是，则抛出异常，是则通过 <code>VariantStorage</code> 提供的方法将字符数组首地址强制转换成对应类型的指针，然后再解引用。</p>
 <figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;exception&gt;</span></span></span><br><span class="line"><span class="keyword">class</span> <span class="title class_">EmptyVariant</span> : <span class="keyword">public</span> std::exception &#123;&#125;;</span><br><span class="line"></span><br><span class="line"><span class="keyword">template</span>&lt;<span class="keyword">typename</span>... Types&gt;</span><br><span class="line"><span class="keyword">template</span>&lt;<span class="keyword">typename</span> T&gt;</span><br><span class="line">T&amp; Variant&lt;Types...&gt;::<span class="built_in">get</span>() &amp; &#123;</span><br><span class="line">    <span class="keyword">if</span> (<span class="built_in">empty</span>()) &#123;</span><br><span class="line">        <span class="keyword">throw</span> <span class="built_in">EmptyVariant</span>();</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="built_in">assert</span>(<span class="built_in">is</span>&lt;T&gt;());</span><br><span class="line">    <span class="keyword">return</span> *<span class="keyword">this</span>-&gt;<span class="keyword">template</span> <span class="built_in">getBufferAs</span>&lt;T&gt;();</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
 <p>注意 <code>getBufferAs</code> 是模板函数，所以要加 <code>template</code> 关键字标识。</p>
-<h2 id="gou-zao" id="构造">构造</h2>
-<p>从 <code>VariantChoice</code> 中继承。</p>
-<h2 id="xi-gou" id="析构">析构</h2>
-<p>书中的方法是调用所有基类的析构函数。只有下标命中的析构函数会真正执行析构的逻辑。</p>
-<p><img src="../../assets/620830742aaa7bdd5388d0f111e9c8f0.png" alt=""></p>
-<p><img src="../../assets/85f88cb4a71df02837a9d64c0967137d.png" alt=""></p>
+<h2 id="构造"><a href="#构造" class="headerlink" title="构造"></a>构造</h2><p>从 <code>VariantChoice</code> 中继承。</p>
+<h2 id="析构"><a href="#析构" class="headerlink" title="析构"></a>析构</h2><p>书中的方法是调用所有基类的析构函数。只有下标命中的析构函数会真正执行析构的逻辑。</p>
+<p><img src="/../../assets/620830742aaa7bdd5388d0f111e9c8f0.png"></p>
+<p><img src="/../../assets/85f88cb4a71df02837a9d64c0967137d.png"></p>
 <p>感觉可以存储一个析构函数指针：<code>void (*destory)(void *);</code> 然后每个 <code>VariantChoice</code> 基类中都设置一个静态的同签名的析构函数。这样析构的时候可以直接调用而不必扫描列表。判断是否为该类型的时候，可以直接比较析构函数指针的地址而不必使用下标。不过其他情况是否必须要使用下标还待考量。</p>
-<h2 id="fu-zhi" id="赋值">赋值</h2>
-<p>赋值操作符的版本通过参数类型来选择。在赋值操作符的实现中需检查当前存储的是否为本类元素。如果不是本类元素则需要析构再 placement new；是的话则进行本类元素的赋值操作。</p>
-<h2 id="visitor" id="Visitor">Visitor</h2>
-<p>书中使用了一种递归实现（有可能被优化内联成一个但函数）。这种实现逐一检查当前的存储种类，遇到匹配的就调用 visitor 并返回结果。如全都没有匹配则抛出异常。</p>
+<h2 id="赋值"><a href="#赋值" class="headerlink" title="赋值"></a>赋值</h2><p>赋值操作符的版本通过参数类型来选择。在赋值操作符的实现中需检查当前存储的是否为本类元素。如果不是本类元素则需要析构再 placement new；是的话则进行本类元素的赋值操作。</p>
+<h2 id="Visitor"><a href="#Visitor" class="headerlink" title="Visitor"></a>Visitor</h2><p>书中使用了一种递归实现（有可能被优化内联成一个但函数）。这种实现逐一检查当前的存储种类，遇到匹配的就调用 visitor 并返回结果。如全都没有匹配则抛出异常。</p>
 <blockquote>
 <p>低抽象层次的 union 和整型下标可以使用 case 关键字完成跳转，比连续的 if 检查要快。</p>
 </blockquote>
 <p>libstdc++ <code>std::variant</code> 的 visit 函数模板会为 11 个以内参数数量的 <code>std::variant</code> 使用 case 跳转，而为参数数量极多的类型生成函数指针数组并跳转。</p>
-<h2 id="mo-ren-gou-zao" id="默认构造">默认构造</h2>
-<p>和标准库的 <code>std::variant</code> 相同，本章节实现的 <code>Variant</code> 在默认构造时会构造第一个参数的默认值。</p>
-<h2 id="cong-tong-lei-xing-code-variant-code-fu-zhi-gou-zao" id="从同类型（Variant）复制构造">从同类型（<code>Variant</code>）复制构造</h2>
-<p><img src="../../assets/0df161f74765ae6012204bddbcb1b172.png" alt=""></p>
+<h2 id="默认构造"><a href="#默认构造" class="headerlink" title="默认构造"></a>默认构造</h2><p>和标准库的 <code>std::variant</code> 相同，本章节实现的 <code>Variant</code> 在默认构造时会构造第一个参数的默认值。</p>
+<h2 id="从同类型（Variant）复制构造"><a href="#从同类型（Variant）复制构造" class="headerlink" title="从同类型（Variant）复制构造"></a>从同类型（<code>Variant</code>）复制构造</h2><p><img src="/../../assets/0df161f74765ae6012204bddbcb1b172.png"></p>
 <p>书中使用 <code>visit</code> 方法逐个查询真实的存储类型，然后完成赋值操作。</p>
-<h2 id="cong-tong-lei-xing-code-variant-code-fu-zhi" id="从同类型（Variant）赋值">从同类型（<code>Variant</code>）赋值</h2>
-<p>和复制构造差不多，也是借助 <code>visit</code> 方法完成派发。</p>
+<h2 id="从同类型（Variant）赋值"><a href="#从同类型（Variant）赋值" class="headerlink" title="从同类型（Variant）赋值"></a>从同类型（<code>Variant</code>）赋值</h2><p>和复制构造差不多，也是借助 <code>visit</code> 方法完成派发。</p>
 
     </div>
 
@@ -410,7 +391,7 @@
 
       <!--noindex-->
       <div class="post-toc-wrap sidebar-panel">
-          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#shu-ju-jie-gou"><span class="nav-number">1.</span> <span class="nav-text">数据结构</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#gong-neng-shi-xian"><span class="nav-number">2.</span> <span class="nav-text">功能实现</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#code-is-lt-t-gt-code"><span class="nav-number">2.1.</span> <span class="nav-text">is&lt;T&gt;()</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#code-get-lt-t-gt-code"><span class="nav-number">2.2.</span> <span class="nav-text">get&lt;T&gt;()</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#gou-zao"><span class="nav-number">2.3.</span> <span class="nav-text">构造</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#xi-gou"><span class="nav-number">2.4.</span> <span class="nav-text">析构</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#fu-zhi"><span class="nav-number">2.5.</span> <span class="nav-text">赋值</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#visitor"><span class="nav-number">2.6.</span> <span class="nav-text">Visitor</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#mo-ren-gou-zao"><span class="nav-number">2.7.</span> <span class="nav-text">默认构造</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#cong-tong-lei-xing-code-variant-code-fu-zhi-gou-zao"><span class="nav-number">2.8.</span> <span class="nav-text">从同类型（Variant）复制构造</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#cong-tong-lei-xing-code-variant-code-fu-zhi"><span class="nav-number">2.9.</span> <span class="nav-text">从同类型（Variant）赋值</span></a></li></ol></li></ol></div>
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84"><span class="nav-text">数据结构</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%8A%9F%E8%83%BD%E5%AE%9E%E7%8E%B0"><span class="nav-text">功能实现</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#is"><span class="nav-text">is&lt;T&gt;()</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#get"><span class="nav-text">get&lt;T&gt;()</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%9E%84%E9%80%A0"><span class="nav-text">构造</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%9E%90%E6%9E%84"><span class="nav-text">析构</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E8%B5%8B%E5%80%BC"><span class="nav-text">赋值</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Visitor"><span class="nav-text">Visitor</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E9%BB%98%E8%AE%A4%E6%9E%84%E9%80%A0"><span class="nav-text">默认构造</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%BB%8E%E5%90%8C%E7%B1%BB%E5%9E%8B%EF%BC%88Variant%EF%BC%89%E5%A4%8D%E5%88%B6%E6%9E%84%E9%80%A0"><span class="nav-text">从同类型（Variant）复制构造</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%BB%8E%E5%90%8C%E7%B1%BB%E5%9E%8B%EF%BC%88Variant%EF%BC%89%E8%B5%8B%E5%80%BC"><span class="nav-text">从同类型（Variant）赋值</span></a></li></ol></li></ol></div>
       </div>
       <!--/noindex-->
 
@@ -424,20 +405,20 @@
       <div class="site-state-item site-state-posts">
           <a href="/archives/">
         
-          <span class="site-state-item-count">106</span>
+          <span class="site-state-item-count">123</span>
           <span class="site-state-item-name">日志</span>
         </a>
       </div>
       <div class="site-state-item site-state-categories">
             <a href="/categories/">
           
-        <span class="site-state-item-count">6</span>
+        <span class="site-state-item-count">11</span>
         <span class="site-state-item-name">分类</span></a>
       </div>
       <div class="site-state-item site-state-tags">
             <a href="/tags/">
           
-        <span class="site-state-item-count">3</span>
+        <span class="site-state-item-count">9</span>
         <span class="site-state-item-name">标签</span></a>
       </div>
   </nav>
@@ -447,7 +428,7 @@
         <a href="https://github.com/hxhue" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;hxhue" rel="noopener" target="_blank"><i class="fab fa-github fa-fw"></i></a>
       </span>
       <span class="links-of-author-item">
-        <a href="https://stackoverflow.com/users/13785815" title="S.O. → https:&#x2F;&#x2F;stackoverflow.com&#x2F;users&#x2F;13785815" rel="noopener" target="_blank"><i class="fab fa-stack-overflow fa-fw"></i></a>
+        <a href="https://stackoverflow.com/users/13785815" title="StackOverflow → https:&#x2F;&#x2F;stackoverflow.com&#x2F;users&#x2F;13785815" rel="noopener" target="_blank"><i class="fab fa-stack-overflow fa-fw"></i></a>
       </span>
       <span class="links-of-author-item">
         <a href="mailto:simooncake@gmail.com" title="Email → mailto:simooncake@gmail.com" rel="noopener" target="_blank"><i class="fa fa-envelope fa-fw"></i></a>
@@ -485,38 +466,18 @@
       <i class="fa fa-chart-area"></i>
     </span>
       <span class="post-meta-item-text">站点总字数：</span>
-    <span title="站点总字数">81k</span>
+    <span title="站点总字数">84k</span>
     <span class="post-meta-divider">|</span>
     <span class="post-meta-item-icon">
       <i class="fa fa-coffee"></i>
     </span>
       <span class="post-meta-item-text">站点阅读时长 &asymp;</span>
-    <span title="站点阅读时长">4:54</span>
+    <span title="站点阅读时长">5:07</span>
 </div>
   <div class="powered-by">由 <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Gemini</a> 强力驱动
   </div><script color="0,0,255" opacity="0.5" zIndex="-1" count="99" src="https://cdn.jsdelivr.net/npm/canvas-nest.js@1/dist/canvas-nest.js"></script>
 
         
-<div class="busuanzi-count">
-  <script async src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
-    <span class="post-meta-item" id="busuanzi_container_site_uv" style="display: none;">
-      <span class="post-meta-item-icon">
-        <i class="user"></i>
-      </span>
-      <span class="site-uv" title="总访客量">
-        <span id="busuanzi_value_site_uv"></span>
-      </span>
-    </span>
-    <span class="post-meta-divider">|</span>
-    <span class="post-meta-item" id="busuanzi_container_site_pv" style="display: none;">
-      <span class="post-meta-item-icon">
-        <i class="eye"></i>
-      </span>
-      <span class="site-pv" title="总访问量">
-        <span id="busuanzi_value_site_pv"></span>
-      </span>
-    </span>
-</div>
 
 
 

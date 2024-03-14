@@ -30,7 +30,7 @@
 <meta property="og:description" content="现在已经没有 Segment 概念，并发系数不生效。能支持高效的并发：  支持懒初始化，第一次写的时候发生，可能需要自旋但不需要加锁。 读的时候可能需要自旋，不需要加锁。 写的时候如果遇到正在扩容，则加入一起扩容；如果写时槽位为空，则只需要原子操作；写时操作非空，且不处在特殊状态，则需要加对象锁。因而读写互不阻塞、不同槽位的写不会阻塞、扩容不会阻塞（因为扩容时其他竞争线程也会被分配任务）、仅有单个">
 <meta property="og:locale" content="zh_CN">
 <meta property="article:published_time" content="2023-08-12T07:17:00.000Z">
-<meta property="article:modified_time" content="2024-03-10T05:17:49.112Z">
+<meta property="article:modified_time" content="2024-03-14T02:21:51.648Z">
 <meta property="article:author" content="Hxhue">
 <meta property="article:tag" content="java">
 <meta name="twitter:card" content="summary">
@@ -119,27 +119,27 @@
   <ul id="menu" class="main-menu menu">
         <li class="menu-item menu-item-home">
 
-    <a href="/" rel="section"><i class="home fa-fw"></i>首页</a>
+    <a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a>
 
   </li>
         <li class="menu-item menu-item-archives">
 
-    <a href="/archives/" rel="section"><i class="archive fa-fw"></i>归档</a>
+    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档</a>
 
   </li>
         <li class="menu-item menu-item-about">
 
-    <a href="/about/" rel="section"><i class="user fa-fw"></i>关于</a>
+    <a href="/about/" rel="section"><i class="fa fa-user fa-fw"></i>关于</a>
 
   </li>
         <li class="menu-item menu-item-tags">
 
-    <a href="/tags/" rel="section"><i class="tags fa-fw"></i>标签</a>
+    <a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>标签</a>
 
   </li>
         <li class="menu-item menu-item-categories">
 
-    <a href="/categories/" rel="section"><i class="th fa-fw"></i>分类</a>
+    <a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>分类</a>
 
   </li>
       <li class="menu-item menu-item-search">
@@ -227,7 +227,7 @@
                   <i class="far fa-calendar-check"></i>
                 </span>
                 <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2024-03-10 13:17:49" itemprop="dateModified" datetime="2024-03-10T13:17:49+08:00">2024-03-10</time>
+                <time title="修改时间：2024-03-14 10:21:51" itemprop="dateModified" datetime="2024-03-14T10:21:51+08:00">2024-03-14</time>
               </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
@@ -239,14 +239,7 @@
                 </span>
             </span>
 
-          
-            <span class="post-meta-item" title="阅读次数" id="busuanzi_container_page_pv" style="display: none;">
-              <span class="post-meta-item-icon">
-                <i class="eye"></i>
-              </span>
-              <span class="post-meta-item-text">阅读次数：</span>
-              <span id="busuanzi_value_page_pv"></span>
-            </span><br>
+          <br>
             <span class="post-meta-item" title="本文字数">
               <span class="post-meta-item-icon">
                 <i class="far fa-file-word"></i>
@@ -282,9 +275,8 @@
 <p>💡 这当中有个优化过程：计算 lastRun，称链表尾部一连串对应 bit 相同的结点的起始位置为 lastRun，这系列结点将会被转移到 nextTable 的相同位置，因此会直接被转移，而不会对每个结点重新用头插法插入。头插法不仅需要遍历这一系列结点，还要对每个结点申请空间。</p>
 <p>如果线程 A 正在转移 <code>table</code> 到 <code>nextTable</code>，线程 B 读写链上的结点都会直接反映在被转移到的 <code>nextTable</code> 中。但如果线程 B 新创建了一个链（<code>table[i]</code> 从 <code>null</code> 变成有效），线程 A 如何看到？转移是从大下标开始，向小下标转移。转移后会在上面 CAS 放置 <code>ForwardingNode</code>，这样后来者可以直接写到其中，前来者写的结果会被转移。</p>
 <p>添加或者删除的时候怎么办？</p>
-<h2 id="wei-shi-yao-bu-yun-xu-jian-zhi-wei-kong" id="为什么不允许键值为空？">为什么不允许键值为空？</h2>
-<ol>
-<li>键值为空实在是无意义。在 <code>putVal</code> 方法中还检查了结点的键值，即便是普通结点也确保 K/V 不为空才进行操作，即存在完善的空检查，所以从效率或实现角度解释不成立。</li>
+<h2 id="为什么不允许键值为空？"><a href="#为什么不允许键值为空？" class="headerlink" title="为什么不允许键值为空？"></a>为什么不允许键值为空？</h2><ol>
+<li>键值为空实在是无意义。在 <code>putVal</code> 方法中还检查了结点的键值，即便是普通结点也确保 K&#x2F;V 不为空才进行操作，即存在完善的空检查，所以从效率或实现角度解释不成立。</li>
 <li>get 方法无法通过返回值 <code>null</code> 区分是不存在元素还是值为 <code>null</code>，并发环境下 <code>containsKey</code> 返回的结果在下一次写入时可能就不成立了，因而从 API 设计上 value 最好不是 <code>null</code>。</li>
 </ol>
 
@@ -305,12 +297,12 @@
         
     <div class="post-nav">
       <div class="post-nav-item">
-    <a href="/java/openjdk-copyonwritearraylist/" rel="prev" title="OpenJDK: CopyOnWriteArrayList">
-      <i class="fa fa-chevron-left"></i> OpenJDK: CopyOnWriteArrayList
+    <a href="/java/openjdk-juc-locks/" rel="prev" title="OpenJDK: JUC locks">
+      <i class="fa fa-chevron-left"></i> OpenJDK: JUC locks
     </a></div>
       <div class="post-nav-item">
-    <a href="/inside-the-cpp-object-model/%E9%9D%99%E6%80%81%E6%88%90%E5%91%98%E5%87%BD%E6%95%B0/" rel="next" title="静态成员函数">
-      静态成员函数 <i class="fa fa-chevron-right"></i>
+    <a href="/java/openjdk-copyonwritearraylist/" rel="next" title="OpenJDK: CopyOnWriteArrayList">
+      OpenJDK: CopyOnWriteArrayList <i class="fa fa-chevron-right"></i>
     </a></div>
     </div>
       </footer>
@@ -370,7 +362,7 @@
 
       <!--noindex-->
       <div class="post-toc-wrap sidebar-panel">
-          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#wei-shi-yao-bu-yun-xu-jian-zhi-wei-kong"><span class="nav-number">1.</span> <span class="nav-text">为什么不允许键值为空？</span></a></li></ol></div>
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%B8%BA%E4%BB%80%E4%B9%88%E4%B8%8D%E5%85%81%E8%AE%B8%E9%94%AE%E5%80%BC%E4%B8%BA%E7%A9%BA%EF%BC%9F"><span class="nav-text">为什么不允许键值为空？</span></a></li></ol></div>
       </div>
       <!--/noindex-->
 
@@ -384,20 +376,20 @@
       <div class="site-state-item site-state-posts">
           <a href="/archives/">
         
-          <span class="site-state-item-count">106</span>
+          <span class="site-state-item-count">123</span>
           <span class="site-state-item-name">日志</span>
         </a>
       </div>
       <div class="site-state-item site-state-categories">
             <a href="/categories/">
           
-        <span class="site-state-item-count">6</span>
+        <span class="site-state-item-count">11</span>
         <span class="site-state-item-name">分类</span></a>
       </div>
       <div class="site-state-item site-state-tags">
             <a href="/tags/">
           
-        <span class="site-state-item-count">3</span>
+        <span class="site-state-item-count">9</span>
         <span class="site-state-item-name">标签</span></a>
       </div>
   </nav>
@@ -407,7 +399,7 @@
         <a href="https://github.com/hxhue" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;hxhue" rel="noopener" target="_blank"><i class="fab fa-github fa-fw"></i></a>
       </span>
       <span class="links-of-author-item">
-        <a href="https://stackoverflow.com/users/13785815" title="S.O. → https:&#x2F;&#x2F;stackoverflow.com&#x2F;users&#x2F;13785815" rel="noopener" target="_blank"><i class="fab fa-stack-overflow fa-fw"></i></a>
+        <a href="https://stackoverflow.com/users/13785815" title="StackOverflow → https:&#x2F;&#x2F;stackoverflow.com&#x2F;users&#x2F;13785815" rel="noopener" target="_blank"><i class="fab fa-stack-overflow fa-fw"></i></a>
       </span>
       <span class="links-of-author-item">
         <a href="mailto:simooncake@gmail.com" title="Email → mailto:simooncake@gmail.com" rel="noopener" target="_blank"><i class="fa fa-envelope fa-fw"></i></a>
@@ -445,38 +437,18 @@
       <i class="fa fa-chart-area"></i>
     </span>
       <span class="post-meta-item-text">站点总字数：</span>
-    <span title="站点总字数">81k</span>
+    <span title="站点总字数">84k</span>
     <span class="post-meta-divider">|</span>
     <span class="post-meta-item-icon">
       <i class="fa fa-coffee"></i>
     </span>
       <span class="post-meta-item-text">站点阅读时长 &asymp;</span>
-    <span title="站点阅读时长">4:54</span>
+    <span title="站点阅读时长">5:07</span>
 </div>
   <div class="powered-by">由 <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Gemini</a> 强力驱动
   </div><script color="0,0,255" opacity="0.5" zIndex="-1" count="99" src="https://cdn.jsdelivr.net/npm/canvas-nest.js@1/dist/canvas-nest.js"></script>
 
         
-<div class="busuanzi-count">
-  <script async src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
-    <span class="post-meta-item" id="busuanzi_container_site_uv" style="display: none;">
-      <span class="post-meta-item-icon">
-        <i class="user"></i>
-      </span>
-      <span class="site-uv" title="总访客量">
-        <span id="busuanzi_value_site_uv"></span>
-      </span>
-    </span>
-    <span class="post-meta-divider">|</span>
-    <span class="post-meta-item" id="busuanzi_container_site_pv" style="display: none;">
-      <span class="post-meta-item-icon">
-        <i class="eye"></i>
-      </span>
-      <span class="site-pv" title="总访问量">
-        <span id="busuanzi_value_site_pv"></span>
-      </span>
-    </span>
-</div>
 
 
 

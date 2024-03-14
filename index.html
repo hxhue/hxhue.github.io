@@ -114,27 +114,27 @@
   <ul id="menu" class="main-menu menu">
         <li class="menu-item menu-item-home">
 
-    <a href="/" rel="section"><i class="home fa-fw"></i>首页</a>
+    <a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a>
 
   </li>
         <li class="menu-item menu-item-archives">
 
-    <a href="/archives/" rel="section"><i class="archive fa-fw"></i>归档</a>
+    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档</a>
 
   </li>
         <li class="menu-item menu-item-about">
 
-    <a href="/about/" rel="section"><i class="user fa-fw"></i>关于</a>
+    <a href="/about/" rel="section"><i class="fa fa-user fa-fw"></i>关于</a>
 
   </li>
         <li class="menu-item menu-item-tags">
 
-    <a href="/tags/" rel="section"><i class="tags fa-fw"></i>标签</a>
+    <a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>标签</a>
 
   </li>
         <li class="menu-item menu-item-categories">
 
-    <a href="/categories/" rel="section"><i class="th fa-fw"></i>分类</a>
+    <a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>分类</a>
 
   </li>
       <li class="menu-item menu-item-search">
@@ -222,7 +222,7 @@
                   <i class="far fa-calendar-check"></i>
                 </span>
                 <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2024-03-10 13:15:54" itemprop="dateModified" datetime="2024-03-10T13:15:54+08:00">2024-03-10</time>
+                <time title="修改时间：2024-03-14 10:21:51" itemprop="dateModified" datetime="2024-03-14T10:21:51+08:00">2024-03-14</time>
               </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
@@ -262,6 +262,7 @@
           <p>下面的代码继承了 <code>std::streambuf</code> 改变了 <code>ostream</code> 的行为，并自定义了打印操作将结果送到 <code>stdout</code>，而不是 <code>std::cout</code> 中。</p>
 <p>其中的 <code>print</code> 函数是仿 C++23 <code>std::print</code> 的，功能仅仅是打印参数，在笔记 <strong>实现简单的花括号插值打印</strong> 中实现。</p>
 <figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">struct</span> <span class="title class_">membuf</span> : std::streambuf &#123;</span><br><span class="line">    <span class="built_in">membuf</span>(<span class="type">char</span> *p, <span class="type">size_t</span> n) &#123;</span><br><span class="line">        <span class="built_in">setg</span>(p, p, p + n);  <span class="comment">// set read pointers</span></span><br><span class="line">        <span class="built_in">setp</span>(p, p + n);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="type">void</span> <span class="title">flush</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        <span class="keyword">auto</span> p = <span class="built_in">pbase</span>(), e = <span class="built_in">pptr</span>();</span><br><span class="line">        <span class="built_in">fwrite</span>(p, <span class="number">1</span>, e - p, stdout);</span><br><span class="line">        <span class="built_in">setp</span>(p, e);  <span class="comment">// reset write pointers</span></span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">   <span class="keyword">private</span>:</span><br><span class="line">    <span class="function"><span class="type">int</span> <span class="title">overflow</span><span class="params">(<span class="type">int</span> c)</span> <span class="keyword">override</span> </span>&#123;</span><br><span class="line">        <span class="built_in">flush</span>();</span><br><span class="line">        <span class="keyword">if</span> (c != <span class="string">&#x27;\0&#x27;</span>) <span class="built_in">fputc</span>(c, stdout);</span><br><span class="line">        <span class="keyword">return</span> c;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="comment">// A little slower since we have to maintain a different buffer.</span></span><br><span class="line"><span class="keyword">template</span> &lt;<span class="keyword">class</span>... Ts&gt;</span><br><span class="line"><span class="function"><span class="type">void</span> <span class="title">print_stdout</span><span class="params">(<span class="type">const</span> <span class="type">char</span> *s, Ts... args)</span> </span>&#123;</span><br><span class="line">    <span class="type">char</span> buf[<span class="number">512</span>];</span><br><span class="line">    <span class="function">membuf <span class="title">mbuf</span><span class="params">(buf, <span class="keyword">sizeof</span>(buf))</span></span>;</span><br><span class="line">    <span class="function">std::ostream <span class="title">os</span><span class="params">(&amp;mbuf)</span></span>;</span><br><span class="line">    <span class="built_in">print</span>(os, s, args...);</span><br><span class="line">    mbuf.<span class="built_in">flush</span>();</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
 
       
     </div>
@@ -312,7 +313,7 @@
                   <i class="far fa-calendar-check"></i>
                 </span>
                 <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2024-03-10 13:51:44" itemprop="dateModified" datetime="2024-03-10T13:51:44+08:00">2024-03-10</time>
+                <time title="修改时间：2024-03-14 15:12:11" itemprop="dateModified" datetime="2024-03-14T15:12:11+08:00">2024-03-14</time>
               </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
@@ -349,18 +350,17 @@
     <div class="post-body" itemprop="articleBody">
 
       
-          <h1 id="shi-yao-shi-xiang-xia-zhuan-huan">什么是向下转换</h1>
-<p>向下转换是可能出现溢出的转换。检查是否为向下转换：</p>
+          <h1 id="什么是向下转换"><a href="#什么是向下转换" class="headerlink" title="什么是向下转换"></a>什么是向下转换</h1><p>向下转换是可能出现溢出的转换。检查是否为向下转换：</p>
 <figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">template</span> &lt;<span class="keyword">typename</span> To, <span class="keyword">typename</span> From, <span class="keyword">typename</span> = <span class="type">void</span>&gt;</span><br><span class="line"><span class="keyword">struct</span> NotNarrowing: std::false_type &#123;&#125;;</span><br><span class="line"></span><br><span class="line"><span class="keyword">template</span> &lt;<span class="keyword">typename</span> To, <span class="keyword">typename</span> From&gt;</span><br><span class="line"><span class="keyword">struct</span> <span class="title class_">NotNarrowing</span>&lt;To, From, std::<span class="type">void_t</span>&lt;<span class="keyword">decltype</span>(To&#123;std::<span class="built_in">declval</span>&lt;From&gt;()&#125;)&gt;&gt;: std::true_type &#123;&#125;;</span><br></pre></td></tr></table></figure>
-<p>其中 <code>To&#123;std::declval&lt;From&gt;()&#125;</code> 这一步如果用在具体的类型上（比如说 int 和 unsigned），编译器是只给警告，不会报错。如果能够在编译期推导出来数值，则会根据数值来选择通过或报错。比如 <code>char&#123;'a'&#125;;</code> 是正常编译的，但是 <code>char&#123;300&#125;;</code> 是会报错的。</p>
+
+<p>其中 <code>To&#123;std::declval&lt;From&gt;()&#125;</code> 这一步如果用在具体的类型上（比如说 int 和 unsigned），编译器是只给警告，不会报错。如果能够在编译期推导出来数值，则会根据数值来选择通过或报错。比如 <code>char&#123;&#39;a&#39;&#125;;</code> 是正常编译的，但是 <code>char&#123;300&#125;;</code> 是会报错的。</p>
 <p>向下转换溢出的判断标准是真实的表数范围：</p>
 <ol>
 <li>无符号数和对应的有符号数互转都算是溢出。</li>
 <li>范围较小的无符号数转向范围较大的有符号数是不溢出的。</li>
 <li>任何有符号数转向无符号数都会溢出，因为无符号数不能表示负数。</li>
 </ol>
-<h1 id="yi-chu-de-ding-yi-qing-kuang">溢出的定义情况</h1>
-<p>算术运算溢出只有在 unsigned 类型上有定义，在浮点数上无定义，在 signed 整数上是 implementation-defined（C++17）或模除定义（C++20，同 unsigned）。</p>
+<h1 id="溢出的定义情况"><a href="#溢出的定义情况" class="headerlink" title="溢出的定义情况"></a>溢出的定义情况</h1><p>算术运算溢出只有在 unsigned 类型上有定义，在浮点数上无定义，在 signed 整数上是 implementation-defined（C++17）或模除定义（C++20，同 unsigned）。</p>
 <p>因此，虽然可能会溢出，大范围的数字转向任意范围的无符号数都有良好定义。大范围的数字转向小范围的有符号数，在溢出的时候仅在 C++20 以上有良好定义（否则是实现定义）。</p>
 <figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line">&#123;</span><br><span class="line">  <span class="comment">// implementation-defined in C++17</span></span><br><span class="line">  <span class="function"><span class="keyword">extern</span> <span class="type">long</span> <span class="type">long</span> <span class="title">f</span><span class="params">()</span></span>;</span><br><span class="line">  <span class="type">signed</span> a = <span class="built_in">f</span>();</span><br><span class="line">&#125;</span><br><span class="line">&#123;</span><br><span class="line">  <span class="comment">// well-defined</span></span><br><span class="line">  <span class="function"><span class="keyword">extern</span> <span class="type">long</span> <span class="type">long</span> <span class="title">f</span><span class="params">()</span></span>;</span><br><span class="line">  <span class="type">unsigned</span> a = <span class="built_in">f</span>();</span><br><span class="line">&#125;</span><br><span class="line">&#123;</span><br><span class="line">  <span class="comment">// won&#x27;t compile</span></span><br><span class="line">  <span class="function"><span class="keyword">extern</span> <span class="type">long</span> <span class="type">long</span> <span class="title">f</span><span class="params">()</span></span>;</span><br><span class="line">  <span class="type">unsigned</span> a&#123; <span class="built_in">f</span>() &#125;;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
           <!--noindex-->
@@ -420,7 +420,7 @@
                   <i class="far fa-calendar-check"></i>
                 </span>
                 <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2024-03-11 18:05:21" itemprop="dateModified" datetime="2024-03-11T18:05:21+08:00">2024-03-11</time>
+                <time title="修改时间：2024-03-14 15:12:11" itemprop="dateModified" datetime="2024-03-14T15:12:11+08:00">2024-03-14</time>
               </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
@@ -462,19 +462,17 @@
 <li>有一些算法是在 <code>numeric</code> 头文件中的。</li>
 </ol>
 <p><a target="_blank" rel="noopener" href="https://www.youtube.com/watch?v=2olsGf6JIkU">https://www.youtube.com/watch?v=2olsGf6JIkU</a></p>
-<h1 id="1-not-classified-2">1 Not Classified (2)</h1>
-<pre><code>1. transform
+<h1 id="1-Not-Classified-2"><a href="#1-Not-Classified-2" class="headerlink" title="1 Not Classified (2)"></a>1 Not Classified (2)</h1><pre><code>1. transform
 </code></pre>
-<p><img src="../../assets/84fcaeff404297d9e7af540b6eb1f8fc.jpeg" alt></p>
+<p><img src="/../../assets/84fcaeff404297d9e7af540b6eb1f8fc.jpeg"></p>
 <p>下面这种重载有点像先 zip 再 transform，但是没有 zip 灵活。</p>
-<p><img src="../../assets/0d98e310a23368a81ad03e73a79d11a9.jpeg" alt></p>
+<p><img src="/../../assets/0d98e310a23368a81ad03e73a79d11a9.jpeg"></p>
 <pre><code>2. for_each 不关心选用的函数的返回值类型，主要配合有 side effects 的函数使用。
    在现在有 for(*:*) 语法的情况下，for_each 也并不是完全没用。
     1. 在需要按照一定顺序遍历，比如倒序遍历的时候，可以用 rbegin/rend/for_each 来完成。
     2. for_each 可以指定执行策略，比如并行执行。
 </code></pre>
-<h1 id="2-permutations-17">2 Permutations (17)</h1>
-<p>（逻辑）连续空间上的元素易位。</p>
+<h1 id="2-Permutations-17"><a href="#2-Permutations-17" class="headerlink" title="2 Permutations (17)"></a>2 Permutations (17)</h1><p>（逻辑）连续空间上的元素易位。</p>
           <!--noindex-->
             <div class="post-button">
               <a class="btn" href="/cppcon/cppcon-2018-105-stl-algorithms-in-less-than-an-hour/#more" rel="contents">
@@ -532,7 +530,7 @@
                   <i class="far fa-calendar-check"></i>
                 </span>
                 <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2024-03-10 13:14:50" itemprop="dateModified" datetime="2024-03-10T13:14:50+08:00">2024-03-10</time>
+                <time title="修改时间：2024-03-14 10:21:51" itemprop="dateModified" datetime="2024-03-14T10:21:51+08:00">2024-03-14</time>
               </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
@@ -630,7 +628,7 @@
                   <i class="far fa-calendar-check"></i>
                 </span>
                 <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2024-03-10 13:16:41" itemprop="dateModified" datetime="2024-03-10T13:16:41+08:00">2024-03-10</time>
+                <time title="修改时间：2024-03-14 10:21:51" itemprop="dateModified" datetime="2024-03-14T10:21:51+08:00">2024-03-14</time>
               </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
@@ -671,13 +669,14 @@
 <p>CUDA 程序有两种代码：一是设备无关的 PTX，二是设备有关的二进制代码。在运行之前将 PTX 编译成二进制代码就是 JIT 过程。（当然，nvcc 会在文件系统里面存储 cache。）用 <code>-arch=sm_xx</code> 可以只为给定的架构编译，从而运行时不需要 JIT 这一步。</p>
 <p>禁用 cache（不允许本次运行读取和写入 cache）：</p>
 <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">export CUDA_CACHE_DISABLE=1</span><br></pre></td></tr></table></figure>
+
 <p>然后分别使用 <code>-arch=native</code> 选项和不使用，可以明显感受到程序在启动速度上的差别。</p>
 <p><code>nvcc --help</code>:</p>
 <blockquote>
 <p>nvcc embeds a compiled code image in the resulting executable for each specified <code>&lt;code&gt;</code> architecture, which is a true binary load image for each ‘real’ architecture (such as <code>sm_50</code>), and PTX code for the ‘virtual’ architecture (such as <code>compute_50</code>). During runtime, such embedded PTX code is dynamically compiled by the CUDA runtime system if no binary load image is found for the ‘current’ GPU.</p>
 </blockquote>
 <blockquote>
-<p><font size="+3">📖</font><font size="+1"><strong>NOTE</strong></font></p>
+<p style="margin-bottom: 0px"><font size="+3">✏️</font><font size="+1"><strong> NOTE</strong></font></p>
 <p><code>-arch</code> 选项生成二进制代码，而 <code>-code</code> 选项生成虚拟的 PTX 代码。</p>
 </blockquote>
 
@@ -730,7 +729,7 @@
                   <i class="far fa-calendar-check"></i>
                 </span>
                 <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2024-03-10 13:16:41" itemprop="dateModified" datetime="2024-03-10T13:16:41+08:00">2024-03-10</time>
+                <time title="修改时间：2024-03-14 10:21:51" itemprop="dateModified" datetime="2024-03-14T10:21:51+08:00">2024-03-14</time>
               </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
@@ -767,17 +766,18 @@
     <div class="post-body" itemprop="articleBody">
 
       
-          <h1 id="zai-ci-kao-lu-dot-ji-suan">再次考虑 dot 计算</h1>
-<p>在第 5 章的 dot 计算中，我们在每个块上做完 reduction 之后就将数据拷贝回到 CPU 了，然后让 CPU 做最后的加法。</p>
+          <h1 id="再次考虑-dot-计算"><a href="#再次考虑-dot-计算" class="headerlink" title="再次考虑 dot 计算"></a>再次考虑 dot 计算</h1><p>在第 5 章的 dot 计算中，我们在每个块上做完 reduction 之后就将数据拷贝回到 CPU 了，然后让 CPU 做最后的加法。</p>
 <p>为什么在 compute capability 2.0 之前，<code>atomicAdd</code> 只支持整数？因为原子加法是不能指定计算的发生顺序的，因而每个计算都必须遵守结合律，也就是 $(A+B)+C$ 必须等于 $A+(B+C)$。<strong>但是浮点数因为中间结果的舍入问题，并不能保证这一点</strong>！！</p>
 <p>本节接下来是讲解用原子操作实现一个忙等待的 mutex，用于同步多个 CUDA 线程（<strong>因为在写书的时候浮点数的原子加法还没有受到设备的广泛支持</strong>）。<code>atomicCAS</code> 就是 CUDA 上的比较并交换。</p>
 <figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// mutex 的类型是 int *，而且是分配在 GPU 上的</span></span><br><span class="line">__device__ <span class="type">void</span> <span class="title function_">lock</span><span class="params">( <span class="type">void</span> )</span> &#123;</span><br><span class="line">  <span class="keyword">while</span>( atomicCAS( mutex, <span class="number">0</span>, <span class="number">1</span> ) != <span class="number">0</span> );</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">__device__ <span class="type">void</span> <span class="title function_">unlock</span><span class="params">( <span class="type">void</span> )</span> &#123;</span><br><span class="line">  atomicExch( mutex, <span class="number">1</span> );</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
 <blockquote>
-<p><font size="+3">📖</font><font size="+1"><strong>NOTE</strong></font></p>
+<p style="margin-bottom: 0px"><font size="+3">✏️</font><font size="+1"><strong> NOTE</strong></font></p>
 <p>这里的 <code>unlock</code> 方法并不是直接对 <code>*mutex</code> 赋值为 1，因为 CUDA 中原子操作和普通的内存访问经过的路径不同，所以应该在 <code>unlock</code> 的时候也统一使用原子操作。</p>
 </blockquote>
 <p>最后的 dot 核函数：</p>
 <figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br></pre></td><td class="code"><pre><span class="line">__global__ <span class="type">void</span> <span class="title function_">dot</span><span class="params">( Lock lock, <span class="type">float</span> *a,</span></span><br><span class="line"><span class="params">                     <span class="type">float</span> *b, <span class="type">float</span> *c )</span> &#123;</span><br><span class="line">    __shared__ <span class="type">float</span> cache[threadsPerBlock];</span><br><span class="line">    <span class="type">int</span> tid = threadIdx.x + blockIdx.x * blockDim.x;</span><br><span class="line">    <span class="type">int</span> cacheIndex = threadIdx.x;</span><br><span class="line"></span><br><span class="line">    <span class="type">float</span>   temp = <span class="number">0</span>;</span><br><span class="line">    <span class="keyword">while</span> (tid &lt; N) &#123;</span><br><span class="line">        temp += a[tid] * b[tid];</span><br><span class="line">        tid += blockDim.x * gridDim.x;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// set the cache values</span></span><br><span class="line">    cache[cacheIndex] = temp;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// synchronize threads in this block</span></span><br><span class="line">    __syncthreads();</span><br><span class="line"></span><br><span class="line">    <span class="comment">// for reductions, threadsPerBlock must be a power of 2</span></span><br><span class="line">    <span class="comment">// because of the following code</span></span><br><span class="line">    <span class="type">int</span> i = blockDim.x/<span class="number">2</span>;</span><br><span class="line">    <span class="keyword">while</span> (i != <span class="number">0</span>) &#123;</span><br><span class="line">        <span class="keyword">if</span> (cacheIndex &lt; i)</span><br><span class="line">            cache[cacheIndex] += cache[cacheIndex + i];</span><br><span class="line">        __syncthreads();</span><br><span class="line">        i /= <span class="number">2</span>;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">if</span> (cacheIndex == <span class="number">0</span>) &#123;</span><br><span class="line">        <span class="comment">// wait until we get the lock</span></span><br><span class="line">        lock.lock();</span><br><span class="line">       <span class="comment">// we have the lock at this point, update and release</span></span><br><span class="line">        *c += cache[<span class="number">0</span>];</span><br><span class="line">        lock.unlock();</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
 <p>首先是多了一个 <code>Lock</code> 参数，这个参数是将原子操作模拟 mutex 的过程封装之后的对象。中间是在第 5 章就已经介绍过的写法。然后最后加到 <code>*c</code> 上的操作是用这个 mutex 来保护的。<strong>现在已经可以用浮点数原子加法了，因而不必再这样写代码</strong>。</p>
 <blockquote>
 <p>注意：由于无法预知多个线程竞争下的浮点数的结合顺序，最终的结果很可能和 CPU 不一样。</p>
@@ -839,7 +839,7 @@
                   <i class="far fa-calendar-check"></i>
                 </span>
                 <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2024-03-11 18:18:34" itemprop="dateModified" datetime="2024-03-11T18:18:34+08:00">2024-03-11</time>
+                <time title="修改时间：2024-03-14 15:12:11" itemprop="dateModified" datetime="2024-03-14T15:12:11+08:00">2024-03-14</time>
               </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
@@ -876,12 +876,12 @@
     <div class="post-body" itemprop="articleBody">
 
       
-          <h1 id="di-6-zhang-constant-memory-and-events">第 6 章 Constant Memory and Events</h1>
-<h2 id="chang-liang-nei-cun">常量内存</h2>
-<p>常量内存是在全局区域声明的。如果漏掉了 <code>__constant__</code> 关键字，就会将其定义在全局内存区域，尽管存储方式、分配的时机和用 <code>cudaMalloc</code> 申请的内存有一些差异。</p>
+          <h1 id="第-6-章-Constant-Memory-and-Events"><a href="#第-6-章-Constant-Memory-and-Events" class="headerlink" title="第 6 章 Constant Memory and Events"></a>第 6 章 Constant Memory and Events</h1><h2 id="常量内存"><a href="#常量内存" class="headerlink" title="常量内存"></a>常量内存</h2><p>常量内存是在全局区域声明的。如果漏掉了 <code>__constant__</code> 关键字，就会将其定义在全局内存区域，尽管存储方式、分配的时机和用 <code>cudaMalloc</code> 申请的内存有一些差异。</p>
 <figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">__constant__ Sphere s[SPHERES];</span><br></pre></td></tr></table></figure>
+
 <p>常量内存的内存拷贝方法比较特殊：</p>
 <figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">HANDLE_ERROR( cudaMemcpyToSymbol( s, temp_s,</span><br><span class="line">                                  <span class="keyword">sizeof</span>(Sphere) * SPHERES) );</span><br></pre></td></tr></table></figure>
+
 <p>CUDA 线程对常量内存是只读的，也就是只有 host 能操作常量内存。通过将反复读取的数据移动到常量内存区域而不是全局内存，可以加速。但是要注意常量内存的大小非常有限（<a target="_blank" rel="noopener" href="https://docs.nvidia.com/cuda/cuda-c-programming-guide/index.html#features-and-technical-specifications-technical-specifications-per-compute-capability"></a>）。书中的例子只是对 20 个球体做光线追踪。</p>
 <p>常量内存为什么快：</p>
 <ol>
@@ -946,7 +946,7 @@
                   <i class="far fa-calendar-check"></i>
                 </span>
                 <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2024-03-12 19:30:13" itemprop="dateModified" datetime="2024-03-12T19:30:13+08:00">2024-03-12</time>
+                <time title="修改时间：2024-03-14 15:12:11" itemprop="dateModified" datetime="2024-03-14T15:12:11+08:00">2024-03-14</time>
               </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
@@ -986,8 +986,8 @@
           <p>源码可以参考 <a target="_blank" rel="noopener" href="https://github.com/yottaawesome/cuda-by-example/">https://github.com/yottaawesome/cuda-by-example/</a> ，官网的源码链接挂了。</p>
 <p>书中的代码有些需要用 opengl 来跑。安装了 <code>freeglut3-dev</code> 和 <code>mesa-utils</code>。（不确定 <code>libgl1-mesa-dev</code> 是否是必要的。）然后 cmake 规则中要 link 对应的库：</p>
 <figure class="highlight cmake"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">cmake_minimum_required</span>(VERSION <span class="number">3.20</span>.<span class="number">1</span>)</span><br><span class="line"><span class="keyword">project</span>(chapter3 LANGUAGES CXX CUDA)</span><br><span class="line"><span class="keyword">set</span>(CMAKE_CUDA_STANDARD <span class="number">17</span>)</span><br><span class="line"><span class="keyword">set</span>(CMAKE_CUDA_STANDARD_REQUIRED <span class="keyword">ON</span>)</span><br><span class="line"><span class="keyword">set</span>(CMAKE_CUDA_EXTENSIONS <span class="keyword">OFF</span>)</span><br><span class="line"><span class="keyword">add_executable</span>(ray ray_global.cu)</span><br><span class="line"><span class="keyword">target_link_libraries</span>(ray GL glut)</span><br><span class="line"><span class="comment">#                         ^^^^^^^</span></span><br></pre></td></tr></table></figure>
-<h1 id="di-3-zhang-cuda-yuan-wen-jian">第 3 章 CUDA 源文件</h1>
-<p>用 nvcc 编译时不需要为 cuda 内置函数额外包含头文件。这些头文件是在 host 端才需要的。</p>
+
+<h1 id="第-3-章-CUDA-源文件"><a href="#第-3-章-CUDA-源文件" class="headerlink" title="第 3 章 CUDA 源文件"></a>第 3 章 CUDA 源文件</h1><p>用 nvcc 编译时不需要为 cuda 内置函数额外包含头文件。这些头文件是在 host 端才需要的。</p>
 <p><a target="_blank" rel="noopener" href="https://stackoverflow.com/questions/6302695/difference-between-cuda-h-cuda-runtime-h-cuda-runtime-api-h">https://stackoverflow.com/questions/6302695/difference-between-cuda-h-cuda-runtime-h-cuda-runtime-api-h</a></p>
 <blockquote>
 <p>In very broad terms:</p>
@@ -999,16 +999,16 @@
 <p>If you were writing host code to be compiled with the host compiler which includes API calls, you would include either <code>cuda.h</code> or <code>cuda_runtime_api.h</code>. If you needed other CUDA language built-ins, like types, and were using the runtime API and compiling with the host compiler, you would include <code>cuda_runtime.h</code>. If you are writing code which will be compiled using nvcc, it is all irrelevant, because nvcc takes care of inclusion of all the required headers automatically without programmer intervention.</p>
 </blockquote>
 <blockquote>
-<p><font size="+3">🚨</font><font size="+1"><strong>WARNING</strong></font></p>
+<p style="margin-bottom: 0px"><font size="+3">🚨</font><font size="+1"><strong> WARNING</strong></font></p>
 <p>书中没讲如何编译，需要预备知识。至少要会像 gcc 一样用 nvcc。</p>
 </blockquote>
 <blockquote>
-<p><font size="+3">📖</font><font size="+1"><strong>NOTE</strong></font></p>
+<p style="margin-bottom: 0px"><font size="+3">✏️</font><font size="+1"><strong> NOTE</strong></font></p>
 <p>没有 compile_commands.json 时 clangd 反而能够为 cu 文件提供诊断？好像是生成的 compile_commands.json 有太多 clang 无法理解的选项，但是 clang 没有忽略它们，导致了诊断问题。</p>
 </blockquote>
 <blockquote>
-<p><font size="+3">📖</font><font size="+1"><strong>NOTE</strong></font></p>
-<p>遇到了 wsl 中无法在 cmake 中使用 debug（可以直接 run）的情况，原来是没有安装 C/C++ intellisense。同时也只有安装了这个才能在 <code>.cu</code> 文件中打断点。</p>
+<p style="margin-bottom: 0px"><font size="+3">✏️</font><font size="+1"><strong> NOTE</strong></font></p>
+<p>遇到了 wsl 中无法在 cmake 中使用 debug（可以直接 run）的情况，原来是没有安装 C&#x2F;C++ intellisense。同时也只有安装了这个才能在 <code>.cu</code> 文件中打断点。</p>
 <p>不过怎么会没有安装呢？可能是上次 compact 虚拟磁盘之后出现的后遗症。</p>
 </blockquote>
           <!--noindex-->
@@ -1068,7 +1068,7 @@
                   <i class="far fa-calendar-check"></i>
                 </span>
                 <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2024-03-11 18:06:22" itemprop="dateModified" datetime="2024-03-11T18:06:22+08:00">2024-03-11</time>
+                <time title="修改时间：2024-03-14 15:12:11" itemprop="dateModified" datetime="2024-03-14T15:12:11+08:00">2024-03-14</time>
               </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
@@ -1105,19 +1105,19 @@
     <div class="post-body" itemprop="articleBody">
 
       
-          <h1 id="di-9-zhang-yuan-zi-cao-zuo">第 9 章 原子操作</h1>
-<blockquote>
+          <h1 id="第-9-章-原子操作"><a href="#第-9-章-原子操作" class="headerlink" title="第 9 章 原子操作"></a>第 9 章 原子操作</h1><blockquote>
 <p>You should know that atomic operations on <strong>global memory</strong> are supported only on GPUs of compute capability 1.1 or higher. Furthermore, atomic operations on <strong>shared memory</strong> require a GPU of compute capability 1.2 or higher.</p>
 </blockquote>
 <p>指定计算能力：</p>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">nvcc -<span class="built_in">arch</span>=sm_11</span><br></pre></td></tr></table></figure>
+
 <p>这样就指定了计算能力是 1.1，当有些指令是只有 1.1 才能编译时加这个参数可以确保编译。同时，有了更加精确的生成目标，nvcc 可以执行一些和硬件相关的优化手段，这些优化手段在更早的架构上可能没有。</p>
 <p>但是一个硬件上不一定支持给定的计算能力。通过 <code>-arch-ls</code> 可以列出设备支持的计算能力：</p>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line">$ nvcc -arch-ls</span><br><span class="line">compute_50</span><br><span class="line">compute_52</span><br><span class="line">compute_53</span><br><span class="line">compute_60</span><br><span class="line">compute_61</span><br><span class="line">compute_62</span><br><span class="line">compute_70</span><br><span class="line">compute_72</span><br><span class="line">compute_75</span><br><span class="line">compute_80</span><br><span class="line">compute_86</span><br><span class="line">compute_87</span><br><span class="line">compute_89</span><br><span class="line">compute_90</span><br></pre></td></tr></table></figure>
+
 <p>例子是直方图计算，也就是统计各个值的元素的数量。书中的例子是对随机填充生成的字符数组的计数，每个字符值不超过 256。</p>
 <p>可以用 <code>prop.multiProcessorCount</code> 来查询设备有的 SM 的数量。NexusNet 则是直接对 blocks 数量使用了一个定数，没有查询 SM 数量。</p>
-<p>第一个直方图的尝试是用 <code>atomicAdd</code> 直接在全局内存上做原子加法。但是这样的性能相当差，甚至在书中所用的硬件上比 CPU 上的计算慢了好几倍。用自己的设备测试，则 CPU、全局内存原子加法、共享内存原子加法耗时分别为 182ms<br>
-、62.5ms、30ms。虽然全局内存上的原子加法开销没有那么离谱，但是也比共享内存上的加法慢了很多。</p>
+<p>第一个直方图的尝试是用 <code>atomicAdd</code> 直接在全局内存上做原子加法。但是这样的性能相当差，甚至在书中所用的硬件上比 CPU 上的计算慢了好几倍。用自己的设备测试，则 CPU、全局内存原子加法、共享内存原子加法耗时分别为 182ms<br>、62.5ms、30ms。虽然全局内存上的原子加法开销没有那么离谱，但是也比共享内存上的加法慢了很多。</p>
           <!--noindex-->
             <div class="post-button">
               <a class="btn" href="/cuda/cuda-by-example-chapter-09-12/#more" rel="contents">
@@ -1175,7 +1175,7 @@
                   <i class="far fa-calendar-check"></i>
                 </span>
                 <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2024-03-10 13:15:54" itemprop="dateModified" datetime="2024-03-10T13:15:54+08:00">2024-03-10</time>
+                <time title="修改时间：2024-03-14 10:21:51" itemprop="dateModified" datetime="2024-03-14T10:21:51+08:00">2024-03-14</time>
               </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
@@ -1214,9 +1214,11 @@
       
           <p>在看 Modern CMake for C++ 的时候看到了这段代码：</p>
 <figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="type">void</span> <span class="title">RunOutputsCorrectEquations</span><span class="params">()</span> </span>&#123;</span><br><span class="line">  string expected &#123;<span class="string">&quot;2 + 2 = 4\n3 * 3 = 9\n&quot;</span>&#125;;</span><br><span class="line">  stringstream buffer;</span><br><span class="line">  <span class="comment">// redirect cout</span></span><br><span class="line">  <span class="keyword">auto</span> prevcoutbuf = cout.<span class="built_in">rdbuf</span>(buffer.<span class="built_in">rdbuf</span>());</span><br><span class="line">  <span class="built_in">run</span>();</span><br><span class="line">  <span class="keyword">auto</span> output = buffer.<span class="built_in">str</span>();</span><br><span class="line">  <span class="comment">// restore original buffer</span></span><br><span class="line">  cout.<span class="built_in">rdbuf</span>(prevcoutbuf);</span><br><span class="line">  <span class="keyword">if</span> (expected != output)</span><br><span class="line">    <span class="built_in">exit</span>(<span class="number">1</span>);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
 <p>看起来 stdio 的 FILE 也能重定向（但是不能保存之前的关联，因而恢复到 stdout 不能跨平台）：</p>
 <p><a target="_blank" rel="noopener" href="https://stackoverflow.com/a/29154180/">https://stackoverflow.com/a/29154180/</a></p>
 <figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 重定向</span></span><br><span class="line">freopen(<span class="string">&quot;output.txt&quot;</span>, <span class="string">&quot;a+&quot;</span>, <span class="built_in">stdout</span>);</span><br><span class="line"></span><br><span class="line"><span class="comment">// 恢复到终端输出</span></span><br><span class="line">freopen(<span class="string">&quot;/dev/tty&quot;</span>, <span class="string">&quot;w&quot;</span>, <span class="built_in">stdout</span>); <span class="comment">/*for gcc, ubuntu*/</span></span><br><span class="line"><span class="comment">// or</span></span><br><span class="line">freopen(<span class="string">&quot;CON&quot;</span>, <span class="string">&quot;w&quot;</span>, <span class="built_in">stdout</span>); <span class="comment">/*Mingw C++; Windows*/</span></span><br></pre></td></tr></table></figure>
+
 <p>没办法保存之前的输出！</p>
 <blockquote>
 <p>不能直接给 stdout 赋值，因为 stdout 不保证是可写的变量。</p>
@@ -1240,7 +1242,7 @@
 
   
   <nav class="pagination">
-    <span class="page-number current">1</span><a class="page-number" href="/page/2/">2</a><span class="space">&hellip;</span><a class="page-number" href="/page/11/">11</a><a class="extend next" rel="next" href="/page/2/"><i class="fa fa-angle-right" aria-label="下一页"></i></a>
+    <span class="page-number current">1</span><a class="page-number" href="/page/2/">2</a><span class="space">&hellip;</span><a class="page-number" href="/page/13/">13</a><a class="extend next" rel="next" href="/page/2/"><i class="fa fa-angle-right" aria-label="下一页"></i></a>
   </nav>
 
 
@@ -1306,20 +1308,20 @@
       <div class="site-state-item site-state-posts">
           <a href="/archives/">
         
-          <span class="site-state-item-count">106</span>
+          <span class="site-state-item-count">123</span>
           <span class="site-state-item-name">日志</span>
         </a>
       </div>
       <div class="site-state-item site-state-categories">
             <a href="/categories/">
           
-        <span class="site-state-item-count">6</span>
+        <span class="site-state-item-count">11</span>
         <span class="site-state-item-name">分类</span></a>
       </div>
       <div class="site-state-item site-state-tags">
             <a href="/tags/">
           
-        <span class="site-state-item-count">3</span>
+        <span class="site-state-item-count">9</span>
         <span class="site-state-item-name">标签</span></a>
       </div>
   </nav>
@@ -1329,7 +1331,7 @@
         <a href="https://github.com/hxhue" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;hxhue" rel="noopener" target="_blank"><i class="fab fa-github fa-fw"></i></a>
       </span>
       <span class="links-of-author-item">
-        <a href="https://stackoverflow.com/users/13785815" title="S.O. → https:&#x2F;&#x2F;stackoverflow.com&#x2F;users&#x2F;13785815" rel="noopener" target="_blank"><i class="fab fa-stack-overflow fa-fw"></i></a>
+        <a href="https://stackoverflow.com/users/13785815" title="StackOverflow → https:&#x2F;&#x2F;stackoverflow.com&#x2F;users&#x2F;13785815" rel="noopener" target="_blank"><i class="fab fa-stack-overflow fa-fw"></i></a>
       </span>
       <span class="links-of-author-item">
         <a href="mailto:simooncake@gmail.com" title="Email → mailto:simooncake@gmail.com" rel="noopener" target="_blank"><i class="fa fa-envelope fa-fw"></i></a>
@@ -1367,38 +1369,18 @@
       <i class="fa fa-chart-area"></i>
     </span>
       <span class="post-meta-item-text">站点总字数：</span>
-    <span title="站点总字数">81k</span>
+    <span title="站点总字数">84k</span>
     <span class="post-meta-divider">|</span>
     <span class="post-meta-item-icon">
       <i class="fa fa-coffee"></i>
     </span>
       <span class="post-meta-item-text">站点阅读时长 &asymp;</span>
-    <span title="站点阅读时长">4:54</span>
+    <span title="站点阅读时长">5:07</span>
 </div>
   <div class="powered-by">由 <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Gemini</a> 强力驱动
   </div><script color="0,0,255" opacity="0.5" zIndex="-1" count="99" src="https://cdn.jsdelivr.net/npm/canvas-nest.js@1/dist/canvas-nest.js"></script>
 
         
-<div class="busuanzi-count">
-  <script async src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
-    <span class="post-meta-item" id="busuanzi_container_site_uv" style="display: none;">
-      <span class="post-meta-item-icon">
-        <i class="user"></i>
-      </span>
-      <span class="site-uv" title="总访客量">
-        <span id="busuanzi_value_site_uv"></span>
-      </span>
-    </span>
-    <span class="post-meta-divider">|</span>
-    <span class="post-meta-item" id="busuanzi_container_site_pv" style="display: none;">
-      <span class="post-meta-item-icon">
-        <i class="eye"></i>
-      </span>
-      <span class="site-pv" title="总访问量">
-        <span id="busuanzi_value_site_pv"></span>
-      </span>
-    </span>
-</div>
 
 
 

@@ -22,15 +22,15 @@
     var CONFIG = {"hostname":"hxhue.github.io","root":"/","scheme":"Gemini","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"always","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":true,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":true,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":false,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},"path":"search.xml"};
   </script>
 
-  <meta name="description" content="Perfect forwarding: 1234template&lt;typename T&gt;void f (T&amp;&amp; val) &#123;    g(std::forward&lt;T&gt;(val)); &#x2F;&#x2F; perfect forward val to g()&#125; 注意，完美转发只对模板参数有效，对依赖于模板参数的类型也是无效的，比如：typename T::">
+  <meta name="description" content="Perfect forwarding: 1234template&lt;typename T&gt;void f (T&amp;&amp; val) &#123;    g(std::forward&lt;T&gt;(val)); &#x2F;&#x2F; perfect forward val to g()&#125;  注意，完美转发只对模板参数有效，对依赖于模板参数的类型也是无效的，比如：typename T:">
 <meta property="og:type" content="article">
 <meta property="og:title" content="CTTCG 06 Move Semantics and enable_if">
 <meta property="og:url" content="https://hxhue.github.io/cpp-templates-the-complete-guide/cttcg-06-move-semantics-and-enable-if/index.html">
 <meta property="og:site_name" content="Hxhue&#39;s Blog">
-<meta property="og:description" content="Perfect forwarding: 1234template&lt;typename T&gt;void f (T&amp;&amp; val) &#123;    g(std::forward&lt;T&gt;(val)); &#x2F;&#x2F; perfect forward val to g()&#125; 注意，完美转发只对模板参数有效，对依赖于模板参数的类型也是无效的，比如：typename T::">
+<meta property="og:description" content="Perfect forwarding: 1234template&lt;typename T&gt;void f (T&amp;&amp; val) &#123;    g(std::forward&lt;T&gt;(val)); &#x2F;&#x2F; perfect forward val to g()&#125;  注意，完美转发只对模板参数有效，对依赖于模板参数的类型也是无效的，比如：typename T:">
 <meta property="og:locale" content="zh_CN">
 <meta property="article:published_time" content="2023-08-11T16:00:00.000Z">
-<meta property="article:modified_time" content="2024-03-10T05:14:31.644Z">
+<meta property="article:modified_time" content="2024-03-14T02:21:51.275Z">
 <meta property="article:author" content="Hxhue">
 <meta property="article:tag" content="cpp">
 <meta name="twitter:card" content="summary">
@@ -119,27 +119,27 @@
   <ul id="menu" class="main-menu menu">
         <li class="menu-item menu-item-home">
 
-    <a href="/" rel="section"><i class="home fa-fw"></i>首页</a>
+    <a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a>
 
   </li>
         <li class="menu-item menu-item-archives">
 
-    <a href="/archives/" rel="section"><i class="archive fa-fw"></i>归档</a>
+    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档</a>
 
   </li>
         <li class="menu-item menu-item-about">
 
-    <a href="/about/" rel="section"><i class="user fa-fw"></i>关于</a>
+    <a href="/about/" rel="section"><i class="fa fa-user fa-fw"></i>关于</a>
 
   </li>
         <li class="menu-item menu-item-tags">
 
-    <a href="/tags/" rel="section"><i class="tags fa-fw"></i>标签</a>
+    <a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>标签</a>
 
   </li>
         <li class="menu-item menu-item-categories">
 
-    <a href="/categories/" rel="section"><i class="th fa-fw"></i>分类</a>
+    <a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>分类</a>
 
   </li>
       <li class="menu-item menu-item-search">
@@ -227,7 +227,7 @@
                   <i class="far fa-calendar-check"></i>
                 </span>
                 <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2024-03-10 13:14:31" itemprop="dateModified" datetime="2024-03-10T13:14:31+08:00">2024-03-10</time>
+                <time title="修改时间：2024-03-14 10:21:51" itemprop="dateModified" datetime="2024-03-14T10:21:51+08:00">2024-03-14</time>
               </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
@@ -239,14 +239,7 @@
                 </span>
             </span>
 
-          
-            <span class="post-meta-item" title="阅读次数" id="busuanzi_container_page_pv" style="display: none;">
-              <span class="post-meta-item-icon">
-                <i class="eye"></i>
-              </span>
-              <span class="post-meta-item-text">阅读次数：</span>
-              <span id="busuanzi_value_page_pv"></span>
-            </span><br>
+          <br>
             <span class="post-meta-item" title="本文字数">
               <span class="post-meta-item-icon">
                 <i class="far fa-file-word"></i>
@@ -273,17 +266,16 @@
       
         <p>Perfect forwarding:</p>
 <figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">template</span>&lt;<span class="keyword">typename</span> T&gt;</span></span><br><span class="line"><span class="function"><span class="type">void</span> <span class="title">f</span> <span class="params">(T&amp;&amp; val)</span> </span>&#123;</span><br><span class="line">    <span class="built_in">g</span>(std::forward&lt;T&gt;(val)); <span class="comment">// perfect forward val to g()</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
 <p>注意，完美转发只对模板参数有效，对依赖于模板参数的类型也是无效的，比如：<code>typename T::iterator&amp;&amp;</code> 是无效的，仍表示严格的右值引用。</p>
 <p>完美转发也不能加 const 属性。添加 const 属性后表示常右值引用（而且这种形式很少被使用）。</p>
-<h1 id="chang-shi-yong-wan-mei-zhuan-fa-jian-hua-dai-ma">尝试用完美转发简化代码</h1>
-<p>设想一个 Person 类，里面只有一个 <code>std::string</code> 类型的 name 数据。已经实现了复制构造函数和移动构造函数。从数据的构造函数有 <code>std::string &amp;&amp;</code> 和 <code>std::string const &amp;</code> 两个重载版本。使用完美转发可以同时写出匹配这两种参数的函数模板，减少代码量。</p>
+<h1 id="尝试用完美转发简化代码"><a href="#尝试用完美转发简化代码" class="headerlink" title="尝试用完美转发简化代码"></a>尝试用完美转发简化代码</h1><p>设想一个 Person 类，里面只有一个 <code>std::string</code> 类型的 name 数据。已经实现了复制构造函数和移动构造函数。从数据的构造函数有 <code>std::string &amp;&amp;</code> 和 <code>std::string const &amp;</code> 两个重载版本。使用完美转发可以同时写出匹配这两种参数的函数模板，减少代码量。</p>
 <p>💡 事实上，代码量并不会减少，反而会变得复杂。在这种必定需要复制的场合，最好的方式还是接受 <code>std::string</code> 的值类型。下面的讨论假定必须使用模板实现。</p>
 <p>问题在哪里？</p>
 <p>完美转发匹配的优先级太高了，在传入一个 <code>Person &amp;</code> 对象的时候，<code>Person const &amp;</code> 复制构造函数匹配优先度低，从而调用的是函数模板。而给定的函数模板是为字符串类型写的，显然 Person 不能用于初始化 <code>std::string</code>，因而无法编译。</p>
 <p>可以用 <code>std::enable_if</code> 来要求参数必须是字符串。在 C++20 中，可以用 concept 来加限制。</p>
 <p>💡 <code>std::enable_if_t</code> 这样形式的 <code>_t</code> 后缀是 C++14 引入的。而 <code>std::is_convertable_v</code> 这样的 _v 后缀是 C++17 引入的。</p>
-<h1 id="han-shu-mo-ban-huan-you-shi-yao-wen-ti">函数模板还有什么问题？</h1>
-<p>若为类中的特殊函数提供函数模板，默认的特殊函数并不会被删除。在都能够匹配的场合中，默认的特殊函数优先级更高。因而有时候需要显式 delete。</p>
+<h1 id="函数模板还有什么问题？"><a href="#函数模板还有什么问题？" class="headerlink" title="函数模板还有什么问题？"></a>函数模板还有什么问题？</h1><p>若为类中的特殊函数提供函数模板，默认的特殊函数并不会被删除。在都能够匹配的场合中，默认的特殊函数优先级更高。因而有时候需要显式 delete。</p>
 <p>但是最好还是不要为特殊函数提供模板。</p>
 
     </div>
@@ -307,8 +299,8 @@
       <i class="fa fa-chevron-left"></i> CTTCG 07 By Value or by Reference
     </a></div>
       <div class="post-nav-item">
-    <a href="/cpp-templates-the-complete-guide/cttcg-05-tricky-basics/" rel="next" title="CTTCG 05 Tricky Basics">
-      CTTCG 05 Tricky Basics <i class="fa fa-chevron-right"></i>
+    <a href="/cpp-templates-the-complete-guide/cttcg-04-variadic-templates/" rel="next" title="CTTCG 04 Variadic Templates">
+      CTTCG 04 Variadic Templates <i class="fa fa-chevron-right"></i>
     </a></div>
     </div>
       </footer>
@@ -368,7 +360,7 @@
 
       <!--noindex-->
       <div class="post-toc-wrap sidebar-panel">
-          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#chang-shi-yong-wan-mei-zhuan-fa-jian-hua-dai-ma"><span class="nav-number">1.</span> <span class="nav-text">尝试用完美转发简化代码</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#han-shu-mo-ban-huan-you-shi-yao-wen-ti"><span class="nav-number">2.</span> <span class="nav-text">函数模板还有什么问题？</span></a></li></ol></div>
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%B0%9D%E8%AF%95%E7%94%A8%E5%AE%8C%E7%BE%8E%E8%BD%AC%E5%8F%91%E7%AE%80%E5%8C%96%E4%BB%A3%E7%A0%81"><span class="nav-text">尝试用完美转发简化代码</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%87%BD%E6%95%B0%E6%A8%A1%E6%9D%BF%E8%BF%98%E6%9C%89%E4%BB%80%E4%B9%88%E9%97%AE%E9%A2%98%EF%BC%9F"><span class="nav-text">函数模板还有什么问题？</span></a></li></ol></div>
       </div>
       <!--/noindex-->
 
@@ -382,20 +374,20 @@
       <div class="site-state-item site-state-posts">
           <a href="/archives/">
         
-          <span class="site-state-item-count">106</span>
+          <span class="site-state-item-count">123</span>
           <span class="site-state-item-name">日志</span>
         </a>
       </div>
       <div class="site-state-item site-state-categories">
             <a href="/categories/">
           
-        <span class="site-state-item-count">6</span>
+        <span class="site-state-item-count">11</span>
         <span class="site-state-item-name">分类</span></a>
       </div>
       <div class="site-state-item site-state-tags">
             <a href="/tags/">
           
-        <span class="site-state-item-count">3</span>
+        <span class="site-state-item-count">9</span>
         <span class="site-state-item-name">标签</span></a>
       </div>
   </nav>
@@ -405,7 +397,7 @@
         <a href="https://github.com/hxhue" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;hxhue" rel="noopener" target="_blank"><i class="fab fa-github fa-fw"></i></a>
       </span>
       <span class="links-of-author-item">
-        <a href="https://stackoverflow.com/users/13785815" title="S.O. → https:&#x2F;&#x2F;stackoverflow.com&#x2F;users&#x2F;13785815" rel="noopener" target="_blank"><i class="fab fa-stack-overflow fa-fw"></i></a>
+        <a href="https://stackoverflow.com/users/13785815" title="StackOverflow → https:&#x2F;&#x2F;stackoverflow.com&#x2F;users&#x2F;13785815" rel="noopener" target="_blank"><i class="fab fa-stack-overflow fa-fw"></i></a>
       </span>
       <span class="links-of-author-item">
         <a href="mailto:simooncake@gmail.com" title="Email → mailto:simooncake@gmail.com" rel="noopener" target="_blank"><i class="fa fa-envelope fa-fw"></i></a>
@@ -443,38 +435,18 @@
       <i class="fa fa-chart-area"></i>
     </span>
       <span class="post-meta-item-text">站点总字数：</span>
-    <span title="站点总字数">81k</span>
+    <span title="站点总字数">84k</span>
     <span class="post-meta-divider">|</span>
     <span class="post-meta-item-icon">
       <i class="fa fa-coffee"></i>
     </span>
       <span class="post-meta-item-text">站点阅读时长 &asymp;</span>
-    <span title="站点阅读时长">4:54</span>
+    <span title="站点阅读时长">5:07</span>
 </div>
   <div class="powered-by">由 <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Gemini</a> 强力驱动
   </div><script color="0,0,255" opacity="0.5" zIndex="-1" count="99" src="https://cdn.jsdelivr.net/npm/canvas-nest.js@1/dist/canvas-nest.js"></script>
 
         
-<div class="busuanzi-count">
-  <script async src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
-    <span class="post-meta-item" id="busuanzi_container_site_uv" style="display: none;">
-      <span class="post-meta-item-icon">
-        <i class="user"></i>
-      </span>
-      <span class="site-uv" title="总访客量">
-        <span id="busuanzi_value_site_uv"></span>
-      </span>
-    </span>
-    <span class="post-meta-divider">|</span>
-    <span class="post-meta-item" id="busuanzi_container_site_pv" style="display: none;">
-      <span class="post-meta-item-icon">
-        <i class="eye"></i>
-      </span>
-      <span class="site-pv" title="总访问量">
-        <span id="busuanzi_value_site_pv"></span>
-      </span>
-    </span>
-</div>
 
 
 
