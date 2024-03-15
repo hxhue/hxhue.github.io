@@ -1,0 +1,555 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 7.1.1">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+  <link rel="stylesheet" href="/lib/pace/pace-theme-minimal.min.css">
+  <script src="/lib/pace/pace.min.js"></script>
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"hxhue.github.io","root":"/","scheme":"Gemini","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"always","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":true,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":true,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":false,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},"path":"search.xml"};
+  </script>
+
+  <meta name="description" content="C++ 和 C 的区别 C++ 支持使用非常量表达式对全局或静态变量初始化。对于 local static &#x2F; thread_local static 变量而言，这项功能使得访问时有同步开销。（像 C 一样用常量表达式初始化就不会有访问开销） C++ 的 thread_local 变量在函数中自动具有 static 属性，C 要手动加。而且 C 的 thread_local 在 C23">
+<meta property="og:type" content="article">
+<meta property="og:title" content="非自动变量初始化">
+<meta property="og:url" content="https://hxhue.github.io/2023-08-12/%E9%9D%9E%E8%87%AA%E5%8A%A8%E5%8F%98%E9%87%8F%E5%88%9D%E5%A7%8B%E5%8C%96/index.html">
+<meta property="og:site_name" content="Hxhue&#39;s Blog">
+<meta property="og:description" content="C++ 和 C 的区别 C++ 支持使用非常量表达式对全局或静态变量初始化。对于 local static &#x2F; thread_local static 变量而言，这项功能使得访问时有同步开销。（像 C 一样用常量表达式初始化就不会有访问开销） C++ 的 thread_local 变量在函数中自动具有 static 属性，C 要手动加。而且 C 的 thread_local 在 C23">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://hxhue.github.io/assets/dd4139cc4c1f5af8a382e9708ca348b5.png">
+<meta property="article:published_time" content="2023-08-12T07:17:00.000Z">
+<meta property="article:modified_time" content="2024-03-15T15:32:03.279Z">
+<meta property="article:author" content="Hxhue">
+<meta property="article:tag" content="cpp">
+<meta property="article:tag" content="inside-the-cpp-object-model">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://hxhue.github.io/assets/dd4139cc4c1f5af8a382e9708ca348b5.png">
+
+<link rel="canonical" href="https://hxhue.github.io/2023-08-12/%E9%9D%9E%E8%87%AA%E5%8A%A8%E5%8F%98%E9%87%8F%E5%88%9D%E5%A7%8B%E5%8C%96/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'zh-CN'
+  };
+</script>
+
+  <title>非自动变量初始化 | Hxhue's Blog</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+<link rel="alternate" href="/atom.xml" title="Hxhue's Blog" type="application/atom+xml">
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">Hxhue's Blog</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+        <i class="fa fa-search fa-fw fa-lg"></i>
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="main-menu menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档</a>
+
+  </li>
+        <li class="menu-item menu-item-about">
+
+    <a href="/about/" rel="section"><i class="fa fa-user fa-fw"></i>关于</a>
+
+  </li>
+        <li class="menu-item menu-item-tags">
+
+    <a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>标签</a>
+
+  </li>
+        <li class="menu-item menu-item-categories">
+
+    <a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>分类</a>
+
+  </li>
+      <li class="menu-item menu-item-search">
+        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>搜索
+        </a>
+      </li>
+  </ul>
+</nav>
+
+
+
+  <div class="search-pop-overlay">
+    <div class="popup search-popup">
+        <div class="search-header">
+  <span class="search-icon">
+    <i class="fa fa-search"></i>
+  </span>
+  <div class="search-input-container">
+    <input autocomplete="off" autocapitalize="off"
+           placeholder="搜索..." spellcheck="false"
+           type="search" class="search-input">
+  </div>
+  <span class="popup-btn-close">
+    <i class="fa fa-times-circle"></i>
+  </span>
+</div>
+<div id="search-result">
+  <div id="no-result">
+    <i class="fa fa-spinner fa-pulse fa-5x fa-fw"></i>
+  </div>
+</div>
+
+    </div>
+  </div>
+
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post posts-expand">
+            
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://hxhue.github.io/2023-08-12/%E9%9D%9E%E8%87%AA%E5%8A%A8%E5%8F%98%E9%87%8F%E5%88%9D%E5%A7%8B%E5%8C%96/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="Hxhue">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Hxhue's Blog">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          非自动变量初始化
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2023-08-12 15:17:00" itemprop="dateCreated datePublished" datetime="2023-08-12T15:17:00+08:00">2023-08-12</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2024-03-15 23:32:03" itemprop="dateModified" datetime="2024-03-15T23:32:03+08:00">2024-03-15</time>
+              </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/languages/" itemprop="url" rel="index"><span itemprop="name">languages</span></a>
+                </span>
+            </span>
+
+          <br>
+            <span class="post-meta-item" title="本文字数">
+              <span class="post-meta-item-icon">
+                <i class="far fa-file-word"></i>
+              </span>
+                <span class="post-meta-item-text">本文字数：</span>
+              <span>1.8k</span>
+            </span>
+            <span class="post-meta-item" title="阅读时长">
+              <span class="post-meta-item-icon">
+                <i class="far fa-clock"></i>
+              </span>
+                <span class="post-meta-item-text">阅读时长 &asymp;</span>
+              <span>7 分钟</span>
+            </span>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <h1 id="C-和-C-的区别"><a href="#C-和-C-的区别" class="headerlink" title="C++ 和 C 的区别"></a>C++ 和 C 的区别</h1><ol>
+<li>C++ 支持使用非常量表达式对全局或静态变量初始化。对于 local static &#x2F; thread_local static 变量而言，这项功能使得访问时有同步开销。（像 C 一样用常量表达式初始化就不会有访问开销）</li>
+<li>C++ 的 thread_local 变量在函数中自动具有 static 属性，C 要手动加。而且 C 的 thread_local 在 C23 之前是个宏。</li>
+</ol>
+<h1 id="全局-static-变量"><a href="#全局-static-变量" class="headerlink" title="全局 (static) 变量"></a>全局 (static) 变量</h1><p>全局区域定义的变量，可以具有 static 属性也可以没有。</p>
+<h2 id="不支持非常量初始化表达式（C-模型）"><a href="#不支持非常量初始化表达式（C-模型）" class="headerlink" title="不支持非常量初始化表达式（C 模型）"></a>不支持非常量初始化表达式（C 模型）</h2><p>编译器会抱怨：initializer element is not constant。</p>
+<h2 id="支持非常量初始化表达式，但只对对象生效（Cfront-1-0-模型）"><a href="#支持非常量初始化表达式，但只对对象生效（Cfront-1-0-模型）" class="headerlink" title="支持非常量初始化表达式，但只对对象生效（Cfront 1.0 模型）"></a><del>支持非常量初始化表达式，但只对对象生效</del>（Cfront 1.0 模型）</h2><p>在用户程序真正运行前插入一段<strong>静态变量初始化代码。</strong></p>
+<p>Cfront 早期对 class object 支持了<strong>非常量的静态初始化</strong>，但<strong>标准类型</strong>（整数、指针等）的静态支持和 C 一样。</p>
+<p><img src="/../../../../assets/dd4139cc4c1f5af8a382e9708ca348b5.png"></p>
+<p>考虑下面的代码：</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">struct</span> <span class="title class_">Point</span> &#123;</span><br><span class="line">    <span class="type">double</span> x;</span><br><span class="line">    <span class="type">double</span> y;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="keyword">struct</span> <span class="title class_">Point</span> point = &#123;<span class="number">2.4</span>, <span class="number">0.1</span>&#125;;</span><br></pre></td></tr></table></figure>
+
+<p>此代码是合法的 C 或 C++ 代码。它的数据值直接写到 data section 里，不需要静态初始化代码（也就是不需要用非常量表达式对变量初始化）。</p>
+<p>修改这段代码之后就不能作为 C 语言编译了，但是可以作为 C++ 编译：</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">struct</span> <span class="title class_">Point</span> &#123;</span><br><span class="line">    <span class="type">double</span> x;</span><br><span class="line">    <span class="type">double</span> y;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="keyword">struct</span> <span class="title class_">Point</span> point = &#123;<span class="number">2.4</span>, <span class="number">0.1</span>&#125;;</span><br><span class="line"><span class="keyword">struct</span> <span class="title class_">Point</span> another_point = point;</span><br></pre></td></tr></table></figure>
+
+<p>初始化 <code>another_point</code> 需要用到 <code>point</code>，这产生了全局变量之间的依赖关系，在编译器看来不是常量表达式，所以这个过程会被放到<strong>静态变量初始化代码</strong>中进行。</p>
+<h2 id="所有类型支持非常量初始化表达式（现在的-C-模型）"><a href="#所有类型支持非常量初始化表达式（现在的-C-模型）" class="headerlink" title="所有类型支持非常量初始化表达式（现在的 C++ 模型）"></a>所有类型支持非常量初始化表达式（现在的 C++ 模型）</h2><p>后来 C++ 对所有类型都支持非常量静态初始化了。这可能是支持虚基类的副产品，因为虚基类和子类之间的指针转换需要知道 offset，而 offset 只能在编译全部完成之后才能确定。</p>
+<p>可以参考：</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">class</span> <span class="title class_">Base</span> &#123;&#125;;</span><br><span class="line"><span class="keyword">class</span> <span class="title class_">VirtualBase</span>: <span class="keyword">public</span> <span class="keyword">virtual</span> Base &#123;&#125;;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 不需要静态初始化代码</span></span><br><span class="line"><span class="comment">// Base *pbase = (Base *)0x1000;</span></span><br><span class="line"></span><br><span class="line"><span class="comment">// 从 VirtualBase* 转换成 Base*，需要静态初始化代码</span></span><br><span class="line"><span class="comment">// 如果把虚继承改成具体继承，也不再会需要静态初始化代码</span></span><br><span class="line">Base *pbase2 = (VirtualBase *)<span class="number">0x1000</span>;</span><br></pre></td></tr></table></figure>
+
+<h3 id="GPT-对于书中说法的解释"><a href="#GPT-对于书中说法的解释" class="headerlink" title="GPT 对于书中说法的解释"></a>GPT 对于书中说法的解释</h3><p>Consider the following example:</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">class</span> <span class="title class_">Base</span> &#123;&#125;;</span><br><span class="line"><span class="keyword">class</span> <span class="title class_">VirtualBase</span>: <span class="keyword">public</span> <span class="keyword">virtual</span> Base &#123;&#125;;</span><br><span class="line"></span><br><span class="line"><span class="keyword">class</span> <span class="title class_">Derived1</span>: <span class="keyword">public</span> VirtualBase &#123;&#125;;</span><br><span class="line"><span class="keyword">class</span> <span class="title class_">Derived2</span>: <span class="keyword">public</span> VirtualBase &#123;&#125;;</span><br></pre></td></tr></table></figure>
+
+<p>In this example, we have two separate derived classes, <strong><code>Derived1</code></strong> and <strong><code>Derived2</code></strong>, both inheriting from the same virtual base class <strong><code>VirtualBase</code></strong>.</p>
+<p>Now, when the compiler encounters the definition of <strong><code>Derived1</code></strong> or <strong><code>Derived2</code></strong> in a given translation unit, it doesn’t have information about other derived classes. As a result, the exact offset of the <strong><code>VirtualBase</code></strong> subobject within <strong><code>Derived1</code></strong> or <strong><code>Derived2</code></strong> cannot be determined at that point.</p>
+<p>To handle this situation, the compiler employs static initialization. It generates code that initializes static variables associated with the virtual base class. These static variables store the offset information needed to access the virtual base class subobject. The initialization of these static variables happens at runtime before any objects of the derived classes are created.</p>
+<p>By utilizing static initialization, the compiler ensures that the correct offset information is available at runtime, allowing proper access to the virtual base class subobject.</p>
+<h1 id="局部-static-变量"><a href="#局部-static-变量" class="headerlink" title="局部 static 变量"></a>局部 static 变量</h1><p>这里只讨论 C++，C 没有非常量初始化的功能。</p>
+<p>C++ 保证函数中的静态对象只在其对应函数被调用时初始化，而且仅初始化一次。如果是常量初始化表达式，则在编译时可以初始化，函数中也不需要同步措施；<strong>但如果是非常量初始化表达式，则有同步代价！</strong></p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;cstdio&gt;</span></span></span><br><span class="line"></span><br><span class="line"><span class="keyword">struct</span> <span class="title class_">Echo</span> &#123;</span><br><span class="line">    <span class="built_in">Echo</span>(<span class="type">const</span> <span class="type">char</span> *s) &#123;</span><br><span class="line">        <span class="built_in">puts</span>(s);</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="type">static</span> Echo *static_member;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 初始化只能放到这里，如果放到上面 Echo 就不是完整对象不能创建</span></span><br><span class="line"><span class="comment">// 前面声明不能加 inline 因为 inline 会让声明变成定义</span></span><br><span class="line"><span class="comment">// 此处定义不能加 static 因为不能多次指定存储类型</span></span><br><span class="line"><span class="keyword">inline</span> Echo *Echo::static_member = <span class="keyword">new</span> Echo &#123;<span class="string">&quot;Echo::static_member&quot;</span>&#125;;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="type">void</span> <span class="title">test_echo</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    <span class="function"><span class="type">static</span> Echo <span class="title">hidden</span><span class="params">(<span class="string">&quot;local static&quot;</span>)</span></span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function">Echo <span class="title">global_echo</span><span class="params">(<span class="string">&quot;global&quot;</span>)</span></span>;</span><br><span class="line"><span class="function"><span class="type">static</span> Echo <span class="title">static_echo</span><span class="params">(<span class="string">&quot;static echo&quot;</span>)</span></span>;</span><br><span class="line"></span><br><span class="line"><span class="keyword">struct</span> <span class="title class_">Foo</span> &#123;</span><br><span class="line">    <span class="type">static</span> <span class="keyword">inline</span> Echo *static_member = <span class="keyword">new</span> Echo &#123;<span class="string">&quot;Foo::static_member&quot;</span>&#125;;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="type">int</span> <span class="title">main</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    <span class="comment">// 试试调用 0/1/2 次</span></span><br><span class="line">    <span class="built_in">test_echo</span>();</span><br><span class="line">    <span class="built_in">test_echo</span>();</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>打印结果：</p>
+<figure class="highlight txt"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">Echo::static_member</span><br><span class="line">global</span><br><span class="line">static echo</span><br><span class="line">Foo::static_member</span><br><span class="line">local static</span><br></pre></td></tr></table></figure>
+
+<p>上面的代码中如果注释掉 main 函数中的两次调用，则 <code>hidden(&quot;local static&quot;)</code> 不会被初始化！这是汇编，有了同步措施后复杂了不少：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br></pre></td><td class="code"><pre><span class="line">test_echo():</span><br><span class="line">        push    rbp</span><br><span class="line">        mov     rbp, rsp</span><br><span class="line">        push    r12</span><br><span class="line">        push    rbx</span><br><span class="line">        movzx   eax, BYTE PTR guard variable for test_echo()::hidden[rip]</span><br><span class="line">        test    al, al</span><br><span class="line">        sete    al</span><br><span class="line">        test    al, al</span><br><span class="line">        je      .L7</span><br><span class="line">        mov     edi, OFFSET FLAT:guard variable for test_echo()::hidden</span><br><span class="line">        call    __cxa_guard_acquire</span><br><span class="line">        test    eax, eax</span><br><span class="line">        setne   al</span><br><span class="line">        test    al, al</span><br><span class="line">        je      .L7</span><br><span class="line">        mov     r12d, 0</span><br><span class="line">        mov     esi, OFFSET FLAT:.LC0</span><br><span class="line">        mov     edi, OFFSET FLAT:_ZZ9test_echovE6hidden</span><br><span class="line">        call    Echo::Echo(char const*) [complete object constructor]</span><br><span class="line">        mov     edi, OFFSET FLAT:guard variable for test_echo()::hidden</span><br><span class="line">        call    __cxa_guard_release</span><br><span class="line">        jmp     .L7</span><br><span class="line">        mov     rbx, rax</span><br><span class="line">        test    r12b, r12b</span><br><span class="line">        jne     .L5</span><br><span class="line">        mov     edi, OFFSET FLAT:guard variable for test_echo()::hidden</span><br><span class="line">        call    __cxa_guard_abort</span><br><span class="line">.L5:</span><br><span class="line">        mov     rax, rbx</span><br><span class="line">        mov     rdi, rax</span><br><span class="line">        call    _Unwind_Resume</span><br><span class="line">.L7:</span><br><span class="line">        nop</span><br><span class="line">        pop     rbx</span><br><span class="line">        pop     r12</span><br><span class="line">        pop     rbp</span><br><span class="line">        ret</span><br></pre></td></tr></table></figure>
+
+<h1 id="全局-局部-thread-local-变量"><a href="#全局-局部-thread-local-变量" class="headerlink" title="全局&#x2F;局部 thread_local 变量"></a>全局&#x2F;局部 thread_local 变量</h1><h2 id="C-11-thread-local"><a href="#C-11-thread-local" class="headerlink" title="C++11 thread_local"></a>C++11 thread_local</h2><p>访问变量需要使用一个<strong>和线程相关的段寄存器</strong>和固定的变量偏移得到变量的地址，这样不同线程访问的变量地址肯定不同。</p>
+<p>对于全局的 thread_local 变量，每次访问 thread_local 变量 i 会先调用 TLS wrapper function for i，然后该函数调用 TLS init function for i （在 godbolt 过滤的汇编中是 __tls_init）确保变量只被初始化一次，最后返回变量的<strong>地址</strong>。</p>
+<p><a target="_blank" rel="noopener" href="https://godbolt.org/z/Y8a7s4Msz">https://godbolt.org/z/Y8a7s4Msz</a></p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;iostream&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;thread&gt;</span></span></span><br><span class="line"></span><br><span class="line"><span class="keyword">thread_local</span> <span class="type">int</span> i = <span class="built_in">time</span>(<span class="number">0</span>);</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="type">int</span> <span class="title">main</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    i = <span class="number">7</span>;</span><br><span class="line">    std::thread t&#123;[&amp;]()&#123; i = <span class="number">9</span>; &#125;&#125;;</span><br><span class="line">    t.<span class="built_in">join</span>();</span><br><span class="line">    std::cout &lt;&lt; i &lt;&lt; <span class="string">&quot;\n&quot;</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>对于局部的 thread_local 变量：</p>
+<p><a target="_blank" rel="noopener" href="https://godbolt.org/z/xdePfv3eM">https://godbolt.org/z/xdePfv3eM</a></p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;iostream&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;thread&gt;</span></span></span><br><span class="line"></span><br><span class="line"><span class="comment">// 因为 main 入口肯定只有一个，所以尝试把 thread_local 放到其他函数中试试</span></span><br><span class="line"><span class="comment">// 实际上和把 thread_local 变量放在 main 中的效果一样</span></span><br><span class="line"><span class="function"><span class="type">int</span> &amp;<span class="title">get_i</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    <span class="keyword">thread_local</span> <span class="type">int</span> i = <span class="built_in">time</span>(<span class="number">0</span>);</span><br><span class="line">    <span class="keyword">return</span> i;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="type">int</span> <span class="title">main</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    <span class="built_in">get_i</span>() = <span class="number">7</span>;</span><br><span class="line">    std::thread t&#123;[&amp;]()&#123; <span class="built_in">get_i</span>() = <span class="number">9</span>; &#125;&#125;;</span><br><span class="line">    t.<span class="built_in">join</span>();</span><br><span class="line">    std::cout &lt;&lt; <span class="built_in">get_i</span>() &lt;&lt; <span class="string">&quot;\n&quot;</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p><code>get_i()</code> 中也有确保变量仅仅初始化一次的逻辑。</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line">get_i()::i:</span><br><span class="line">        .zero   4</span><br><span class="line">guard variable for get_i()::i:</span><br><span class="line">        .zero   8</span><br><span class="line">get_i():</span><br><span class="line">        push    rbp</span><br><span class="line">        mov     rbp, rsp</span><br><span class="line">        mov     rax, QWORD PTR fs:0</span><br><span class="line">        add     rax, OFFSET FLAT:guard variable for get_i()::i@tpoff</span><br><span class="line">        movzx   eax, BYTE PTR [rax]</span><br><span class="line">        test    al, al</span><br><span class="line">        jne     .L11</span><br><span class="line">        mov     edi, 0</span><br><span class="line">        call    time</span><br><span class="line">        mov     DWORD PTR fs:get_i()::i@tpoff, eax</span><br><span class="line">        mov     rax, QWORD PTR fs:0</span><br><span class="line">        add     rax, OFFSET FLAT:guard variable for get_i()::i@tpoff</span><br><span class="line">        mov     BYTE PTR [rax], 1</span><br><span class="line">.L11:</span><br><span class="line">        mov     rax, QWORD PTR fs:0</span><br><span class="line">        add     rax, OFFSET FLAT:get_i()::i@tpoff</span><br><span class="line">        pop     rbp</span><br><span class="line">        ret</span><br></pre></td></tr></table></figure>
+
+<p>所以，全局和局部的 thread_local 变量访问的代价是一样的。只不过如果 thread_local 是局部的，那么同步逻辑就直接放在函数中；如果是全局的，同步逻辑用一个生成的函数实现而已。</p>
+<p>接下来尝试把 time(0) 这种初始化表达式换成一个常量，比如说 2，则访问 thread_local 时不会有同步措施，只是创建线程的时候要复制一份变量而已。</p>
+<h2 id="C11-Thread-local"><a href="#C11-Thread-local" class="headerlink" title="C11 _Thread_local"></a>C11 _Thread_local</h2><p>C11 的头文件 threads.h 中有下面定义：</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">define</span> thread_local _Thread_local</span></span><br></pre></td></tr></table></figure>
+
+<p>这就和以前的 bool 宏需要引入一样。在 C23 之后，thread_local 就是一个单独的关键字了。</p>
+<p>C11 的 thread_local 是不具备 static 属性的，在函数中使用时要用 thread_local static，而 C++ 中的 thread_local 在函数中自动具备 static 属性，加不加 static 都行。</p>
+<p>C++ 标准：</p>
+<blockquote>
+<p>When thread_local is applied to a variable of block scope the storage-class-specifier static <strong>is implied</strong> if it does not appear explicitly.</p>
+</blockquote>
+<p>2023 年 6 月 15 日：C11 的 threads.h 在 Windows 上没有实现，而且也没有提供像 C++ 的 mutex 一样的同步功能，写 C 语言用线程还是 pthreads.h &#x2F; Win32 API 会比较好一点。</p>
+
+    </div>
+
+    
+    
+    
+
+      <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/cpp/" rel="tag"># cpp</a>
+              <a href="/tags/inside-the-cpp-object-model/" rel="tag"># inside-the-cpp-object-model</a>
+          </div>
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/2023-08-12/cttcg-%E9%99%84%E5%BD%95-d-standard-type-utilities/" rel="prev" title="CTTCG 附录 D Standard Type Utilities">
+      <i class="fa fa-chevron-left"></i> CTTCG 附录 D Standard Type Utilities
+    </a></div>
+      <div class="post-nav-item">
+    <a href="/2023-08-12/%E9%9D%99%E6%80%81%E6%88%90%E5%91%98%E5%87%BD%E6%95%B0/" rel="next" title="静态成员函数">
+      静态成员函数 <i class="fa fa-chevron-right"></i>
+    </a></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+
+
+          </div>
+          
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#C-%E5%92%8C-C-%E7%9A%84%E5%8C%BA%E5%88%AB"><span class="nav-text">C++ 和 C 的区别</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%85%A8%E5%B1%80-static-%E5%8F%98%E9%87%8F"><span class="nav-text">全局 (static) 变量</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%B8%8D%E6%94%AF%E6%8C%81%E9%9D%9E%E5%B8%B8%E9%87%8F%E5%88%9D%E5%A7%8B%E5%8C%96%E8%A1%A8%E8%BE%BE%E5%BC%8F%EF%BC%88C-%E6%A8%A1%E5%9E%8B%EF%BC%89"><span class="nav-text">不支持非常量初始化表达式（C 模型）</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%94%AF%E6%8C%81%E9%9D%9E%E5%B8%B8%E9%87%8F%E5%88%9D%E5%A7%8B%E5%8C%96%E8%A1%A8%E8%BE%BE%E5%BC%8F%EF%BC%8C%E4%BD%86%E5%8F%AA%E5%AF%B9%E5%AF%B9%E8%B1%A1%E7%94%9F%E6%95%88%EF%BC%88Cfront-1-0-%E6%A8%A1%E5%9E%8B%EF%BC%89"><span class="nav-text">支持非常量初始化表达式，但只对对象生效（Cfront 1.0 模型）</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%89%80%E6%9C%89%E7%B1%BB%E5%9E%8B%E6%94%AF%E6%8C%81%E9%9D%9E%E5%B8%B8%E9%87%8F%E5%88%9D%E5%A7%8B%E5%8C%96%E8%A1%A8%E8%BE%BE%E5%BC%8F%EF%BC%88%E7%8E%B0%E5%9C%A8%E7%9A%84-C-%E6%A8%A1%E5%9E%8B%EF%BC%89"><span class="nav-text">所有类型支持非常量初始化表达式（现在的 C++ 模型）</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#GPT-%E5%AF%B9%E4%BA%8E%E4%B9%A6%E4%B8%AD%E8%AF%B4%E6%B3%95%E7%9A%84%E8%A7%A3%E9%87%8A"><span class="nav-text">GPT 对于书中说法的解释</span></a></li></ol></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%B1%80%E9%83%A8-static-%E5%8F%98%E9%87%8F"><span class="nav-text">局部 static 变量</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%85%A8%E5%B1%80-%E5%B1%80%E9%83%A8-thread-local-%E5%8F%98%E9%87%8F"><span class="nav-text">全局&#x2F;局部 thread_local 变量</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#C-11-thread-local"><span class="nav-text">C++11 thread_local</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#C11-Thread-local"><span class="nav-text">C11 _Thread_local</span></a></li></ol></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+  <p class="site-author-name" itemprop="name">Hxhue</p>
+  <div class="site-description" itemprop="description"></div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">174</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+            <a href="/categories/">
+          
+        <span class="site-state-item-count">6</span>
+        <span class="site-state-item-name">分类</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+            <a href="/tags/">
+          
+        <span class="site-state-item-count">34</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author motion-element">
+      <span class="links-of-author-item">
+        <a href="https://github.com/hxhue" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;hxhue" rel="noopener" target="_blank"><i class="fab fa-github fa-fw"></i></a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="https://stackoverflow.com/users/13785815" title="StackOverflow → https:&#x2F;&#x2F;stackoverflow.com&#x2F;users&#x2F;13785815" rel="noopener" target="_blank"><i class="fab fa-stack-overflow fa-fw"></i></a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="mailto:simooncake@gmail.com" title="Email → mailto:simooncake@gmail.com" rel="noopener" target="_blank"><i class="fa fa-envelope fa-fw"></i></a>
+      </span>
+  </div>
+
+
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+
+<div class="copyright">
+  
+  &copy; 
+  <span itemprop="copyrightYear">2024</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Hxhue</span>
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item-icon">
+      <i class="fa fa-chart-area"></i>
+    </span>
+      <span class="post-meta-item-text">站点总字数：</span>
+    <span title="站点总字数">111k</span>
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item-icon">
+      <i class="fa fa-coffee"></i>
+    </span>
+      <span class="post-meta-item-text">站点阅读时长 &asymp;</span>
+    <span title="站点阅读时长">6:42</span>
+</div>
+  <div class="powered-by">由 <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Gemini</a> 强力驱动
+  </div><script color="0,0,255" opacity="0.5" zIndex="-1" count="99" src="https://cdn.jsdelivr.net/npm/canvas-nest.js@1/dist/canvas-nest.js"></script>
+
+        
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="//cdn.jsdelivr.net/npm/pangu@4/dist/browser/pangu.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+
+<script src="/js/schemes/pisces.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+
+
+
+  
+
+
+
+
+  
+<script src="/js/local-search.js"></script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+</body>
+</html>

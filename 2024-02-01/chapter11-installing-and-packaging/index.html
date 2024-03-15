@@ -1,0 +1,708 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 7.1.1">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+  <link rel="stylesheet" href="/lib/pace/pace-theme-minimal.min.css">
+  <script src="/lib/pace/pace.min.js"></script>
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"hxhue.github.io","root":"/","scheme":"Gemini","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"always","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":true,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":true,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":false,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},"path":"search.xml"};
+  </script>
+
+  <meta name="description" content="Exporting without installation使用 export 命令可以创建导出文件，然后其他工程只要 include 这个导出文件就能使用当前这个包中的 target，而不需要先将这个包用 install 安装在系统里。 123export(TARGETS [target1 [target2 [...]]]      [NAMESPACE &lt;namespace&gt;] [">
+<meta property="og:type" content="article">
+<meta property="og:title" content="chapter11 - installing and packaging">
+<meta property="og:url" content="https://hxhue.github.io/2024-02-01/chapter11-installing-and-packaging/index.html">
+<meta property="og:site_name" content="Hxhue&#39;s Blog">
+<meta property="og:description" content="Exporting without installation使用 export 命令可以创建导出文件，然后其他工程只要 include 这个导出文件就能使用当前这个包中的 target，而不需要先将这个包用 install 安装在系统里。 123export(TARGETS [target1 [target2 [...]]]      [NAMESPACE &lt;namespace&gt;] [">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://hxhue.github.io/assets/4a429e2c96abfb245883b6fd8e556f15.webp">
+<meta property="og:image" content="https://hxhue.github.io/assets/01e051f3683d45def6221e2a53e1630e.webp">
+<meta property="og:image" content="https://hxhue.github.io/assets/5e75910ef77984fadaa879387f8921a1.webp">
+<meta property="og:image" content="https://hxhue.github.io/assets/33ecd0b25782c14cde3061e906c7688c.webp">
+<meta property="article:published_time" content="2024-02-01T15:01:00.000Z">
+<meta property="article:modified_time" content="2024-03-15T15:34:53.456Z">
+<meta property="article:author" content="Hxhue">
+<meta property="article:tag" content="cpp">
+<meta property="article:tag" content="cmake">
+<meta property="article:tag" content="modern-cmake-for-cpp">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://hxhue.github.io/assets/4a429e2c96abfb245883b6fd8e556f15.webp">
+
+<link rel="canonical" href="https://hxhue.github.io/2024-02-01/chapter11-installing-and-packaging/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'zh-CN'
+  };
+</script>
+
+  <title>chapter11 - installing and packaging | Hxhue's Blog</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+<link rel="alternate" href="/atom.xml" title="Hxhue's Blog" type="application/atom+xml">
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">Hxhue's Blog</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+        <i class="fa fa-search fa-fw fa-lg"></i>
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="main-menu menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档</a>
+
+  </li>
+        <li class="menu-item menu-item-about">
+
+    <a href="/about/" rel="section"><i class="fa fa-user fa-fw"></i>关于</a>
+
+  </li>
+        <li class="menu-item menu-item-tags">
+
+    <a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>标签</a>
+
+  </li>
+        <li class="menu-item menu-item-categories">
+
+    <a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>分类</a>
+
+  </li>
+      <li class="menu-item menu-item-search">
+        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>搜索
+        </a>
+      </li>
+  </ul>
+</nav>
+
+
+
+  <div class="search-pop-overlay">
+    <div class="popup search-popup">
+        <div class="search-header">
+  <span class="search-icon">
+    <i class="fa fa-search"></i>
+  </span>
+  <div class="search-input-container">
+    <input autocomplete="off" autocapitalize="off"
+           placeholder="搜索..." spellcheck="false"
+           type="search" class="search-input">
+  </div>
+  <span class="popup-btn-close">
+    <i class="fa fa-times-circle"></i>
+  </span>
+</div>
+<div id="search-result">
+  <div id="no-result">
+    <i class="fa fa-spinner fa-pulse fa-5x fa-fw"></i>
+  </div>
+</div>
+
+    </div>
+  </div>
+
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post posts-expand">
+            
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://hxhue.github.io/2024-02-01/chapter11-installing-and-packaging/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="Hxhue">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Hxhue's Blog">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          chapter11 - installing and packaging
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2024-02-01 23:01:00" itemprop="dateCreated datePublished" datetime="2024-02-01T23:01:00+08:00">2024-02-01</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2024-03-15 23:34:53" itemprop="dateModified" datetime="2024-03-15T23:34:53+08:00">2024-03-15</time>
+              </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/cli/" itemprop="url" rel="index"><span itemprop="name">CLI</span></a>
+                </span>
+            </span>
+
+          <br>
+            <span class="post-meta-item" title="本文字数">
+              <span class="post-meta-item-icon">
+                <i class="far fa-file-word"></i>
+              </span>
+                <span class="post-meta-item-text">本文字数：</span>
+              <span>4.4k</span>
+            </span>
+            <span class="post-meta-item" title="阅读时长">
+              <span class="post-meta-item-icon">
+                <i class="far fa-clock"></i>
+              </span>
+                <span class="post-meta-item-text">阅读时长 &asymp;</span>
+              <span>16 分钟</span>
+            </span>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <h1 id="Exporting-without-installation"><a href="#Exporting-without-installation" class="headerlink" title="Exporting without installation"></a>Exporting without installation</h1><p>使用 <code>export</code> 命令可以创建导出文件，然后其他工程只要 include 这个导出文件就能使用当前这个包中的 target，而不需要先将这个包用 <code>install</code> 安装在系统里。</p>
+<figure class="highlight cmake"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">export</span>(TARGETS [target1 [target2 [...]]]</span><br><span class="line">      [NAMESPACE &lt;namespace&gt;] [APPEND] <span class="keyword">FILE</span> &lt;path&gt;</span><br><span class="line">      [EXPORT_LINK_INTERFACE_LIBRARIES]</span><br></pre></td></tr></table></figure>
+
+<blockquote>
+<p><code>NAMESPACE</code> is recommended as a hint, stating that the target has been imported from other projects.</p>
+<p><code>APPEND</code> tells CMake that it shouldn’t erase the contents of the file before writing. 也就是说本身会按照 <code>FILE</code> 来覆写文件，但是 <code>APPEND</code> 使得写入方式变成追加。</p>
+<p><code>EXPORT_LINK_INTERFACE_LIBRARIES</code> will export target link dependencies (including imported and config-specific variants).</p>
+</blockquote>
+<p>例子：</p>
+<figure class="highlight cmake"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">cmake_minimum_required</span>(VERSION <span class="number">3.20</span>.<span class="number">0</span>)</span><br><span class="line"><span class="keyword">project</span>(ExportCalcCXX)</span><br><span class="line"><span class="keyword">add_subdirectory</span>(src bin)</span><br><span class="line"><span class="keyword">set</span>(EXPORT_DIR <span class="string">&quot;$&#123;CMAKE_CURRENT_BINARY_DIR&#125;/cmake&quot;</span>)</span><br><span class="line"><span class="keyword">export</span>(TARGETS calc</span><br><span class="line">  <span class="keyword">FILE</span> <span class="string">&quot;$&#123;EXPORT_DIR&#125;/CalcTargets.cmake&quot;</span></span><br><span class="line">  NAMESPACE Calc::</span><br><span class="line">)</span><br><span class="line">...</span><br></pre></td></tr></table></figure>
+
+<p><strong>这段代码将导出文件生成在了 binary tree 里面</strong>，这样的文件不会污染系统，但是可以被其他工程包含进去。还要注意 CMake 在 build tree 中导出的 target export file 里用的是绝对路径，所以不能轻易移动。上面代码还用到了一个名字空间 <code>Calc::</code>，因而创建的 target export file 中声明的 target 是 <code>Calc::calc</code>。</p>
+<p>export 命令还有一个形式：<code>export(EXPORT &lt;export&gt; [NAMESPACE &lt;namespace&gt;] [FILE &lt;path&gt;])</code>。这个形式不需要 targets，但是需要一个之前创建的 export 的名字。</p>
+<blockquote>
+<p>However, it requires a <code>&lt;export&gt;</code> name rather than a list of exported targets. Such <code>&lt;export&gt;</code> instances are named lists of targets that are defined by install(TARGETS)</p>
+</blockquote>
+<p>export 命令在 build tree 的生成阶段就会导出 target export file。<strong>使用 <code>$&#123;CMAKE_INSTALL_LIBDIR&#125;</code> 作为前缀是安全的</strong>（更保险一点的是先 <code>include(GNUInstallDirs)</code>），因为它是一个相对路径，生成阶段的相对位置是 build tree，所以不会真正安装到系统里面去。</p>
+<h1 id="cmake-install"><a href="#cmake-install" class="headerlink" title="cmake --install"></a><code>cmake --install</code></h1><p><code>cmake --install</code> 接受这些参数（它们的参数都是前面不加等号的）：</p>
+<ol>
+<li><code>--config</code>：对多配置生成器有用。</li>
+<li><code>--component</code>：选择要安装的部分（后面讲）。</li>
+<li><code>--default-directory-permissions</code>：设置安装目录的权限（<code>u=rwx,g=rx,o=rx</code>）。</li>
+<li><code>--prefix</code>：设置 <code>CMAKE_INSTALL_PREFIX</code> 的值（对 Windows 来说默认为 <code>c:/Program Files/$&#123;PROJECT_NAME&#125;</code>，对 unix 来说默认为 <code>/usr/local</code>）。</li>
+<li><code>-v</code>, <code>--verbose</code></li>
+</ol>
+<h1 id="install-命令"><a href="#install-命令" class="headerlink" title="install() 命令"></a><code>install()</code> 命令</h1><ul>
+<li><code>install(TARGETS)</code>: This installs output artifacts such as libraries and executables.</li>
+<li><code>install(FILES|PROGRAMS)</code>: This installs individual files and sets their permissions. 这两命令非常相似，但是设置的默认权限不同，显然 <code>PROGRAMS</code> 会设置写权限。</li>
+<li><code>install(DIRECTORY)</code>: This installs whole directories.</li>
+<li><code>install(SCRIPT|CODE)</code>: This runs a CMake script or a snippet during installation.</li>
+<li><code>install(EXPORT)</code>: This generates and installs a target export file.</li>
+</ul>
+<p><code>install</code> 命令可以指定 <code>DESTINATION</code>&#x2F;<code>PERMISSIONS</code>&#x2F;<code>CONFIGURATIONS</code>&#x2F;<code>OPTIONAL</code> 等参数。在 <code>COMPONENT</code> 模式下，还可以指定 <code>EXCLUDE_FROM_ALL</code>。如果给定的安装位置是相对路径，那么实际上的安装位置是 <code>$&#123;CMAKE_INSTALL_PREFIX&#125; + $&#123;DESTINATION&#125;</code>。</p>
+<h1 id="install-TARGETS"><a href="#install-TARGETS" class="headerlink" title="install(TARGETS)"></a><code>install(TARGETS)</code></h1><blockquote>
+<p style="margin-bottom: 0px"><font size="+3">✏️</font><font size="+1"><strong> NOTE</strong></font></p>
+<p><code>OPTIONAL</code> 指的是如果找不到要安装的文件也不报错。<code>CONFIGURATIONS</code> 指的是这个安装对哪些配置（Debug, Release）有效，处在无效配置时这条 <code>install</code> 命令被忽略。</p>
+</blockquote>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">install(TARGETS &lt;target&gt;... [EXPORT &lt;export-name&gt;]</span><br><span class="line">        [&lt;output-artifact-configuration&gt; ...]</span><br><span class="line">        [INCLUDES DESTINATION [&lt;dir&gt; ...]]</span><br><span class="line">        )</span><br></pre></td></tr></table></figure>
+
+<p><code>&lt;output-artifact-configuration&gt;</code> 指的是：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">&lt;TYPE&gt; [DESTINATION &lt;dir&gt;] [PERMISSIONS permissions...]</span><br><span class="line">       [CONFIGURATIONS [Debug|Release|...]]</span><br><span class="line">       [COMPONENT &lt;component&gt;]</span><br><span class="line">       [NAMELINK_COMPONENT &lt;component&gt;]</span><br><span class="line">       [OPTIONAL] [EXCLUDE_FROM_ALL]</span><br><span class="line">       [NAMELINK_ONLY|NAMELINK_SKIP]</span><br></pre></td></tr></table></figure>
+
+<p>其中的 <code>&lt;TYPE&gt;</code> 可以是：</p>
+<ol>
+<li><code>ARCHIVE</code> 静态库（Static libraries (.a) and DLL import libraries for Windows-based systems (.lib)）</li>
+<li><code>LIBRARY</code> 动态库（Shared libraries (.so), but not DLLs）</li>
+<li><code>RUNTIME</code> 可执行文件和 DLLs。</li>
+<li><code>OBJECT</code> 目标文件</li>
+<li><code>FRAMEWORK</code> macOS 专属</li>
+<li><code>BUNDLE</code> macOS 专属</li>
+<li><code>PUBLIC_HEADER</code>, <code>PRIVATE_HEADER</code>, <code>RESOURCE</code></li>
+</ol>
+<p>一个 target 可以同时指定安装多个 types。也就是说，有个 target 可能既需要安装静态库，又需要安装动态库，同时还安装头文件。如果一个 target 被指定了需要安装某一类成品（比如设置了 <code>PUBLIC_HEADER</code> 属性），但是这个成品没有在 <code>install</code> 命令中给出配置，那么在 3.20.0 之前就会忽略它的安装，而在这之后则是使用默认配置安装。参考：</p>
+<blockquote>
+<p>The CMake documentation claims that if you only configure one artifact type (for example, <code>LIBRARY</code>), only this type will be installed. For CMake version 3.20.0, this is not true: all the artifacts will be installed as if they were configured with the default options. This can be solved by specifying <code>&lt;TYPE&gt; EXCLUDE_FROM_ALL</code> for all unwanted artifact types.</p>
+</blockquote>
+<p>这个命令也有局限性，比如虽然 <code>CONFIGURATIONS</code> 是可以对每个成品类型单独设置，但是一个成品类型只能在 <code>install</code> 命令中出现一次。也就是说想要对 Debug 和 Release 两种配置单独设置某种成品的安装方式，需要两条 <code>install</code> 命令，不能放在一起写。</p>
+<p><img src="/../../../../assets/4a429e2c96abfb245883b6fd8e556f15.webp"></p>
+<p>上面的这些变量也能够通过命令行设置（大概是因为它们是 cached 变量）。</p>
+<h2 id="GNUInstallDirs"><a href="#GNUInstallDirs" class="headerlink" title="GNUInstallDirs"></a><code>GNUInstallDirs</code></h2><p>CMake 有一个 <code>GNUInstallDirs</code> 模块。这个模块可以检查 GNU 平台的种类（比如说有些系统并不是安装在 <code>/usr/local</code> 中比较好），并正确设置好和安装路径相关的变量。在安装之前 <code>include</code> 一下就行了。</p>
+<h2 id="处理-public-headers"><a href="#处理-public-headers" class="headerlink" title="处理 public headers"></a>处理 public headers</h2><blockquote>
+<p>The <code>install(TARGETS)</code> documentation recommends that we specify public headers (as a semicolon-separated list) in the <code>PUBLIC_HEADER</code> property of the library target.</p>
+</blockquote>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">add_library(calc STATIC calc.cpp)</span><br><span class="line">target_include_directories(calc INTERFACE include)</span><br><span class="line"># 也可以直接设置 INTERFACE_ 开头的变量</span><br><span class="line">set_target_properties(calc PROPERTIES</span><br><span class="line">  PUBLIC_HEADER src/include/calc/calc.h</span><br><span class="line">)</span><br></pre></td></tr></table></figure>
+
+<p>因为设置了 calc 这个 target 的 <code>PUBLIC_HEADER</code> 属性，这下用 install 安装 calc 的时候，只要指定 <code>PUBLIC_HEADER</code> 也能将这些头文件也一起安装。</p>
+<p>但是我们还需要解决一个问题，CMake 的默认安装位置很可能不是我们想要的。尤其是直接将头文件裸露在 &#x2F;usr&#x2F;local&#x2F;include 里面这一点。包含 <code>GNUInstallDirs</code> 模块之后，<code>CMAKE_INSTALL_INCLUDEDIR</code> 会被重设。然后我们根据它注明我们要安装的位置（参数 <code>DESTINATION</code>）：</p>
+<figure class="highlight cmake"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">cmake_minimum_required</span>(VERSION <span class="number">3.20</span>.<span class="number">0</span>)</span><br><span class="line"><span class="keyword">project</span>(InstallTargets CXX)</span><br><span class="line"><span class="keyword">add_subdirectory</span>(src bin)</span><br><span class="line"><span class="keyword">include</span>(GNUInstallDirs)</span><br><span class="line"><span class="keyword">install</span>(TARGETS calc</span><br><span class="line">  ARCHIVE</span><br><span class="line">  PUBLIC_HEADER</span><br><span class="line">  DESTINATION <span class="variable">$&#123;CMAKE_INSTALL_INCLUDEDIR&#125;</span>/calc</span><br><span class="line">)</span><br></pre></td></tr></table></figure>
+
+<blockquote>
+<p style="margin-bottom: 0px"><font size="+3">✏️</font><font size="+1"><strong> NOTE</strong></font></p>
+<p>在 Debian 12 上测试，<code>CMAKE_INSTALL_INCLUDEDIR</code> 都是 include。拼接上默认的前缀路径就是 usr&#x2F;local&#x2F;include。</p>
+</blockquote>
+<p>这个变量似乎在所有平台上其实都是一样的，但是也有一些变量在不同平台上表现不同，比如：</p>
+<blockquote>
+<p><code>CMAKE_INSTALL_LIBDIR</code> will vary by architecture and distribution – <code>lib</code>, <code>lib64</code>, or <code>lib/&lt;multiarch-tuple&gt;</code>.</p>
+</blockquote>
+<p>书上给出的运行结果：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"># cmake -S &lt;source-tree&gt; -B &lt;build-tree&gt;</span><br><span class="line"># cmake --build &lt;build-tree&gt;</span><br><span class="line"># cmake --install &lt;build-tree&gt;</span><br><span class="line">-- Install configuration: &quot;&quot;</span><br><span class="line">-- Installing: /usr/local/lib/libcalc.a</span><br><span class="line">-- Installing: /usr/local/include/calc/calc.h</span><br></pre></td></tr></table></figure>
+
+<p>由于版本比较新，而且没有指定静态库成品的安装方式，所以按照默认方式安装了。</p>
+<p>这种基于 target 的安装感觉比基于其他方式的安装更加灵活和方便，毕竟是把很多成品都捆绑在一起了。但是也有缺点，比如必须要给出所有的头文件，手动列举容易形成超长的列表。而且所有头文件都被安装在了同一个目录，丢失了层级关系：</p>
+<blockquote>
+<p style="margin-bottom: 0px"><font size="+3">🚨</font><font size="+1"><strong> WARNING</strong></font></p>
+<p>This works well for this basic case, but there’s a slight drawback: files specified in this way don’t retain their directory structure. They will all be installed in the same destination, even if they’re nested in different base directories.</p>
+</blockquote>
+<p>在 CMake 3.23.0 之后，<code>target_sources</code> 有新选项 <code>FILE_SET</code> 可以更好解决这个问题。</p>
+<h1 id="install-FILES-PROGRAMS"><a href="#install-FILES-PROGRAMS" class="headerlink" title="install(FILES|PROGRAMS)"></a><code>install(FILES|PROGRAMS)</code></h1><p>签名：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">install(&lt;FILES|PROGRAMS&gt; files...</span><br><span class="line">        TYPE &lt;type&gt; | DESTINATION &lt;dir&gt;</span><br><span class="line">        [PERMISSIONS permissions...]</span><br><span class="line">        [CONFIGURATIONS [Debug|Release|...]]</span><br><span class="line">        [COMPONENT &lt;component&gt;]</span><br><span class="line">        [RENAME &lt;name&gt;] [OPTIONAL] [EXCLUDE_FROM_ALL])</span><br></pre></td></tr></table></figure>
+
+<p>这两命令非常相似，但是设置的默认权限不同，主要是 <code>PROGRAMS</code> 会设置写权限。下面是不同类型和默认的安装位置。</p>
+<p><img src="/../../../../assets/01e051f3683d45def6221e2a53e1630e.webp"></p>
+<h1 id="install-DIRECTORY"><a href="#install-DIRECTORY" class="headerlink" title="install(DIRECTORY)"></a><code>install(DIRECTORY)</code></h1><p>签名：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">install(DIRECTORY dirs...</span><br><span class="line">        TYPE &lt;type&gt; | DESTINATION &lt;dir&gt;</span><br><span class="line">        [FILE_PERMISSIONS permissions...]</span><br><span class="line">        [DIRECTORY_PERMISSIONS permissions...]</span><br><span class="line">        [USE_SOURCE_PERMISSIONS] [OPTIONAL] [MESSAGE_NEVER]</span><br><span class="line">        [CONFIGURATIONS [Debug|Release|...]]</span><br><span class="line">        [COMPONENT &lt;component&gt;] [EXCLUDE_FROM_ALL]</span><br><span class="line">        [FILES_MATCHING]</span><br><span class="line">        [[PATTERN &lt;pattern&gt; | REGEX &lt;regex&gt;] [EXCLUDE]</span><br><span class="line">        [PERMISSIONS permissions...]] [...]</span><br></pre></td></tr></table></figure>
+
+<p><code>TYPE</code> 选项和 <code>install(FILES|PROGRAMS)</code> 是一样的。</p>
+<p>有个小细节需要注意：<strong>如果给的目录没有以 &#x2F; 结尾，将会将目录本身复制到目的位置。如果以 &#x2F; 结尾，将会把目录中的内容复制到目的位置，这个和 rsync 的拷贝有相同之处</strong>！</p>
+<blockquote>
+<p>There’s one detail worth noting: if the paths that are provided after the <code>DIRECTORY</code> keyword do not end with &#x2F;, the last directory of the path will be appended to the destination, like so:</p>
+<p><code>install(DIRECTORY a DESTINATION /x)</code></p>
+<p>This will create a directory called <strong>&#x2F;x&#x2F;a</strong> and copy the contents of a to it. Now, look at the following code:</p>
+<p><code>install(DIRECTORY a/ DESTINATION /x) </code></p>
+<p>This will copy the contents of a <strong>directly to &#x2F;x</strong>.</p>
+</blockquote>
+<p>使用这个模式的时候可以用 <code>DIRECTORY_PERMISSIONS</code> 参数设置文件夹的 <code>x</code> 权限。这是因为文件夹的 <code>x</code> 权限表示用户是否能够进入目录和列举目录内容，是和文件有一点不同的。</p>
+<p>还能过滤目录中的文件。可以用 <code>PATTERN</code> 来匹配 glob 表达式（<strong>以给定的 parttern 结尾</strong>的所有文件名都会被匹配上），或者用 <code>REGEX</code> 来匹配正则表达式。用 <code>FILES_MATCHING</code> 来选择文件（但是不会排除目录，因而目录结构会被保留）。用 <code>EXCLUDE</code> 来排除一部分已经匹配上的内容。</p>
+<h1 id="install-SCRIPT-CODE"><a href="#install-SCRIPT-CODE" class="headerlink" title="install(SCRIPT|CODE)"></a><code>install(SCRIPT|CODE)</code></h1><p><strong>在安装的时候执行代码</strong>。这里的代码得是 CMake 的代码，并不是 shell 的代码：</p>
+<figure class="highlight cmake"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">cmake_minimum_required</span>(VERSION <span class="number">3.20</span>.<span class="number">0</span>)</span><br><span class="line"><span class="keyword">project</span>(InstallCode CXX)</span><br><span class="line"><span class="keyword">add_subdirectory</span>(src bin)</span><br><span class="line"></span><br><span class="line"><span class="keyword">include</span>(GNUInstallDirs)</span><br><span class="line"><span class="keyword">install</span>(TARGETS calc LIBRARY</span><br><span class="line">        PUBLIC_HEADER</span><br><span class="line">        DESTINATION <span class="variable">$&#123;CMAKE_INSTALL_INCLUDEDIR&#125;</span>/calc</span><br><span class="line">       )</span><br><span class="line"></span><br><span class="line"><span class="keyword">if</span> (UNIX)</span><br><span class="line">  <span class="keyword">install</span>(CODE <span class="string">&quot;execute_process(COMMAND ldconfig)&quot;</span>)</span><br><span class="line"><span class="keyword">endif</span>()</span><br></pre></td></tr></table></figure>
+
+<p>这里的 <code>&quot;execute_process(COMMAND ldconfig)&quot;</code> 只能用奇异来形容。</p>
+<p>也可以用 <code>install(SCRIPT)</code>，但是它的参数是 CMake 脚本文件的路径而不是代码字符串。</p>
+<h1 id="install-EXPORT"><a href="#install-EXPORT" class="headerlink" title="install(EXPORT)"></a><code>install(EXPORT)</code></h1><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">install(EXPORT &lt;export-name&gt; DESTINATION &lt;dir&gt;</span><br><span class="line">        [NAMESPACE &lt;namespace&gt;] [[FILE &lt;name&gt;.cmake]|</span><br><span class="line">        [PERMISSIONS permissions...]</span><br><span class="line">        [CONFIGURATIONS [Debug|Release|...]]</span><br><span class="line">        [EXPORT_LINK_INTERFACE_LIBRARIES]</span><br><span class="line">        [COMPONENT &lt;component&gt;]</span><br><span class="line">        [EXCLUDE_FROM_ALL])</span><br></pre></td></tr></table></figure>
+
+<blockquote>
+<p>It’s a combination of “plain” <code>export(EXPORT)</code> and other <code>install()</code> commands.</p>
+</blockquote>
+<blockquote>
+<p style="margin-bottom: 0px"><font size="+3">✏️</font><font size="+1"><strong> NOTE</strong></font></p>
+<p>好像能使用的 <code>EXPORT</code> 参数的 <code>install()</code> 命令除了 <code>install(EXPORT)</code> 本身也就只有 <code>install(TARGETS)</code> 了。</p>
+</blockquote>
+<p>这个命令是用来安装 export 文件的。用 <code>export</code> 或者 <code>install(TARGETS ... EXPORT)</code> 可以生成 export 文件。这个命令不会在构建时在 binary tree 里产生文件哦！</p>
+<h1 id="写-Config-file"><a href="#写-Config-file" class="headerlink" title="写 Config file"></a>写 Config file</h1><h2 id="Basic-config-file"><a href="#Basic-config-file" class="headerlink" title="Basic config file"></a>Basic config file</h2><blockquote>
+<p>A complete package definition consists of the <strong>target export files</strong>, the package’s <strong>config file</strong>, and the package’s <strong>version file</strong>, but technically, all that’s needed for <code>find_package()</code> to work is a config-file.</p>
+</blockquote>
+<p>Config file 的命名：<code>&lt;PackageName&gt;-config.cmake</code> or <code>&lt;PackageName&gt;Config.cmake</code>。搜索路径有很多，一般可以放在 <code>$&#123;CMAKE_INSTALL_LIBDIR&#125;/&lt;PackageName&gt;/cmake/</code> 下。</p>
+<p>最简单的 config file 就是直接将 target export files 引用进来：</p>
+<figure class="highlight cmake"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># CMakeLists.txt</span></span><br><span class="line"><span class="keyword">install</span>(<span class="keyword">EXPORT</span> CalcTargets</span><br><span class="line">  DESTINATION <span class="variable">$&#123;CMAKE_INSTALL_LIBDIR&#125;</span>/calc/cmake</span><br><span class="line">  NAMESPACE Calc::</span><br><span class="line">)</span><br><span class="line"><span class="keyword">install</span>(FILES <span class="string">&quot;CalcConfig.cmake&quot;</span></span><br><span class="line">  DESTINATION <span class="variable">$&#123;CMAKE_INSTALL_LIBDIR&#125;</span>/calc/cmake</span><br><span class="line">)</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight cmake"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># CalcConfig.cmake</span></span><br><span class="line"><span class="keyword">include</span>(<span class="string">&quot;$&#123;CMAKE_CURRENT_LIST_DIR&#125;/CalcTargets.cmake&quot;</span>)</span><br></pre></td></tr></table></figure>
+
+<h2 id="Advanced-config-file"><a href="#Advanced-config-file" class="headerlink" title="Advanced config file"></a>Advanced config file</h2><p>更高级一点的是不自己写 CalcConfig.cmake，而是提供模板 CalcConfig.cmake.in 文件（一般按照这种方式命名）。</p>
+<figure class="highlight cmake"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">cmake_minimum_required</span>(VERSION <span class="number">3.20</span>.<span class="number">0</span>)</span><br><span class="line"><span class="keyword">project</span>(AdvancedConfig CXX)</span><br><span class="line"><span class="keyword">include</span>(GNUInstallDirs) <span class="comment"># so it&#x27;s available in ./src/</span></span><br><span class="line"><span class="keyword">add_subdirectory</span>(src bin)</span><br><span class="line"></span><br><span class="line"><span class="keyword">install</span>(TARGETS calc <span class="keyword">EXPORT</span> CalcTargets ARCHIVE</span><br><span class="line">  PUBLIC_HEADER DESTINATION <span class="variable">$&#123;CMAKE_INSTALL_INCLUDEDIR&#125;</span>/calc</span><br><span class="line">)</span><br><span class="line"><span class="keyword">install</span>(<span class="keyword">EXPORT</span> CalcTargets</span><br><span class="line">  DESTINATION <span class="variable">$&#123;CMAKE_INSTALL_LIBDIR&#125;</span>/calc/cmake</span><br><span class="line">  NAMESPACE Calc::</span><br><span class="line">)</span><br><span class="line"><span class="comment"># 到这一步已经有了 target export file，但是没有 config file</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">include</span>(CMakePackageConfigHelpers)</span><br><span class="line"><span class="keyword">set</span>(LIB_INSTALL_DIR <span class="variable">$&#123;CMAKE_INSTALL_LIBDIR&#125;</span>/calc)</span><br><span class="line">configure_package_config_file(</span><br><span class="line">  <span class="variable">$&#123;CMAKE_CURRENT_SOURCE_DIR&#125;</span>/CalcConfig.cmake.in</span><br><span class="line">  <span class="string">&quot;$&#123;CMAKE_CURRENT_BINARY_DIR&#125;/CalcConfig.cmake&quot;</span></span><br><span class="line">  INSTALL_DESTINATION <span class="variable">$&#123;CMAKE_INSTALL_LIBDIR&#125;</span>/calc/cmake</span><br><span class="line">  PATH_VARS LIB_INSTALL_DIR</span><br><span class="line">)</span><br><span class="line"><span class="comment"># 到这一步已经根据模板文件创建了 config file</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">install</span>(FILES <span class="string">&quot;$&#123;CMAKE_CURRENT_BINARY_DIR&#125;/CalcConfig.cmake&quot;</span></span><br><span class="line">  DESTINATION <span class="variable">$&#123;CMAKE_INSTALL_LIBDIR&#125;</span>/calc/cmake</span><br><span class="line">)</span><br></pre></td></tr></table></figure>
+
+<p>一般使用 <a target="_blank" rel="noopener" href="https://cmake.org/cmake/help/latest/module/CMakePackageConfigHelpers.html"><code>CMakePackageConfigHelpers</code></a> 模块来帮助完成这个操作。使用 <a target="_blank" rel="noopener" href="https://cmake.org/cmake/help/latest/module/CMakePackageConfigHelpers.html#command:configure_package_config_file"></a> 和 <code>install</code> 分了两部，而不是一口气安装到系统目录，这是因为 configure 的时候不确定用户是否需要安装，所以不能轻易安装。只有用户使用 <code>cmake --install</code> 启动安装过程时，才应该将其安装到系统。另外就是在 configure 的时候就要明确目的安装路径了，因为可能有些安装文件是要硬编码最终的安装路径的。</p>
+<p><code>PATH_VARS</code> 是我们要从当前的 CMake 脚本向 <code>*.cmake.in</code> 文件传递的变量，这些变量可以在模板文件中引用。并且这个函数会对我们传入的变量重新计算，正确处理好绝对路径和相对路径。比如上面代码中传入的是 <code>LIB_INSTALL_DIR</code>，在模板文件中可以用 <code>@PACKAGE_LIB_INSTALL_DIR@</code> 来引用，注意有一个 <code>PACKAGE</code> 前缀。如果传入的是 <code>calc</code>（相对路径），会被展开为 <code>$&#123;PACKAGE_PREFIX_DIR&#125;/calc</code>；传入的是 <code>/calc</code>（绝对路径），会被展开为 <code>/calc</code>（不做路径拼接）。</p>
+<p>模板文件写法如下：</p>
+<figure class="highlight cmake"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">@PACKAGE_INIT@</span><br><span class="line"></span><br><span class="line">set_and_check(CALC_LIB_DIR <span class="string">&quot;@PACKAGE_LIB_INSTALL_DIR@&quot;</span>)</span><br><span class="line"><span class="keyword">include</span>(<span class="string">&quot;$&#123;CALC_LIB_DIR&#125;/cmake/CalcTargets.cmake&quot;</span>)</span><br><span class="line"></span><br><span class="line">check_required_components(Calc)</span><br></pre></td></tr></table></figure>
+
+<p>开头有一个固定的 <code>@PACKAGE_INIT@</code> 头。<code>set_and_check</code> 和 <code>check_required_components</code> 都是 <code>configure_package_config_file</code> 提供的宏，会在 <code>@PACKAGE_INIT@</code> 展开的时候补充出来。好像目前版本里就只提供了这两个宏。</p>
+<p><code>set_and_check</code> 会在设置变量后检查它是否为一个在操作系统上存在的路径，不存在则报错。<code>check_required_components</code> 的参数是当前包的名字，它会根据 CMake 的 find_package 调用规定检查传来的 COMPONENTS 是否全部被找到了（以 FOUND 为后缀的变量是否为真），没有找到则报错。所以这个宏要放在整个模板文件的最后使用。</p>
+<p>基本上一头一尾是固定的，中间是一些 include 和变量设置。</p>
+<p>如果有一些必须要满足的依赖可以使用 <code>CMakeFindDependencyMacro</code> 中的 <code>find_dependency()</code> 去找，注意这个宏有找不到就返回的性质。这个函数在 <a href="../../../../../_archive/cmake/Modern%20CMake%20for%20C++/chapter07%20-%20managing%20dependencies.md">chapter07 - managing dependencies</a> 已经提到过了。</p>
+<h2 id="Version-file"><a href="#Version-file" class="headerlink" title="Version file"></a>Version file</h2><p><code>CMakePackageConfigHelpers</code> 还提供了生成 version 文件的功能。有了 version，用户就能像这样来查找包：</p>
+<figure class="highlight cmake"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">find_package</span>(Calc <span class="number">1.2</span>.<span class="number">3</span> REQUIRED)</span><br></pre></td></tr></table></figure>
+
+<blockquote>
+<p>CMake will then search the config-file for Calc and check if a version file named <code>&lt;config-file&gt;-version.cmake</code> or <code>&lt;config-file&gt;Version.cmake</code> is present in the same directory, that is, <code>CalcConfigVersion.cmake</code>.</p>
+</blockquote>
+<p><code>write_basic_package_version_file</code> 的用法：</p>
+<figure class="highlight cmake"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">write_basic_package_version_file(&lt;filename&gt; [VERSION &lt;ver&gt;]</span><br><span class="line">  COMPATIBILITY &lt;AnyNewerVersion  | SameMajorVersion |</span><br><span class="line">                 SameMinorVersion | ExactVersion&gt;</span><br><span class="line">  [ARCH_INDEPENDENT]</span><br><span class="line">)</span><br></pre></td></tr></table></figure>
+
+<p>其中兼容性指定的是版本可能不同时的处理情况，如果使用 <code>AnyNewerVersion</code>，则可以向下兼容请求的版本。</p>
+<blockquote>
+<p>First, we need to provide the <code>&lt;filename&gt;</code> property of the artifact we want to create; it must follow the rules we outlined earlier. Other than that, keep in mind that we should store all the generated files in the build tree.</p>
+</blockquote>
+<p>注意这个命令还是将文件写入到 build tree 的。安装步骤是要分开的。我们可以提供一个 <code>VERSION</code> 参数，如果不提供则会使用我们的 <code>project()</code> 中标注的 <code>VERSION</code> 参数，如果 <code>project()</code> 也没有提供 <code>VERSION</code> 就会报错了。</p>
+<h1 id="Components"><a href="#Components" class="headerlink" title="Components"></a>Components</h1><p><code>find_package</code> 可以有 <code>COMPONENTS</code> 和 <code>OPTIONAL_COMPONENTS</code> 参数。注意这些参数需要由 config 提供者在 config 文件中做好检查，如果不检查那么就会无事发生。</p>
+<blockquote>
+<p>Requested components are passed to the config-file in the <code>&lt;package&gt;_FIND_COMPONENTS</code> variable (both optional and not). Additionally, for every non-optional component, a <code>&lt;package&gt;_FIND_REQUIRED_&lt;component&gt;</code> will be set. As package authors, we could write a macro to scan this list and check if we have provided all the required components. But we don’t need to – this is exactly what <code>check_required_components()</code> does. To use it, the config-file should set the <code>&lt;Package&gt;_&lt;Component&gt;_FOUND</code> variable when the necessary component is found. The macro at the end of the file will check if all the required variables were set.</p>
+</blockquote>
+<p>对于必要的 components 做检查时，可以使用 <code>CMakePackageConfigHelper</code> 模块中提供的 <code>check_required_components()</code> 宏。到文件最后还没有设置 FOUND 变量的对应模块就被视为没有找到。</p>
+<p>CMake 在命令行从 build tree 中安装 components（如果指定的某些 components 没有匹配成功，也不会报错，只是不安装而已）：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">cmake --install &lt;build tree&gt; --component=&lt;component name&gt;</span><br></pre></td></tr></table></figure>
+
+<p>install() 命令中可以给每一项都加 COMPONENT 参数，将给定项目归类到一个 COMPONENT 中。这样在限定 COMPONENT 时，就只会安装对应的文件。但是即便是标记了 COMPONENT，文件也会被默认安装，想要将其排除需要使用 EXCLUDE_FROM_ALL。</p>
+<figure class="highlight cmake"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">install</span>(TARGETS calc <span class="keyword">EXPORT</span> CalcTargets</span><br><span class="line">  ARCHIVE</span><br><span class="line">    COMPONENT lib</span><br><span class="line">  PUBLIC_HEADER</span><br><span class="line">    DESTINATION <span class="variable">$&#123;CMAKE_INSTALL_INCLUDEDIR&#125;</span>/calc</span><br><span class="line">    COMPONENT headers</span><br><span class="line">)</span><br></pre></td></tr></table></figure>
+
+<blockquote>
+<p>If no <code>COMPONENT</code> keyword is specified for the installed artifact, it will get a default value of Unspecified from the <code>CMAKE_INSTALL_DEFAULT_COMPONENT_NAME</code> variable.</p>
+</blockquote>
+<h1 id="Managing-symbolic-links-for-versioned-shared-libraries"><a href="#Managing-symbolic-links-for-versioned-shared-libraries" class="headerlink" title="Managing symbolic links for versioned shared libraries"></a>Managing symbolic links for versioned shared libraries</h1><p>在安装的时候 CMake 可能会使用符号链接帮助我们处理好 linker 的问题：</p>
+<blockquote>
+<p>The target platform for your installation may use symbolic links to help linkers discover the currently installed version of a shared library. After creating a <code>lib&lt;name&gt;.so</code> symlink to the <code>lib&lt;name&gt;.so.1</code> file, it’s possible to link this library by passing the <code>-l&lt;name&gt;</code> argument to the linker. The creation of such symlinks is handled by <code>CMake</code>‘s <code>install(TARGETS &lt;target&gt; LIBRARY)</code> block when needed.</p>
+</blockquote>
+<p>可以跳过符号链接的阶段，或者只进行符号链接的阶段。</p>
+<p><img src="/../../../../assets/5e75910ef77984fadaa879387f8921a1.webp"></p>
+<h1 id="CPack"><a href="#CPack" class="headerlink" title="CPack"></a>CPack</h1><p>以下是 CPack 支持的 package generators。请不要将 package generators 和 build generators 搞混淆。</p>
+<p><img src="/../../../../assets/33ecd0b25782c14cde3061e906c7688c.webp"></p>
+<p>使用 CPack 只需要在 CMakeLists.txt 正确写好 install 命令，然后加入对 CPack 相关变量的设置和对 CPack 模块的引用。</p>
+<figure class="highlight cmake"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">set</span>(CPACK_PACKAGE_VENDOR <span class="string">&quot;Rafal Swidzinski&quot;</span>)</span><br><span class="line"><span class="keyword">set</span>(CPACK_PACKAGE_CONTACT <span class="string">&quot;email@example.com&quot;</span>)</span><br><span class="line"><span class="keyword">set</span>(CPACK_PACKAGE_DESCRIPTION <span class="string">&quot;Simple Calculator&quot;</span>)</span><br><span class="line"><span class="keyword">include</span>(CPack)</span><br></pre></td></tr></table></figure>
+
+<p>这里 CPack 模块的作用是从 project 命令的设置结果中推导一些 cpack 程序需要用到的变量。没有 CPack 也可以手动设置这些变量。</p>
+<p>这几个变量是安装必不可缺的（还有很多不可缺少的变量，<code>include(CPack)</code> 就能推导）：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">变量名                       对应命令行参数（覆盖）</span><br><span class="line">CPACK_PACKAGE_NAME          -P</span><br><span class="line">CPACK_PACKAGE_VERSION       -R</span><br><span class="line">CPACK_PACKAGE_VENDOR        --vendor</span><br></pre></td></tr></table></figure>
+
+<p>最终文件名是 <code>$CPACK_PACKAGE_NAME-$CPACK_PACKAGE_VERSION-$CPACK_SYSTEM_NAME</code>，比如 CPackPackage-1.2.3-Linux.zip（package generator 是 ZIP）。</p>
+<p>为了让 CPack 能推导变量，project() 命令就要写的详细一点（其实也就只是需要一个明确的 version，毕竟名字是必需的、语言是无关的）：</p>
+<figure class="highlight cmake"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">project</span>(CPackPackage VERSION <span class="number">1.2</span>.<span class="number">3</span> LANGUAGES CXX)</span><br></pre></td></tr></table></figure>
+
+<p>其他选项：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">-G &lt;generators&gt;      semicolon-separated list of package generators</span><br><span class="line">                     可以在 CMakeLists.txt 的 include(CPack) 之前设置 CPACK_GENERATOR 变量以提供默认值</span><br><span class="line">-C &lt;configs&gt;         semicolon-separated list of build configurations (debug, release)</span><br><span class="line">-D &lt;var&gt;=&lt;value&gt;</span><br><span class="line">--config &lt;config-file&gt;</span><br><span class="line">                     覆盖 CPackConfig.cmake 的路径（这样就可以不命名为 CPackConfig.cmake）</span><br><span class="line">-B &lt;packageDirectory&gt;</span><br><span class="line">                     输出路径。默认是当前工作路径。</span><br></pre></td></tr></table></figure>
+
+<p>例子：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">cpack -G <span class="string">&quot;ZIP;7Z;DEB&quot;</span> -B packages</span><br></pre></td></tr></table></figure>
+
+<p>这样会生成三个包，分别是（书中给出的结果）：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">CPackPackage-1.2.3-Linux.7z</span><br><span class="line">CPackPackage-1.2.3-Linux.deb</span><br><span class="line">CPackPackage-1.2.3-Linux.zip</span><br></pre></td></tr></table></figure>
+
+<p>因为 cpack 还会生成临时的目录 <code>_CPack_Packages</code>，所以最好显式提供 -B 参数，不要生成在当前路径。就算是在 build 里面，将多个包分组在同一个文件夹里面也是更好的做法。</p>
+<blockquote>
+<p style="margin-bottom: 0px"><font size="+3">☢️</font><font size="+1"><strong> CAUTION</strong></font></p>
+<p>cpack 要在 build tree 里面跑，这个和 ctest 一样。</p>
+<p>为什么要在 build tree 里跑呢？因为 build tree 中有生成的 CPackConfig.cmake。如果在别处跑，就不会自动加载这个文件，从而报错：<code>CPack Error: CPack project name not specified</code>。这样的报错很隐晦，因为 cpack 程序并不要求存在 CPackConfig.cmake 才能运行，而我们也使用了 <code>include(CPack)</code> 的写法，没有手动提供必需的变量。</p>
+<p>如果直接在 source tree 里跑，能够通过 <code>--config</code> 选项传入 build tree 中的 CPackConfig.cmake 路径，也是可以成功的。</p>
+</blockquote>
+<blockquote>
+<p style="margin-bottom: 0px"><font size="+3">✏️</font><font size="+1"><strong> NOTE</strong></font></p>
+<p>cpack 在 multi-config generator（至少 Ninja Multi-Config 是这样）的 build tree 中默认寻找的是 Release 版本。使用 <code>-C Debug</code> 来允许 Debug 版本的安装。</p>
+</blockquote>
+<p>感觉 CPack 很好用，在写好 install 命令的基础上几乎不必花时间去适配 CPack。主要还是 install 比较复杂。</p>
+
+    </div>
+
+    
+    
+    
+
+      <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/cpp/" rel="tag"># cpp</a>
+              <a href="/tags/cmake/" rel="tag"># cmake</a>
+              <a href="/tags/modern-cmake-for-cpp/" rel="tag"># modern-cmake-for-cpp</a>
+          </div>
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/2024-02-01/chapter11-a-%E5%AF%B9%E6%AF%94-export-%E5%92%8C-install-%E5%91%BD%E4%BB%A4/" rel="prev" title="chapter11.a - 对比 export 和 install 命令">
+      <i class="fa fa-chevron-left"></i> chapter11.a - 对比 export 和 install 命令
+    </a></div>
+      <div class="post-nav-item">
+    <a href="/2024-02-01/chapter10-documents/" rel="next" title="chapter10 - documents">
+      chapter10 - documents <i class="fa fa-chevron-right"></i>
+    </a></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+
+
+          </div>
+          
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#Exporting-without-installation"><span class="nav-text">Exporting without installation</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#cmake-install"><span class="nav-text">cmake --install</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#install-%E5%91%BD%E4%BB%A4"><span class="nav-text">install() 命令</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#install-TARGETS"><span class="nav-text">install(TARGETS)</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#GNUInstallDirs"><span class="nav-text">GNUInstallDirs</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%A4%84%E7%90%86-public-headers"><span class="nav-text">处理 public headers</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#install-FILES-PROGRAMS"><span class="nav-text">install(FILES|PROGRAMS)</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#install-DIRECTORY"><span class="nav-text">install(DIRECTORY)</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#install-SCRIPT-CODE"><span class="nav-text">install(SCRIPT|CODE)</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#install-EXPORT"><span class="nav-text">install(EXPORT)</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%86%99-Config-file"><span class="nav-text">写 Config file</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#Basic-config-file"><span class="nav-text">Basic config file</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Advanced-config-file"><span class="nav-text">Advanced config file</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Version-file"><span class="nav-text">Version file</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Components"><span class="nav-text">Components</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Managing-symbolic-links-for-versioned-shared-libraries"><span class="nav-text">Managing symbolic links for versioned shared libraries</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#CPack"><span class="nav-text">CPack</span></a></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+  <p class="site-author-name" itemprop="name">Hxhue</p>
+  <div class="site-description" itemprop="description"></div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">174</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+            <a href="/categories/">
+          
+        <span class="site-state-item-count">6</span>
+        <span class="site-state-item-name">分类</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+            <a href="/tags/">
+          
+        <span class="site-state-item-count">34</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author motion-element">
+      <span class="links-of-author-item">
+        <a href="https://github.com/hxhue" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;hxhue" rel="noopener" target="_blank"><i class="fab fa-github fa-fw"></i></a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="https://stackoverflow.com/users/13785815" title="StackOverflow → https:&#x2F;&#x2F;stackoverflow.com&#x2F;users&#x2F;13785815" rel="noopener" target="_blank"><i class="fab fa-stack-overflow fa-fw"></i></a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="mailto:simooncake@gmail.com" title="Email → mailto:simooncake@gmail.com" rel="noopener" target="_blank"><i class="fa fa-envelope fa-fw"></i></a>
+      </span>
+  </div>
+
+
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+
+<div class="copyright">
+  
+  &copy; 
+  <span itemprop="copyrightYear">2024</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Hxhue</span>
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item-icon">
+      <i class="fa fa-chart-area"></i>
+    </span>
+      <span class="post-meta-item-text">站点总字数：</span>
+    <span title="站点总字数">111k</span>
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item-icon">
+      <i class="fa fa-coffee"></i>
+    </span>
+      <span class="post-meta-item-text">站点阅读时长 &asymp;</span>
+    <span title="站点阅读时长">6:42</span>
+</div>
+  <div class="powered-by">由 <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Gemini</a> 强力驱动
+  </div><script color="0,0,255" opacity="0.5" zIndex="-1" count="99" src="https://cdn.jsdelivr.net/npm/canvas-nest.js@1/dist/canvas-nest.js"></script>
+
+        
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="//cdn.jsdelivr.net/npm/pangu@4/dist/browser/pangu.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+
+<script src="/js/schemes/pisces.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+
+
+
+  
+
+
+
+
+  
+<script src="/js/local-search.js"></script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+</body>
+</html>

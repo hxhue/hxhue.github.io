@@ -1,0 +1,515 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 7.1.1">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+  <link rel="stylesheet" href="/lib/pace/pace-theme-minimal.min.css">
+  <script src="/lib/pace/pace.min.js"></script>
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"hxhue.github.io","root":"/","scheme":"Gemini","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"always","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":true,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":true,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":false,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},"path":"search.xml"};
+  </script>
+
+  <meta name="description" content="头文件：template.hpp 1234567#ifndef TEMPLATE_HPP#define TEMPLATE_HPPtemplate &lt;typename T&gt;void println(T t);#endif  源文件：main.cpp 123456#include &quot;template.hpp&quot;int main() &#123;  println(9);">
+<meta property="og:type" content="article">
+<meta property="og:title" content="C++ 模板显式实例化">
+<meta property="og:url" content="https://hxhue.github.io/2024-01-31/c-%E6%A8%A1%E6%9D%BF%E6%98%BE%E5%BC%8F%E5%AE%9E%E4%BE%8B%E5%8C%96/index.html">
+<meta property="og:site_name" content="Hxhue&#39;s Blog">
+<meta property="og:description" content="头文件：template.hpp 1234567#ifndef TEMPLATE_HPP#define TEMPLATE_HPPtemplate &lt;typename T&gt;void println(T t);#endif  源文件：main.cpp 123456#include &quot;template.hpp&quot;int main() &#123;  println(9);">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2024-01-31T06:48:00.000Z">
+<meta property="article:modified_time" content="2024-03-15T08:31:51.148Z">
+<meta property="article:author" content="Hxhue">
+<meta property="article:tag" content="cpp">
+<meta name="twitter:card" content="summary">
+
+<link rel="canonical" href="https://hxhue.github.io/2024-01-31/c-%E6%A8%A1%E6%9D%BF%E6%98%BE%E5%BC%8F%E5%AE%9E%E4%BE%8B%E5%8C%96/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'zh-CN'
+  };
+</script>
+
+  <title>C++ 模板显式实例化 | Hxhue's Blog</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+<link rel="alternate" href="/atom.xml" title="Hxhue's Blog" type="application/atom+xml">
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">Hxhue's Blog</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+        <i class="fa fa-search fa-fw fa-lg"></i>
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="main-menu menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档</a>
+
+  </li>
+        <li class="menu-item menu-item-about">
+
+    <a href="/about/" rel="section"><i class="fa fa-user fa-fw"></i>关于</a>
+
+  </li>
+        <li class="menu-item menu-item-tags">
+
+    <a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>标签</a>
+
+  </li>
+        <li class="menu-item menu-item-categories">
+
+    <a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>分类</a>
+
+  </li>
+      <li class="menu-item menu-item-search">
+        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>搜索
+        </a>
+      </li>
+  </ul>
+</nav>
+
+
+
+  <div class="search-pop-overlay">
+    <div class="popup search-popup">
+        <div class="search-header">
+  <span class="search-icon">
+    <i class="fa fa-search"></i>
+  </span>
+  <div class="search-input-container">
+    <input autocomplete="off" autocapitalize="off"
+           placeholder="搜索..." spellcheck="false"
+           type="search" class="search-input">
+  </div>
+  <span class="popup-btn-close">
+    <i class="fa fa-times-circle"></i>
+  </span>
+</div>
+<div id="search-result">
+  <div id="no-result">
+    <i class="fa fa-spinner fa-pulse fa-5x fa-fw"></i>
+  </div>
+</div>
+
+    </div>
+  </div>
+
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post posts-expand">
+            
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://hxhue.github.io/2024-01-31/c-%E6%A8%A1%E6%9D%BF%E6%98%BE%E5%BC%8F%E5%AE%9E%E4%BE%8B%E5%8C%96/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="Hxhue">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Hxhue's Blog">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          C++ 模板显式实例化
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2024-01-31 14:48:00" itemprop="dateCreated datePublished" datetime="2024-01-31T14:48:00+08:00">2024-01-31</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2024-03-15 16:31:51" itemprop="dateModified" datetime="2024-03-15T16:31:51+08:00">2024-03-15</time>
+              </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/languages/" itemprop="url" rel="index"><span itemprop="name">languages</span></a>
+                </span>
+            </span>
+
+          <br>
+            <span class="post-meta-item" title="本文字数">
+              <span class="post-meta-item-icon">
+                <i class="far fa-file-word"></i>
+              </span>
+                <span class="post-meta-item-text">本文字数：</span>
+              <span>596</span>
+            </span>
+            <span class="post-meta-item" title="阅读时长">
+              <span class="post-meta-item-icon">
+                <i class="far fa-clock"></i>
+              </span>
+                <span class="post-meta-item-text">阅读时长 &asymp;</span>
+              <span>2 分钟</span>
+            </span>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <p>头文件：template.hpp</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">ifndef</span> TEMPLATE_HPP</span></span><br><span class="line"><span class="meta">#<span class="keyword">define</span> TEMPLATE_HPP</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">template</span> &lt;<span class="keyword">typename</span> T&gt;</span><br><span class="line"><span class="function"><span class="type">void</span> <span class="title">println</span><span class="params">(T t)</span></span>;</span><br><span class="line"></span><br><span class="line"><span class="meta">#<span class="keyword">endif</span></span></span><br></pre></td></tr></table></figure>
+
+<p>源文件：main.cpp</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&quot;template.hpp&quot;</span></span></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="type">int</span> <span class="title">main</span><span class="params">()</span> </span>&#123;</span><br><span class="line">  <span class="built_in">println</span>(<span class="number">9</span>);</span><br><span class="line">  <span class="built_in">println</span>(<span class="number">-7</span>);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>源文件：instantiation.cpp</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;iostream&gt;</span></span></span><br><span class="line"></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&quot;template.hpp&quot;</span></span></span><br><span class="line"></span><br><span class="line"><span class="keyword">template</span> &lt;<span class="keyword">typename</span> T&gt;</span><br><span class="line"><span class="function"><span class="type">void</span> <span class="title">println</span><span class="params">(T t)</span> </span>&#123;</span><br><span class="line">  std::cout &lt;&lt; t &lt;&lt; <span class="string">&quot;\n&quot;</span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 特化声明：失败，因为没有定义</span></span><br><span class="line"><span class="comment">// template &lt;&gt;</span></span><br><span class="line"><span class="comment">// void println&lt;int&gt;(int);</span></span><br><span class="line"></span><br><span class="line"><span class="comment">// 显式实例化：成功</span></span><br><span class="line"><span class="keyword">template</span> <span class="type">void</span> <span class="built_in">println</span>&lt;<span class="type">int</span>&gt;(<span class="type">int</span>);</span><br><span class="line"><span class="comment">// template void println(int); // 如果能够从函数参数中推导出模板参数，也可以省略模板参数</span></span><br><span class="line"></span><br><span class="line"><span class="comment">// 特化定义：成功</span></span><br><span class="line"><span class="comment">// template &lt;&gt;</span></span><br><span class="line"><span class="comment">// void println&lt;int&gt;(int t) &#123;</span></span><br><span class="line"><span class="comment">//   std::cout &lt;&lt; &quot;instantiation.cpp: &quot; &lt;&lt; t &lt;&lt; &quot;\n&quot;;</span></span><br><span class="line"><span class="comment">// &#125;</span></span><br></pre></td></tr></table></figure>
+
+<p>翻译单元 A 要调用模板函数：</p>
+<ol>
+<li>如果它能看到模板函数的特化定义，就会直接使用。</li>
+<li>如果它只能看到模板函数的定义（即便是看到了特化函数的声明也不行），但是看不到特化的定义，就会去生成。</li>
+<li>如果只能看到模板函数的声明，则没办法生成，就只能等待链接。</li>
+</ol>
+<p>所以想要节省编译时间只能在头文件中留下声明，不能留定义。</p>
+<p>在实例化的时候也要注意，首先是对每一个类型都写一遍函数体太累了，可以直接在源文件中提供定义，然后显式实例化或者特化。两者关系如下：</p>
+<ol>
+<li>显式实例化和特化不能一起出现。显式实例化在特化之前则会报错，在特化之后会没有效果（相当于没有使用显式实例化）。</li>
+<li>写法上有区别：注意特化是要加 <code>template &lt;&gt;</code> 的，而显式实例化是加的 <code>template</code>，没有 <code>&lt;&gt;</code>。</li>
+<li>显式实例化不能提供定义（函数体），特化可以有定义也可以没有（在和显式实例化进行对比的这种场景下，我们希望特化有定义，否则函数无法生成，链接不能成功）。</li>
+</ol>
+<blockquote>
+<p style="margin-bottom: 0px"><font size="+3">🚨</font><font size="+1"><strong> WARNING</strong></font></p>
+<p>特化函数只声明不定义没有意义。如果所在翻译单元能看到 primary 模板的定义，则会自己生成，如果看不到则会延迟到链接阶段去解决符号查找问题，是否有特化函数声明没有影响。</p>
+</blockquote>
+<p>为什么需要显式实例化？因为模板实例化是按需进行的，显式实例化就是告诉编译器这个函数之后会被用到，所以先实例化出来方便链接。</p>
+
+    </div>
+
+    
+    
+    
+
+      <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/cpp/" rel="tag"># cpp</a>
+          </div>
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/2024-01-31/cmake-%E5%AD%A6%E8%BF%87%E5%8F%88%E5%BF%98%E8%AE%B0%E7%9A%84%E5%86%99%E6%B3%95/" rel="prev" title="CMake 学过又忘记的写法">
+      <i class="fa fa-chevron-left"></i> CMake 学过又忘记的写法
+    </a></div>
+      <div class="post-nav-item">
+    <a href="/2024-01-31/c-%E9%87%8D%E5%AE%9A%E5%90%91%E8%BE%93%E5%87%BA%E7%9A%84%E5%87%A0%E7%A7%8D%E6%96%B9%E6%A1%88%EF%BC%9Aiostream-rdbuf%E3%80%81stdio-freopen%E3%80%81unix-fd/" rel="next" title="C++ 重定向输出的几种方案：iostream rdbuf、stdio freopen、unix fd">
+      C++ 重定向输出的几种方案：iostream rdbuf、stdio freopen、unix fd <i class="fa fa-chevron-right"></i>
+    </a></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+
+
+          </div>
+          
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+  <p class="site-author-name" itemprop="name">Hxhue</p>
+  <div class="site-description" itemprop="description"></div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">174</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+            <a href="/categories/">
+          
+        <span class="site-state-item-count">6</span>
+        <span class="site-state-item-name">分类</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+            <a href="/tags/">
+          
+        <span class="site-state-item-count">34</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author motion-element">
+      <span class="links-of-author-item">
+        <a href="https://github.com/hxhue" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;hxhue" rel="noopener" target="_blank"><i class="fab fa-github fa-fw"></i></a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="https://stackoverflow.com/users/13785815" title="StackOverflow → https:&#x2F;&#x2F;stackoverflow.com&#x2F;users&#x2F;13785815" rel="noopener" target="_blank"><i class="fab fa-stack-overflow fa-fw"></i></a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="mailto:simooncake@gmail.com" title="Email → mailto:simooncake@gmail.com" rel="noopener" target="_blank"><i class="fa fa-envelope fa-fw"></i></a>
+      </span>
+  </div>
+
+
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+
+<div class="copyright">
+  
+  &copy; 
+  <span itemprop="copyrightYear">2024</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Hxhue</span>
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item-icon">
+      <i class="fa fa-chart-area"></i>
+    </span>
+      <span class="post-meta-item-text">站点总字数：</span>
+    <span title="站点总字数">111k</span>
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item-icon">
+      <i class="fa fa-coffee"></i>
+    </span>
+      <span class="post-meta-item-text">站点阅读时长 &asymp;</span>
+    <span title="站点阅读时长">6:42</span>
+</div>
+  <div class="powered-by">由 <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Gemini</a> 强力驱动
+  </div><script color="0,0,255" opacity="0.5" zIndex="-1" count="99" src="https://cdn.jsdelivr.net/npm/canvas-nest.js@1/dist/canvas-nest.js"></script>
+
+        
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="//cdn.jsdelivr.net/npm/pangu@4/dist/browser/pangu.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+
+<script src="/js/schemes/pisces.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+
+
+
+  
+
+
+
+
+  
+<script src="/js/local-search.js"></script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+</body>
+</html>

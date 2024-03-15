@@ -1,0 +1,625 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 7.1.1">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+  <link rel="stylesheet" href="/lib/pace/pace-theme-minimal.min.css">
+  <script src="/lib/pace/pace.min.js"></script>
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"hxhue.github.io","root":"/","scheme":"Gemini","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"always","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":true,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":true,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":false,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},"path":"search.xml"};
+  </script>
+
+  <meta name="description" content="第 9 章 原子操作 You should know that atomic operations on global memory are supported only on GPUs of compute capability 1.1 or higher. Furthermore, atomic operations on shared memory require a GPU of comp">
+<meta property="og:type" content="article">
+<meta property="og:title" content="CUDA by Example: Chapter 09-12">
+<meta property="og:url" content="https://hxhue.github.io/2024-02-02/cuda-by-example-chapter-09-12/index.html">
+<meta property="og:site_name" content="Hxhue&#39;s Blog">
+<meta property="og:description" content="第 9 章 原子操作 You should know that atomic operations on global memory are supported only on GPUs of compute capability 1.1 or higher. Furthermore, atomic operations on shared memory require a GPU of comp">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://hxhue.github.io/assets/e2af4d188a4a3774c2ef96b8589fb58a.webp">
+<meta property="og:image" content="https://hxhue.github.io/assets/1483c6573eb752b4db5e52292ca44856.webp">
+<meta property="article:published_time" content="2024-02-02T03:46:00.000Z">
+<meta property="article:modified_time" content="2024-03-15T15:32:03.295Z">
+<meta property="article:author" content="Hxhue">
+<meta property="article:tag" content="cuda">
+<meta property="article:tag" content="cuda-by-example">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://hxhue.github.io/assets/e2af4d188a4a3774c2ef96b8589fb58a.webp">
+
+<link rel="canonical" href="https://hxhue.github.io/2024-02-02/cuda-by-example-chapter-09-12/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'zh-CN'
+  };
+</script>
+
+  <title>CUDA by Example: Chapter 09-12 | Hxhue's Blog</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+<link rel="alternate" href="/atom.xml" title="Hxhue's Blog" type="application/atom+xml">
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">Hxhue's Blog</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+        <i class="fa fa-search fa-fw fa-lg"></i>
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="main-menu menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档</a>
+
+  </li>
+        <li class="menu-item menu-item-about">
+
+    <a href="/about/" rel="section"><i class="fa fa-user fa-fw"></i>关于</a>
+
+  </li>
+        <li class="menu-item menu-item-tags">
+
+    <a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>标签</a>
+
+  </li>
+        <li class="menu-item menu-item-categories">
+
+    <a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>分类</a>
+
+  </li>
+      <li class="menu-item menu-item-search">
+        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>搜索
+        </a>
+      </li>
+  </ul>
+</nav>
+
+
+
+  <div class="search-pop-overlay">
+    <div class="popup search-popup">
+        <div class="search-header">
+  <span class="search-icon">
+    <i class="fa fa-search"></i>
+  </span>
+  <div class="search-input-container">
+    <input autocomplete="off" autocapitalize="off"
+           placeholder="搜索..." spellcheck="false"
+           type="search" class="search-input">
+  </div>
+  <span class="popup-btn-close">
+    <i class="fa fa-times-circle"></i>
+  </span>
+</div>
+<div id="search-result">
+  <div id="no-result">
+    <i class="fa fa-spinner fa-pulse fa-5x fa-fw"></i>
+  </div>
+</div>
+
+    </div>
+  </div>
+
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post posts-expand">
+            
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://hxhue.github.io/2024-02-02/cuda-by-example-chapter-09-12/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="Hxhue">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Hxhue's Blog">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          CUDA by Example: Chapter 09-12
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2024-02-02 11:46:00" itemprop="dateCreated datePublished" datetime="2024-02-02T11:46:00+08:00">2024-02-02</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2024-03-15 23:32:03" itemprop="dateModified" datetime="2024-03-15T23:32:03+08:00">2024-03-15</time>
+              </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/languages/" itemprop="url" rel="index"><span itemprop="name">languages</span></a>
+                </span>
+            </span>
+
+          <br>
+            <span class="post-meta-item" title="本文字数">
+              <span class="post-meta-item-icon">
+                <i class="far fa-file-word"></i>
+              </span>
+                <span class="post-meta-item-text">本文字数：</span>
+              <span>3.1k</span>
+            </span>
+            <span class="post-meta-item" title="阅读时长">
+              <span class="post-meta-item-icon">
+                <i class="far fa-clock"></i>
+              </span>
+                <span class="post-meta-item-text">阅读时长 &asymp;</span>
+              <span>11 分钟</span>
+            </span>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <h1 id="第-9-章-原子操作"><a href="#第-9-章-原子操作" class="headerlink" title="第 9 章 原子操作"></a>第 9 章 原子操作</h1><blockquote>
+<p>You should know that atomic operations on <strong>global memory</strong> are supported only on GPUs of compute capability 1.1 or higher. Furthermore, atomic operations on <strong>shared memory</strong> require a GPU of compute capability 1.2 or higher.</p>
+</blockquote>
+<p>指定计算能力：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">nvcc -<span class="built_in">arch</span>=sm_11</span><br></pre></td></tr></table></figure>
+
+<p>这样就指定了计算能力是 1.1，当有些指令是只有 1.1 才能编译时加这个参数可以确保编译。同时，有了更加精确的生成目标，nvcc 可以执行一些和硬件相关的优化手段，这些优化手段在更早的架构上可能没有。</p>
+<p>但是一个硬件上不一定支持给定的计算能力。通过 <code>-arch-ls</code> 可以列出设备支持的计算能力：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line">$ nvcc -arch-ls</span><br><span class="line">compute_50</span><br><span class="line">compute_52</span><br><span class="line">compute_53</span><br><span class="line">compute_60</span><br><span class="line">compute_61</span><br><span class="line">compute_62</span><br><span class="line">compute_70</span><br><span class="line">compute_72</span><br><span class="line">compute_75</span><br><span class="line">compute_80</span><br><span class="line">compute_86</span><br><span class="line">compute_87</span><br><span class="line">compute_89</span><br><span class="line">compute_90</span><br></pre></td></tr></table></figure>
+
+<p>例子是直方图计算，也就是统计各个值的元素的数量。书中的例子是对随机填充生成的字符数组的计数，每个字符值不超过 256。</p>
+<p>可以用 <code>prop.multiProcessorCount</code> 来查询设备有的 SM 的数量。NexusNet 则是直接对 blocks 数量使用了一个定数，没有查询 SM 数量。</p>
+<p>第一个直方图的尝试是用 <code>atomicAdd</code> 直接在全局内存上做原子加法。但是这样的性能相当差，甚至在书中所用的硬件上比 CPU 上的计算慢了好几倍。用自己的设备测试，则 CPU、全局内存原子加法、共享内存原子加法耗时分别为 182ms<br>、62.5ms、30ms。虽然全局内存上的原子加法开销没有那么离谱，但是也比共享内存上的加法慢了很多。</p>
+<p>计算直方图的可以用共享内存优化，先在各个块内用原子加法计算好块中的每个元素的数量，然后一口气用原子加法加到全局内存上去。虽然计算的过程多了，使用原子加法的次数也看起来变多了，但实际上却能节省很多时间！</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br></pre></td><td class="code"><pre><span class="line">__global__ <span class="type">void</span> <span class="title function_">histo_kernel</span><span class="params">( <span class="type">unsigned</span> <span class="type">char</span> *buffer,</span></span><br><span class="line"><span class="params">                              <span class="type">long</span> size,</span></span><br><span class="line"><span class="params">                              <span class="type">unsigned</span> <span class="type">int</span> *histo )</span> &#123;</span><br><span class="line">    <span class="comment">// clear out the accumulation buffer called temp</span></span><br><span class="line">    <span class="comment">// since we are launched with 256 threads, it is easy</span></span><br><span class="line">    <span class="comment">// to clear that memory with one write per thread</span></span><br><span class="line">    __shared__  <span class="type">unsigned</span> <span class="type">int</span> temp[<span class="number">256</span>];</span><br><span class="line">    temp[threadIdx.x] = <span class="number">0</span>;</span><br><span class="line">    __syncthreads();</span><br><span class="line"></span><br><span class="line">    <span class="comment">// calculate the starting index and the offset to the next</span></span><br><span class="line">    <span class="comment">// block that each thread will be processing</span></span><br><span class="line">    <span class="type">int</span> i = threadIdx.x + blockIdx.x * blockDim.x;</span><br><span class="line">    <span class="type">int</span> stride = blockDim.x * gridDim.x;</span><br><span class="line">    <span class="keyword">while</span> (i &lt; size) &#123;</span><br><span class="line">        atomicAdd( &amp;temp[buffer[i]], <span class="number">1</span> );</span><br><span class="line">        i += stride;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="comment">// sync the data from the above writes to shared memory</span></span><br><span class="line">    <span class="comment">// then add the shared memory values to the values from</span></span><br><span class="line">    <span class="comment">// the other thread blocks using global memory</span></span><br><span class="line">    <span class="comment">// atomic adds</span></span><br><span class="line">    <span class="comment">// same as before, since we have 256 threads, updating the</span></span><br><span class="line">    <span class="comment">// global histogram is just one write per thread!</span></span><br><span class="line">    __syncthreads();</span><br><span class="line">    atomicAdd( &amp;(histo[threadIdx.x]), temp[threadIdx.x] );</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h1 id="第-10-章-Streams"><a href="#第-10-章-Streams" class="headerlink" title="第 10 章 Streams"></a>第 10 章 Streams</h1><h2 id="Page-Locked-Host-Memory"><a href="#Page-Locked-Host-Memory" class="headerlink" title="Page-Locked Host Memory"></a>Page-Locked Host Memory</h2><p>CUDA 提供了一个函数是 <code>cudaHostAlloc</code>，这个函数能够分配 host 端的内存。并且分配的内存是页锁定的（page-locked）或者说是固定的（pinned memory）。固定的内存不能被操作系统换出到外存，永远都存在于内存系统，因而其物理地址保持长期有效性，可以被硬件访问。CUDA 从 CPU 向 GPU 拷贝内存要使用 DMA，如果原先的内存就是页锁定的，则只会拷贝一次。如果原先的内存不是页锁定的，需要先将其拷贝到页锁定的内存上，然后拷贝到 GPU 上。<code>malloc</code> 创建的内存没有页锁定的性质。</p>
+<p><strong>结论：<code>cudaHostAlloc</code> 分配的页锁定的 host 内存更适合和 GPU 之间做数据交换</strong>。</p>
+<blockquote>
+<p>However, you should resist the temptation to simply do a search-and-replace on malloc to convert every one of your calls to use <code>cudaHostAlloc()</code>.</p>
+</blockquote>
+<p>缺点是分配页锁定的内存更容易 OOM，也容易影响到系统上其他的应用程序。</p>
+<blockquote>
+<p>We suggest trying to restrict their use to memory that will be used as a source or destination in calls to <code>cudaMemcpy() </code>and freeing them when they are no longer needed rather than waiting until application shutdown to release the memory.</p>
+</blockquote>
+<p>用 <code>cudaHostAlloc</code> 创建的内存要用 <code>cudaFreeHost</code> 来释放。注意两个函数的命名规则有不一致的地方。</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">HANDLE_ERROR( cudaHostAlloc( (<span class="type">void</span>**)&amp;a,</span><br><span class="line">                             size * <span class="keyword">sizeof</span>( *a ),</span><br><span class="line">                             cudaHostAllocDefault ) );</span><br><span class="line"><span class="comment">// ...</span></span><br><span class="line">HANDLE_ERROR( cudaFreeHost( a ) );</span><br></pre></td></tr></table></figure>
+
+<blockquote>
+<p style="margin-bottom: 0px"><font size="+3">☢️</font><font size="+1"><strong> CAUTION</strong></font></p>
+<p>我使用书中所给的测试代码发现 <code>cudaHostAlloc</code> 分配内存的拷贝反而更慢。将 <code>SIZE</code> 改小之后观察到 <code>cudaHostAlloc</code> 分配的内存比用 <code>malloc</code> 分配的稍微快了一些。可能是因为系统内存不够大，用页锁定内存反而影响性能了。</p>
+</blockquote>
+<h2 id="检查-CUDA-属性中的-deviceOverlap"><a href="#检查-CUDA-属性中的-deviceOverlap" class="headerlink" title="检查 CUDA 属性中的 deviceOverlap"></a>检查 CUDA 属性中的 <code>deviceOverlap</code></h2><figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">cudaDeviceProp prop;</span><br><span class="line"><span class="type">int</span> whichDevice;</span><br><span class="line">HANDLE_ERROR( cudaGetDevice( &amp;whichDevice ) );</span><br><span class="line">HANDLE_ERROR( cudaGetDeviceProperties( &amp;prop, whichDevice ) );</span><br><span class="line"><span class="keyword">if</span> (!prop.deviceOverlap) &#123;</span><br><span class="line">  <span class="comment">// ...</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>这段代码检查当前设备是否具有 <code>deviceOverlap</code> 功能。有这个功能的设备能够同时执行 kernel 并且在 CPU 和 GPU 之间异步拷贝数据。</p>
+<blockquote>
+<p>A GPU supporting <strong>device overlap</strong> possesses the capacity to <strong>simultaneously execute a CUDA C kernel while performing a copy between device and host memory</strong>.</p>
+</blockquote>
+<p>书中创建了 <code>cudaEvent_t</code> 但是没有销毁，自己写的话还是要记得销毁。 <a target="_blank" rel="noopener" href="https://stackoverflow.com/a/10943498/">https://stackoverflow.com/a/10943498/</a></p>
+<h2 id="为核函数调用和-cudaMemcpyAsync-指定流"><a href="#为核函数调用和-cudaMemcpyAsync-指定流" class="headerlink" title="为核函数调用和 cudaMemcpyAsync 指定流"></a>为核函数调用和 <code>cudaMemcpyAsync</code> 指定流</h2><p><strong><code>cudaMemcpyAsync</code> 要求 host 端的内存必须是 pinned memory</strong>，这和 <code>cudaMemcpy</code> 不强制要求内存类型不同。</p>
+<p><code>cudaMemcpy</code> 是同步的，当函数执行完成时，可以认为数据已经完成了复制。而 <code>cudaMemcpyAsync</code> 是异步的，只能保证它比同一个 <code>cudaStream_t</code> 中的后加入的任务先完成，并不能保证返回时就完成了（甚至可能函数返回时任务还没有开始）。</p>
+<p>下面这个核函数调用也有 stream 参数（以往书中例子尖括号里都是只有两个参数，现在有 4 个），这时的核函数调用也是异步调用：</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">kernel&lt;&lt;&lt;N/<span class="number">256</span>,<span class="number">256</span>,<span class="number">0</span>,stream&gt;&gt;&gt;( dev_a, dev_b, dev_c );</span><br></pre></td></tr></table></figure>
+
+<p>创建流是很简单的（但是记得用完要销毁）：</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">cudaStream_t stream;</span><br><span class="line">HANDLE_ERROR( cudaStreamCreate( &amp;stream ) );</span><br></pre></td></tr></table></figure>
+
+<p>用 <code>­cudaStreamSynchronize</code> 函数去同步一个流，也就是等待这个流上的所有操作都完成。（类似的，如果将 CUDA event 当成一个瞬间完成的低开销标记，同步一个 CUDA event 是不是也是等待这个 event 在流上的执行&#x2F;标记完成呢？）</p>
+<p>流的类型是指针而不是整数，所以将 0 赋值给流其实是指定了空指针。</p>
+<h2 id="使用多个流"><a href="#使用多个流" class="headerlink" title="使用多个流"></a>使用多个流</h2><blockquote>
+<p>In fact, the execution timeline can be even more favorable than this; some newer NVIDIA GPUs support simultaneous kernel execution and two memory copies, one to the device and one from the device.</p>
+</blockquote>
+<p>先看结果：</p>
+<blockquote>
+<p style="margin-bottom: 0px"><font size="+3">✏️</font><font size="+1"><strong> NOTE</strong></font></p>
+<p>在我的电脑上，basic_single_stream.cu 和 basic_double_stream.cu 耗时 26ms，而 basic_double_stream_correct.cu 耗时 21.4ms。</p>
+</blockquote>
+<p>书的作者所用硬件的耗时优化结果如下（和我的差不多都是节省了 20% 时间）：</p>
+<blockquote>
+<p>The new code runs in 48ms, a 21 percent improvement over our original, naïve double-stream implementation.</p>
+</blockquote>
+<p>书中的 basic_double_stream.cu 将 chunks 拆分成了两组，偶数使用 stream0，奇数使用 stream1，但是最后的性能和使用单个流没有区别。</p>
+<p>下图左边是错误的编码方式，右边是正确的编码方式：</p>
+<p><img src="/../../../assets/e2af4d188a4a3774c2ef96b8589fb58a.webp"></p>
+<p>由于任务是按照顺序加入到 stream 中的，而 stream 只保证同步关系，和硬件的执行无关，所以左边的写法会出现硬件中一个流的任务阻塞了另外一个流的任务的情况。毕竟严格的顺序执行并不违背同步关系。</p>
+<p><img src="/../../../assets/1483c6573eb752b4db5e52292ca44856.webp"></p>
+<p>考虑左边的代码，在上图，由于前三个 <code>cudaMemcpyAsync</code> 都在第二个流的首个操作，即 <code>cudaMemcpyAsync</code> 之前，所以第二个流会等待这三个 <code>cudaMemcpyAsync</code> 执行完才会开始。但是第三个 <code>cudaMemcpyAsync</code> 是第一个流的最后一条任务，所以两个流时间上是顺序执行的，和一个流的执行时间没有区别！</p>
+<p>如果 GPU 只支持一次执行一个拷贝和 kernel 操作，那么按照后一种交错指定任务的写法，只有流 1 数据拷贝回 CPU 的操作能够和流 2 的 kernel A 运行并行化。但是有些比较好的 GPU 支持一次执行一个 kernel 操作和多个数据拷贝操作，这会让节约的时间更多。</p>
+<p>注意在计算完成之后还要对用到的两个流同步。（<code>cudaStreamSynchronize</code>）</p>
+<h1 id="第-11-章"><a href="#第-11-章" class="headerlink" title="第 11 章"></a>第 11 章</h1><h2 id="零拷贝、CPU-和-GPU-之间的内存映射"><a href="#零拷贝、CPU-和-GPU-之间的内存映射" class="headerlink" title="零拷贝、CPU 和 GPU 之间的内存映射"></a>零拷贝、CPU 和 GPU 之间的内存映射</h2><p>查询内存映射支持：</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">cudaDeviceProp  prop;</span><br><span class="line"><span class="type">int</span> whichDevice;</span><br><span class="line">HANDLE_ERROR( cudaGetDevice( &amp;whichDevice ) );</span><br><span class="line">HANDLE_ERROR( cudaGetDeviceProperties( &amp;prop, whichDevice ) );</span><br><span class="line"><span class="keyword">if</span> (prop.canMapHostMemory != <span class="number">1</span>) &#123;</span><br><span class="line">    <span class="built_in">printf</span>( <span class="string">&quot;Device can not map memory.\n&quot;</span> );</span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>启用内存映射：</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">HANDLE_ERROR( cudaSetDeviceFlags( cudaDeviceMapHost ) );</span><br></pre></td></tr></table></figure>
+
+<p>在申请 host 内存时启用内存映射（注意现在用的 flag 不是 default 了，<code>cudaHostAllocMapped</code> 表示内存映射，<code>cudaHostAllocWriteCombined</code> 则是选择了 CPU 的 cache 方式，这种方式对于读少的情况有利）：</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">HANDLE_ERROR( cudaHostAlloc( (<span class="type">void</span>**)&amp;a,</span><br><span class="line">                          size*<span class="keyword">sizeof</span>(<span class="type">float</span>),</span><br><span class="line">                          cudaHostAllocWriteCombined | cudaHostAllocMapped ) );</span><br></pre></td></tr></table></figure>
+
+<p>cudaHostAlloc 申请的指针总是在 CPU 内存区域的。现在启用映射之后，可以将其转换成 GPU 区域的指针，有了 GPU 区域的指针才能在 GPU 上读写：</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">HANDLE_ERROR( cudaHostGetDevicePointer( &amp;dev_a, a, <span class="number">0</span> ) );</span><br><span class="line"><span class="comment">//                                                 ^ 这个参数是 flag</span></span><br></pre></td></tr></table></figure>
+
+<p>内存映射有一点特殊，核函数对映射区域的修改需要同步才对 CPU 可见（因为本身 GPU 和 CPU 就是异步的），在 host 端对 GPU 同步需要调用 <code>cudaDeviceSynchronize</code>：</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">dot&lt;&lt;&lt;blocksPerGrid,threadsPerBlock&gt;&gt;&gt;( size, dev_a, dev_b,</span><br><span class="line">                                        dev_partial_c );</span><br><span class="line">HANDLE_ERROR( cudaDeviceSynchronize() );</span><br></pre></td></tr></table></figure>
+
+<blockquote>
+<p style="margin-bottom: 0px"><font size="+3">☢️</font><font size="+1"><strong> CAUTION</strong></font></p>
+<p><code>cudaThreadSynchronize</code> 已经是过时的函数（书中使用），过时原因是其名称不能正确反映其功能。现在应该用 <code>cudaDeviceSynchronize</code>。</p>
+</blockquote>
+<p>之前书里的 dot 计算主要做的是：</p>
+<ol>
+<li>申请设备内存</li>
+<li>将数据用 <code>cudaMemcpy</code> 的方式拷贝到设备内存</li>
+<li>调用 kernel 计算</li>
+<li>用 <code>cudaMemcpy</code> 将数据拷贝回 CPU</li>
+<li>完成其他处理</li>
+<li>释放资源</li>
+</ol>
+<p>为什么这个过程不需要同步呢？因为 <code>cudaMemcpy</code> 是在 kernel 之后发起的，虽然 kernel 的执行是异步的，但是 <code>cudaMemcpy</code> 的执行是同步的。CPU 要等待 <code>cudaMemcpy</code>，而 <code>cudaMemcpy</code> 要等待 kernel，所以达成了同步关系。</p>
+<p>使用 <code>cudaMemcpyAsync</code> 还要注意同步其他流。这个时候也达成了同步。</p>
+<p>但是这里的新例子中 kernel 之后没有天然的同步措施，所以要使用 <code>cudaDeviceSynchronize</code> 对设备同步，保证 CPU 能够看到正确的结果。</p>
+<p><strong>什么时候用内存映射</strong>？当典型的只拷贝一次到设备内存，计算完成之后就拷贝回去时，这种方法比较高效。但是要注意：如果对内存区域读写次数很多，这种方法反而更慢；映射内存必须是页锁定内存，给系统内存会带来负担。</p>
+<blockquote>
+<p>In cases where inputs and outputs are used exactly once, we will even see a performance enhancement when using zero-copy memory with a discrete GPU.</p>
+</blockquote>
+<p>书中还有提到在核显的时候用内存映射肯定是有提升的。（但是核显一般不是 N 卡）</p>
+<h2 id="多-GPU-计算"><a href="#多-GPU-计算" class="headerlink" title="多 GPU 计算"></a>多 GPU 计算</h2><p>首先是要用 <code>cudaGetDeviceCount</code> 查询 GPU 数量。</p>
+<p><strong>然后每个 GPU 设备要专门用一个 CPU 线程来控制</strong>。可能如果不用多个线程，<code>cudaSetDevice</code> 就会冲突，无法使用多个设备。</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">CUTThread   thread = start_thread( routine, &amp;(data[<span class="number">0</span>]) );</span><br><span class="line">routine( &amp;(data[<span class="number">1</span>]) );</span><br><span class="line">end_thread( thread );</span><br></pre></td></tr></table></figure>
+
+<p>这里的例子中 <code>routine</code> 是一个函数，而 <code>start_thread</code> 和 <code>end_thread</code> 都是本书给出的，<strong>实际上是调用了 pthread 库</strong>。</p>
+<h2 id="Portable-Pinned-Memory"><a href="#Portable-Pinned-Memory" class="headerlink" title="Portable Pinned Memory"></a>Portable Pinned Memory</h2><blockquote>
+<p style="margin-bottom: 0px"><font size="+3">☢️</font><font size="+1"><strong> CAUTION</strong></font></p>
+<p>Once you have set the device on a particular thread, you cannot call <code>cudaSetDevice()</code> again, even if you pass the same device identifier.</p>
+</blockquote>
+<blockquote>
+<p style="margin-bottom: 0px"><font size="+3">✏️</font><font size="+1"><strong> NOTE</strong></font></p>
+<p>如果不使用 cudaSetDevice，那么就用默认设备 0。根据书上所说，一旦对当前线程设置了设备就不能再次设置，否则会出错。但实际上我对同一个设备调用多次也没有出错。</p>
+</blockquote>
+<p>本章并没有马上申请映射内存，而是使用了很早之前讲过的先复制到 GPU 计算完成再复制到 CPU 的方案。这是因为本章涉及了多设备，同时也涉及了多线程。使用一般方法申请的 pinned memory 只是对于作为资源申请者的那一个线程是页锁定的，对于其他线程来说是非页锁定的，这会造成在使用 cudaMemcpy 时不必要的拷贝开销。要想申请 portable pinned memory，也就是对所有线程可见，需要额外添加 <code>cudaHostAllocPortable</code> 标志：</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">HANDLE_ERROR( cudaHostAlloc( (<span class="type">void</span>**)&amp;b, N*<span class="keyword">sizeof</span>(<span class="type">float</span>),</span><br><span class="line">                          cudaHostAllocWriteCombined |</span><br><span class="line">                          cudaHostAllocPortable      |</span><br><span class="line">                          cudaHostAllocMapped ) );</span><br></pre></td></tr></table></figure>
+
+<h1 id="第-12-章-CUDA-工具"><a href="#第-12-章-CUDA-工具" class="headerlink" title="第 12 章 CUDA 工具"></a>第 12 章 CUDA 工具</h1><h2 id="数学库"><a href="#数学库" class="headerlink" title="数学库"></a>数学库</h2><p>CUDA Toolkit 包含这两个库：CUFFT 和 CUBLAS。</p>
+<p>CUFFT：快速傅里叶变换库。</p>
+<p>CUBLAS：基本线性代数子程序库。</p>
+<blockquote>
+<p>This library, named CUBLAS, is also freely available and supports a large subset of the <strong>full BLAS package</strong>.（BLAS 是用 FORTRAN 实现的库。）</p>
+</blockquote>
+<h2 id="其他"><a href="#其他" class="headerlink" title="其他"></a>其他</h2><p>GPU Computing SDK：在 CUDA driver 和 CUDA Toolkit 之外。其中也附有一些示例代码，这些代码都是学习用，并不是 SOTA。</p>
+<p>NVIDIA Performance Primitives (NPP)：主要用于图形和视频处理。</p>
+<p>调试工具：cuda-gdb 和 cuda-memcheck（感觉有点像 valgrind 在 GPU 上的改造？）。NVIDIA Parallel Nsight 是最开始在 Windows 上支持 CUDA 调试的工具。</p>
+<p>Profiler：CUDA Visual Profiler。</p>
+
+    </div>
+
+    
+    
+    
+
+      <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/cuda/" rel="tag"># cuda</a>
+              <a href="/tags/cuda-by-example/" rel="tag"># cuda-by-example</a>
+          </div>
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/2024-02-01/chapter01-basic/" rel="prev" title="chapter01 - basic">
+      <i class="fa fa-chevron-left"></i> chapter01 - basic
+    </a></div>
+      <div class="post-nav-item">
+    <a href="/2024-02-02/vs-code-%E9%94%99%E8%AF%AF%EF%BC%9Aremote-extension-host-terminated-unexpectedly-3-times-within-the-last-5-minutes/" rel="next" title="VS Code 错误：Remote Extension host terminated unexpectedly 3 times within the last 5 minutes.">
+      VS Code 错误：Remote Extension host terminated unexpectedly 3 times within the last 5 minutes. <i class="fa fa-chevron-right"></i>
+    </a></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+
+
+          </div>
+          
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#%E7%AC%AC-9-%E7%AB%A0-%E5%8E%9F%E5%AD%90%E6%93%8D%E4%BD%9C"><span class="nav-text">第 9 章 原子操作</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E7%AC%AC-10-%E7%AB%A0-Streams"><span class="nav-text">第 10 章 Streams</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#Page-Locked-Host-Memory"><span class="nav-text">Page-Locked Host Memory</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%A3%80%E6%9F%A5-CUDA-%E5%B1%9E%E6%80%A7%E4%B8%AD%E7%9A%84-deviceOverlap"><span class="nav-text">检查 CUDA 属性中的 deviceOverlap</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%B8%BA%E6%A0%B8%E5%87%BD%E6%95%B0%E8%B0%83%E7%94%A8%E5%92%8C-cudaMemcpyAsync-%E6%8C%87%E5%AE%9A%E6%B5%81"><span class="nav-text">为核函数调用和 cudaMemcpyAsync 指定流</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%BD%BF%E7%94%A8%E5%A4%9A%E4%B8%AA%E6%B5%81"><span class="nav-text">使用多个流</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E7%AC%AC-11-%E7%AB%A0"><span class="nav-text">第 11 章</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E9%9B%B6%E6%8B%B7%E8%B4%9D%E3%80%81CPU-%E5%92%8C-GPU-%E4%B9%8B%E9%97%B4%E7%9A%84%E5%86%85%E5%AD%98%E6%98%A0%E5%B0%84"><span class="nav-text">零拷贝、CPU 和 GPU 之间的内存映射</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%A4%9A-GPU-%E8%AE%A1%E7%AE%97"><span class="nav-text">多 GPU 计算</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Portable-Pinned-Memory"><span class="nav-text">Portable Pinned Memory</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E7%AC%AC-12-%E7%AB%A0-CUDA-%E5%B7%A5%E5%85%B7"><span class="nav-text">第 12 章 CUDA 工具</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%95%B0%E5%AD%A6%E5%BA%93"><span class="nav-text">数学库</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%85%B6%E4%BB%96"><span class="nav-text">其他</span></a></li></ol></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+  <p class="site-author-name" itemprop="name">Hxhue</p>
+  <div class="site-description" itemprop="description"></div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">174</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+            <a href="/categories/">
+          
+        <span class="site-state-item-count">6</span>
+        <span class="site-state-item-name">分类</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+            <a href="/tags/">
+          
+        <span class="site-state-item-count">34</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author motion-element">
+      <span class="links-of-author-item">
+        <a href="https://github.com/hxhue" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;hxhue" rel="noopener" target="_blank"><i class="fab fa-github fa-fw"></i></a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="https://stackoverflow.com/users/13785815" title="StackOverflow → https:&#x2F;&#x2F;stackoverflow.com&#x2F;users&#x2F;13785815" rel="noopener" target="_blank"><i class="fab fa-stack-overflow fa-fw"></i></a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="mailto:simooncake@gmail.com" title="Email → mailto:simooncake@gmail.com" rel="noopener" target="_blank"><i class="fa fa-envelope fa-fw"></i></a>
+      </span>
+  </div>
+
+
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+
+<div class="copyright">
+  
+  &copy; 
+  <span itemprop="copyrightYear">2024</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Hxhue</span>
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item-icon">
+      <i class="fa fa-chart-area"></i>
+    </span>
+      <span class="post-meta-item-text">站点总字数：</span>
+    <span title="站点总字数">111k</span>
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item-icon">
+      <i class="fa fa-coffee"></i>
+    </span>
+      <span class="post-meta-item-text">站点阅读时长 &asymp;</span>
+    <span title="站点阅读时长">6:42</span>
+</div>
+  <div class="powered-by">由 <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Gemini</a> 强力驱动
+  </div><script color="0,0,255" opacity="0.5" zIndex="-1" count="99" src="https://cdn.jsdelivr.net/npm/canvas-nest.js@1/dist/canvas-nest.js"></script>
+
+        
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="//cdn.jsdelivr.net/npm/pangu@4/dist/browser/pangu.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+
+<script src="/js/schemes/pisces.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+
+
+
+  
+
+
+
+
+  
+<script src="/js/local-search.js"></script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+</body>
+</html>
