@@ -19,7 +19,7 @@
 
 <script id="hexo-configurations">
     var NexT = window.NexT || {};
-    var CONFIG = {"hostname":"hxhue.github.io","root":"/","scheme":"Gemini","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"always","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":true,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":true,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":false,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},"path":"search.xml"};
+    var CONFIG = {"hostname":"hxhue.github.io","root":"/","scheme":"Gemini","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"always","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":true,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":true,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},"path":"search.xml"};
   </script>
 
   <meta name="description" content="文章：What is Strict Aliasing and Why do we Care? (github.com)) 所谓 Strict Aliasing 就是指为 aliasing 设定条件，使得编译器大多数场景下认为代码没有 aliasing，从而可以激进优化代码。 12345678910111213141516#include &lt;iostream&gt;int foo( float">
@@ -33,7 +33,7 @@
 <meta property="og:image" content="https://hxhue.github.io/assets/b706c07f3b79287bcabc594362b1e5c2.png">
 <meta property="og:image" content="https://hxhue.github.io/assets/f012dc7d5ba56e6a5a1549e0a3b67b81.png">
 <meta property="article:published_time" content="2023-08-12T07:17:00.000Z">
-<meta property="article:modified_time" content="2024-03-15T15:32:03.123Z">
+<meta property="article:modified_time" content="2024-03-16T05:24:17.826Z">
 <meta property="article:author" content="Hxhue">
 <meta property="article:tag" content="cpp">
 <meta name="twitter:card" content="summary">
@@ -83,11 +83,11 @@
   </style>
 </noscript>
 
-<link rel="alternate" href="/atom.xml" title="Hxhue's Blog" type="application/atom+xml">
+<!-- hexo injector head_end start --><style>a { word-break: break-all; }</style><!-- hexo injector head_end end --><link rel="alternate" href="/atom.xml" title="Hxhue's Blog" type="application/atom+xml">
 </head>
 
 <body itemscope itemtype="http://schema.org/WebPage">
-  <div class="container">
+  <div class="container use-motion">
     <div class="headband"></div>
 
     <header class="header" itemscope itemtype="http://schema.org/WPHeader">
@@ -231,7 +231,7 @@
                   <i class="far fa-calendar-check"></i>
                 </span>
                 <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2024-03-15 23:32:03" itemprop="dateModified" datetime="2024-03-15T23:32:03+08:00">2024-03-15</time>
+                <time title="修改时间：2024-03-16 13:24:17" itemprop="dateModified" datetime="2024-03-16T13:24:17+08:00">2024-03-16</time>
               </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
@@ -268,7 +268,7 @@
     <div class="post-body" itemprop="articleBody">
 
       
-        <p>文章：<a href="github.com">What is Strict Aliasing and Why do we Care? (github.com)</a>)</p>
+        <p>文章：<a href="/2023-08-12/strict-aliasing/../github.com">What is Strict Aliasing and Why do we Care? (github.com)</a>)</p>
 <p>所谓 Strict Aliasing 就是指为 aliasing 设定条件，使得编译器大多数场景下认为代码没有 aliasing，从而可以激进优化代码。</p>
 <figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;iostream&gt;</span></span></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="type">int</span> <span class="title">foo</span><span class="params">( <span class="type">float</span> *f, <span class="type">int</span> *i )</span> </span>&#123;</span><br><span class="line">    *i = <span class="number">1</span>;</span><br><span class="line">    *f = <span class="number">0.f</span>;</span><br><span class="line"></span><br><span class="line">   <span class="keyword">return</span> *i;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="type">int</span> <span class="title">main</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    <span class="type">int</span> x = <span class="number">0</span>;</span><br><span class="line"></span><br><span class="line">    std::cout &lt;&lt; x &lt;&lt; <span class="string">&quot;\n&quot;</span>;   <span class="comment">// Expect 0</span></span><br><span class="line">    x = <span class="built_in">foo</span>(<span class="built_in">reinterpret_cast</span>&lt;<span class="type">float</span>*&gt;(&amp;x), &amp;x);</span><br><span class="line">    std::cout &lt;&lt; x &lt;&lt; <span class="string">&quot;\n&quot;</span>;   <span class="comment">// Expect 0?</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 
@@ -276,7 +276,7 @@
 <h1 id="什么时候-Aliasing-是允许的？"><a href="#什么时候-Aliasing-是允许的？" class="headerlink" title="什么时候 Aliasing 是允许的？"></a>什么时候 Aliasing 是允许的？</h1><p>比较复杂，而且 C 和 C++ 的要求不同。在 alias 可用时，编译器不会像上面那样激进优化。下面只提到了一部分规则。</p>
 <p><strong>允许同类指针</strong>，而且两者都允许给指针加 cv 限定，但是 C++17 还允许 unsigned 和 signed 对应类型之间的别名，C11 不允许（尽管 gcc 和 clang 都是按照允许的方式实现的）。</p>
 <p>最基本的保证是：无论指针如何变化，只要目的类型是对象的真实类型，就能正常使用。但是如何开启一个新对象的生命周期则有区别。<strong>C 语言中只要写入就已经可以按照写入类型启用一个新的生命周期。而在 C++ 必须保存用于写入的指针并在之后始终使用该指针！（C++17 新增了</strong> <code>std::launder</code><strong>，可以不必再保存指针但是要洗一下）</strong></p>
-<p><img src="/../../../../assets/b7cb646b10cbc680cd7416f06f677cf2.png"></p>
+<p><img src="/2023-08-12/strict-aliasing/../../../../../assets/b7cb646b10cbc680cd7416f06f677cf2.png"></p>
 <blockquote>
 <p>问题：保存 memcpy 返回的指针可以吗？</p>
 </blockquote>
@@ -314,11 +314,11 @@
 <p>根据文章，这可能使得我们可以在 union 中利用 padding 存储 index，以提供 discriminated union 的功能。</p>
 <h1 id="C-std-launder"><a href="#C-std-launder" class="headerlink" title="C++ std::launder"></a>C++ <code>std::launder</code></h1><p><code>std::launder</code> 有什么用呢？表面含义是洗，也就是让指针的来源难以追溯，目的是<strong>抑制非同类指针的激进优化</strong>。但实际上 <code>std::launder</code> 的作用还是非常局限的，因为它的使用有一些必须满足的条件（<strong>其中就包含指针的类型必须和其真实类型对应，以及不能传入 void 指针和函数指针</strong>）。</p>
 <p><a target="_blank" rel="noopener" href="https://en.cppreference.com/w/cpp/utility/launder">std::launder - cppreference.com</a></p>
-<p><img src="/../../../../assets/b706c07f3b79287bcabc594362b1e5c2.png"></p>
+<p><img src="/2023-08-12/strict-aliasing/../../../../../assets/b706c07f3b79287bcabc594362b1e5c2.png"></p>
 <p>典型的用法是用 placement new 在一块字符数组上面创建对象，然后用 <code>std::launder</code> 洗字符数组的首元素指针。</p>
 <p>如果不这样做，按照 strict aliasing 的规则，也可以保存 placement new 的返回值到一个变量，然后每次都利用这个变量做操作。</p>
 <p><a target="_blank" rel="noopener" href="https://stackoverflow.com/a/63003406">https://stackoverflow.com/a/63003406</a></p>
-<p><img src="/../../../../assets/f012dc7d5ba56e6a5a1549e0a3b67b81.png"></p>
+<p><img src="/2023-08-12/strict-aliasing/../../../../../assets/f012dc7d5ba56e6a5a1549e0a3b67b81.png"></p>
 <ol>
 <li>初始化，u.x 被激活。</li>
 <li>赋值，u.f 被激活，u.x 失活。</li>
@@ -365,12 +365,12 @@
         
     <div class="post-nav">
       <div class="post-nav-item">
-    <a href="/2023-08-12/ub/" rel="prev" title="UB">
-      <i class="fa fa-chevron-left"></i> UB
+    <a href="/2023-08-12/three-way-comparison/" rel="prev" title="Three-way Comparison =">
+      <i class="fa fa-chevron-left"></i> Three-way Comparison =
     </a></div>
       <div class="post-nav-item">
-    <a href="/2023-08-12/three-way-comparison/" rel="next" title="Three-way Comparison =">
-      Three-way Comparison = <i class="fa fa-chevron-right"></i>
+    <a href="/2023-08-12/pod/" rel="next" title="POD">
+      POD <i class="fa fa-chevron-right"></i>
     </a></div>
     </div>
       </footer>
@@ -444,7 +444,7 @@
       <div class="site-state-item site-state-posts">
           <a href="/archives/">
         
-          <span class="site-state-item-count">174</span>
+          <span class="site-state-item-count">186</span>
           <span class="site-state-item-name">日志</span>
         </a>
       </div>
@@ -457,7 +457,7 @@
       <div class="site-state-item site-state-tags">
             <a href="/tags/">
           
-        <span class="site-state-item-count">34</span>
+        <span class="site-state-item-count">38</span>
         <span class="site-state-item-name">标签</span></a>
       </div>
   </nav>
@@ -505,13 +505,13 @@
       <i class="fa fa-chart-area"></i>
     </span>
       <span class="post-meta-item-text">站点总字数：</span>
-    <span title="站点总字数">111k</span>
+    <span title="站点总字数">112k</span>
     <span class="post-meta-divider">|</span>
     <span class="post-meta-item-icon">
       <i class="fa fa-coffee"></i>
     </span>
       <span class="post-meta-item-text">站点阅读时长 &asymp;</span>
-    <span title="站点阅读时长">6:42</span>
+    <span title="站点阅读时长">6:48</span>
 </div>
   <div class="powered-by">由 <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Gemini</a> 强力驱动
   </div><script color="0,0,255" opacity="0.5" zIndex="-1" count="99" src="https://cdn.jsdelivr.net/npm/canvas-nest.js@1/dist/canvas-nest.js"></script>
@@ -532,8 +532,12 @@
   
   <script src="/lib/anime.min.js"></script>
   <script src="//cdn.jsdelivr.net/npm/pangu@4/dist/browser/pangu.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
 
 <script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
 
 
 <script src="/js/schemes/pisces.js"></script>

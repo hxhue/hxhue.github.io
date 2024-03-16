@@ -19,7 +19,7 @@
 
 <script id="hexo-configurations">
     var NexT = window.NexT || {};
-    var CONFIG = {"hostname":"hxhue.github.io","root":"/","scheme":"Gemini","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"always","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":true,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":true,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":false,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},"path":"search.xml"};
+    var CONFIG = {"hostname":"hxhue.github.io","root":"/","scheme":"Gemini","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"always","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":true,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":true,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},"path":"search.xml"};
   </script>
 
   <meta name="description" content="下面都是用的 Itanium C++ ABI。机器字长为 64 位。 指向成员函数的指针：2 倍大小在 64 位下是 16 字节，因为需要支持虚函数调用。指向成员函数的指针会保存两部分数据： ptr：非虚函数则存储函数地址。虚函数则存储虚表中偏置加 1（1 plus the virtual table offset (in bytes) of the function, represented a">
@@ -36,7 +36,7 @@
 <meta property="og:image" content="https://hxhue.github.io/assets/31b3aadd8a98cd2b2f2d0fcf7791f013.png">
 <meta property="og:image" content="https://hxhue.github.io/assets/30fb8fc1adba1e75180fb9c4c5935c36.png">
 <meta property="article:published_time" content="2023-08-12T07:17:00.000Z">
-<meta property="article:modified_time" content="2024-03-15T15:32:03.186Z">
+<meta property="article:modified_time" content="2024-03-16T05:24:17.895Z">
 <meta property="article:author" content="Hxhue">
 <meta property="article:tag" content="cpp">
 <meta property="article:tag" content="inside-the-cpp-object-model">
@@ -87,11 +87,11 @@
   </style>
 </noscript>
 
-<link rel="alternate" href="/atom.xml" title="Hxhue's Blog" type="application/atom+xml">
+<!-- hexo injector head_end start --><style>a { word-break: break-all; }</style><!-- hexo injector head_end end --><link rel="alternate" href="/atom.xml" title="Hxhue's Blog" type="application/atom+xml">
 </head>
 
 <body itemscope itemtype="http://schema.org/WebPage">
-  <div class="container">
+  <div class="container use-motion">
     <div class="headband"></div>
 
     <header class="header" itemscope itemtype="http://schema.org/WPHeader">
@@ -235,7 +235,7 @@
                   <i class="far fa-calendar-check"></i>
                 </span>
                 <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2024-03-15 23:32:03" itemprop="dateModified" datetime="2024-03-15T23:32:03+08:00">2024-03-15</time>
+                <time title="修改时间：2024-03-16 13:24:17" itemprop="dateModified" datetime="2024-03-16T13:24:17+08:00">2024-03-16</time>
               </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
@@ -276,7 +276,7 @@
 <h1 id="指向成员函数的指针：2-倍大小"><a href="#指向成员函数的指针：2-倍大小" class="headerlink" title="指向成员函数的指针：2 倍大小"></a>指向成员函数的指针：2 倍大小</h1><p>在 64 位下是 16 字节，因为需要支持虚函数调用。指向成员函数的指针会保存两部分数据：</p>
 <p><code>ptr</code>：非虚函数则存储函数地址。虚函数则存储虚表中偏置加 1（1 plus the virtual table offset (in bytes) of the function, represented as a <code>ptrdiff_t</code>）</p>
 <p><code>adj</code>：存储对 this 指针的调整量。</p>
-<p><img src="/../../../../assets/330ad93e6e502a485f38a465497e5685.png"></p>
+<p><img src="/2023-08-12/c-%E5%AF%B9%E8%B1%A1%E6%A8%A1%E5%9E%8B%E5%BC%80%E9%94%80%E6%80%BB%E7%BB%93/../../../../../assets/330ad93e6e502a485f38a465497e5685.png"></p>
 <p>用 <code>指向成员函数的指针</code> 调用函数时，需要在传入的 this 指针上添加偏置（在多继承中有用），偏置信息就存储在该指针内。下一节“调用虚函数的开销”也描述了如何在跨平台 C++ ABI 上装配一个 指向成员函数的指针。</p>
 <h1 id="调用虚函数：多访存-2-次"><a href="#调用虚函数：多访存-2-次" class="headerlink" title="调用虚函数：多访存 2 次"></a>调用虚函数：多访存 2 次</h1><figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;cstdio&gt;</span></span></span><br><span class="line"></span><br><span class="line"><span class="keyword">struct</span> <span class="title class_">BaseObject</span> &#123;</span><br><span class="line">    <span class="function"><span class="keyword">virtual</span> <span class="type">int</span> <span class="title">f</span><span class="params">()</span> </span>&#123; <span class="keyword">return</span> <span class="number">13</span>; &#125;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="keyword">struct</span> <span class="title class_">DerivedObject</span> : BaseObject &#123;</span><br><span class="line">    <span class="function"><span class="type">int</span> <span class="title">f</span><span class="params">()</span> <span class="keyword">override</span> </span>&#123; <span class="keyword">return</span> <span class="number">4000</span>; &#125;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="type">int</span> <span class="title">main</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    BaseObject *p = <span class="keyword">new</span> DerivedObject;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 访存两次得到虚函数（感觉 long 类型比 char*/void* 模拟汇编更加合适）</span></span><br><span class="line">    <span class="type">long</span> vptr = *(<span class="type">long</span> *)p;</span><br><span class="line">    <span class="type">long</span> func = *(<span class="type">long</span> *)(vptr + <span class="number">0</span>);</span><br><span class="line">    </span><br><span class="line">    <span class="comment">// 把 this 指针作为第一个参数传入</span></span><br><span class="line">    <span class="keyword">auto</span> method = (<span class="built_in">int</span> (*)(BaseObject *))func;</span><br><span class="line">    <span class="type">int</span> result = <span class="built_in">method</span>(p);</span><br><span class="line">    </span><br><span class="line">    <span class="comment">// 尽管也可以按照 Itanium C++ ABI 装配成员函数指针，</span></span><br><span class="line">    <span class="comment">// 但实际上调用时还是会动态查找，相当于上面的访存操作白做了。</span></span><br><span class="line">    <span class="comment">// int (BaseObject::*method)();</span></span><br><span class="line">    <span class="comment">// auto &amp;manip = (long (&amp;)[2])method;</span></span><br><span class="line">    <span class="comment">// manip[0] = (long)func;</span></span><br><span class="line">    <span class="comment">// manip[1] = 0; // single inheritance</span></span><br><span class="line">    <span class="comment">// int result = (p-&gt;*method)();</span></span><br><span class="line"></span><br><span class="line">    <span class="built_in">printf</span>(<span class="string">&quot;result: %d\n&quot;</span>, result);</span><br><span class="line">    <span class="comment">// 打印结果：result: 4000</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 
@@ -305,7 +305,7 @@
 <p>前者访存 4 次，后者访存 2 次。如果<strong>类型正在构建中</strong>，这两个地址是不同的，否则应该相等，dynamic_cast 对这个特殊情况有专门的处理（两个都读，一共 6 次访存，可以看之后的小节）。如果是我们的代码动态使用，用到的是访存 2 次的版本！</p>
 <figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;typeinfo&gt;</span></span></span><br><span class="line"></span><br><span class="line"><span class="keyword">struct</span> <span class="title class_">A</span> &#123;</span><br><span class="line">    <span class="type">int</span> a;</span><br><span class="line">    <span class="function"><span class="keyword">virtual</span> <span class="type">void</span> <span class="title">f</span><span class="params">()</span> </span>&#123;&#125;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="keyword">struct</span> <span class="title class_">B</span> : A &#123;</span><br><span class="line">    <span class="type">int</span> b;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="type">int</span> <span class="title">main</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    A *p = <span class="keyword">new</span> B;</span><br><span class="line">    <span class="keyword">auto</span> &amp;info = <span class="built_in">typeid</span>(*p);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 
-<p><img src="/../../../../assets/2b8d47a8e6b1211028438a01a87879dc.png"></p>
+<p><img src="/2023-08-12/c-%E5%AF%B9%E8%B1%A1%E6%A8%A1%E5%9E%8B%E5%BC%80%E9%94%80%E6%80%BB%E7%BB%93/../../../../../assets/2b8d47a8e6b1211028438a01a87879dc.png"></p>
 <h1 id="比较-std-type-info-std-type-index：类型名（mangled）字符串比较"><a href="#比较-std-type-info-std-type-index：类型名（mangled）字符串比较" class="headerlink" title="比较 std::type_info &#x2F; std::type_index：类型名（mangled）字符串比较"></a>比较 <code>std::type_info</code> &#x2F; <code>std::type_index</code>：类型名（mangled）字符串比较</h1><p>用 RTTI 比较类型等同于比较字符串。</p>
 <p>编译期间只需要比较地址，但是编译期无论多慢都不影响运行性能所以显得没那么重要。</p>
 <figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 去掉了一些条件编译分支</span></span><br><span class="line">_GLIBCXX23_CONSTEXPR <span class="keyword">inline</span> <span class="type">bool</span></span><br><span class="line">type_info::<span class="keyword">operator</span>==(<span class="type">const</span> type_info&amp; __arg) <span class="type">const</span> _GLIBCXX_NOEXCEPT</span><br><span class="line">&#123;</span><br><span class="line">    <span class="keyword">if</span> (std::__is_constant_evaluated())</span><br><span class="line">      <span class="keyword">return</span> <span class="keyword">this</span> == &amp;__arg;</span><br><span class="line">    <span class="keyword">if</span> (__name == __arg.__name)</span><br><span class="line">      <span class="keyword">return</span> <span class="literal">true</span>;</span><br><span class="line">    <span class="keyword">return</span> __name[<span class="number">0</span>] != <span class="string">&#x27;*&#x27;</span> &amp;&amp; __builtin_strcmp (__name, __arg.<span class="built_in">name</span>()) == <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
@@ -314,12 +314,12 @@
 <h1 id="dynamic-cast-static-cast-向上转型：非零偏移需先判空"><a href="#dynamic-cast-static-cast-向上转型：非零偏移需先判空" class="headerlink" title="dynamic_cast &#x2F; static_cast 向上转型：非零偏移需先判空"></a><code>dynamic_cast</code> &#x2F; <code>static_cast</code> 向上转型：非零偏移需先判空</h1><p>如果是向第一个基类转型，则地址没有偏移，直接赋值即可。<strong>如果是第二个或更后面的非空基类转型，则地址会发生偏移，需要判断指针是否为空再赋值</strong>：若为空则仍保持空；若不空则对指针做偏移运算。</p>
 <h1 id="dynamic-cast-向下转型：精确命中则快，否则是开销大的图搜索"><a href="#dynamic-cast-向下转型：精确命中则快，否则是开销大的图搜索" class="headerlink" title="dynamic_cast 向下转型：精确命中则快，否则是开销大的图搜索"></a><code>dynamic_cast</code> 向下转型：精确命中则快，否则是开销大的图搜索</h1><p>用 <code>static_cast</code> 做向下转型没有运行时检查，用 <code>dynamic_cast</code> 做向上转型则效果等同于 <code>static_cast</code>。<strong>所以一般说 <code>dynamic_cast</code>，关注的多是 <code>dynamic_cast</code> 的运行时检查。</strong></p>
 <p>首先检查类型是否正在构建，这个阶段会从两个地方读 type_info，检查其地址一致性。<strong>一共访存 6 次。</strong>如果地址不同则类型正在构建，不允许转换，返回 nullptr。</p>
-<p><img src="/../../../../assets/8df4c419d661852da7eccf5709ec60eb.png"></p>
-<p><img src="/../../../../assets/f9ac45d4d57dd1d7c0c52cc6afa1db5c.png"></p>
+<p><img src="/2023-08-12/c-%E5%AF%B9%E8%B1%A1%E6%A8%A1%E5%9E%8B%E5%BC%80%E9%94%80%E6%80%BB%E7%BB%93/../../../../../assets/8df4c419d661852da7eccf5709ec60eb.png"></p>
+<p><img src="/2023-08-12/c-%E5%AF%B9%E8%B1%A1%E6%A8%A1%E5%9E%8B%E5%BC%80%E9%94%80%E6%80%BB%E7%BB%93/../../../../../assets/f9ac45d4d57dd1d7c0c52cc6afa1db5c.png"></p>
 <p>接下来判断是否目的类型和当前真实类型完全相符，如果相符可以直接返回。多判断 <code>src2dst</code> 和偏置的相等性可能是冗余信息检查，以便避免失败时 <strong>type_info 中的字符串比较</strong>（个人想法）。</p>
-<p><img src="/../../../../assets/31b3aadd8a98cd2b2f2d0fcf7791f013.png"></p>
+<p><img src="/2023-08-12/c-%E5%AF%B9%E8%B1%A1%E6%A8%A1%E5%9E%8B%E5%BC%80%E9%94%80%E6%80%BB%E7%BB%93/../../../../../assets/31b3aadd8a98cd2b2f2d0fcf7791f013.png"></p>
 <p>如果失败，则还需要<strong>考虑目的类是否为真实类型的基类</strong>。这会用到一个另外的虚函数，其结果还需要进行一些校验。这个过程就比较耗时了。</p>
-<p><img src="/../../../../assets/30fb8fc1adba1e75180fb9c4c5935c36.png"></p>
+<p><img src="/2023-08-12/c-%E5%AF%B9%E8%B1%A1%E6%A8%A1%E5%9E%8B%E5%BC%80%E9%94%80%E6%80%BB%E7%BB%93/../../../../../assets/30fb8fc1adba1e75180fb9c4c5935c36.png"></p>
 <blockquote>
 <p>如果我们向下转型时要求类型必须精确匹配，则可以用比较 type_info 和 static_cast 的方式减少开销。首先是我们读 type_info 往往不是在构造函数中，所以只需要 2 次访存而不是 6 次；其次是如果精确匹配失败可以直接返回，而不是进入接下来的图搜索步骤。</p>
 </blockquote>
@@ -342,12 +342,12 @@
         
     <div class="post-nav">
       <div class="post-nav-item">
-    <a href="/2023-08-12/cfront-%E5%A6%82%E4%BD%95%E6%8F%92%E5%85%A5%E6%9E%84%E9%80%A0%E5%87%BD%E6%95%B0/" rel="prev" title="Cfront 如何插入构造函数">
-      <i class="fa fa-chevron-left"></i> Cfront 如何插入构造函数
+    <a href="/2023-08-12/%E5%A4%8D%E5%88%B6%E6%9E%84%E9%80%A0%E5%92%8C%E8%B5%8B%E5%80%BC%E8%BF%90%E7%AE%97%E7%AC%A6/" rel="prev" title="复制构造和赋值运算符">
+      <i class="fa fa-chevron-left"></i> 复制构造和赋值运算符
     </a></div>
       <div class="post-nav-item">
-    <a href="/2023-08-12/%E7%94%A8%E6%8B%B7%E8%B4%9D%E5%B9%B6%E4%BA%A4%E6%8D%A2%E5%AE%9E%E7%8E%B0-operator/" rel="next" title="用拷贝并交换实现 operator=">
-      用拷贝并交换实现 operator= <i class="fa fa-chevron-right"></i>
+    <a href="/2023-08-12/cfront-%E5%A6%82%E4%BD%95%E6%8F%92%E5%85%A5%E6%9E%84%E9%80%A0%E5%87%BD%E6%95%B0/" rel="next" title="Cfront 如何插入构造函数">
+      Cfront 如何插入构造函数 <i class="fa fa-chevron-right"></i>
     </a></div>
     </div>
       </footer>
@@ -421,7 +421,7 @@
       <div class="site-state-item site-state-posts">
           <a href="/archives/">
         
-          <span class="site-state-item-count">174</span>
+          <span class="site-state-item-count">186</span>
           <span class="site-state-item-name">日志</span>
         </a>
       </div>
@@ -434,7 +434,7 @@
       <div class="site-state-item site-state-tags">
             <a href="/tags/">
           
-        <span class="site-state-item-count">34</span>
+        <span class="site-state-item-count">38</span>
         <span class="site-state-item-name">标签</span></a>
       </div>
   </nav>
@@ -482,13 +482,13 @@
       <i class="fa fa-chart-area"></i>
     </span>
       <span class="post-meta-item-text">站点总字数：</span>
-    <span title="站点总字数">111k</span>
+    <span title="站点总字数">112k</span>
     <span class="post-meta-divider">|</span>
     <span class="post-meta-item-icon">
       <i class="fa fa-coffee"></i>
     </span>
       <span class="post-meta-item-text">站点阅读时长 &asymp;</span>
-    <span title="站点阅读时长">6:42</span>
+    <span title="站点阅读时长">6:48</span>
 </div>
   <div class="powered-by">由 <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Gemini</a> 强力驱动
   </div><script color="0,0,255" opacity="0.5" zIndex="-1" count="99" src="https://cdn.jsdelivr.net/npm/canvas-nest.js@1/dist/canvas-nest.js"></script>
@@ -509,8 +509,12 @@
   
   <script src="/lib/anime.min.js"></script>
   <script src="//cdn.jsdelivr.net/npm/pangu@4/dist/browser/pangu.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
 
 <script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
 
 
 <script src="/js/schemes/pisces.js"></script>

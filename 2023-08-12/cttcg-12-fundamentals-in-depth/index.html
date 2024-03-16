@@ -19,7 +19,7 @@
 
 <script id="hexo-configurations">
     var NexT = window.NexT || {};
-    var CONFIG = {"hostname":"hxhue.github.io","root":"/","scheme":"Gemini","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"always","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":true,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":true,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":false,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},"path":"search.xml"};
+    var CONFIG = {"hostname":"hxhue.github.io","root":"/","scheme":"Gemini","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"always","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":true,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":true,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},"path":"search.xml"};
   </script>
 
   <meta name="description" content="1 参数化声明模板分类模板有四类：类模板、函数模板、变量模板、别名模板。其中别名模板是：  变量模板其实可以不需要 inline（但是最好加上）C++17 中静态和全局变量都能够用 inline 来修饰。这也意味着类中的静态变量不必在类中声明、类外初始化（非头文件），而是可以在类中直接写 inline。之前笔记里面提到的问题里，inline 加不加都没有关系，因为变量模板本身可以在多个翻译单元中出">
@@ -48,7 +48,7 @@
 <meta property="og:image" content="https://hxhue.github.io/assets/d30787052beab1b959248107df155283.png">
 <meta property="og:image" content="https://hxhue.github.io/assets/eefd246b9619fe28f801328ee7b84b31.png">
 <meta property="article:published_time" content="2023-08-11T16:00:00.000Z">
-<meta property="article:modified_time" content="2024-03-15T15:32:03.023Z">
+<meta property="article:modified_time" content="2024-03-16T05:24:17.640Z">
 <meta property="article:author" content="Hxhue">
 <meta property="article:tag" content="cpp">
 <meta property="article:tag" content="cpp-templates-the-complete-guide">
@@ -99,11 +99,11 @@
   </style>
 </noscript>
 
-<link rel="alternate" href="/atom.xml" title="Hxhue's Blog" type="application/atom+xml">
+<!-- hexo injector head_end start --><style>a { word-break: break-all; }</style><!-- hexo injector head_end end --><link rel="alternate" href="/atom.xml" title="Hxhue's Blog" type="application/atom+xml">
 </head>
 
 <body itemscope itemtype="http://schema.org/WebPage">
-  <div class="container">
+  <div class="container use-motion">
     <div class="headband"></div>
 
     <header class="header" itemscope itemtype="http://schema.org/WPHeader">
@@ -247,7 +247,7 @@
                   <i class="far fa-calendar-check"></i>
                 </span>
                 <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2024-03-15 23:32:03" itemprop="dateModified" datetime="2024-03-15T23:32:03+08:00">2024-03-15</time>
+                <time title="修改时间：2024-03-16 13:24:17" itemprop="dateModified" datetime="2024-03-16T13:24:17+08:00">2024-03-16</time>
               </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
@@ -285,49 +285,49 @@
 
       
         <h1 id="1-参数化声明"><a href="#1-参数化声明" class="headerlink" title="1 参数化声明"></a>1 参数化声明</h1><h2 id="模板分类"><a href="#模板分类" class="headerlink" title="模板分类"></a>模板分类</h2><p>模板有四类：类模板、函数模板、变量模板、别名模板。其中别名模板是：</p>
-<p><img src="/../../../../assets/8be842c59c3eec8f5932e5043b2fd31f.png"></p>
+<p><img src="/2023-08-12/cttcg-12-fundamentals-in-depth/../../../../../assets/8be842c59c3eec8f5932e5043b2fd31f.png"></p>
 <h2 id="变量模板其实可以不需要-inline（但是最好加上）"><a href="#变量模板其实可以不需要-inline（但是最好加上）" class="headerlink" title="变量模板其实可以不需要 inline（但是最好加上）"></a>变量模板其实可以不需要 inline（但是最好加上）</h2><p>C++17 中静态和全局变量都能够用 inline 来修饰。这也意味着类中的静态变量不必在类中声明、类外初始化（非头文件），而是可以在类中直接写 inline。之前笔记里面提到的问题里，inline 加不加都没有关系，因为变量模板本身可以在多个翻译单元中出现。P179</p>
 <h2 id="嵌套模板的非原地定义"><a href="#嵌套模板的非原地定义" class="headerlink" title="嵌套模板的非原地定义"></a>嵌套模板的非原地定义</h2><p>想要给类模板中的模板在类外提供定义是比较复杂的，需要嵌套模板参数描述：</p>
-<p><img src="/../../../../assets/e750ed75305bf3e74154ae9efa985b71.png"></p>
+<p><img src="/2023-08-12/cttcg-12-fundamentals-in-depth/../../../../../assets/e750ed75305bf3e74154ae9efa985b71.png"></p>
 <p>这里为了给 Handle 函数模板提供定义写了两次 template 参数列表。</p>
 <h2 id="构造函数模板会覆盖默认构造函数"><a href="#构造函数模板会覆盖默认构造函数" class="headerlink" title="构造函数模板会覆盖默认构造函数"></a>构造函数模板会覆盖默认构造函数</h2><p>虽然类模板的特殊函数模板不会覆盖掉类的同类函数的默认版本，但是如果提供了其他的构造函数模板，默认的构造函数也将不会被定义。这是由默认构造函数的特殊性决定的。</p>
-<h2 id="Union-templates"><a href="#Union-templates" class="headerlink" title="Union templates"></a>Union templates</h2><p><img src="/../../../../assets/ed11966fdb66b9a480abfdbaebdeedc3.png"></p>
-<h2 id="函数模板默认参数"><a href="#函数模板默认参数" class="headerlink" title="函数模板默认参数"></a>函数模板默认参数</h2><p><img src="/../../../../assets/2b7e1772df56a10357005f7b05a4cf45.png"></p>
+<h2 id="Union-templates"><a href="#Union-templates" class="headerlink" title="Union templates"></a>Union templates</h2><p><img src="/2023-08-12/cttcg-12-fundamentals-in-depth/../../../../../assets/ed11966fdb66b9a480abfdbaebdeedc3.png"></p>
+<h2 id="函数模板默认参数"><a href="#函数模板默认参数" class="headerlink" title="函数模板默认参数"></a>函数模板默认参数</h2><p><img src="/2023-08-12/cttcg-12-fundamentals-in-depth/../../../../../assets/2b7e1772df56a10357005f7b05a4cf45.png"></p>
 <p>如果调用的时候提供了参数，那么 T const &amp;&#x3D;T{} 这一句不会被实例化，这意味着即便是 T 没有默认构造函数，在用户了解 fill 函数用法并传入了合法的 T 类型值时，编译也不会失败。</p>
 <h2 id="虚函数不支持模板"><a href="#虚函数不支持模板" class="headerlink" title="虚函数不支持模板"></a>虚函数不支持模板</h2><p>因为虚函数要写入虚表，在编译后必须大小确定，但是模板的实例化是按需进行的，只有链接完成后才能确定函数模板的特化数目。</p>
-<h2 id="模板的-linkage"><a href="#模板的-linkage" class="headerlink" title="模板的 linkage"></a>模板的 linkage</h2><p><img src="/../../../../assets/bbb7ca96a0234932a3f6f38430f9d428.png"></p>
+<h2 id="模板的-linkage"><a href="#模板的-linkage" class="headerlink" title="模板的 linkage"></a>模板的 linkage</h2><p><img src="/2023-08-12/cttcg-12-fundamentals-in-depth/../../../../../assets/bbb7ca96a0234932a3f6f38430f9d428.png"></p>
 <p>函数模板的 linkage 只能是 C++ 类型。如果外围没有 <code>extern &quot;C&quot;</code>，这里的 extern 可以不写。</p>
 <p><code>int const zero_int = int&#123;&#125;;</code> 按照 const 的全局变量规定，是 internal linkage。但是 <code>template&lt;typename T&gt; int const max_volume = 11;</code> 按照变量模板的规定，是 external linkage。</p>
 <h2 id="原始模板（Primary-template）"><a href="#原始模板（Primary-template）" class="headerlink" title="原始模板（Primary template）"></a>原始模板（Primary template）</h2><p>没有任何参数被特化的模板是原始模板；参数有偏特化就是非原始模板（但因为有参数没有被确定下来因而还是模板）。</p>
 <h1 id="2-模板形参（Parameters）"><a href="#2-模板形参（Parameters）" class="headerlink" title="2 模板形参（Parameters）"></a>2 模板形参（Parameters）</h1><h2 id="模板声明中参数名有时可以省略"><a href="#模板声明中参数名有时可以省略" class="headerlink" title="模板声明中参数名有时可以省略"></a>模板声明中参数名有时可以省略</h2><p>模板声明就像函数声明，没用到参数名的时候可以省略参数名。比如 <code>template &lt;typename, int&gt; class X;</code> 就是一个完整的声明。模板中有些参数可能依赖其他参数，这个时候被依赖的参数就需要参数名。</p>
-<h2 id="类型参数"><a href="#类型参数" class="headerlink" title="类型参数"></a>类型参数</h2><p><img src="/../../../../assets/bcbbf2710fc22c9f2204a9160753e9e3.png"></p>
+<h2 id="类型参数"><a href="#类型参数" class="headerlink" title="类型参数"></a>类型参数</h2><p><img src="/2023-08-12/cttcg-12-fundamentals-in-depth/../../../../../assets/bcbbf2710fc22c9f2204a9160753e9e3.png"></p>
 <p>类型参数本身被假定为一个完整的类型，所以不能加上 class 前缀。以前我们在一个普通类中写 <code>friend class B;</code> 其实既声明了类型 B，又完成了友元声明。在 B 类已经声明的情况下，<code>friend B;</code> 也可以。</p>
 <h2 id="非类型参数"><a href="#非类型参数" class="headerlink" title="非类型参数"></a>非类型参数</h2><p>可能用到 typename 关键字：</p>
-<p><img src="/../../../../assets/5f01800eb485e06bcad1a9d28a2e711b.png"></p>
+<p><img src="/2023-08-12/cttcg-12-fundamentals-in-depth/../../../../../assets/5f01800eb485e06bcad1a9d28a2e711b.png"></p>
 <p>因为访问了 <code>T::Allocator</code> 类型。</p>
 <p>也可能用到 class 关键字：</p>
-<p><img src="/../../../../assets/8f9fb0e92f54fe2770db14bef0bb573d.png"></p>
+<p><img src="/2023-08-12/cttcg-12-fundamentals-in-depth/../../../../../assets/8f9fb0e92f54fe2770db14bef0bb573d.png"></p>
 <p>这里附带了对类 X 的声明效果。注意 X 类看起来像个泛型参数，实际上是个具体的类。</p>
 <p>非引用类型的非类型参数还会 decay：</p>
-<p><img src="/../../../../assets/a40061434cbf7fb317261e44d531bf62.png"></p>
+<p><img src="/2023-08-12/cttcg-12-fundamentals-in-depth/../../../../../assets/a40061434cbf7fb317261e44d531bf62.png"></p>
 <p>这包含了数组、函数、cv 限定符等情况。</p>
 <p>非类型参数用 auto 是值语义；用 auto &amp;&amp; 是转发引用语义，绑定不了纯右值。</p>
 <h2 id="模板模板参数"><a href="#模板模板参数" class="headerlink" title="模板模板参数"></a>模板模板参数</h2><p>在 C++17 之前要用 <code>template&lt;…&gt; class</code> 来写，C++17 之后也可以用 <code>template&lt;…&gt; typename</code> 写。</p>
 <p>模板模板参数中的参数不能在外面使用：</p>
-<p><img src="/../../../../assets/695f6820eb11ba88420edf4f21eed738.png"></p>
-<h2 id="Template-Parameter-Packs-可变长模板参数"><a href="#Template-Parameter-Packs-可变长模板参数" class="headerlink" title="Template Parameter Packs - 可变长模板参数"></a>Template Parameter Packs - 可变长模板参数</h2><p><img src="/../../../../assets/ab8ceac86858c7313da79e7a230a5789.png"></p>
+<p><img src="/2023-08-12/cttcg-12-fundamentals-in-depth/../../../../../assets/695f6820eb11ba88420edf4f21eed738.png"></p>
+<h2 id="Template-Parameter-Packs-可变长模板参数"><a href="#Template-Parameter-Packs-可变长模板参数" class="headerlink" title="Template Parameter Packs - 可变长模板参数"></a>Template Parameter Packs - 可变长模板参数</h2><p><img src="/2023-08-12/cttcg-12-fundamentals-in-depth/../../../../../assets/ab8ceac86858c7313da79e7a230a5789.png"></p>
 <p><strong>类模板的可变长模板参数</strong>只能放在参数列表的末尾，不能有默认值，而且一个原始模板只能有一组可变长模板参数。与此相对，类模板偏特化可以有多组可变长模板参数：</p>
-<p><img src="/../../../../assets/f02fdd5bf8c64f10e35146549341d2df.png"></p>
+<p><img src="/2023-08-12/cttcg-12-fundamentals-in-depth/../../../../../assets/f02fdd5bf8c64f10e35146549341d2df.png"></p>
 <p>正因为可变长模板参数只能放在参数列表的末尾，同时获取一组参数的类型和值是不可能的：</p>
 <p><code>template&lt;typename... Ts, Ts... vals&gt; struct StaticValues &#123;&#125;;</code> → error</p>
 <p>解决方案 1：可以使用 decltype(auto) 或者 auto 可变长参数表达式，然后用 decltype 再把类型推导出来。</p>
 <p>解决方案 2：使用嵌套模板。</p>
-<p><img src="/../../../../assets/db0f049545e2a1867624c41503589d8a.png"></p>
+<p><img src="/2023-08-12/cttcg-12-fundamentals-in-depth/../../../../../assets/db0f049545e2a1867624c41503589d8a.png"></p>
 <p><strong>函数模板的可变长模板参数</strong>可以不用放在最后，定义可以通过，但是使用时会报错！下面的模板函数在使用时无法推导出参数 N。（其实相当于只能放在最后了……）</p>
-<p><img src="/../../../../assets/c2b7f57c406fd8cd9273bc14bf76cd90.png"></p>
+<p><img src="/2023-08-12/cttcg-12-fundamentals-in-depth/../../../../../assets/c2b7f57c406fd8cd9273bc14bf76cd90.png"></p>
 <h2 id="默认模板参数"><a href="#默认模板参数" class="headerlink" title="默认模板参数"></a>默认模板参数</h2><p><strong>类模板的默认模板参数</strong>可以分次声明，但有着从后向前的要求。作为对比，函数模板的默认参数可以从前面开始声明。</p>
 <p>图为 **[clang]**：</p>
-<p><img src="/../../../../assets/84c1d384d9fcd61b86fe776b40d364f8.png"></p>
+<p><img src="/2023-08-12/cttcg-12-fundamentals-in-depth/../../../../../assets/84c1d384d9fcd61b86fe776b40d364f8.png"></p>
 <p>其中第二次多声明了一个 T3 的默认值。</p>
 <h3 id="gcc"><a href="#gcc" class="headerlink" title="[gcc]"></a><strong>[gcc]</strong></h3><ol>
 <li>当两次声明完全一致，没有额外信息时，会视作重复定义，从而编译失败。比如把以上任意一个模板声明重复一遍。</li>
@@ -341,12 +341,12 @@
 <p><strong>指针或引用参数</strong>可以从函数或者数组 decay 得到。<del>在 C++17 之后，指针或引用参数还可以从子类指针&#x2F;引用隐式转换到父类指针&#x2F;引用，也可以从用户定义类型转换得来。</del>这同样被要求必须发生在编译期。</p>
 <p>💡 关于带有删除线的句子，书上是有说可以的。但是实测到 C++20 都不行。</p>
 <p>模板参数不能使用字符串字面量，因为尽管两个字面量的值可能相同，其地址不一定相同。</p>
-<p><img src="/../../../../assets/617f3c97f85ec715073ffe29a787c0a9.png"></p>
+<p><img src="/2023-08-12/cttcg-12-fundamentals-in-depth/../../../../../assets/617f3c97f85ec715073ffe29a787c0a9.png"></p>
 <p>注意看上图对指针或引用的非类型模板参数的 linkage 要求。</p>
 <h2 id="模板模板实参"><a href="#模板模板实参" class="headerlink" title="模板模板实参"></a>模板模板实参</h2><h3 id="参数列表数目匹配"><a href="#参数列表数目匹配" class="headerlink" title="参数列表数目匹配"></a>参数列表数目匹配</h3><p>就像前面章节”模板模板参数“提到的，模板模板实参在 C++17 之前要求提供的参数与使用时完全匹配：如果传入的模板有默认参数，可能会导致参数数量不一致从而编译失败。这时需要声明对应数量的模板参数，并提供相应的默认值。C++17 之后模板的默认参数也会被考虑，就没有这个问题。</p>
 <p>如果在模板模板形参中写 <code>template &lt;typename… &gt; class Cont</code>，这样可变长参数列表就能接受多个类型，这在一定场景下可以无视类型参数数量。但是这无法匹配非类型参数。</p>
 <h3 id="相等性判断"><a href="#相等性判断" class="headerlink" title="相等性判断"></a>相等性判断</h3><p>如果两个模板声明除了使用的符号外完全一致，这被认为是相等（equivalent）的两次声明，编译器不会报错。但如果符号一致，形式不一致，而含义一致，这被成为功能相等（functional equivalent）。编译器不被要求找到”功能相等“的声明并报错，但我们不应该这么写。下图中 #1 和 #2 相等。而 #1 和 #3 功能相等，尽管只是交换了加号两边操作符的顺序，但编译器不一定能认得出来。</p>
-<p><img src="/../../../../assets/d30787052beab1b959248107df155283.png"></p>
+<p><img src="/2023-08-12/cttcg-12-fundamentals-in-depth/../../../../../assets/d30787052beab1b959248107df155283.png"></p>
 <h3 id="函数模板特化与函数从来不相等"><a href="#函数模板特化与函数从来不相等" class="headerlink" title="函数模板特化与函数从来不相等"></a>函数模板特化与函数从来不相等</h3><p>函数模板特化后也和具有对应参数和返回值的函数不相等。这意味着：</p>
 <ol>
 <li>类中的与复制赋值、移动赋值、移动构造、复制构造形式相同的函数模板均不会遮掩对应的非模板函数。</li>
@@ -358,7 +358,7 @@
 </ol>
 <h1 id="4-可变参数-aka-Parameter-Pack"><a href="#4-可变参数-aka-Parameter-Pack" class="headerlink" title="4 可变参数 aka Parameter Pack"></a>4 可变参数 aka Parameter Pack</h1><h2 id="Pack-expansion"><a href="#Pack-expansion" class="headerlink" title="Pack expansion"></a>Pack expansion</h2><p>Pack expansion 指把可变参数用省略号展开成一长串参数的行为。我们能对包展开参数做出额外包装，也可以把多个包组成表达式一起展开，但当多个包一起展开时需要保证包的长度一致。</p>
 <h2 id="Fold-expression"><a href="#Fold-expression" class="headerlink" title="Fold expression"></a>Fold expression</h2><p>Fold expression 指的是以相同模式利用参数的行为，这将利用完所有参数。折叠表达式也是包展开。折叠表达式在遇到 <code>||</code> <code>&amp;&amp;</code> <code>,</code> 操作符时会有默认初始值，分别是 <code>false</code>、<code>true</code> 和 <code>void</code> 类型。因而如果我们对运算符做出了重载时，<code>||</code> 和 <code>&amp;&amp;</code> 的默认初始值不一定能符合我们的表达含义。因此应该优先考虑带有初始值的折叠表达式。</p>
-<h2 id="可变参数模板和-C-语言可变参数函数混淆"><a href="#可变参数模板和-C-语言可变参数函数混淆" class="headerlink" title="可变参数模板和 C 语言可变参数函数混淆"></a>可变参数模板和 C 语言可变参数函数混淆</h2><p><img src="/../../../../assets/eefd246b9619fe28f801328ee7b84b31.png"></p>
+<h2 id="可变参数模板和-C-语言可变参数函数混淆"><a href="#可变参数模板和-C-语言可变参数函数混淆" class="headerlink" title="可变参数模板和 C 语言可变参数函数混淆"></a>可变参数模板和 C 语言可变参数函数混淆</h2><p><img src="/2023-08-12/cttcg-12-fundamentals-in-depth/../../../../../assets/eefd246b9619fe28f801328ee7b84b31.png"></p>
 <p>在上图中，第一行声明的 <code>T</code> 不是参数包，因此 <code>T…</code> 会被理解成 <code>T, ….</code>，后面的省略号表示兼容 C 语言的 varargs 语法。因而必须小心使用省略号语法，确认前面的类型是参数包类型。</p>
 <h1 id="5-友元"><a href="#5-友元" class="headerlink" title="5 友元"></a>5 友元</h1><h2 id="非模板类"><a href="#非模板类" class="headerlink" title="非模板类"></a>非模板类</h2><p>使用 <code>friend class Foo;</code> 不仅有声明友元，还有声明这个类的作用。所以，仅仅承担声明友元功能的写法是 <code>friend Foo;</code>。</p>
 <p><strong>声明友元时可以给出函数和原始模板函数的定义</strong>，这些友元将成为 hidden friends，可以在类外使用（相当于定义了类外的内联函数，可以在不同翻译单元中出现）。但是声明友元时不能给出非原始模板函数（特化的模板函数）、带有作用域限定符<code>::</code>类型（这个时候相当于在查找类外的函数或类型，但是找不到或者提供了重复定义）、友元类的定义。</p>
@@ -392,8 +392,8 @@
       <i class="fa fa-chevron-left"></i> CTTCG 13 Names in Templates
     </a></div>
       <div class="post-nav-item">
-    <a href="/2023-08-12/cttcg-11-generic-libraries/" rel="next" title="CTTCG 11 Generic Libraries">
-      CTTCG 11 Generic Libraries <i class="fa fa-chevron-right"></i>
+    <a href="/2023-08-12/cttcg-09-using-templates-in-practice/" rel="next" title="CTTCG 09 Using Templates in Practice">
+      CTTCG 09 Using Templates in Practice <i class="fa fa-chevron-right"></i>
     </a></div>
     </div>
       </footer>
@@ -467,7 +467,7 @@
       <div class="site-state-item site-state-posts">
           <a href="/archives/">
         
-          <span class="site-state-item-count">174</span>
+          <span class="site-state-item-count">186</span>
           <span class="site-state-item-name">日志</span>
         </a>
       </div>
@@ -480,7 +480,7 @@
       <div class="site-state-item site-state-tags">
             <a href="/tags/">
           
-        <span class="site-state-item-count">34</span>
+        <span class="site-state-item-count">38</span>
         <span class="site-state-item-name">标签</span></a>
       </div>
   </nav>
@@ -528,13 +528,13 @@
       <i class="fa fa-chart-area"></i>
     </span>
       <span class="post-meta-item-text">站点总字数：</span>
-    <span title="站点总字数">111k</span>
+    <span title="站点总字数">112k</span>
     <span class="post-meta-divider">|</span>
     <span class="post-meta-item-icon">
       <i class="fa fa-coffee"></i>
     </span>
       <span class="post-meta-item-text">站点阅读时长 &asymp;</span>
-    <span title="站点阅读时长">6:42</span>
+    <span title="站点阅读时长">6:48</span>
 </div>
   <div class="powered-by">由 <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Gemini</a> 强力驱动
   </div><script color="0,0,255" opacity="0.5" zIndex="-1" count="99" src="https://cdn.jsdelivr.net/npm/canvas-nest.js@1/dist/canvas-nest.js"></script>
@@ -555,8 +555,12 @@
   
   <script src="/lib/anime.min.js"></script>
   <script src="//cdn.jsdelivr.net/npm/pangu@4/dist/browser/pangu.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
 
 <script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
 
 
 <script src="/js/schemes/pisces.js"></script>

@@ -19,7 +19,7 @@
 
 <script id="hexo-configurations">
     var NexT = window.NexT || {};
-    var CONFIG = {"hostname":"hxhue.github.io","root":"/","scheme":"Gemini","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"always","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":true,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":true,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":false,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},"path":"search.xml"};
+    var CONFIG = {"hostname":"hxhue.github.io","root":"/","scheme":"Gemini","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"always","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":true,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":true,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},"path":"search.xml"};
   </script>
 
   <meta name="description" content="2023 年 5 月 7 日 两个 type traitsstd::decay_t 去引用、去限定符、函数&#x2F;数组变指针；std::common_type_t&#96; 用三元运算符获得更“宽泛”类型 函数模板默认参数模板默认参数可以放在最前面，不像普通函数只能把带有默认值的参数放在最后。而且函数模板可以明确指定开头几个参数，让后面的参数由推导规则生成。 函数重载参数匹配优先级优先级排序 perfe">
@@ -32,7 +32,7 @@
 <meta property="og:image" content="https://hxhue.github.io/assets/e4fbc0fe9351908a43237c5100659419.png">
 <meta property="og:image" content="https://hxhue.github.io/assets/e227b1aec68720e2114c3fc519a7657e.png">
 <meta property="article:published_time" content="2023-08-11T16:00:00.000Z">
-<meta property="article:modified_time" content="2024-03-15T15:32:02.998Z">
+<meta property="article:modified_time" content="2024-03-16T05:24:17.591Z">
 <meta property="article:author" content="Hxhue">
 <meta property="article:tag" content="cpp">
 <meta property="article:tag" content="cpp-templates-the-complete-guide">
@@ -83,11 +83,11 @@
   </style>
 </noscript>
 
-<link rel="alternate" href="/atom.xml" title="Hxhue's Blog" type="application/atom+xml">
+<!-- hexo injector head_end start --><style>a { word-break: break-all; }</style><!-- hexo injector head_end end --><link rel="alternate" href="/atom.xml" title="Hxhue's Blog" type="application/atom+xml">
 </head>
 
 <body itemscope itemtype="http://schema.org/WebPage">
-  <div class="container">
+  <div class="container use-motion">
     <div class="headband"></div>
 
     <header class="header" itemscope itemtype="http://schema.org/WPHeader">
@@ -231,7 +231,7 @@
                   <i class="far fa-calendar-check"></i>
                 </span>
                 <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2024-03-15 23:32:02" itemprop="dateModified" datetime="2024-03-15T23:32:02+08:00">2024-03-15</time>
+                <time title="修改时间：2024-03-16 13:24:17" itemprop="dateModified" datetime="2024-03-16T13:24:17+08:00">2024-03-16</time>
               </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
@@ -298,7 +298,7 @@
 <blockquote>
 <p>由于成员是从基类继承下来的，所以从基类向子类转换是合理的。</p>
 </blockquote>
-<h2 id="初始化列表作为实参"><a href="#初始化列表作为实参" class="headerlink" title="初始化列表作为实参"></a>初始化列表作为实参</h2><p><img src="/../../../../assets/e4fbc0fe9351908a43237c5100659419.png"></p>
+<h2 id="初始化列表作为实参"><a href="#初始化列表作为实参" class="headerlink" title="初始化列表作为实参"></a>初始化列表作为实参</h2><p><img src="/2023-08-12/cttcg-01-function-templates/../../../../../assets/e4fbc0fe9351908a43237c5100659419.png"></p>
 <p>可以尝试把初始化列表推导成：</p>
 <ol>
 <li><code>std::initializer_list</code></li>
@@ -313,7 +313,7 @@
 <li>考虑第 2 类</li>
 <li>考虑第 3 类的所有其他构造函数</li>
 </ol>
-<h2 id="Surrogate-Function"><a href="#Surrogate-Function" class="headerlink" title="Surrogate Function"></a>Surrogate Function</h2><p><img src="/../../../../assets/e227b1aec68720e2114c3fc519a7657e.png"></p>
+<h2 id="Surrogate-Function"><a href="#Surrogate-Function" class="headerlink" title="Surrogate Function"></a>Surrogate Function</h2><p><img src="/2023-08-12/cttcg-01-function-templates/../../../../../assets/e227b1aec68720e2114c3fc519a7657e.png"></p>
 <p>可以想象函数本身也是参数中的一个。上面的 <code>funcObj</code> 是一个 <code>const</code> 引用，不过 <code>operator FuncType*</code> 也恰好可以在 <code>const</code> 属性的 this 指针上调用，因而转换是可行的。由于需要额外的转换，所以第二个函数在参数 0 位置不如第一个函数匹配程度高（按照 <code>IndirectFunctor</code> 中的两个函数的顺序）。但是在参数 2 位置，<code>FuncType</code> 接受 <code>int</code>，比第一个函数匹配程度高，这就导致了两个函数无法决出优先级。</p>
 <h1 id="函数重载时名字可见性"><a href="#函数重载时名字可见性" class="headerlink" title="函数重载时名字可见性"></a>函数重载时名字可见性</h1><p>在模板中使用了其他函数时，可以参与重载决议的函数必须在此之前。即便后面有匹配度更高的函数也无法使用。P19</p>
 <h1 id="std-ref"><a href="#std-ref" class="headerlink" title="std::ref"></a><code>std::ref</code></h1><p>书中的一个观点是：函数模板的参数可以使用值类型，如果确实需要传递引用，由用户调用 std::ref 或者 std::cref 即可。P20</p>
@@ -337,12 +337,12 @@
         
     <div class="post-nav">
       <div class="post-nav-item">
-    <a href="/2023-08-12/cttcg-05-tricky-basics/" rel="prev" title="CTTCG 05 Tricky Basics">
-      <i class="fa fa-chevron-left"></i> CTTCG 05 Tricky Basics
+    <a href="/2023-08-12/cttcg-02-class-templates/" rel="prev" title="CTTCG 02 Class Templates">
+      <i class="fa fa-chevron-left"></i> CTTCG 02 Class Templates
     </a></div>
       <div class="post-nav-item">
-    <a href="/2023-08-12/cttcg-02-class-templates/" rel="next" title="CTTCG 02 Class Templates">
-      CTTCG 02 Class Templates <i class="fa fa-chevron-right"></i>
+    <a href="/2023-08-12/cttcg-%E9%99%84%E5%BD%95-d-standard-type-utilities/" rel="next" title="CTTCG 附录 D Standard Type Utilities">
+      CTTCG 附录 D Standard Type Utilities <i class="fa fa-chevron-right"></i>
     </a></div>
     </div>
       </footer>
@@ -416,7 +416,7 @@
       <div class="site-state-item site-state-posts">
           <a href="/archives/">
         
-          <span class="site-state-item-count">174</span>
+          <span class="site-state-item-count">186</span>
           <span class="site-state-item-name">日志</span>
         </a>
       </div>
@@ -429,7 +429,7 @@
       <div class="site-state-item site-state-tags">
             <a href="/tags/">
           
-        <span class="site-state-item-count">34</span>
+        <span class="site-state-item-count">38</span>
         <span class="site-state-item-name">标签</span></a>
       </div>
   </nav>
@@ -477,13 +477,13 @@
       <i class="fa fa-chart-area"></i>
     </span>
       <span class="post-meta-item-text">站点总字数：</span>
-    <span title="站点总字数">111k</span>
+    <span title="站点总字数">112k</span>
     <span class="post-meta-divider">|</span>
     <span class="post-meta-item-icon">
       <i class="fa fa-coffee"></i>
     </span>
       <span class="post-meta-item-text">站点阅读时长 &asymp;</span>
-    <span title="站点阅读时长">6:42</span>
+    <span title="站点阅读时长">6:48</span>
 </div>
   <div class="powered-by">由 <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Gemini</a> 强力驱动
   </div><script color="0,0,255" opacity="0.5" zIndex="-1" count="99" src="https://cdn.jsdelivr.net/npm/canvas-nest.js@1/dist/canvas-nest.js"></script>
@@ -504,8 +504,12 @@
   
   <script src="/lib/anime.min.js"></script>
   <script src="//cdn.jsdelivr.net/npm/pangu@4/dist/browser/pangu.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
 
 <script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
 
 
 <script src="/js/schemes/pisces.js"></script>

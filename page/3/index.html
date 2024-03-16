@@ -19,7 +19,7 @@
 
 <script id="hexo-configurations">
     var NexT = window.NexT || {};
-    var CONFIG = {"hostname":"hxhue.github.io","root":"/","scheme":"Gemini","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"always","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":true,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":true,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":false,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},"path":"search.xml"};
+    var CONFIG = {"hostname":"hxhue.github.io","root":"/","scheme":"Gemini","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"always","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":true,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":true,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},"path":"search.xml"};
   </script>
 
   <meta property="og:type" content="website">
@@ -74,11 +74,11 @@
   </style>
 </noscript>
 
-<link rel="alternate" href="/atom.xml" title="Hxhue's Blog" type="application/atom+xml">
+<!-- hexo injector head_end start --><style>a { word-break: break-all; }</style><!-- hexo injector head_end end --><link rel="alternate" href="/atom.xml" title="Hxhue's Blog" type="application/atom+xml">
 </head>
 
 <body itemscope itemtype="http://schema.org/WebPage">
-  <div class="container">
+  <div class="container use-motion">
     <div class="headband"></div>
 
     <header class="header" itemscope itemtype="http://schema.org/WPHeader">
@@ -191,6 +191,402 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://hxhue.github.io/2024-02-02/git-blame-ignore-revs/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="Hxhue">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Hxhue's Blog">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/2024-02-02/git-blame-ignore-revs/" class="post-title-link" itemprop="url">git-blame-ignore-revs</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2024-02-02 21:05:00" itemprop="dateCreated datePublished" datetime="2024-02-02T21:05:00+08:00">2024-02-02</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2024-03-15 16:31:51" itemprop="dateModified" datetime="2024-03-15T16:31:51+08:00">2024-03-15</time>
+              </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/cli/" itemprop="url" rel="index"><span itemprop="name">CLI</span></a>
+                </span>
+            </span>
+
+          <br>
+            <span class="post-meta-item" title="本文字数">
+              <span class="post-meta-item-icon">
+                <i class="far fa-file-word"></i>
+              </span>
+                <span class="post-meta-item-text">本文字数：</span>
+              <span>130</span>
+            </span>
+            <span class="post-meta-item" title="阅读时长">
+              <span class="post-meta-item-icon">
+                <i class="far fa-clock"></i>
+              </span>
+                <span class="post-meta-item-text">阅读时长 &asymp;</span>
+              <span>1 分钟</span>
+            </span>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <p>LLVM 项目中有个文件：.git-blame-ignore-revs</p>
+<p>说明是：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"># Since version 2.23 (released in August 2019), git-blame has a feature</span><br><span class="line"># to ignore or bypass certain commits.</span><br><span class="line">#</span><br><span class="line"># This file contains a list of commits that are not likely what you</span><br><span class="line"># are looking for in a blame, such as mass reformatting or renaming.</span><br><span class="line"># You can set this file as a default ignore file for blame by running</span><br><span class="line"># the following command.</span><br><span class="line">#</span><br><span class="line"># $ git config blame.ignoreRevsFile .git-blame-ignore-revs</span><br></pre></td></tr></table></figure>
+
+<p>这个文件可以指定要在 blame 时忽略的那些提交（比如对工程整体的格式化）。因为 git 配置是本地的，所以需要手动跑一次。</p>
+
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://hxhue.github.io/2024-02-02/vs-code-%E9%94%99%E8%AF%AF%EF%BC%9Aremote-extension-host-terminated-unexpectedly-3-times-within-the-last-5-minutes/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="Hxhue">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Hxhue's Blog">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/2024-02-02/vs-code-%E9%94%99%E8%AF%AF%EF%BC%9Aremote-extension-host-terminated-unexpectedly-3-times-within-the-last-5-minutes/" class="post-title-link" itemprop="url">VS Code 错误：Remote Extension host terminated unexpectedly 3 times within the last 5 minutes.</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2024-02-02 17:54:00" itemprop="dateCreated datePublished" datetime="2024-02-02T17:54:00+08:00">2024-02-02</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2024-03-15 23:28:03" itemprop="dateModified" datetime="2024-03-15T23:28:03+08:00">2024-03-15</time>
+              </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/developer/" itemprop="url" rel="index"><span itemprop="name">developer</span></a>
+                </span>
+            </span>
+
+          <br>
+            <span class="post-meta-item" title="本文字数">
+              <span class="post-meta-item-icon">
+                <i class="far fa-file-word"></i>
+              </span>
+                <span class="post-meta-item-text">本文字数：</span>
+              <span>226</span>
+            </span>
+            <span class="post-meta-item" title="阅读时长">
+              <span class="post-meta-item-icon">
+                <i class="far fa-clock"></i>
+              </span>
+                <span class="post-meta-item-text">阅读时长 &asymp;</span>
+              <span>1 分钟</span>
+            </span>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <p>可能是因为上次对 wsl2 vdisk compact 之后造成的？还是因为升级之后造成的？</p>
+<p>尝试过以下方法：</p>
+<ul>
+<li>删除 ~&#x2F;.vscode 和 ~&#x2F;.vscode-server 里面的所有东西然后重新下载。还是不行！</li>
+<li>禁用所有扩展，还是不行！</li>
+</ul>
+<p>发现在 vscode 的终端使用 code 打开文件夹就有问题，但是在 code 之外的终端用 code 命令就没有问题。一看在 vscode 终端中的 code 命令竟然还是 windows 文件系统中的 code 命令，并不是 vscode-server 提供的 code 命令。</p>
+<p>后来发现是我在 ~&#x2F;.bashrc 中提供了 <code>CLEAN_PATH</code>，想要解决多次载入 ~&#x2F;.bashrc 因此 PATH 被反复追加的问题，但是这也让 vscode-server 设置好的 PATH 丢失了。同时我还在 PATH 的前面添加了 windows 文件系统的 code 命令，而不是在后面追加，这也是有问题的地方。</p>
+
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://hxhue.github.io/2024-02-02/cuda-by-example-chapter-09-12/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="Hxhue">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Hxhue's Blog">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/2024-02-02/cuda-by-example-chapter-09-12/" class="post-title-link" itemprop="url">CUDA by Example: Chapter 09-12</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2024-02-02 11:46:00" itemprop="dateCreated datePublished" datetime="2024-02-02T11:46:00+08:00">2024-02-02</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2024-03-16 13:24:18" itemprop="dateModified" datetime="2024-03-16T13:24:18+08:00">2024-03-16</time>
+              </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/languages/" itemprop="url" rel="index"><span itemprop="name">languages</span></a>
+                </span>
+            </span>
+
+          <br>
+            <span class="post-meta-item" title="本文字数">
+              <span class="post-meta-item-icon">
+                <i class="far fa-file-word"></i>
+              </span>
+                <span class="post-meta-item-text">本文字数：</span>
+              <span>3.1k</span>
+            </span>
+            <span class="post-meta-item" title="阅读时长">
+              <span class="post-meta-item-icon">
+                <i class="far fa-clock"></i>
+              </span>
+                <span class="post-meta-item-text">阅读时长 &asymp;</span>
+              <span>11 分钟</span>
+            </span>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <h1 id="第-9-章-原子操作"><a href="#第-9-章-原子操作" class="headerlink" title="第 9 章 原子操作"></a>第 9 章 原子操作</h1><blockquote>
+<p>You should know that atomic operations on <strong>global memory</strong> are supported only on GPUs of compute capability 1.1 or higher. Furthermore, atomic operations on <strong>shared memory</strong> require a GPU of compute capability 1.2 or higher.</p>
+</blockquote>
+<p>指定计算能力：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">nvcc -<span class="built_in">arch</span>=sm_11</span><br></pre></td></tr></table></figure>
+
+<p>这样就指定了计算能力是 1.1，当有些指令是只有 1.1 才能编译时加这个参数可以确保编译。同时，有了更加精确的生成目标，nvcc 可以执行一些和硬件相关的优化手段，这些优化手段在更早的架构上可能没有。</p>
+<p>但是一个硬件上不一定支持给定的计算能力。通过 <code>-arch-ls</code> 可以列出设备支持的计算能力：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line">$ nvcc -arch-ls</span><br><span class="line">compute_50</span><br><span class="line">compute_52</span><br><span class="line">compute_53</span><br><span class="line">compute_60</span><br><span class="line">compute_61</span><br><span class="line">compute_62</span><br><span class="line">compute_70</span><br><span class="line">compute_72</span><br><span class="line">compute_75</span><br><span class="line">compute_80</span><br><span class="line">compute_86</span><br><span class="line">compute_87</span><br><span class="line">compute_89</span><br><span class="line">compute_90</span><br></pre></td></tr></table></figure>
+
+<p>例子是直方图计算，也就是统计各个值的元素的数量。书中的例子是对随机填充生成的字符数组的计数，每个字符值不超过 256。</p>
+          <!--noindex-->
+            <div class="post-button">
+              <a class="btn" href="/2024-02-02/cuda-by-example-chapter-09-12/#more" rel="contents">
+                阅读全文 &raquo;
+              </a>
+            </div>
+          <!--/noindex-->
+        
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://hxhue.github.io/2024-02-01/chapter12-full-project/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="Hxhue">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Hxhue's Blog">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/2024-02-01/chapter12-full-project/" class="post-title-link" itemprop="url">chapter12 - full project</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2024-02-01 23:02:00" itemprop="dateCreated datePublished" datetime="2024-02-01T23:02:00+08:00">2024-02-01</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2024-03-16 13:24:17" itemprop="dateModified" datetime="2024-03-16T13:24:17+08:00">2024-03-16</time>
+              </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/cli/" itemprop="url" rel="index"><span itemprop="name">CLI</span></a>
+                </span>
+            </span>
+
+          <br>
+            <span class="post-meta-item" title="本文字数">
+              <span class="post-meta-item-icon">
+                <i class="far fa-file-word"></i>
+              </span>
+                <span class="post-meta-item-text">本文字数：</span>
+              <span>457</span>
+            </span>
+            <span class="post-meta-item" title="阅读时长">
+              <span class="post-meta-item-icon">
+                <i class="far fa-clock"></i>
+              </span>
+                <span class="post-meta-item-text">阅读时长 &asymp;</span>
+              <span>2 分钟</span>
+            </span>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <h1 id="总体结构"><a href="#总体结构" class="headerlink" title="总体结构"></a>总体结构</h1><p><img src="/2024-02-01/chapter12-full-project/../../../../../assets/910d063161cd1f14c4743331743ba2d5.webp"></p>
+<h1 id="一些文件的分析"><a href="#一些文件的分析" class="headerlink" title="一些文件的分析"></a>一些文件的分析</h1><p>chapter12&#x2F;01-full-project&#x2F;src&#x2F;calc&#x2F;CMakeLists.txt</p>
+<figure class="highlight cmake"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">add_library</span>(calc_obj OBJECT calc.cpp)</span><br><span class="line"><span class="keyword">target_include_directories</span>(calc_obj INTERFACE</span><br><span class="line">  <span class="string">&quot;$&lt;BUILD_INTERFACE:$&#123;CMAKE_CURRENT_SOURCE_DIR&#125;/include&gt;&quot;</span></span><br><span class="line">  <span class="string">&quot;$&lt;INSTALL_INTERFACE:$&#123;CMAKE_INSTALL_INCLUDEDIR&#125;&gt;&quot;</span></span><br><span class="line">)</span><br><span class="line"><span class="keyword">set_target_properties</span>(calc_obj PROPERTIES</span><br><span class="line">    PUBLIC_HEADER src/calc/<span class="keyword">include</span>/calc/calc.h</span><br><span class="line">    POSITION_INDEPENDENT_CODE <span class="number">1</span></span><br><span class="line">)</span><br><span class="line"></span><br><span class="line"><span class="keyword">add_library</span>(calc_shared SHARED)</span><br><span class="line"><span class="keyword">target_link_libraries</span>(calc_shared calc_obj)</span><br><span class="line"><span class="keyword">add_library</span>(calc_static STATIC)</span><br><span class="line"><span class="keyword">target_link_libraries</span>(calc_static calc_obj)</span><br></pre></td></tr></table></figure>
+
+<p>一些要点：</p>
+<ol>
+<li>target_include_directories 使用生成器表达式为 build 和 install 之后指定了不同的包含路径。导出 target export file 的话这个细节非常重要。</li>
+<li>然后是设置对象的属性。因为我们的库不是 SHARED 类型而是 OBJECT 类型，所以不是默认 PIC 的。需要正确设置 POSITION_INDEPENDENT_CODE 属性（NexusNet 是在全局编译选项中加入 <code>-fPIC</code> 保证这一点的）。</li>
+</ol>
+<p>chapter12&#x2F;01-full-project&#x2F;cmake&#x2F;GetFTXUI.cmake</p>
+          <!--noindex-->
+            <div class="post-button">
+              <a class="btn" href="/2024-02-01/chapter12-full-project/#more" rel="contents">
+                阅读全文 &raquo;
+              </a>
+            </div>
+          <!--/noindex-->
+        
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
     <link itemprop="mainEntityOfPage" href="https://hxhue.github.io/2024-02-01/chapter01-basic/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -222,7 +618,7 @@
                   <i class="far fa-calendar-check"></i>
                 </span>
                 <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2024-03-15 23:35:12" itemprop="dateModified" datetime="2024-03-15T23:35:12+08:00">2024-03-15</time>
+                <time title="修改时间：2024-03-16 13:24:17" itemprop="dateModified" datetime="2024-03-16T13:24:17+08:00">2024-03-16</time>
               </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
@@ -268,119 +664,9 @@
 <p><strong>选择生成器</strong>：</p>
 <pre><code>cmake -G &lt;generator&gt;
 </code></pre>
-<p>也可以使用环境变量 <code>CMAKE_GENERATOR</code>。但是要注意大小写：</p>
-<pre><code>CMAKE_GENERATOR=Ninja cmake -B build
-</code></pre>
           <!--noindex-->
             <div class="post-button">
               <a class="btn" href="/2024-02-01/chapter01-basic/#more" rel="contents">
-                阅读全文 &raquo;
-              </a>
-            </div>
-          <!--/noindex-->
-        
-      
-    </div>
-
-    
-    
-    
-      <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  
-  
-  
-
-      
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="https://hxhue.github.io/2024-02-01/chapter02-a-%E6%80%BB%E7%BB%93%E5%B8%B8%E7%94%A8%E7%9A%84-cmake-%E5%8F%98%E9%87%8F/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/avatar.gif">
-      <meta itemprop="name" content="Hxhue">
-      <meta itemprop="description" content="">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Hxhue's Blog">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          
-            <a href="/2024-02-01/chapter02-a-%E6%80%BB%E7%BB%93%E5%B8%B8%E7%94%A8%E7%9A%84-cmake-%E5%8F%98%E9%87%8F/" class="post-title-link" itemprop="url">chapter02.a - 总结常用的 CMake 变量</a>
-        </h2>
-
-        <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-calendar"></i>
-              </span>
-              <span class="post-meta-item-text">发表于</span>
-
-              <time title="创建时间：2024-02-01 23:01:00" itemprop="dateCreated datePublished" datetime="2024-02-01T23:01:00+08:00">2024-02-01</time>
-            </span>
-              <span class="post-meta-item">
-                <span class="post-meta-item-icon">
-                  <i class="far fa-calendar-check"></i>
-                </span>
-                <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2024-03-15 23:34:07" itemprop="dateModified" datetime="2024-03-15T23:34:07+08:00">2024-03-15</time>
-              </span>
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-folder"></i>
-              </span>
-              <span class="post-meta-item-text">分类于</span>
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/cli/" itemprop="url" rel="index"><span itemprop="name">CLI</span></a>
-                </span>
-            </span>
-
-          <br>
-            <span class="post-meta-item" title="本文字数">
-              <span class="post-meta-item-icon">
-                <i class="far fa-file-word"></i>
-              </span>
-                <span class="post-meta-item-text">本文字数：</span>
-              <span>144</span>
-            </span>
-            <span class="post-meta-item" title="阅读时长">
-              <span class="post-meta-item-icon">
-                <i class="far fa-clock"></i>
-              </span>
-                <span class="post-meta-item-text">阅读时长 &asymp;</span>
-              <span>1 分钟</span>
-            </span>
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          <h1 id="PROJECT"><a href="#PROJECT" class="headerlink" title="PROJECT_*"></a><code>PROJECT_*</code></h1><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">PROJECT_SOURCE_DIR</span><br><span class="line">PROJECT_BINARY_DIR</span><br></pre></td></tr></table></figure>
-
-<blockquote>
-<p>不存在 <code>PROJECT_LIST_DIR</code>。</p>
-</blockquote>
-<p><code>PROJECT_*</code> 变量会随着 <code>project</code> 命令的出现而变更。</p>
-<h1 id="CMAKE"><a href="#CMAKE" class="headerlink" title="CMAKE_*"></a><code>CMAKE_*</code></h1><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">CMAKE_SOURCE_DIR</span><br><span class="line">CMAKE_BINARY_DIR</span><br></pre></td></tr></table></figure>
-
-<blockquote>
-<p>也不存在 <code>CMAKE_LIST_DIR</code>。</p>
-</blockquote>
-<p>和本次 cmake 命令有关。</p>
-<h1 id="CMAKE-CURRENT"><a href="#CMAKE-CURRENT" class="headerlink" title="CMAKE_CURRENT_*"></a><code>CMAKE_CURRENT_*</code></h1><p>通过 VS Code 补全可以看到有很多变量：</p>
-          <!--noindex-->
-            <div class="post-button">
-              <a class="btn" href="/2024-02-01/chapter02-a-%E6%80%BB%E7%BB%93%E5%B8%B8%E7%94%A8%E7%9A%84-cmake-%E5%8F%98%E9%87%8F/#more" rel="contents">
                 阅读全文 &raquo;
               </a>
             </div>
@@ -435,7 +721,7 @@
                   <i class="far fa-calendar-check"></i>
                 </span>
                 <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2024-03-15 23:34:07" itemprop="dateModified" datetime="2024-03-15T23:34:07+08:00">2024-03-15</time>
+                <time title="修改时间：2024-03-16 13:24:17" itemprop="dateModified" datetime="2024-03-16T13:24:17+08:00">2024-03-16</time>
               </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
@@ -482,8 +768,6 @@
 <h1 id="Command"><a href="#Command" class="headerlink" title="Command"></a>Command</h1><p>命令名是大小写不敏感的，但是一般用小写。</p>
 <p>命令不是表达式，没有返回值。</p>
 <p>commands 分类：</p>
-<p><img src="/../../../../assets/9049faba4a3c91e2636068fdec08ba31.webp"></p>
-<p>唯一的数据类型：string</p>
           <!--noindex-->
             <div class="post-button">
               <a class="btn" href="/2024-02-01/chapter02-cmake-language/#more" rel="contents">
@@ -510,7 +794,7 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="https://hxhue.github.io/2024-02-01/chapter04-targets/">
+    <link itemprop="mainEntityOfPage" href="https://hxhue.github.io/2024-02-01/chapter02-a-%E6%80%BB%E7%BB%93%E5%B8%B8%E7%94%A8%E7%9A%84-cmake-%E5%8F%98%E9%87%8F/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="image" content="/images/avatar.gif">
@@ -524,7 +808,7 @@
       <header class="post-header">
         <h2 class="post-title" itemprop="name headline">
           
-            <a href="/2024-02-01/chapter04-targets/" class="post-title-link" itemprop="url">chapter04 - targets</a>
+            <a href="/2024-02-01/chapter02-a-%E6%80%BB%E7%BB%93%E5%B8%B8%E7%94%A8%E7%9A%84-cmake-%E5%8F%98%E9%87%8F/" class="post-title-link" itemprop="url">chapter02.a - 总结常用的 CMake 变量</a>
         </h2>
 
         <div class="post-meta">
@@ -541,7 +825,7 @@
                   <i class="far fa-calendar-check"></i>
                 </span>
                 <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2024-03-15 23:34:07" itemprop="dateModified" datetime="2024-03-15T23:34:07+08:00">2024-03-15</time>
+                <time title="修改时间：2024-03-16 13:24:17" itemprop="dateModified" datetime="2024-03-16T13:24:17+08:00">2024-03-16</time>
               </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
@@ -559,14 +843,14 @@
                 <i class="far fa-file-word"></i>
               </span>
                 <span class="post-meta-item-text">本文字数：</span>
-              <span>2.7k</span>
+              <span>144</span>
             </span>
             <span class="post-meta-item" title="阅读时长">
               <span class="post-meta-item-icon">
                 <i class="far fa-clock"></i>
               </span>
                 <span class="post-meta-item-text">阅读时长 &asymp;</span>
-              <span>10 分钟</span>
+              <span>1 分钟</span>
             </span>
 
         </div>
@@ -578,26 +862,21 @@
     <div class="post-body" itemprop="articleBody">
 
       
-          <h1 id="创建-target"><a href="#创建-target" class="headerlink" title="创建 target"></a>创建 target</h1><p>三种方式：</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">add_executable     # 默认在 ALL 中</span><br><span class="line">add_library        # 默认在 ALL 中</span><br><span class="line">add_custom_target  # 默认不在 ALL 中</span><br><span class="line"># add_custom_command 是创建文件的方式，但是不是创建 target</span><br></pre></td></tr></table></figure>
+          <h1 id="PROJECT"><a href="#PROJECT" class="headerlink" title="PROJECT_*"></a><code>PROJECT_*</code></h1><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">PROJECT_SOURCE_DIR</span><br><span class="line">PROJECT_BINARY_DIR</span><br></pre></td></tr></table></figure>
 
-<p><code>add_library</code>: <a target="_blank" rel="noopener" href="https://cmake.org/cmake/help/latest/command/add_library.html#object-libraries">https://cmake.org/cmake/help/latest/command/add_library.html#object-libraries</a></p>
-<ul>
-<li>Normal library: 如果不指定 <code>STATIC</code>&#x2F;<code>SHARED</code>&#x2F;<code>MODULE</code>，<code>add_library</code> 会根据 <code>BUILD_SHARED_LIBS</code> 变量去决定是否使用 <code>SHARED</code> 还是 <code>STATIC</code>。</li>
-<li>Object library: 生成目标文件。</li>
-<li>Interface library：不生成文件。用来打包传播属性。</li>
-<li>Imported library：<code>IMPORTED</code> 属性和 <code>STATIC</code> 等是可以叠加的。<code>IMPORTED</code> 库是<strong>已经被编译好的库</strong>，不需要另外编译，但是需要用 <code>set_target_property</code> 来设置其位置。</li>
-<li>Alias library</li>
-</ul>
-<p><code>add_custom_target</code> 可以有多条命令，而且不一定有产物。<code>add_custom_target</code> 创建的 target 是默认不 ALL 的！和 <code>add_custom_command</code> 的对比看后文。</p>
-<p>可以手动用 <code>add_dependencies</code> 创建新的依赖关系。主要是用来维护编译顺序的（比如检查 checksum 的自定义任务必须得在目标已经生成之后）。</p>
 <blockquote>
-<p>target 的依赖声明可以不按照顺序，cmake 会扫描整个文件再去构建依赖。</p>
+<p>不存在 <code>PROJECT_LIST_DIR</code>。</p>
 </blockquote>
-<h1 id="读写-target-的属性"><a href="#读写-target-的属性" class="headerlink" title="读写 target 的属性"></a>读写 target 的属性</h1><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">set_target_properties</span><br><span class="line">get_target_property</span><br></pre></td></tr></table></figure>
+<p><code>PROJECT_*</code> 变量会随着 <code>project</code> 命令的出现而变更。</p>
+<h1 id="CMAKE"><a href="#CMAKE" class="headerlink" title="CMAKE_*"></a><code>CMAKE_*</code></h1><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">CMAKE_SOURCE_DIR</span><br><span class="line">CMAKE_BINARY_DIR</span><br></pre></td></tr></table></figure>
+
+<blockquote>
+<p>也不存在 <code>CMAKE_LIST_DIR</code>。</p>
+</blockquote>
+<p>和本次 cmake 命令有关。</p>
           <!--noindex-->
             <div class="post-button">
-              <a class="btn" href="/2024-02-01/chapter04-targets/#more" rel="contents">
+              <a class="btn" href="/2024-02-01/chapter02-a-%E6%80%BB%E7%BB%93%E5%B8%B8%E7%94%A8%E7%9A%84-cmake-%E5%8F%98%E9%87%8F/#more" rel="contents">
                 阅读全文 &raquo;
               </a>
             </div>
@@ -652,7 +931,7 @@
                   <i class="far fa-calendar-check"></i>
                 </span>
                 <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2024-03-15 23:34:07" itemprop="dateModified" datetime="2024-03-15T23:34:07+08:00">2024-03-15</time>
+                <time title="修改时间：2024-03-16 13:24:17" itemprop="dateModified" datetime="2024-03-16T13:24:17+08:00">2024-03-16</time>
               </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
@@ -696,121 +975,11 @@
 </blockquote>
 <p>VERSION 可以是一个范围 <code>a...b</code>，如果只有一个值则是最小版本要求。</p>
 <h1 id="project"><a href="#project" class="headerlink" title="project"></a>project</h1><p><code>project</code> 命令用来设置项目名、版本、还有语言等。</p>
-<p><img src="/../../../../assets/20ddfe76203d6c6d79c90737d5b92ad0.webp"></p>
+<p><img src="/2024-02-01/chapter03-first-cmake-project/../../../../../assets/20ddfe76203d6c6d79c90737d5b92ad0.webp"></p>
 <p>默认的语言是 C 和 CXX 两个（不包含 CUDA）。对于 C++ 项目设置语言为 CXX 的好处是 cmake 不再会为所有语言检查编译器的存在情况，配置时间会短一些（对于 hello-world 项目，在 6 core Intel(R) Core(TM) i7-8750H CPU @ 2.20GHz + <strong>wsl2</strong> 中 CXX 的配置时间是 200 ms，C 和 CXX 的配置时间是 345 ms）。</p>
-<p><img src="/../../../../assets/acca4488edb7d2a86cfc225abb5ed144.webp"><br>也可以用 <code>enable_language</code> 添加语言，这不会设置任何元变量。</p>
-<h1 id="最小项目"><a href="#最小项目" class="headerlink" title="最小项目"></a>最小项目</h1>
           <!--noindex-->
             <div class="post-button">
               <a class="btn" href="/2024-02-01/chapter03-first-cmake-project/#more" rel="contents">
-                阅读全文 &raquo;
-              </a>
-            </div>
-          <!--/noindex-->
-        
-      
-    </div>
-
-    
-    
-    
-      <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  
-  
-  
-
-      
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="https://hxhue.github.io/2024-02-01/chapter04-a-%E6%A2%B3%E7%90%86%E4%BE%9D%E8%B5%96%E6%98%AF%E5%A6%82%E4%BD%95%E5%88%9B%E5%BB%BA%E7%9A%84/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/avatar.gif">
-      <meta itemprop="name" content="Hxhue">
-      <meta itemprop="description" content="">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Hxhue's Blog">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          
-            <a href="/2024-02-01/chapter04-a-%E6%A2%B3%E7%90%86%E4%BE%9D%E8%B5%96%E6%98%AF%E5%A6%82%E4%BD%95%E5%88%9B%E5%BB%BA%E7%9A%84/" class="post-title-link" itemprop="url">chapter04.a - 梳理依赖是如何创建的</a>
-        </h2>
-
-        <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-calendar"></i>
-              </span>
-              <span class="post-meta-item-text">发表于</span>
-
-              <time title="创建时间：2024-02-01 23:01:00" itemprop="dateCreated datePublished" datetime="2024-02-01T23:01:00+08:00">2024-02-01</time>
-            </span>
-              <span class="post-meta-item">
-                <span class="post-meta-item-icon">
-                  <i class="far fa-calendar-check"></i>
-                </span>
-                <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2024-03-15 23:34:07" itemprop="dateModified" datetime="2024-03-15T23:34:07+08:00">2024-03-15</time>
-              </span>
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-folder"></i>
-              </span>
-              <span class="post-meta-item-text">分类于</span>
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/cli/" itemprop="url" rel="index"><span itemprop="name">CLI</span></a>
-                </span>
-            </span>
-
-          <br>
-            <span class="post-meta-item" title="本文字数">
-              <span class="post-meta-item-icon">
-                <i class="far fa-file-word"></i>
-              </span>
-                <span class="post-meta-item-text">本文字数：</span>
-              <span>516</span>
-            </span>
-            <span class="post-meta-item" title="阅读时长">
-              <span class="post-meta-item-icon">
-                <i class="far fa-clock"></i>
-              </span>
-                <span class="post-meta-item-text">阅读时长 &asymp;</span>
-              <span>2 分钟</span>
-            </span>
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          <p>我认为的依赖有两种：</p>
-<ol>
-<li>文件依赖（sources）既有同级依赖（比如 <code>add_custom_command</code> 的 <code>DEPENDS</code> 参数），又有 targets 到 sources 的依赖。</li>
-<li>target 依赖是一种 targets 之间的同级依赖关系。</li>
-</ol>
-<h1 id="Target-依赖"><a href="#Target-依赖" class="headerlink" title="Target 依赖"></a>Target 依赖</h1><p>创建 target 可以用 <code>add_executable</code>&#x2F;<code>add_library</code>&#x2F;<code>add_custom_target</code>。前面两个都默认包含在 all 中，而最后一个默认不包含在 all 中。此外，<code>add_custom_target</code> 如果给的是命令，而不是依赖文件，则创建的 targets 永远处于“需要被构建”的状态；如果给的是文件，则就只是文件依赖。</p>
-<p>可以用 <a target="_blank" rel="noopener" href="https://cmake.org/cmake/help/latest/command/add_dependencies.html"><code>add_dependencies</code></a> 来创建 targets 之间的依赖。</p>
-<h1 id="文件依赖"><a href="#文件依赖" class="headerlink" title="文件依赖"></a>文件依赖</h1><p>如果 target 或者 command（由 <code>add_custom_command</code> 创建）依赖一个源文件，这个文件找不到、但是又被标记了 <code>GENERATED</code> 属性，则会想办法去生成这个文件。</p>
-<p>创建 target 的时候没有给全源文件不要紧，可以用 <a target="_blank" rel="noopener" href="https://cmake.org/cmake/help/latest/command/target_sources.html#target-sources%20%22Permalink%20to%20this%20heading%22"></a> 去追加源文件。</p>
-<p>在源文件中添加头文件看似没有意义，实际上是增加了依赖文件，在这个文件需要由自定义命令在构建时生成时很有用。</p>
-<blockquote>
-<p style="margin-bottom: 0px"><font size="+3">✏️</font><font size="+1"><strong> NOTE</strong></font></p>
-<p>使用 <code>add_custom_target</code> 和 <code>add_custom_command</code> 时一定要正确写上 <code>OUTPUT</code>&#x2F;<code>DEPENDS</code>&#x2F;<code>BYPRODUCTS</code>。</p>
-</blockquote>
-          <!--noindex-->
-            <div class="post-button">
-              <a class="btn" href="/2024-02-01/chapter04-a-%E6%A2%B3%E7%90%86%E4%BE%9D%E8%B5%96%E6%98%AF%E5%A6%82%E4%BD%95%E5%88%9B%E5%BB%BA%E7%9A%84/#more" rel="contents">
                 阅读全文 &raquo;
               </a>
             </div>
@@ -865,7 +1034,7 @@
                   <i class="far fa-calendar-check"></i>
                 </span>
                 <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2024-03-15 23:34:07" itemprop="dateModified" datetime="2024-03-15T23:34:07+08:00">2024-03-15</time>
+                <time title="修改时间：2024-03-16 13:24:17" itemprop="dateModified" datetime="2024-03-16T13:24:17+08:00">2024-03-16</time>
               </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
@@ -902,7 +1071,7 @@
     <div class="post-body" itemprop="articleBody">
 
       
-          <h1 id="程序分段"><a href="#程序分段" class="headerlink" title="程序分段"></a>程序分段</h1><p><img src="/../../../../assets/64c742277ee1ef7f3cdf8b9122b1f754.webp"></p>
+          <h1 id="程序分段"><a href="#程序分段" class="headerlink" title="程序分段"></a>程序分段</h1><p><img src="/2024-02-01/chapter06-linking/../../../../../assets/64c742277ee1ef7f3cdf8b9122b1f754.webp"></p>
 <ul>
 <li><p>.text section: Machine code, with all the instructions to be executed by the processor</p>
 </li>
@@ -915,15 +1084,12 @@
 <li><p>.strtab section: 常量字符串的表</p>
 </li>
 <li><p>.shstrtab section: 每个 section 的名称字符串的表</p>
-<p>可执行文件有一些差异，其中之一就是 program header，它描述了创建进程镜像的信息。<br><img src="/../../../../assets/34541da063f09d037b43216bbc190ebd.webp"></p>
+<p>可执行文件有一些差异，其中之一就是 program header，它描述了创建进程镜像的信息。<br><img src="/2024-02-01/chapter06-linking/../../../../../assets/34541da063f09d037b43216bbc190ebd.webp"></p>
 </li>
 </ul>
 <h1 id="库的分类"><a href="#库的分类" class="headerlink" title="库的分类"></a>库的分类</h1><p>CMake 支持的有 <code>STATIC</code>, <code>SHARED</code>, <code>MODULE</code>：</p>
-<h2 id="MODULE"><a href="#MODULE" class="headerlink" title="MODULE"></a><code>MODULE</code></h2><p><img src="/../../../../assets/46e5676e1712b851ad881fe4159b38fa.webp"></p>
+<h2 id="MODULE"><a href="#MODULE" class="headerlink" title="MODULE"></a><code>MODULE</code></h2><p><img src="/2024-02-01/chapter06-linking/../../../../../assets/46e5676e1712b851ad881fe4159b38fa.webp"></p>
 <p>不应该将 <code>MODULE</code> 链接到其他文件。成为 <code>MODULE</code> 的库需要在运行时被显式链接。</p>
-<h1 id="Position-independent-code"><a href="#Position-independent-code" class="headerlink" title="Position-independent code"></a>Position-independent code</h1><blockquote>
-<p>CMake checks the <code>POSITION_INDEPENDENT_CODE</code> property of targets and appropriately adds compiler-specific compilation flags such as <code>-fPIC</code> for gcc or clang.</p>
-</blockquote>
           <!--noindex-->
             <div class="post-button">
               <a class="btn" href="/2024-02-01/chapter06-linking/#more" rel="contents">
@@ -981,7 +1147,7 @@
                   <i class="far fa-calendar-check"></i>
                 </span>
                 <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2024-03-15 23:34:07" itemprop="dateModified" datetime="2024-03-15T23:34:07+08:00">2024-03-15</time>
+                <time title="修改时间：2024-03-16 13:24:17" itemprop="dateModified" datetime="2024-03-16T13:24:17+08:00">2024-03-16</time>
               </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
@@ -1025,11 +1191,9 @@
 <li><code>target_compile_features</code> 的特性非常多。一般也就只用 <code>cxx_std_&#123;98,11,14,17,20,23&#125;</code> 这种语言标准，而不是具体的标准。</li>
 </ul>
 <h1 id="Preprocessor-configuration"><a href="#Preprocessor-configuration" class="headerlink" title="Preprocessor configuration"></a>Preprocessor configuration</h1><p><code>target_compile_definitions</code> 能够自动去除多加的 <code>-D</code>，不过最好还是不要加，因为这个命令本来就是用于跨平台的，不加风格更统一。</p>
-<p><img src="/../../../../assets/4c5ad7aad11be5051780ddf02fa506bb.webp"></p>
-<p>通过 execute_process 和 宏定义，可以将当前的最新 commit 传入源码，这样源码就能自己计算最新版本，而不需要每次都手动更改！然后提交的代码通过 CD 就能够自动构建了。特别是在用户只有产品时，能够获得具体的 commit sha1 能够很方便定位出问题的版本。<br><img src="/../../../../assets/4d843150d0707fc70cf669a8bab71c0b.webp"></p>
+<p><img src="/2024-02-01/chapter05-compiling-c-sources/../../../../../assets/4c5ad7aad11be5051780ddf02fa506bb.webp"></p>
+<p>通过 execute_process 和 宏定义，可以将当前的最新 commit 传入源码，这样源码就能自己计算最新版本，而不需要每次都手动更改！然后提交的代码通过 CD 就能够自动构建了。特别是在用户只有产品时，能够获得具体的 commit sha1 能够很方便定位出问题的版本。<br><img src="/2024-02-01/chapter05-compiling-c-sources/../../../../../assets/4d843150d0707fc70cf669a8bab71c0b.webp"></p>
 <p><code>configure_file(&lt;input&gt; &lt;output&gt;)</code> 能够从模板（比如 <code>configure.h.in</code>）中生成各种诸多宏定义的头文件。</p>
-<p><img src="/../../../../assets/8704857336f787aa6f7f721b55b3379e.webp"></p>
-<h1 id="Configuring-the-optimizer"><a href="#Configuring-the-optimizer" class="headerlink" title="Configuring the optimizer"></a>Configuring the optimizer</h1>
           <!--noindex-->
             <div class="post-button">
               <a class="btn" href="/2024-02-01/chapter05-compiling-c-sources/#more" rel="contents">
@@ -1052,221 +1216,10 @@
   
   
 
-      
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="https://hxhue.github.io/2024-02-01/chapter07-managing-dependencies/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/avatar.gif">
-      <meta itemprop="name" content="Hxhue">
-      <meta itemprop="description" content="">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Hxhue's Blog">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          
-            <a href="/2024-02-01/chapter07-managing-dependencies/" class="post-title-link" itemprop="url">chapter07 - managing dependencies</a>
-        </h2>
-
-        <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-calendar"></i>
-              </span>
-              <span class="post-meta-item-text">发表于</span>
-
-              <time title="创建时间：2024-02-01 23:01:00" itemprop="dateCreated datePublished" datetime="2024-02-01T23:01:00+08:00">2024-02-01</time>
-            </span>
-              <span class="post-meta-item">
-                <span class="post-meta-item-icon">
-                  <i class="far fa-calendar-check"></i>
-                </span>
-                <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2024-03-15 23:34:53" itemprop="dateModified" datetime="2024-03-15T23:34:53+08:00">2024-03-15</time>
-              </span>
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-folder"></i>
-              </span>
-              <span class="post-meta-item-text">分类于</span>
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/cli/" itemprop="url" rel="index"><span itemprop="name">CLI</span></a>
-                </span>
-            </span>
-
-          <br>
-            <span class="post-meta-item" title="本文字数">
-              <span class="post-meta-item-icon">
-                <i class="far fa-file-word"></i>
-              </span>
-                <span class="post-meta-item-text">本文字数：</span>
-              <span>1.8k</span>
-            </span>
-            <span class="post-meta-item" title="阅读时长">
-              <span class="post-meta-item-icon">
-                <i class="far fa-clock"></i>
-              </span>
-                <span class="post-meta-item-text">阅读时长 &asymp;</span>
-              <span>7 分钟</span>
-            </span>
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          <h1 id="Best-option-find-package"><a href="#Best-option-find-package" class="headerlink" title="Best option: find_package"></a>Best option: <code>find_package</code></h1><p><a target="_blank" rel="noopener" href="https://cmake.org/cmake/help/latest/command/find_package.html">https://cmake.org/cmake/help/latest/command/find_package.html</a></p>
-<p>有三种工作模式。</p>
-<h2 id="Module-mode"><a href="#Module-mode" class="headerlink" title="Module mode"></a>Module mode</h2><p><code>Find&lt;PackageName&gt;.cmake</code></p>
-<p>主要是包外提供，比如 CMake、操作系统、或者写当前工程的人提供的试探性地去搜索库的方式。先找 <code>CMAKE_MODULE_PATH</code>，然后就是 cmake 的安装目录。</p>
-<blockquote>
-<p>NexusNet 的不少路径都是硬编码的，写 Find Module 会更合适。</p>
-</blockquote>
-<h2 id="Config-mode"><a href="#Config-mode" class="headerlink" title="Config mode"></a>Config mode</h2><blockquote>
-<p>In this mode, CMake searches for a file called <code>&lt;lowercasePackageName&gt;-config.cmake</code> or <code>&lt;PackageName&gt;Config.cmake</code>. It will also look for <code>&lt;lowercasePackageName&gt;-config-version.cmake</code> or <code>&lt;PackageName&gt;ConfigVersion.cmake</code> if version details were specified.</p>
-</blockquote>
-<p>这些文件是由作者提供。由于作者知道包的结构，所以一般搜索起来更加直接。</p>
-          <!--noindex-->
-            <div class="post-button">
-              <a class="btn" href="/2024-02-01/chapter07-managing-dependencies/#more" rel="contents">
-                阅读全文 &raquo;
-              </a>
-            </div>
-          <!--/noindex-->
-        
-      
-    </div>
-
-    
-    
-    
-      <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  
-  
-  
-
-      
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="https://hxhue.github.io/2024-02-01/chapter08-testing/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/avatar.gif">
-      <meta itemprop="name" content="Hxhue">
-      <meta itemprop="description" content="">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Hxhue's Blog">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          
-            <a href="/2024-02-01/chapter08-testing/" class="post-title-link" itemprop="url">chapter08 - testing</a>
-        </h2>
-
-        <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-calendar"></i>
-              </span>
-              <span class="post-meta-item-text">发表于</span>
-
-              <time title="创建时间：2024-02-01 23:01:00" itemprop="dateCreated datePublished" datetime="2024-02-01T23:01:00+08:00">2024-02-01</time>
-            </span>
-              <span class="post-meta-item">
-                <span class="post-meta-item-icon">
-                  <i class="far fa-calendar-check"></i>
-                </span>
-                <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2024-03-15 23:34:53" itemprop="dateModified" datetime="2024-03-15T23:34:53+08:00">2024-03-15</time>
-              </span>
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-folder"></i>
-              </span>
-              <span class="post-meta-item-text">分类于</span>
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/cli/" itemprop="url" rel="index"><span itemprop="name">CLI</span></a>
-                </span>
-            </span>
-
-          <br>
-            <span class="post-meta-item" title="本文字数">
-              <span class="post-meta-item-icon">
-                <i class="far fa-file-word"></i>
-              </span>
-                <span class="post-meta-item-text">本文字数：</span>
-              <span>1.3k</span>
-            </span>
-            <span class="post-meta-item" title="阅读时长">
-              <span class="post-meta-item-icon">
-                <i class="far fa-clock"></i>
-              </span>
-                <span class="post-meta-item-text">阅读时长 &asymp;</span>
-              <span>5 分钟</span>
-            </span>
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          <h1 id="CTest"><a href="#CTest" class="headerlink" title="CTest"></a>CTest</h1><h2 id="基本用法"><a href="#基本用法" class="headerlink" title="基本用法"></a>基本用法</h2><p>&#x3D;&#x3D;要使用 CTest 和相关的东西需要调用 <code>enable_testing</code>。&#x3D;&#x3D;</p>
-<p>ctest 是要在 build tree 执行的。</p>
-<p>ctest 也能直接编译和运行（两步合为一步），但是要手动提供测试命令（有点奇怪）。</p>
-<p><img src="/../../../../assets/7ca10eeb58885e9b9539c3406ecab01a.webp"></p>
-<p>Dry run：</p>
-<blockquote>
-<p>CTest offers an -N option, which disables execution and only prints a list.</p>
-</blockquote>
-<p><strong>将测试用标签分组</strong>（之前我在 NexusNet 只用了 NAME 关键字）：</p>
-<blockquote>
-<p>CTest also offers a mechanism to group tests with LABELS keyword.</p>
-</blockquote>
-          <!--noindex-->
-            <div class="post-button">
-              <a class="btn" href="/2024-02-01/chapter08-testing/#more" rel="contents">
-                阅读全文 &raquo;
-              </a>
-            </div>
-          <!--/noindex-->
-        
-      
-    </div>
-
-    
-    
-    
-      <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  
-  
-  
-
 
   
   <nav class="pagination">
-    <a class="extend prev" rel="prev" href="/page/2/"><i class="fa fa-angle-left" aria-label="上一页"></i></a><a class="page-number" href="/">1</a><a class="page-number" href="/page/2/">2</a><span class="page-number current">3</span><a class="page-number" href="/page/4/">4</a><span class="space">&hellip;</span><a class="page-number" href="/page/18/">18</a><a class="extend next" rel="next" href="/page/4/"><i class="fa fa-angle-right" aria-label="下一页"></i></a>
+    <a class="extend prev" rel="prev" href="/page/2/"><i class="fa fa-angle-left" aria-label="上一页"></i></a><a class="page-number" href="/">1</a><a class="page-number" href="/page/2/">2</a><span class="page-number current">3</span><a class="page-number" href="/page/4/">4</a><span class="space">&hellip;</span><a class="page-number" href="/page/19/">19</a><a class="extend next" rel="next" href="/page/4/"><i class="fa fa-angle-right" aria-label="下一页"></i></a>
   </nav>
 
 
@@ -1332,7 +1285,7 @@
       <div class="site-state-item site-state-posts">
           <a href="/archives/">
         
-          <span class="site-state-item-count">174</span>
+          <span class="site-state-item-count">186</span>
           <span class="site-state-item-name">日志</span>
         </a>
       </div>
@@ -1345,7 +1298,7 @@
       <div class="site-state-item site-state-tags">
             <a href="/tags/">
           
-        <span class="site-state-item-count">34</span>
+        <span class="site-state-item-count">38</span>
         <span class="site-state-item-name">标签</span></a>
       </div>
   </nav>
@@ -1393,13 +1346,13 @@
       <i class="fa fa-chart-area"></i>
     </span>
       <span class="post-meta-item-text">站点总字数：</span>
-    <span title="站点总字数">111k</span>
+    <span title="站点总字数">112k</span>
     <span class="post-meta-divider">|</span>
     <span class="post-meta-item-icon">
       <i class="fa fa-coffee"></i>
     </span>
       <span class="post-meta-item-text">站点阅读时长 &asymp;</span>
-    <span title="站点阅读时长">6:42</span>
+    <span title="站点阅读时长">6:48</span>
 </div>
   <div class="powered-by">由 <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Gemini</a> 强力驱动
   </div><script color="0,0,255" opacity="0.5" zIndex="-1" count="99" src="https://cdn.jsdelivr.net/npm/canvas-nest.js@1/dist/canvas-nest.js"></script>
@@ -1420,8 +1373,12 @@
   
   <script src="/lib/anime.min.js"></script>
   <script src="//cdn.jsdelivr.net/npm/pangu@4/dist/browser/pangu.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
 
 <script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
 
 
 <script src="/js/schemes/pisces.js"></script>

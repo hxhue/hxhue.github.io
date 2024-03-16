@@ -19,7 +19,7 @@
 
 <script id="hexo-configurations">
     var NexT = window.NexT || {};
-    var CONFIG = {"hostname":"hxhue.github.io","root":"/","scheme":"Gemini","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"always","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":true,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":true,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":false,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},"path":"search.xml"};
+    var CONFIG = {"hostname":"hxhue.github.io","root":"/","scheme":"Gemini","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"always","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":true,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":true,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},"path":"search.xml"};
   </script>
 
   <meta name="description" content="export 和 install 命令都有 TARGETS 和 EXPORT 两种参数形式，所以容易混淆： 1234567891011export (TARGETS ...)  将给定的 targets 导出到 target export file，不会创建 named exportinstall(TARGETS ... [EXPORT] ...)  如果有 EXPORT，除了安装之外，还会顺便从">
@@ -81,11 +81,11 @@
   </style>
 </noscript>
 
-<link rel="alternate" href="/atom.xml" title="Hxhue's Blog" type="application/atom+xml">
+<!-- hexo injector head_end start --><style>a { word-break: break-all; }</style><!-- hexo injector head_end end --><link rel="alternate" href="/atom.xml" title="Hxhue's Blog" type="application/atom+xml">
 </head>
 
 <body itemscope itemtype="http://schema.org/WebPage">
-  <div class="container">
+  <div class="container use-motion">
     <div class="headband"></div>
 
     <header class="header" itemscope itemtype="http://schema.org/WPHeader">
@@ -269,7 +269,7 @@
         <p><code>export</code> 和 <code>install</code> 命令都有 <code>TARGETS</code> 和 <code>EXPORT</code> 两种参数形式，所以容易混淆：</p>
 <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">export (TARGETS ...)</span><br><span class="line">  将给定的 targets 导出到 target export file，不会创建 named export</span><br><span class="line"></span><br><span class="line">install(TARGETS ... [EXPORT] ...)</span><br><span class="line">  如果有 EXPORT，除了安装之外，还会顺便从 targets 创建 named export（有两个作用！！这个是我是检查了 cmake_install.cmake 的）</span><br><span class="line"></span><br><span class="line">export (EXPORT  ...)</span><br><span class="line">  将 named export 导出到文件，可以指定名字空间</span><br><span class="line"></span><br><span class="line">install(EXPORT  ...)</span><br><span class="line">  将 named export 安装到系统，和 export(EXPORT ...) 有相似的参数，同样可以指定名字空间</span><br></pre></td></tr></table></figure>
 
-<p><code>export</code> 命令用来导出 target export file。<code>install</code> 命令用来安装文件到系统。在 target export file 的场景下，两者都能用于“安装”，但是前者一般是用在安装在临时路径上（参考 <a href="../../../../../_archive/cmake/Modern%20CMake%20for%20C++/chapter11%20-%20installing%20and%20packaging.md#Exporting%20without%20installation">link</a>），而后者是用来安装进系统的。</p>
+<p><code>export</code> 命令用来导出 target export file。<code>install</code> 命令用来安装文件到系统。在 target export file 的场景下，两者都能用于“安装”，但是前者一般是用在安装在临时路径上（参考 <a href="/2024-02-01/chapter11-a-%E5%AF%B9%E6%AF%94-export-%E5%92%8C-install-%E5%91%BD%E4%BB%A4/../../../../../../_archive/cmake/Modern%20CMake%20for%20C++/chapter11%20-%20installing%20and%20packaging/#Exporting-without-installation">link</a>），而后者是用来安装进系统的。</p>
 <p>例子：unnamed export VS named export</p>
 <figure class="highlight cmake"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># unnamed export</span></span><br><span class="line"><span class="keyword">export</span>(TARGETS calc</span><br><span class="line">       <span class="keyword">FILE</span> <span class="string">&quot;$&#123;EXPORT_DIR&#125;/CalcTargets.cmake&quot;</span></span><br><span class="line">       NAMESPACE Calc::</span><br><span class="line">)</span><br><span class="line"></span><br><span class="line"><span class="comment">#[=[</span></span><br><span class="line">named <span class="keyword">export</span>，同时还有 <span class="keyword">install</span>(TARGETS calc) 的副作用。因而代码相当于：</span><br><span class="line"><span class="keyword">install</span>(TARGETS calc)</span><br><span class="line"><span class="keyword">export</span>(TARGETS calc</span><br><span class="line">       <span class="keyword">FILE</span> <span class="string">&quot;$&#123;EXPORT_DIR&#125;/CalcTargets2.cmake&quot;</span></span><br><span class="line">       NAMESPACE Calc::</span><br><span class="line">)</span><br><span class="line"><span class="comment">#]=]</span></span><br><span class="line"><span class="keyword">install</span>(TARGETS calc <span class="keyword">EXPORT</span> CalcTargets)</span><br><span class="line"><span class="keyword">export</span>(<span class="keyword">EXPORT</span> CalcTargets</span><br><span class="line">       <span class="keyword">FILE</span> <span class="string">&quot;$&#123;EXPORT_DIR&#125;/CalcTargets2.cmake&quot;</span></span><br><span class="line">       NAMESPACE Calc::</span><br><span class="line">)</span><br></pre></td></tr></table></figure>
 
@@ -294,8 +294,8 @@
         
     <div class="post-nav">
       <div class="post-nav-item">
-    <a href="/2024-01-31/cmake-config-%E7%94%9F%E6%88%90%E5%99%A8%E8%A1%A8%E8%BE%BE%E5%BC%8F/" rel="prev" title="CMake CONFIG 生成器表达式">
-      <i class="fa fa-chevron-left"></i> CMake CONFIG 生成器表达式
+    <a href="/2024-02-01/chapter10-documents/" rel="prev" title="chapter10 - documents">
+      <i class="fa fa-chevron-left"></i> chapter10 - documents
     </a></div>
       <div class="post-nav-item">
     <a href="/2024-02-01/chapter11-installing-and-packaging/" rel="next" title="chapter11 - installing and packaging">
@@ -372,7 +372,7 @@
       <div class="site-state-item site-state-posts">
           <a href="/archives/">
         
-          <span class="site-state-item-count">174</span>
+          <span class="site-state-item-count">186</span>
           <span class="site-state-item-name">日志</span>
         </a>
       </div>
@@ -385,7 +385,7 @@
       <div class="site-state-item site-state-tags">
             <a href="/tags/">
           
-        <span class="site-state-item-count">34</span>
+        <span class="site-state-item-count">38</span>
         <span class="site-state-item-name">标签</span></a>
       </div>
   </nav>
@@ -433,13 +433,13 @@
       <i class="fa fa-chart-area"></i>
     </span>
       <span class="post-meta-item-text">站点总字数：</span>
-    <span title="站点总字数">111k</span>
+    <span title="站点总字数">112k</span>
     <span class="post-meta-divider">|</span>
     <span class="post-meta-item-icon">
       <i class="fa fa-coffee"></i>
     </span>
       <span class="post-meta-item-text">站点阅读时长 &asymp;</span>
-    <span title="站点阅读时长">6:42</span>
+    <span title="站点阅读时长">6:48</span>
 </div>
   <div class="powered-by">由 <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Gemini</a> 强力驱动
   </div><script color="0,0,255" opacity="0.5" zIndex="-1" count="99" src="https://cdn.jsdelivr.net/npm/canvas-nest.js@1/dist/canvas-nest.js"></script>
@@ -460,8 +460,12 @@
   
   <script src="/lib/anime.min.js"></script>
   <script src="//cdn.jsdelivr.net/npm/pangu@4/dist/browser/pangu.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
 
 <script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
 
 
 <script src="/js/schemes/pisces.js"></script>
