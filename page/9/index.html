@@ -191,7 +191,7 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="https://hxhue.github.io/2023-08-21/javascript-s-hoisting%EF%BC%88%E5%8F%98%E9%87%8F%E6%8F%90%E5%8D%87%E3%80%81%E5%87%BD%E6%95%B0%E6%8F%90%E5%8D%87%E3%80%81%E7%B1%BB%E6%8F%90%E5%8D%87%EF%BC%89/">
+    <link itemprop="mainEntityOfPage" href="https://hxhue.github.io/cli/git-restore/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="image" content="/images/avatar.gif">
@@ -205,7 +205,7 @@
       <header class="post-header">
         <h2 class="post-title" itemprop="name headline">
           
-            <a href="/2023-08-21/javascript-s-hoisting%EF%BC%88%E5%8F%98%E9%87%8F%E6%8F%90%E5%8D%87%E3%80%81%E5%87%BD%E6%95%B0%E6%8F%90%E5%8D%87%E3%80%81%E7%B1%BB%E6%8F%90%E5%8D%87%EF%BC%89/" class="post-title-link" itemprop="url">Javascript's Hoisting（变量提升、函数提升、类提升）</a>
+            <a href="/cli/git-restore/" class="post-title-link" itemprop="url">git restore</a>
         </h2>
 
         <div class="post-meta">
@@ -215,7 +215,7 @@
               </span>
               <span class="post-meta-item-text">发表于</span>
 
-              <time title="创建时间：2023-08-21 10:21:00" itemprop="dateCreated datePublished" datetime="2023-08-21T10:21:00+08:00">2023-08-21</time>
+              <time title="创建时间：2023-11-15 18:31:00" itemprop="dateCreated datePublished" datetime="2023-11-15T18:31:00+08:00">2023-11-15</time>
             </span>
               <span class="post-meta-item">
                 <span class="post-meta-item-icon">
@@ -230,7 +230,7 @@
               </span>
               <span class="post-meta-item-text">分类于</span>
                 <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/languages/" itemprop="url" rel="index"><span itemprop="name">languages</span></a>
+                  <a href="/categories/cli/" itemprop="url" rel="index"><span itemprop="name">CLI</span></a>
                 </span>
             </span>
 
@@ -240,7 +240,7 @@
                 <i class="far fa-file-word"></i>
               </span>
                 <span class="post-meta-item-text">本文字数：</span>
-              <span>364</span>
+              <span>293</span>
             </span>
             <span class="post-meta-item" title="阅读时长">
               <span class="post-meta-item-icon">
@@ -259,528 +259,112 @@
     <div class="post-body" itemprop="articleBody">
 
       
-          <h1 id="Function-hoisting"><a href="#Function-hoisting" class="headerlink" title="Function hoisting"></a>Function hoisting</h1><figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> <span class="title function_">callerArrow</span> = (<span class="params"></span>) =&gt; &#123;</span><br><span class="line">    <span class="keyword">return</span> <span class="title function_">callee</span>(); <span class="comment">// 刚定义这个函数时，callee 的状态是：defined but uninitialized</span></span><br><span class="line">                     <span class="comment">// 只要 callee 在调用这个函数之前初始化了就没有问题</span></span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="comment">// callee(); // 见不到定义，调用会出错</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">const</span> <span class="title function_">callee</span> = (<span class="params"></span>) =&gt; &#123;</span><br><span class="line">    <span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="string">&quot;Hello from callee!&quot;</span>)</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="title function_">callerArrow</span>(); <span class="comment">// callee 的定义出现了，可以调用</span></span><br><span class="line"></span><br><span class="line"><span class="title function_">calleeRegular</span>();</span><br><span class="line"><span class="keyword">function</span> <span class="title function_">calleeRegular</span>(<span class="params"></span>) &#123;</span><br><span class="line">    <span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="string">&quot;Hello from calleeRegular!&quot;</span>)</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<p>在同一个词法定义域中的所有声明都是能被看见的。但如果声明是函数，则还能支持直接（向后）调用，即<strong>函数提升</strong>规则。如果是箭头函数，则只能引用，不能调用。</p>
-<p>为什么箭头函数和普通函数有这样的区别？因为箭头函数没有用到 function 关键字，是按照变量的方式来定义的，遵循的是<strong>变量提升</strong>规则。</p>
-<h1 id="Variable-hoisting"><a href="#Variable-hoisting" class="headerlink" title="Variable hoisting"></a>Variable hoisting</h1><figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="variable language_">console</span>.<span class="title function_">log</span>(a)</span><br><span class="line">a = <span class="number">1</span></span><br></pre></td></tr></table></figure>
-
-<p>尝试修改第二行：</p>
-<table>
-<thead>
-<tr>
-<th>定义方式</th>
-<th>作用域</th>
-<th>hoisting?</th>
-<th>程序执行结果</th>
-</tr>
-</thead>
-<tbody><tr>
-<td><code>a = 1</code></td>
-<td>全局</td>
-<td>无</td>
-<td><code>ReferenceError: a is not defined</code></td>
-</tr>
-<tr>
-<td><code>var a = 1</code></td>
-<td>局部</td>
-<td>有</td>
-<td>打印 <code>undefined</code>（因为 <code>var</code> 变量有默认值）</td>
-</tr>
-<tr>
-<td><code>let = 1</code></td>
-<td>局部</td>
-<td>有</td>
-<td><code>ReferenceError: Cannot access &#39;a&#39; before initialization</code></td>
-</tr>
-<tr>
-<td><code>const = 1</code></td>
-<td>局部</td>
-<td>有</td>
-<td><code>ReferenceError: Cannot access &#39;a&#39; before initialization</code></td>
-</tr>
-</tbody></table>
-          <!--noindex-->
-            <div class="post-button">
-              <a class="btn" href="/2023-08-21/javascript-s-hoisting%EF%BC%88%E5%8F%98%E9%87%8F%E6%8F%90%E5%8D%87%E3%80%81%E5%87%BD%E6%95%B0%E6%8F%90%E5%8D%87%E3%80%81%E7%B1%BB%E6%8F%90%E5%8D%87%EF%BC%89/#more" rel="contents">
-                阅读全文 &raquo;
-              </a>
-            </div>
-          <!--/noindex-->
-        
-      
-    </div>
-
-    
-    
-    
-      <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  
-  
-  
-
-      
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="https://hxhue.github.io/2023-08-19/pointer-events-%E6%A0%B7%E5%BC%8F/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/avatar.gif">
-      <meta itemprop="name" content="Hxhue">
-      <meta itemprop="description" content="">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Hxhue's Blog">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          
-            <a href="/2023-08-19/pointer-events-%E6%A0%B7%E5%BC%8F/" class="post-title-link" itemprop="url">Pointer Events 样式</a>
-        </h2>
-
-        <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-calendar"></i>
-              </span>
-              <span class="post-meta-item-text">发表于</span>
-
-              <time title="创建时间：2023-08-19 15:51:00" itemprop="dateCreated datePublished" datetime="2023-08-19T15:51:00+08:00">2023-08-19</time>
-            </span>
-              <span class="post-meta-item">
-                <span class="post-meta-item-icon">
-                  <i class="far fa-calendar-check"></i>
-                </span>
-                <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2024-03-15 16:31:51" itemprop="dateModified" datetime="2024-03-15T16:31:51+08:00">2024-03-15</time>
-              </span>
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-folder"></i>
-              </span>
-              <span class="post-meta-item-text">分类于</span>
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/languages/" itemprop="url" rel="index"><span itemprop="name">languages</span></a>
-                </span>
-            </span>
-
-          <br>
-            <span class="post-meta-item" title="本文字数">
-              <span class="post-meta-item-icon">
-                <i class="far fa-file-word"></i>
-              </span>
-                <span class="post-meta-item-text">本文字数：</span>
-              <span>106</span>
-            </span>
-            <span class="post-meta-item" title="阅读时长">
-              <span class="post-meta-item-icon">
-                <i class="far fa-clock"></i>
-              </span>
-                <span class="post-meta-item-text">阅读时长 &asymp;</span>
-              <span>1 分钟</span>
-            </span>
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          <p>在 <code>&lt;a&gt;</code> 中加上 <code>style=&quot;pointer-events: none;&quot;</code> 会使得标签本身不能点击，但是其子元素可以点击。而在 <code>&lt;div&gt;</code> 中加同样的样式，会使得标签本身和子元素都不能点击。</p>
-<p>其他元素基本上都是只禁用本身，只有 <code>&lt;div&gt;</code> 元素会将子元素也禁用。</p>
-<p>如果想要将子元素的鼠标事件开启，需要加上 <code>style=&quot;pointer-events: auto;&quot;</code>。</p>
-
-      
-    </div>
-
-    
-    
-    
-      <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  
-  
-  
-
-      
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="https://hxhue.github.io/2023-08-19/python-dict-%E5%92%8C-ordereddict/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/avatar.gif">
-      <meta itemprop="name" content="Hxhue">
-      <meta itemprop="description" content="">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Hxhue's Blog">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          
-            <a href="/2023-08-19/python-dict-%E5%92%8C-ordereddict/" class="post-title-link" itemprop="url">Python dict 和 OrderedDict</a>
-        </h2>
-
-        <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-calendar"></i>
-              </span>
-              <span class="post-meta-item-text">发表于</span>
-
-              <time title="创建时间：2023-08-19 11:05:00" itemprop="dateCreated datePublished" datetime="2023-08-19T11:05:00+08:00">2023-08-19</time>
-            </span>
-              <span class="post-meta-item">
-                <span class="post-meta-item-icon">
-                  <i class="far fa-calendar-check"></i>
-                </span>
-                <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2024-03-15 19:37:47" itemprop="dateModified" datetime="2024-03-15T19:37:47+08:00">2024-03-15</time>
-              </span>
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-folder"></i>
-              </span>
-              <span class="post-meta-item-text">分类于</span>
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/languages/" itemprop="url" rel="index"><span itemprop="name">languages</span></a>
-                </span>
-            </span>
-
-          <br>
-            <span class="post-meta-item" title="本文字数">
-              <span class="post-meta-item-icon">
-                <i class="far fa-file-word"></i>
-              </span>
-                <span class="post-meta-item-text">本文字数：</span>
-              <span>196</span>
-            </span>
-            <span class="post-meta-item" title="阅读时长">
-              <span class="post-meta-item-icon">
-                <i class="far fa-clock"></i>
-              </span>
-                <span class="post-meta-item-text">阅读时长 &asymp;</span>
-              <span>1 分钟</span>
-            </span>
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          <h1 id="有序性"><a href="#有序性" class="headerlink" title="有序性"></a>有序性</h1><p>这里说的有序指的是<strong>维持键的插入顺序</strong>，并不是指使用二叉树维持键的大小关系。</p>
-<blockquote>
-<p><strong>As of Python version 3.7, dictionaries are ordered</strong>. In Python 3.6 and earlier, dictionaries are unordered.</p>
-</blockquote>
-<p>而 <code>OrderedDict</code> 一直是有序的。</p>
-<p><a target="_blank" rel="noopener" href="https://devdocs.io/python~3.11/library/collections#collections.OrderedDict">https://devdocs.io/python~3.11/library/collections#collections.OrderedDict</a></p>
-<h1 id="比较"><a href="#比较" class="headerlink" title="比较"></a>比较</h1><ol>
-<li>Python 内置的字典主要用于查询（但在 3.7 版本之后也附带了维持插入顺序的功能），如果要频繁使用排序的功能，<code>OrderedDict</code> 性能更好。</li>
-<li><code>OrderedDict</code> 有一些排序的接口，方便实现 LRU 缓存等。</li>
-<li><code>OrderedDict</code> 在相等比较时会额外比较键的顺序。</li>
-</ol>
-<blockquote>
-<p>A <a target="_blank" rel="noopener" href="https://devdocs.io/python~3.11/library/stdtypes#dict%20%22dict%22">regular</a> can emulate the order sensitive equality test with :<br><code>p == q and all(k1 == k2 for k1, k2 in zip(p, q))</code>.</p>
-</blockquote>
-          <!--noindex-->
-            <div class="post-button">
-              <a class="btn" href="/2023-08-19/python-dict-%E5%92%8C-ordereddict/#more" rel="contents">
-                阅读全文 &raquo;
-              </a>
-            </div>
-          <!--/noindex-->
-        
-      
-    </div>
-
-    
-    
-    
-      <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  
-  
-  
-
-      
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="https://hxhue.github.io/2023-08-17/%E5%9C%A8-windows-%E7%9A%84-bat-%E8%84%9A%E6%9C%AC%E4%B8%AD%E5%86%99-python-%E4%BB%A3%E7%A0%81/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/avatar.gif">
-      <meta itemprop="name" content="Hxhue">
-      <meta itemprop="description" content="">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Hxhue's Blog">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          
-            <a href="/2023-08-17/%E5%9C%A8-windows-%E7%9A%84-bat-%E8%84%9A%E6%9C%AC%E4%B8%AD%E5%86%99-python-%E4%BB%A3%E7%A0%81/" class="post-title-link" itemprop="url">在 Windows 的 bat 脚本中写 python 代码</a>
-        </h2>
-
-        <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-calendar"></i>
-              </span>
-              <span class="post-meta-item-text">发表于</span>
-
-              <time title="创建时间：2023-08-17 13:08:00" itemprop="dateCreated datePublished" datetime="2023-08-17T13:08:00+08:00">2023-08-17</time>
-            </span>
-              <span class="post-meta-item">
-                <span class="post-meta-item-icon">
-                  <i class="far fa-calendar-check"></i>
-                </span>
-                <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2024-03-15 16:45:34" itemprop="dateModified" datetime="2024-03-15T16:45:34+08:00">2024-03-15</time>
-              </span>
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-folder"></i>
-              </span>
-              <span class="post-meta-item-text">分类于</span>
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/languages/" itemprop="url" rel="index"><span itemprop="name">languages</span></a>
-                </span>
-            </span>
-
-          <br>
-            <span class="post-meta-item" title="本文字数">
-              <span class="post-meta-item-icon">
-                <i class="far fa-file-word"></i>
-              </span>
-                <span class="post-meta-item-text">本文字数：</span>
-              <span>130</span>
-            </span>
-            <span class="post-meta-item" title="阅读时长">
-              <span class="post-meta-item-icon">
-                <i class="far fa-clock"></i>
-              </span>
-                <span class="post-meta-item-text">阅读时长 &asymp;</span>
-              <span>1 分钟</span>
-            </span>
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          <figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><span class="line"><span class="string">&quot;python&quot;</span> <span class="string">&quot;%~dp0%~nx0&quot;</span></span><br><span class="line">exit</span><br><span class="line"></span><br><span class="line"><span class="string">&quot;&quot;&quot;</span></span><br><span class="line"><span class="string">字符串对于 cmd 来说是外部命令或参数，对于 python 来说是可拼接的字面量。</span></span><br><span class="line"><span class="string">exit 对 cmd 来说是退出，对于 python 来说是一个函数名。</span></span><br><span class="line"><span class="string">exit 会中止调用者，但在桌面点击运行的环境下可以正常使用。</span></span><br><span class="line"><span class="string">&quot;&quot;&quot;</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> uuid</span><br><span class="line"><span class="keyword">import</span> subprocess</span><br><span class="line"></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">main</span>():</span><br><span class="line">    <span class="keyword">while</span> (<span class="built_in">input</span>(<span class="string">&#x27;Hit enter to generate another key: &#x27;</span>).strip() == <span class="string">&#x27;&#x27;</span>):</span><br><span class="line">        s = <span class="built_in">str</span>(uuid.uuid4())</span><br><span class="line">        subprocess.run(<span class="string">&quot;clip&quot;</span>, text=<span class="literal">True</span>, <span class="built_in">input</span>=s)</span><br><span class="line">        <span class="built_in">print</span>(<span class="string">f&#x27;<span class="subst">&#123;s&#125;</span> is sent to your clipboard!\n&#x27;</span>)</span><br><span class="line"></span><br><span class="line"><span class="keyword">if</span> __name__ == <span class="string">&#x27;__main__&#x27;</span>:</span><br><span class="line">    <span class="keyword">try</span>:</span><br><span class="line">        main()</span><br><span class="line">    <span class="keyword">except</span>:</span><br><span class="line">        <span class="keyword">pass</span></span><br><span class="line">    <span class="built_in">input</span>(<span class="string">&#x27;\nYou entered something else. Program will end after your next input.&#x27;</span>)</span><br><span class="line"></span><br></pre></td></tr></table></figure>
-
-      
-    </div>
-
-    
-    
-    
-      <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  
-  
-  
-
-      
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="https://hxhue.github.io/2023-08-15/python-%E5%88%A4%E6%96%AD%E5%AD%97%E7%AC%A6%E4%B8%B2%E6%98%AF%E5%90%A6%E4%B8%BA%E7%A9%BA/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/avatar.gif">
-      <meta itemprop="name" content="Hxhue">
-      <meta itemprop="description" content="">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Hxhue's Blog">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          
-            <a href="/2023-08-15/python-%E5%88%A4%E6%96%AD%E5%AD%97%E7%AC%A6%E4%B8%B2%E6%98%AF%E5%90%A6%E4%B8%BA%E7%A9%BA/" class="post-title-link" itemprop="url">Python 判断字符串是否为空</a>
-        </h2>
-
-        <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-calendar"></i>
-              </span>
-              <span class="post-meta-item-text">发表于</span>
-
-              <time title="创建时间：2023-08-15 00:11:00" itemprop="dateCreated datePublished" datetime="2023-08-15T00:11:00+08:00">2023-08-15</time>
-            </span>
-              <span class="post-meta-item">
-                <span class="post-meta-item-icon">
-                  <i class="far fa-calendar-check"></i>
-                </span>
-                <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2024-03-15 16:31:51" itemprop="dateModified" datetime="2024-03-15T16:31:51+08:00">2024-03-15</time>
-              </span>
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-folder"></i>
-              </span>
-              <span class="post-meta-item-text">分类于</span>
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/languages/" itemprop="url" rel="index"><span itemprop="name">languages</span></a>
-                </span>
-            </span>
-
-          <br>
-            <span class="post-meta-item" title="本文字数">
-              <span class="post-meta-item-icon">
-                <i class="far fa-file-word"></i>
-              </span>
-                <span class="post-meta-item-text">本文字数：</span>
-              <span>14</span>
-            </span>
-            <span class="post-meta-item" title="阅读时长">
-              <span class="post-meta-item-icon">
-                <i class="far fa-clock"></i>
-              </span>
-                <span class="post-meta-item-text">阅读时长 &asymp;</span>
-              <span>1 分钟</span>
-            </span>
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          <figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">def</span> <span class="title function_">empty</span>(<span class="params">s</span>): <span class="keyword">return</span> s <span class="keyword">is</span> <span class="literal">None</span> <span class="keyword">or</span> <span class="built_in">len</span>(s) == <span class="number">0</span> <span class="keyword">or</span> s.isblank()</span><br></pre></td></tr></table></figure>
-
-
-      
-    </div>
-
-    
-    
-    
-      <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  
-  
-  
-
-      
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="https://hxhue.github.io/2023-08-12/cttcg-%E9%99%84%E5%BD%95-b-value-categories/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/avatar.gif">
-      <meta itemprop="name" content="Hxhue">
-      <meta itemprop="description" content="">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Hxhue's Blog">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          
-            <a href="/2023-08-12/cttcg-%E9%99%84%E5%BD%95-b-value-categories/" class="post-title-link" itemprop="url">CTTCG 附录 B Value Categories</a>
-        </h2>
-
-        <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-calendar"></i>
-              </span>
-              <span class="post-meta-item-text">发表于</span>
-
-              <time title="创建时间：2023-08-12 21:47:45" itemprop="dateCreated datePublished" datetime="2023-08-12T21:47:45+08:00">2023-08-12</time>
-            </span>
-              <span class="post-meta-item">
-                <span class="post-meta-item-icon">
-                  <i class="far fa-calendar-check"></i>
-                </span>
-                <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2024-03-15 16:31:51" itemprop="dateModified" datetime="2024-03-15T16:31:51+08:00">2024-03-15</time>
-              </span>
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-folder"></i>
-              </span>
-              <span class="post-meta-item-text">分类于</span>
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/languages/" itemprop="url" rel="index"><span itemprop="name">languages</span></a>
-                </span>
-            </span>
-
-          <br>
-            <span class="post-meta-item" title="本文字数">
-              <span class="post-meta-item-icon">
-                <i class="far fa-file-word"></i>
-              </span>
-                <span class="post-meta-item-text">本文字数：</span>
-              <span>277</span>
-            </span>
-            <span class="post-meta-item" title="阅读时长">
-              <span class="post-meta-item-icon">
-                <i class="far fa-clock"></i>
-              </span>
-                <span class="post-meta-item-text">阅读时长 &asymp;</span>
-              <span>1 分钟</span>
-            </span>
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          <p>对于变量而言，其括号表达式的值属性是左值引用。但由于 <code>decltype</code> 有特殊效果，直接对变量 <code>x</code> 使用 <code>decltype(x)</code> 并不遵循这一点，为此可以按照下面说的使用 <code>decltype((x))</code>。</p>
-<blockquote>
-<p>With the keyword decltype (introduced in C++11), it is possible to check the value category of any C++ expression. For any expression <code>x</code>, <code>decltype((x))</code> (note the double parentheses) yields:</p>
+          <p>在没有 <code>--source</code> 选项时，有 <code>--staged</code> 则默认使用 HEAD 来恢复，如果没有则默认使用 index。此时：</p>
 <ul>
-<li><code>type</code> if <code>x</code> is a prvalue</li>
-<li><code>type&amp;</code> if <code>x</code> is an lvalue</li>
-<li><code>type&amp;&amp;</code> if <code>x</code> is an xvalue</li>
+<li><code>git restore</code> 相当于 <code>git restore --worktree</code>。</li>
+<li><code>git restore --staged</code> 用 HEAD 的信息来恢复 index，不会改动 working tree。</li>
+<li><code>git restore --worktree</code> 用 index 的信息来恢复 working tree。</li>
+<li><code>git restore --worktree --staged</code> 同时恢复 working tree 和 index。<code>git restore --source HEAD --worktree --staged</code> 相当于 <code>git reset --hard</code> 对于单个文件的效果。（虽然按照官方的描述来说是默认 source 为 HEAD，但是在 git 2.25.1 中实测这种情况下的默认 source 是 index）</li>
 </ul>
-<p>The double parentheses in <code>decltype((x))</code> are needed to avoid producing the declared type of a named entity in case where the expression <code>x</code> does indeed name an entity (in other cases, the paren-theses have no effect). For example, if the expression <code>x</code> simply names a variable <code>v</code>, the construct without parentheses becomes <code>decltype(v)</code>, which produces the type of the variable <code>v</code> rather than a type reﬂecting the value category of the expression <code>x</code> referring to that variable.</p>
+<blockquote>
+<p><code>-W</code> <a target="_blank" rel="noopener" href="https://git-scm.com/docs/git-restore#Documentation/git-restore.txt---worktree">link1</a>; <a target="_blank" rel="noopener" href="https://git-scm.com/docs/git-restore#Documentation/git-restore.txt--S">link2</a> <a target="_blank" rel="noopener" href="https://git-scm.com/docs/git-restore#Documentation/git-restore.txt---staged">link3</a><br>Specify the restore location. If neither option is specified, by default the working tree is restored. Specifying <code>--staged</code> will only restore the index. Specifying both restores both.</p>
 </blockquote>
+<blockquote>
+<p>Torek insists on the fact <code>git restore --source &lt;aCommit&gt; --worktree -- somefile</code> is new (cannot be done with checkout): the ability to restore a file in the working tree <em>without touching the index</em>.Torek insists on the fact <code>git restore --source &lt;aCommit&gt; --worktree -- somefile</code> is new (cannot be done with checkout): the ability to restore a file in the working tree <em>without touching the index</em>.</p>
+</blockquote>
+<p>这大概是说 <code>git checkout</code> 利用历史 commit 改动单个文件的同时也会改动 index。</p>
+<p><code>git restore --staged file</code> 相当于 <code>git reset HEAD file</code>。这是因为 <code>git reset</code> 默认是 <code>--mixed</code> 模式，只改变 index 但是不改变 working tree。</p>
+
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://hxhue.github.io/programming/inline-namespace/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="Hxhue">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Hxhue's Blog">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/programming/inline-namespace/" class="post-title-link" itemprop="url">inline namespace</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2023-11-12 20:19:00" itemprop="dateCreated datePublished" datetime="2023-11-12T20:19:00+08:00">2023-11-12</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2024-03-15 16:31:51" itemprop="dateModified" datetime="2024-03-15T16:31:51+08:00">2024-03-15</time>
+              </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/programming/" itemprop="url" rel="index"><span itemprop="name">programming</span></a>
+                </span>
+            </span>
+
+          <br>
+            <span class="post-meta-item" title="本文字数">
+              <span class="post-meta-item-icon">
+                <i class="far fa-file-word"></i>
+              </span>
+                <span class="post-meta-item-text">本文字数：</span>
+              <span>64</span>
+            </span>
+            <span class="post-meta-item" title="阅读时长">
+              <span class="post-meta-item-icon">
+                <i class="far fa-clock"></i>
+              </span>
+                <span class="post-meta-item-text">阅读时长 &asymp;</span>
+              <span>1 分钟</span>
+            </span>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <p><a target="_blank" rel="noopener" href="https://en.cppreference.com/w/cpp/language/namespace">Namespaces - cppreference.com</a></p>
+<p>inline namespace 既本身存在，又将所有内容引入自己所在的（enclosing）名字空间中。相当于名字空间后面加了一句：<code>using namespace X;</code></p>
 <p>例子：</p>
-<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;iostream&gt;</span></span></span><br><span class="line"></span><br><span class="line"><span class="keyword">template</span>&lt;<span class="keyword">typename</span> T&gt;</span><br><span class="line"><span class="keyword">struct</span> <span class="title class_">value_category</span> &#123;</span><br><span class="line">    <span class="type">static</span> <span class="keyword">constexpr</span> <span class="keyword">auto</span> value = <span class="string">&quot;prvalue&quot;</span>;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="keyword">template</span>&lt;<span class="keyword">typename</span> T&gt;</span><br><span class="line"><span class="keyword">struct</span> <span class="title class_">value_category</span>&lt;T&amp;&gt; &#123;</span><br><span class="line">    <span class="type">static</span> <span class="keyword">constexpr</span> <span class="keyword">auto</span> value = <span class="string">&quot;lvalue&quot;</span>;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="keyword">template</span>&lt;<span class="keyword">typename</span> T&gt;</span><br><span class="line"><span class="keyword">struct</span> <span class="title class_">value_category</span>&lt;T&amp;&amp;&gt; &#123;</span><br><span class="line">    <span class="type">static</span> <span class="keyword">constexpr</span> <span class="keyword">auto</span> value = <span class="string">&quot;xvalue&quot;</span>;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="comment">// Get value category of an expression</span></span><br><span class="line"><span class="meta">#<span class="keyword">define</span> VALUE_CATEGORY(expr) value_category<span class="string">&lt;decltype((expr))&gt;</span>::value</span></span><br><span class="line"><span class="meta">#<span class="keyword">define</span> PRINT(expr) printf(<span class="string">&quot;(%s) : %s\n&quot;</span>, #expr, VALUE_CATEGORY(expr))</span></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="type">int</span> <span class="title">main</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    <span class="built_in">PRINT</span>(<span class="number">4</span>);   <span class="comment">// prvalue</span></span><br><span class="line">    <span class="type">int</span> x;</span><br><span class="line">    <span class="type">int</span> &amp;y = x;</span><br><span class="line">    <span class="type">int</span> &amp;&amp;z = (<span class="type">int</span> &amp;&amp;)x;</span><br><span class="line">    <span class="built_in">PRINT</span>(x);   <span class="comment">// lvalue</span></span><br><span class="line">    <span class="built_in">PRINT</span>(y);   <span class="comment">// lvalue</span></span><br><span class="line">    <span class="built_in">PRINT</span>(z);   <span class="comment">// lvalue</span></span><br><span class="line">    <span class="built_in">PRINT</span>(x+<span class="number">1</span>); <span class="comment">// prvalue</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">inline</span> <span class="keyword">namespace</span> A &#123;</span><br><span class="line">    <span class="keyword">using</span> Int = <span class="type">int</span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="type">int</span> <span class="title">main</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    A::Int a;</span><br><span class="line">    Int b; <span class="comment">// 也能成功</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 
       
     </div>
@@ -800,7 +384,7 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="https://hxhue.github.io/2023-08-12/cttcg-%E9%99%84%E5%BD%95-e-concept/">
+    <link itemprop="mainEntityOfPage" href="https://hxhue.github.io/unsorted/%E6%8F%8F%E8%BF%B0%E9%A2%9C%E8%89%B2%E7%9A%84%E6%9C%AF%E8%AF%AD%EF%BC%9A%E8%89%B2%E7%9B%B8%E3%80%81%E9%A5%B1%E5%92%8C%E5%BA%A6%E3%80%81%E4%BA%AE%E5%BA%A6/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="image" content="/images/avatar.gif">
@@ -814,7 +398,7 @@
       <header class="post-header">
         <h2 class="post-title" itemprop="name headline">
           
-            <a href="/2023-08-12/cttcg-%E9%99%84%E5%BD%95-e-concept/" class="post-title-link" itemprop="url">CTTCG 附录 E Concept</a>
+            <a href="/unsorted/%E6%8F%8F%E8%BF%B0%E9%A2%9C%E8%89%B2%E7%9A%84%E6%9C%AF%E8%AF%AD%EF%BC%9A%E8%89%B2%E7%9B%B8%E3%80%81%E9%A5%B1%E5%92%8C%E5%BA%A6%E3%80%81%E4%BA%AE%E5%BA%A6/" class="post-title-link" itemprop="url">描述颜色的术语：色相、饱和度、亮度</a>
         </h2>
 
         <div class="post-meta">
@@ -824,7 +408,97 @@
               </span>
               <span class="post-meta-item-text">发表于</span>
 
-              <time title="创建时间：2023-08-12 21:47:45" itemprop="dateCreated datePublished" datetime="2023-08-12T21:47:45+08:00">2023-08-12</time>
+              <time title="创建时间：2023-11-12 13:43:00" itemprop="dateCreated datePublished" datetime="2023-11-12T13:43:00+08:00">2023-11-12</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2024-03-16 13:24:18" itemprop="dateModified" datetime="2024-03-16T13:24:18+08:00">2024-03-16</time>
+              </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/unsorted/" itemprop="url" rel="index"><span itemprop="name">unsorted</span></a>
+                </span>
+            </span>
+
+          <br>
+            <span class="post-meta-item" title="本文字数">
+              <span class="post-meta-item-icon">
+                <i class="far fa-file-word"></i>
+              </span>
+                <span class="post-meta-item-text">本文字数：</span>
+              <span>52</span>
+            </span>
+            <span class="post-meta-item" title="阅读时长">
+              <span class="post-meta-item-icon">
+                <i class="far fa-clock"></i>
+              </span>
+                <span class="post-meta-item-text">阅读时长 &asymp;</span>
+              <span>1 分钟</span>
+            </span>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <p><img src="/unsorted/%E6%8F%8F%E8%BF%B0%E9%A2%9C%E8%89%B2%E7%9A%84%E6%9C%AF%E8%AF%AD%EF%BC%9A%E8%89%B2%E7%9B%B8%E3%80%81%E9%A5%B1%E5%92%8C%E5%BA%A6%E3%80%81%E4%BA%AE%E5%BA%A6/../../../assets/a38f57a7090157b88a31966c509f46fb.jpeg"></p>
+<p>这三个单词的含义分别是色相、饱和度、亮度。</p>
+<p>所有的粉色都是洋红色，所有的洋红色都是紫色。<a target="_blank" rel="noopener" href="https://english.stackexchange.com/questions/226940/what-is-pink-and-what-is-magenta">word choice - What is ‘pink’ and what is ‘magenta’? - English Language &amp; Usage Stack Exchange</a></p>
+
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://hxhue.github.io/programming/python-re-match/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="Hxhue">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Hxhue's Blog">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/programming/python-re-match/" class="post-title-link" itemprop="url">Python re.match</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2023-11-11 23:32:00" itemprop="dateCreated datePublished" datetime="2023-11-11T23:32:00+08:00">2023-11-11</time>
             </span>
               <span class="post-meta-item">
                 <span class="post-meta-item-icon">
@@ -839,7 +513,7 @@
               </span>
               <span class="post-meta-item-text">分类于</span>
                 <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/languages/" itemprop="url" rel="index"><span itemprop="name">languages</span></a>
+                  <a href="/categories/programming/" itemprop="url" rel="index"><span itemprop="name">programming</span></a>
                 </span>
             </span>
 
@@ -849,7 +523,7 @@
                 <i class="far fa-file-word"></i>
               </span>
                 <span class="post-meta-item-text">本文字数：</span>
-              <span>373</span>
+              <span>45</span>
             </span>
             <span class="post-meta-item" title="阅读时长">
               <span class="post-meta-item-icon">
@@ -868,17 +542,372 @@
     <div class="post-body" itemprop="articleBody">
 
       
-          <h1 id="定义和使用-concept"><a href="#定义和使用-concept" class="headerlink" title="定义和使用 concept"></a>定义和使用 concept</h1><p>下面演示了几种 C++20 支持的定义 concept 的方式：</p>
-<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">template</span> &lt;<span class="keyword">typename</span> T&gt;</span><br><span class="line"><span class="keyword">concept</span> StringConcept = <span class="built_in">requires</span>(T t) &#123;</span><br><span class="line">    <span class="keyword">typename</span> T::iterator; <span class="comment">// 1. 检查类型存在性</span></span><br><span class="line">    t.<span class="built_in">data</span>();             <span class="comment">// 2. 检查表达式合法性</span></span><br><span class="line"></span><br><span class="line">    <span class="comment">// 3. 将表达式作为concept的第一个参数，要求concept成立（额外参数从第二个参数起放置）</span></span><br><span class="line">    &#123; t.<span class="built_in">c_str</span>() &#125; -&gt; std::same_as&lt;<span class="type">char</span> <span class="type">const</span> *&gt;;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 4. 用 requires 语句引入子条件</span></span><br><span class="line">    <span class="keyword">requires</span> std::is_pointer_v&lt;<span class="keyword">decltype</span>(t.<span class="built_in">data</span>())&gt;;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 5. 除了requires体之外还能用其他编译期常量表达式做约束</span></span><br><span class="line">&#125; &amp;&amp; (<span class="built_in">sizeof</span>(T) &gt; <span class="number">8</span>) &amp;&amp; !std::is_aggregate_v&lt;T&gt;;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">template</span>&lt;StringConcept Str&gt;</span></span><br><span class="line"><span class="function"><span class="type">void</span> <span class="title">takeString</span><span class="params">(Str <span class="type">const</span> &amp;s)</span> </span>&#123; &#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="type">int</span> <span class="title">main</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    <span class="built_in">takeString</span>(std::string&#123;<span class="string">&quot;hello&quot;</span>&#125;);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+          <p>Python 的正则表达式函数基本都是从第一个字符开始匹配的。不像 bash 和 JS 是任意位置匹配都行。所以要适当加上 <code>.*</code>。</p>
 
-<p>在模板中加上 <code>requires</code> 条件则相对比较简单。只需要在 <strong>模板参数后，函数返回值前面</strong>，或者 <strong>函数体前面</strong> 加上 <code>requires</code> 约束。<code>requires</code> 约束能使用一般的条件表达式，也能把 concept 当成 type trait 使用。比如：</p>
-<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">template</span> &lt;<span class="keyword">typename</span> T&gt;</span><br><span class="line"><span class="function"><span class="keyword">requires</span> HasPlus&lt;T&gt;</span></span><br><span class="line"><span class="function"><span class="type">int</span> <span class="title">f</span><span class="params">(T p)</span></span></span><br><span class="line"><span class="function"></span>&#123;&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">template</span> &lt;<span class="keyword">typename</span> T&gt;</span><br><span class="line"><span class="function"><span class="type">int</span> <span class="title">g</span><span class="params">(T p)</span></span></span><br><span class="line"><span class="function"><span class="keyword">requires</span> HasPlus&lt;T&gt;</span></span><br><span class="line"><span class="function"></span>&#123;&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 注意 requires 约束的位置比较灵活</span></span><br></pre></td></tr></table></figure>
+      
+    </div>
 
-<p>上方代码中 <code>template&lt;StringConcept Str&gt;</code> 是对 <code>template&lt;typename Str&gt; requires StringConcept&lt;Str&gt;</code> 的缩写。只有单参数 concept 可以用这种简写方法。（<em>是的，concept 可以有多个参数！</em>）</p>
-<h1 id="concept-下的重载选择"><a href="#concept-下的重载选择" class="headerlink" title="concept 下的重载选择"></a>concept 下的重载选择</h1><p>如果一个 concept 中显式使用了另外一个 concept（可以通过 <code>requires</code> 体中的 <code>requires</code> 语句，也可以通过 concept 定义中的 <code>&amp;&amp;</code> 逻辑连词），则前者比后者严格。如果两个 concept 都能启用模板，则更严格的那个被选择。</p>
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://hxhue.github.io/cli/bash-%E4%B8%8B%E4%B8%8D%E7%94%A8%E8%BD%AC%E4%B9%89%E7%AC%A6%E6%89%93%E5%8D%B0%E7%BA%A2%E8%89%B2%E5%AD%97%E7%AC%A6%E4%B8%B2/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="Hxhue">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Hxhue's Blog">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/cli/bash-%E4%B8%8B%E4%B8%8D%E7%94%A8%E8%BD%AC%E4%B9%89%E7%AC%A6%E6%89%93%E5%8D%B0%E7%BA%A2%E8%89%B2%E5%AD%97%E7%AC%A6%E4%B8%B2/" class="post-title-link" itemprop="url">bash 下不用转义符打印红色字符串</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2023-11-11 16:42:00" itemprop="dateCreated datePublished" datetime="2023-11-11T16:42:00+08:00">2023-11-11</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2024-03-18 16:33:32" itemprop="dateModified" datetime="2024-03-18T16:33:32+08:00">2024-03-18</time>
+              </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/cli/" itemprop="url" rel="index"><span itemprop="name">CLI</span></a>
+                </span>
+            </span>
+
+          <br>
+            <span class="post-meta-item" title="本文字数">
+              <span class="post-meta-item-icon">
+                <i class="far fa-file-word"></i>
+              </span>
+                <span class="post-meta-item-text">本文字数：</span>
+              <span>23</span>
+            </span>
+            <span class="post-meta-item" title="阅读时长">
+              <span class="post-meta-item-icon">
+                <i class="far fa-clock"></i>
+              </span>
+                <span class="post-meta-item-text">阅读时长 &asymp;</span>
+              <span>1 分钟</span>
+            </span>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <p>给一个必定匹配的模式让 grep 打印所有行：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">... | grep -E <span class="string">&#x27;(^|pattern)&#x27;</span> --color=always</span><br></pre></td></tr></table></figure>
+
+
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://hxhue.github.io/system/windows-%E4%B8%8B%E7%94%A8-cmd-%E6%88%96-powershell-%E4%B8%80%E9%94%AE%E9%87%8D%E5%90%AF%E6%98%BE%E5%8D%A1%E9%A9%B1%E5%8A%A8/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="Hxhue">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Hxhue's Blog">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/system/windows-%E4%B8%8B%E7%94%A8-cmd-%E6%88%96-powershell-%E4%B8%80%E9%94%AE%E9%87%8D%E5%90%AF%E6%98%BE%E5%8D%A1%E9%A9%B1%E5%8A%A8/" class="post-title-link" itemprop="url">Windows 下用 CMD 或 powershell 一键重启显卡驱动</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2023-11-09 18:36:00" itemprop="dateCreated datePublished" datetime="2023-11-09T18:36:00+08:00">2023-11-09</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2024-03-18 16:41:22" itemprop="dateModified" datetime="2024-03-18T16:41:22+08:00">2024-03-18</time>
+              </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/system/" itemprop="url" rel="index"><span itemprop="name">system</span></a>
+                </span>
+            </span>
+
+          <br>
+            <span class="post-meta-item" title="本文字数">
+              <span class="post-meta-item-icon">
+                <i class="far fa-file-word"></i>
+              </span>
+                <span class="post-meta-item-text">本文字数：</span>
+              <span>216</span>
+            </span>
+            <span class="post-meta-item" title="阅读时长">
+              <span class="post-meta-item-icon">
+                <i class="far fa-clock"></i>
+              </span>
+                <span class="post-meta-item-text">阅读时长 &asymp;</span>
+              <span>1 分钟</span>
+            </span>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <p>主要是双显卡笔记本切换显示屏后，部分应用没有切换图形显示卡，导致未活跃的显卡时不时被唤醒，而每次唤醒会有一秒的卡顿。</p>
+<p>创建 bat 文件（<strong>其中硬件驱动的实例路径需要在设备管理器上查看后根据实际修改</strong>）：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line">:: Run as admin</span><br><span class="line">@echo off</span><br><span class="line"><span class="meta prompt_">%</span><span class="language-bash">1 mshta vbscript:createobject(<span class="string">&quot;shell.application&quot;</span>).shellexecute(<span class="string">&quot;%~s0&quot;</span>,<span class="string">&quot;::&quot;</span>,<span class="string">&quot;&quot;</span>,<span class="string">&quot;runas&quot;</span>,1)(window.close)&amp;<span class="built_in">exit</span></span></span><br><span class="line">cd /d %~dp0</span><br><span class="line"></span><br><span class="line">:: 如果变量为空，整个分支判断会被静默掉，所以给个默认值</span><br><span class="line">set &quot;Input=1&quot;</span><br><span class="line">set /p Input=Index of graphics card to reset? (0: Intel, 1: NVIDIA[default])</span><br><span class="line"></span><br><span class="line">if %Input% equ 0 (</span><br><span class="line">    pnputil /disable-device &quot;PCI\VEN_8086&amp;DEV_3E9B&amp;SUBSYS_39FD17AA&amp;REV_00\3&amp;11583659&amp;0&amp;10&quot;</span><br><span class="line">    pnputil /enable-device &quot;PCI\VEN_8086&amp;DEV_3E9B&amp;SUBSYS_39FD17AA&amp;REV_00\3&amp;11583659&amp;0&amp;10&quot;</span><br><span class="line">) else if %Input% equ 1 (</span><br><span class="line">    pnputil /disable-device &quot;PCI\VEN_10DE&amp;DEV_1C8C&amp;SUBSYS_39FD17AA&amp;REV_A1\4&amp;77AC7CD&amp;0&amp;0008&quot;</span><br><span class="line">    pnputil /enable-device &quot;PCI\VEN_10DE&amp;DEV_1C8C&amp;SUBSYS_39FD17AA&amp;REV_A1\4&amp;77AC7CD&amp;0&amp;0008&quot;</span><br><span class="line">) else (</span><br><span class="line">    echo:</span><br><span class="line">    echo|set /p _=&quot;&gt;&gt;&gt; Unknown choice! Exiting... &lt;&lt;&lt;&quot;</span><br><span class="line">    echo:</span><br><span class="line">    echo:</span><br><span class="line">    pause</span><br><span class="line">)</span><br></pre></td></tr></table></figure>
+
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://hxhue.github.io/programming/cuda-%E8%B0%83%E8%AF%95/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="Hxhue">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Hxhue's Blog">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/programming/cuda-%E8%B0%83%E8%AF%95/" class="post-title-link" itemprop="url">CUDA 调试</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2023-11-06 15:47:00" itemprop="dateCreated datePublished" datetime="2023-11-06T15:47:00+08:00">2023-11-06</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2024-03-18 17:03:24" itemprop="dateModified" datetime="2024-03-18T17:03:24+08:00">2024-03-18</time>
+              </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/programming/" itemprop="url" rel="index"><span itemprop="name">programming</span></a>
+                </span>
+            </span>
+
+          <br>
+            <span class="post-meta-item" title="本文字数">
+              <span class="post-meta-item-icon">
+                <i class="far fa-file-word"></i>
+              </span>
+                <span class="post-meta-item-text">本文字数：</span>
+              <span>62</span>
+            </span>
+            <span class="post-meta-item" title="阅读时长">
+              <span class="post-meta-item-icon">
+                <i class="far fa-clock"></i>
+              </span>
+                <span class="post-meta-item-text">阅读时长 &asymp;</span>
+              <span>1 分钟</span>
+            </span>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <p>cuda-gdb 是 cuda 的调试工具，执行非常慢。</p>
+<p>如果需要符号信息，nvcc 的编译选项需要加上 <code>-g -G</code>，其中 <code>-g</code> 是给 host 代码添加符号信息，而 <code>-G</code> 是给 device 侧代码添加符号信息。</p>
+
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://hxhue.github.io/programming/%E7%94%A8-std-variant-%E7%9A%84%E5%9D%91/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="Hxhue">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Hxhue's Blog">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/programming/%E7%94%A8-std-variant-%E7%9A%84%E5%9D%91/" class="post-title-link" itemprop="url">用 std::variant 的坑</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2023-11-03 16:43:00" itemprop="dateCreated datePublished" datetime="2023-11-03T16:43:00+08:00">2023-11-03</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2024-03-15 16:31:51" itemprop="dateModified" datetime="2024-03-15T16:31:51+08:00">2024-03-15</time>
+              </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/programming/" itemprop="url" rel="index"><span itemprop="name">programming</span></a>
+                </span>
+            </span>
+
+          <br>
+            <span class="post-meta-item" title="本文字数">
+              <span class="post-meta-item-icon">
+                <i class="far fa-file-word"></i>
+              </span>
+                <span class="post-meta-item-text">本文字数：</span>
+              <span>203</span>
+            </span>
+            <span class="post-meta-item" title="阅读时长">
+              <span class="post-meta-item-icon">
+                <i class="far fa-clock"></i>
+              </span>
+                <span class="post-meta-item-text">阅读时长 &asymp;</span>
+              <span>1 分钟</span>
+            </span>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <h1 id="decltype-推导可能带有-属性"><a href="#decltype-推导可能带有-属性" class="headerlink" title="decltype 推导可能带有 &amp; 属性"></a>decltype 推导可能带有 <code>&amp;</code> 属性</h1><p>被 <code>decltype</code> 坑了很多次。推导出来可能有引用类型，想要值类型时需要先去掉！</p>
+<h1 id="不同的-variant-在-visitor-的参数里必须独立"><a href="#不同的-variant-在-visitor-的参数里必须独立" class="headerlink" title="不同的 variant 在 visitor 的参数里必须独立"></a>不同的 variant 在 visitor 的参数里必须独立</h1><p><code>std::visit</code> 的多个参数必须独立和模板参数匹配（或者 lambda 和 C++20 函数的 auto），所以即便是要求两个类型相等，也必须写成这样：</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">template</span> &lt;<span class="keyword">typename</span> DType1, <span class="keyword">typename</span> DType2&gt;</span><br><span class="line"><span class="function"><span class="type">void</span> <span class="title">f</span><span class="params">(DType1* input, DType2* output)</span> </span>&#123;</span><br><span class="line">  <span class="comment">// DType1 and DType2 are actually the same type.</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>如果确定两个类型一样，也可以少传入一个 variant，使用 <code>void *</code> 传入类型，然后手动做转换。</p>
+<h1 id="if-constexpr-的编译问题"><a href="#if-constexpr-的编译问题" class="headerlink" title="if constexpr 的编译问题"></a>if constexpr 的编译问题</h1><p><strong>if constexpr 只在模板代码中才有去除分支的作用</strong>，在普通代码中是不行的，此时不能用来剔除不能编译的分支。</p>
           <!--noindex-->
             <div class="post-button">
-              <a class="btn" href="/2023-08-12/cttcg-%E9%99%84%E5%BD%95-e-concept/#more" rel="contents">
+              <a class="btn" href="/programming/%E7%94%A8-std-variant-%E7%9A%84%E5%9D%91/#more" rel="contents">
                 阅读全文 &raquo;
               </a>
             </div>
@@ -902,7 +931,7 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="https://hxhue.github.io/2023-08-12/vim/">
+    <link itemprop="mainEntityOfPage" href="https://hxhue.github.io/developer/vs-code-%E8%BF%9C%E7%A8%8B%E4%B8%BB%E6%9C%BA%E6%8F%92%E4%BB%B6%E4%B8%8D%E8%83%BD%E4%B8%8B%E8%BD%BD/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="image" content="/images/avatar.gif">
@@ -916,7 +945,7 @@
       <header class="post-header">
         <h2 class="post-title" itemprop="name headline">
           
-            <a href="/2023-08-12/vim/" class="post-title-link" itemprop="url">vim</a>
+            <a href="/developer/vs-code-%E8%BF%9C%E7%A8%8B%E4%B8%BB%E6%9C%BA%E6%8F%92%E4%BB%B6%E4%B8%8D%E8%83%BD%E4%B8%8B%E8%BD%BD/" class="post-title-link" itemprop="url">VS Code 远程主机插件不能下载</a>
         </h2>
 
         <div class="post-meta">
@@ -926,14 +955,14 @@
               </span>
               <span class="post-meta-item-text">发表于</span>
 
-              <time title="创建时间：2023-08-12 15:17:00" itemprop="dateCreated datePublished" datetime="2023-08-12T15:17:00+08:00">2023-08-12</time>
+              <time title="创建时间：2023-11-03 12:14:00" itemprop="dateCreated datePublished" datetime="2023-11-03T12:14:00+08:00">2023-11-03</time>
             </span>
               <span class="post-meta-item">
                 <span class="post-meta-item-icon">
                   <i class="far fa-calendar-check"></i>
                 </span>
                 <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2024-03-15 23:21:00" itemprop="dateModified" datetime="2024-03-15T23:21:00+08:00">2024-03-15</time>
+                <time title="修改时间：2024-03-15 23:24:02" itemprop="dateModified" datetime="2024-03-15T23:24:02+08:00">2024-03-15</time>
               </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
@@ -941,7 +970,7 @@
               </span>
               <span class="post-meta-item-text">分类于</span>
                 <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/cli/" itemprop="url" rel="index"><span itemprop="name">CLI</span></a>
+                  <a href="/categories/developer/" itemprop="url" rel="index"><span itemprop="name">developer</span></a>
                 </span>
             </span>
 
@@ -951,107 +980,7 @@
                 <i class="far fa-file-word"></i>
               </span>
                 <span class="post-meta-item-text">本文字数：</span>
-              <span>461</span>
-            </span>
-            <span class="post-meta-item" title="阅读时长">
-              <span class="post-meta-item-icon">
-                <i class="far fa-clock"></i>
-              </span>
-                <span class="post-meta-item-text">阅读时长 &asymp;</span>
-              <span>2 分钟</span>
-            </span>
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          <h1 id="vim-配置文件位置"><a href="#vim-配置文件位置" class="headerlink" title="vim 配置文件位置"></a>vim 配置文件位置</h1><p>使用 <code>:scriptnames</code> 查看。</p>
-<p>neovim + Windows 的配置文件：<code>%userprofile%\AppData\Local\nvim\init.vim</code></p>
-<p>macOS 和 Linux：<code>~/.config/nvim/init.vim</code></p>
-<h1 id="自用基础配置"><a href="#自用基础配置" class="headerlink" title="自用基础配置"></a>自用基础配置</h1><figure class="highlight vim"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">set</span> <span class="keyword">number</span></span><br><span class="line"><span class="keyword">set</span> relativenumber</span><br><span class="line"><span class="keyword">set</span> expandtab</span><br><span class="line"><span class="keyword">set</span> ss=<span class="number">4</span></span><br><span class="line"><span class="keyword">set</span> tabstop=<span class="number">4</span></span><br><span class="line"><span class="keyword">set</span> <span class="built_in">shiftwidth</span>=<span class="number">4</span></span><br></pre></td></tr></table></figure>
-
-<h1 id="在打开文件之前执行命令"><a href="#在打开文件之前执行命令" class="headerlink" title="在打开文件之前执行命令"></a>在打开文件之前执行命令</h1><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">vim <span class="string">&quot;+set ff=unix&quot;</span> <span class="string">&quot;+wq&quot;</span> 文件名</span><br></pre></td></tr></table></figure>
-          <!--noindex-->
-            <div class="post-button">
-              <a class="btn" href="/2023-08-12/vim/#more" rel="contents">
-                阅读全文 &raquo;
-              </a>
-            </div>
-          <!--/noindex-->
-        
-      
-    </div>
-
-    
-    
-    
-      <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  
-  
-  
-
-      
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="https://hxhue.github.io/2023-08-12/tmux/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/avatar.gif">
-      <meta itemprop="name" content="Hxhue">
-      <meta itemprop="description" content="">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Hxhue's Blog">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          
-            <a href="/2023-08-12/tmux/" class="post-title-link" itemprop="url">tmux</a>
-        </h2>
-
-        <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-calendar"></i>
-              </span>
-              <span class="post-meta-item-text">发表于</span>
-
-              <time title="创建时间：2023-08-12 15:17:00" itemprop="dateCreated datePublished" datetime="2023-08-12T15:17:00+08:00">2023-08-12</time>
-            </span>
-              <span class="post-meta-item">
-                <span class="post-meta-item-icon">
-                  <i class="far fa-calendar-check"></i>
-                </span>
-                <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2024-03-15 23:20:22" itemprop="dateModified" datetime="2024-03-15T23:20:22+08:00">2024-03-15</time>
-              </span>
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-folder"></i>
-              </span>
-              <span class="post-meta-item-text">分类于</span>
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/cli/" itemprop="url" rel="index"><span itemprop="name">CLI</span></a>
-                </span>
-            </span>
-
-          <br>
-            <span class="post-meta-item" title="本文字数">
-              <span class="post-meta-item-icon">
-                <i class="far fa-file-word"></i>
-              </span>
-                <span class="post-meta-item-text">本文字数：</span>
-              <span>159</span>
+              <span>112</span>
             </span>
             <span class="post-meta-item" title="阅读时长">
               <span class="post-meta-item-icon">
@@ -1070,20 +999,14 @@
     <div class="post-body" itemprop="articleBody">
 
       
-          <p>配置文件在 <code>~/.tmux.conf</code>。</p>
-<p>开启鼠标（可能是最正常的操作逻辑了）：</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">set</span> -g mouse on</span><br></pre></td></tr></table></figure>
+          <p>提示 XHR failed。</p>
+<p>找到插件的网页下载 Linux 版本，然后从文件资源管理器拖动文件到工作目录，拷贝文件后运行：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">code --install-extension ./doxdocgen-1.4.0.vsix</span><br></pre></td></tr></table></figure>
 
-<p>打开之后能够支持切换 window、panel，调整 panel 之间的相对大小。右键还有一些便捷操作。比如 mark 提供复制功能。</p>
-<ul>
-<li><code>ctrl</code> + <code>b</code> 是默认的 prefix 按键，先按这个 prefix 键然后按其他按键可以使用特殊功能</li>
-<li><code>d</code> 是 detach</li>
-<li><code>%</code> 是左右分屏（产生新的 panel）</li>
-<li><code>&quot;</code> 是上下分屏（产生新的 panel）</li>
-<li><code>z</code> 是暂时最大化</li>
-<li><code>c</code> 是创建新的窗口（window）</li>
-</ul>
-<p>对正在运行的 tmux 重载配置： <a target="_blank" rel="noopener" href="https://unix.stackexchange.com/questions/516800/how-do-i-enable-tmux-mouse-support">https://unix.stackexchange.com/questions/516800/how-do-i-enable-tmux-mouse-support</a></p>
+<p>也可能是本机的代理设置和远程主机的代理设置冲突了，可以修改远程主机的 <code>&quot;http.proxy&quot;</code> 为空：</p>
+<figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="punctuation">&#123;</span></span><br><span class="line">    <span class="attr">&quot;http.proxy&quot;</span><span class="punctuation">:</span> <span class="string">&quot;&quot;</span><span class="punctuation">,</span></span><br><span class="line"><span class="punctuation">&#125;</span></span><br></pre></td></tr></table></figure>
+
+<p>这个设置应该是立即生效的，删掉扩展搜索词重新输入试试。</p>
 
       
     </div>
@@ -1103,7 +1026,7 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="https://hxhue.github.io/2023-08-12/openjdk-copyonwritearraylist/">
+    <link itemprop="mainEntityOfPage" href="https://hxhue.github.io/programming/%E9%98%BB%E6%AD%A2%E4%B8%80%E4%B8%AA%E6%A8%A1%E6%9D%BF%E7%B1%BB%E8%A2%AB%E5%AE%9E%E4%BE%8B%E5%8C%96%E5%B9%B6%E7%BB%99%E5%87%BA%E9%94%99%E8%AF%AF%E4%BF%A1%E6%81%AF/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="image" content="/images/avatar.gif">
@@ -1117,7 +1040,7 @@
       <header class="post-header">
         <h2 class="post-title" itemprop="name headline">
           
-            <a href="/2023-08-12/openjdk-copyonwritearraylist/" class="post-title-link" itemprop="url">OpenJDK: CopyOnWriteArrayList</a>
+            <a href="/programming/%E9%98%BB%E6%AD%A2%E4%B8%80%E4%B8%AA%E6%A8%A1%E6%9D%BF%E7%B1%BB%E8%A2%AB%E5%AE%9E%E4%BE%8B%E5%8C%96%E5%B9%B6%E7%BB%99%E5%87%BA%E9%94%99%E8%AF%AF%E4%BF%A1%E6%81%AF/" class="post-title-link" itemprop="url">阻止一个模板类被实例化并给出错误信息</a>
         </h2>
 
         <div class="post-meta">
@@ -1127,14 +1050,14 @@
               </span>
               <span class="post-meta-item-text">发表于</span>
 
-              <time title="创建时间：2023-08-12 15:17:00" itemprop="dateCreated datePublished" datetime="2023-08-12T15:17:00+08:00">2023-08-12</time>
+              <time title="创建时间：2023-11-02 15:45:00" itemprop="dateCreated datePublished" datetime="2023-11-02T15:45:00+08:00">2023-11-02</time>
             </span>
               <span class="post-meta-item">
                 <span class="post-meta-item-icon">
                   <i class="far fa-calendar-check"></i>
                 </span>
                 <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2024-03-15 16:45:04" itemprop="dateModified" datetime="2024-03-15T16:45:04+08:00">2024-03-15</time>
+                <time title="修改时间：2024-03-15 16:31:51" itemprop="dateModified" datetime="2024-03-15T16:31:51+08:00">2024-03-15</time>
               </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
@@ -1142,7 +1065,7 @@
               </span>
               <span class="post-meta-item-text">分类于</span>
                 <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/languages/" itemprop="url" rel="index"><span itemprop="name">languages</span></a>
+                  <a href="/categories/programming/" itemprop="url" rel="index"><span itemprop="name">programming</span></a>
                 </span>
             </span>
 
@@ -1152,7 +1075,7 @@
                 <i class="far fa-file-word"></i>
               </span>
                 <span class="post-meta-item-text">本文字数：</span>
-              <span>51</span>
+              <span>124</span>
             </span>
             <span class="post-meta-item" title="阅读时长">
               <span class="post-meta-item-icon">
@@ -1171,7 +1094,11 @@
     <div class="post-body" itemprop="articleBody">
 
       
-          <p>写的时候加锁（因为要替换 array 数组的引用，而且复制的过程比较耗时，不宜自旋），读的时候不用加锁。替换的安全性由 Java volatile 保证。</p>
+          <p>注意，这个类作为（不完整）类型出现在别的模板的参数中是可以的，只有访问成员才会出错。</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">template</span> &lt;<span class="keyword">typename</span> Target&gt;</span><br><span class="line"><span class="keyword">struct</span> <span class="title class_">FindValue</span>&lt;Target, TypeList&lt;&gt;&gt; &#123;</span><br><span class="line">  <span class="type">static</span> <span class="keyword">inline</span> <span class="keyword">constexpr</span> <span class="type">bool</span> ALWAYS_FALSE = <span class="built_in">sizeof</span>(Target) == <span class="number">0</span>;</span><br><span class="line">  <span class="built_in">static_assert</span>(ALWAYS_FALSE, <span class="string">&quot;Unsupported type! Check `nexus::detail::DataTypeList`.&quot;</span>);</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+
+<p><a target="_blank" rel="noopener" href="https://stackoverflow.com/a/40472836/">https://stackoverflow.com/a/40472836/</a></p>
+<p>任何类型要么是不完整类型，无法被 sizeof 评估（会报错），要么被评估为正整数（包括 void 也会被评估为 1）。用 -1 的话会有类型转换警告，所以用 0 就好了。</p>
 
       
     </div>
@@ -1190,7 +1117,7 @@
 
   
   <nav class="pagination">
-    <a class="extend prev" rel="prev" href="/page/8/"><i class="fa fa-angle-left" aria-label="上一页"></i></a><a class="page-number" href="/">1</a><span class="space">&hellip;</span><a class="page-number" href="/page/8/">8</a><span class="page-number current">9</span><a class="page-number" href="/page/10/">10</a><span class="space">&hellip;</span><a class="page-number" href="/page/19/">19</a><a class="extend next" rel="next" href="/page/10/"><i class="fa fa-angle-right" aria-label="下一页"></i></a>
+    <a class="extend prev" rel="prev" href="/page/8/"><i class="fa fa-angle-left" aria-label="上一页"></i></a><a class="page-number" href="/">1</a><span class="space">&hellip;</span><a class="page-number" href="/page/8/">8</a><span class="page-number current">9</span><a class="page-number" href="/page/10/">10</a><span class="space">&hellip;</span><a class="page-number" href="/page/21/">21</a><a class="extend next" rel="next" href="/page/10/"><i class="fa fa-angle-right" aria-label="下一页"></i></a>
   </nav>
 
 
@@ -1256,7 +1183,7 @@
       <div class="site-state-item site-state-posts">
           <a href="/archives/">
         
-          <span class="site-state-item-count">186</span>
+          <span class="site-state-item-count">210</span>
           <span class="site-state-item-name">日志</span>
         </a>
       </div>
@@ -1269,7 +1196,7 @@
       <div class="site-state-item site-state-tags">
             <a href="/tags/">
           
-        <span class="site-state-item-count">38</span>
+        <span class="site-state-item-count">47</span>
         <span class="site-state-item-name">标签</span></a>
       </div>
   </nav>
@@ -1317,13 +1244,13 @@
       <i class="fa fa-chart-area"></i>
     </span>
       <span class="post-meta-item-text">站点总字数：</span>
-    <span title="站点总字数">112k</span>
+    <span title="站点总字数">117k</span>
     <span class="post-meta-divider">|</span>
     <span class="post-meta-item-icon">
       <i class="fa fa-coffee"></i>
     </span>
       <span class="post-meta-item-text">站点阅读时长 &asymp;</span>
-    <span title="站点阅读时长">6:48</span>
+    <span title="站点阅读时长">7:07</span>
 </div>
   <div class="powered-by">由 <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Gemini</a> 强力驱动
   </div><script color="0,0,255" opacity="0.5" zIndex="-1" count="99" src="https://cdn.jsdelivr.net/npm/canvas-nest.js@1/dist/canvas-nest.js"></script>

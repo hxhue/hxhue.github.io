@@ -1,0 +1,543 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 7.1.1">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+  <link rel="stylesheet" href="/lib/pace/pace-theme-minimal.min.css">
+  <script src="/lib/pace/pace.min.js"></script>
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"hxhue.github.io","root":"/","scheme":"Gemini","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"always","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":true,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":true,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},"path":"search.xml"};
+  </script>
+
+  <meta name="description" content="程序分段  .text section: Machine code, with all the instructions to be executed by the processor  .data section: All values of the initialized global and static objects (variables)  .bss section: All valu">
+<meta property="og:type" content="article">
+<meta property="og:title" content="chapter06 - linking">
+<meta property="og:url" content="https://hxhue.github.io/cli/chapter06-linking/index.html">
+<meta property="og:site_name" content="Hxhue&#39;s Blog">
+<meta property="og:description" content="程序分段  .text section: Machine code, with all the instructions to be executed by the processor  .data section: All values of the initialized global and static objects (variables)  .bss section: All valu">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://hxhue.github.io/assets/64c742277ee1ef7f3cdf8b9122b1f754.webp">
+<meta property="og:image" content="https://hxhue.github.io/assets/34541da063f09d037b43216bbc190ebd.webp">
+<meta property="og:image" content="https://hxhue.github.io/assets/46e5676e1712b851ad881fe4159b38fa.webp">
+<meta property="og:image" content="https://hxhue.github.io/assets/793658caaa9900f8495b459c50ac9f7d.webp">
+<meta property="og:image" content="https://hxhue.github.io/assets/e0ecad14ba8545eb0f0d0229de965426.webp">
+<meta property="og:image" content="https://hxhue.github.io/assets/bbede21d72185c852fda91f4f015612f.webp">
+<meta property="og:image" content="https://hxhue.github.io/assets/acea788ff6d689c523458b145642c738.webp">
+<meta property="article:published_time" content="2024-02-01T15:01:00.000Z">
+<meta property="article:modified_time" content="2024-03-16T05:24:17.502Z">
+<meta property="article:author" content="Hxhue">
+<meta property="article:tag" content="cpp">
+<meta property="article:tag" content="cmake">
+<meta property="article:tag" content="modern-cmake-for-cpp">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://hxhue.github.io/assets/64c742277ee1ef7f3cdf8b9122b1f754.webp">
+
+<link rel="canonical" href="https://hxhue.github.io/cli/chapter06-linking/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'zh-CN'
+  };
+</script>
+
+  <title>chapter06 - linking | Hxhue's Blog</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+<!-- hexo injector head_end start --><style>a { word-break: break-all; }</style><!-- hexo injector head_end end --><link rel="alternate" href="/atom.xml" title="Hxhue's Blog" type="application/atom+xml">
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">Hxhue's Blog</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+        <i class="fa fa-search fa-fw fa-lg"></i>
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="main-menu menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档</a>
+
+  </li>
+        <li class="menu-item menu-item-about">
+
+    <a href="/about/" rel="section"><i class="fa fa-user fa-fw"></i>关于</a>
+
+  </li>
+        <li class="menu-item menu-item-tags">
+
+    <a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>标签</a>
+
+  </li>
+        <li class="menu-item menu-item-categories">
+
+    <a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>分类</a>
+
+  </li>
+      <li class="menu-item menu-item-search">
+        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>搜索
+        </a>
+      </li>
+  </ul>
+</nav>
+
+
+
+  <div class="search-pop-overlay">
+    <div class="popup search-popup">
+        <div class="search-header">
+  <span class="search-icon">
+    <i class="fa fa-search"></i>
+  </span>
+  <div class="search-input-container">
+    <input autocomplete="off" autocapitalize="off"
+           placeholder="搜索..." spellcheck="false"
+           type="search" class="search-input">
+  </div>
+  <span class="popup-btn-close">
+    <i class="fa fa-times-circle"></i>
+  </span>
+</div>
+<div id="search-result">
+  <div id="no-result">
+    <i class="fa fa-spinner fa-pulse fa-5x fa-fw"></i>
+  </div>
+</div>
+
+    </div>
+  </div>
+
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post posts-expand">
+            
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://hxhue.github.io/cli/chapter06-linking/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="Hxhue">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Hxhue's Blog">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          chapter06 - linking
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2024-02-01 23:01:00" itemprop="dateCreated datePublished" datetime="2024-02-01T23:01:00+08:00">2024-02-01</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2024-03-16 13:24:17" itemprop="dateModified" datetime="2024-03-16T13:24:17+08:00">2024-03-16</time>
+              </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/cli/" itemprop="url" rel="index"><span itemprop="name">CLI</span></a>
+                </span>
+            </span>
+
+          <br>
+            <span class="post-meta-item" title="本文字数">
+              <span class="post-meta-item-icon">
+                <i class="far fa-file-word"></i>
+              </span>
+                <span class="post-meta-item-text">本文字数：</span>
+              <span>444</span>
+            </span>
+            <span class="post-meta-item" title="阅读时长">
+              <span class="post-meta-item-icon">
+                <i class="far fa-clock"></i>
+              </span>
+                <span class="post-meta-item-text">阅读时长 &asymp;</span>
+              <span>2 分钟</span>
+            </span>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <h1 id="程序分段"><a href="#程序分段" class="headerlink" title="程序分段"></a>程序分段</h1><p><img src="/cli/chapter06-linking/../../../../../assets/64c742277ee1ef7f3cdf8b9122b1f754.webp"></p>
+<ul>
+<li><p>.text section: Machine code, with all the instructions to be executed by the processor</p>
+</li>
+<li><p>.data section: All values of the initialized global and static objects (variables)</p>
+</li>
+<li><p>.bss section: All values of the uninitialized global and static objects (variables), which will be initialized to zero on program start</p>
+</li>
+<li><p>.rodata section: All values of the constants (read-only data)</p>
+</li>
+<li><p>.strtab section: 常量字符串的表</p>
+</li>
+<li><p>.shstrtab section: 每个 section 的名称字符串的表</p>
+<p>可执行文件有一些差异，其中之一就是 program header，它描述了创建进程镜像的信息。<br><img src="/cli/chapter06-linking/../../../../../assets/34541da063f09d037b43216bbc190ebd.webp"></p>
+</li>
+</ul>
+<h1 id="库的分类"><a href="#库的分类" class="headerlink" title="库的分类"></a>库的分类</h1><p>CMake 支持的有 <code>STATIC</code>, <code>SHARED</code>, <code>MODULE</code>：</p>
+<h2 id="MODULE"><a href="#MODULE" class="headerlink" title="MODULE"></a><code>MODULE</code></h2><p><img src="/cli/chapter06-linking/../../../../../assets/46e5676e1712b851ad881fe4159b38fa.webp"></p>
+<p>不应该将 <code>MODULE</code> 链接到其他文件。成为 <code>MODULE</code> 的库需要在运行时被显式链接。</p>
+<h1 id="Position-independent-code"><a href="#Position-independent-code" class="headerlink" title="Position-independent code"></a>Position-independent code</h1><blockquote>
+<p>CMake checks the <code>POSITION_INDEPENDENT_CODE</code> property of targets and appropriately adds compiler-specific compilation flags such as <code>-fPIC</code> for gcc or clang.</p>
+</blockquote>
+<p>PIC will add a new section to our output - <strong>the Global Offset Table (GOT)</strong>. Eventually, this section will become a segment containing runtime addresses for all the symbols needed by shared libraries.</p>
+<p><img src="/cli/chapter06-linking/../../../../../assets/793658caaa9900f8495b459c50ac9f7d.webp"></p>
+<p>感觉这里没有自动传播 <code>POSITION_INDEPENDENT_CODE</code> 是一个设计上的问题？不过 cmake 可以通过这个属性在传播目标上的一致性做冲突检查。</p>
+<h1 id="Dynamically-linked-duplicated-symbols"><a href="#Dynamically-linked-duplicated-symbols" class="headerlink" title="Dynamically linked duplicated symbols"></a>Dynamically linked duplicated symbols</h1><p>动态链接时出现符号冲突，那么最终使用的符号和链接的顺序有关，而不是直接报错！</p>
+<h1 id="The-order-of-linking-and-unresolved-symbols"><a href="#The-order-of-linking-and-unresolved-symbols" class="headerlink" title="The order of linking and unresolved symbols"></a>The order of linking and unresolved symbols</h1><p>Linker 是比较笨的。只是简单按顺序从库中找到当前 unresolved 的符号，但是在处理库的时候可能会增加新的 unresolved 符号。如果在链接一个库时新增了 unresolved 符号，但是提供这个符号的库早就已经被 link 过了，而且后面也没有再次出现，那么就会出现问题。</p>
+<p>这个时候要么更换顺序：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">target_link_libraries(main outer nested)</span><br></pre></td></tr></table></figure>
+
+<p>要么 link 多次：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">target_link_libraries(main nested outer nested)</span><br></pre></td></tr></table></figure>
+
+<p>还可以用特殊的 linker 选项：</p>
+<p><img src="/cli/chapter06-linking/../../../../../assets/e0ecad14ba8545eb0f0d0229de965426.webp"></p>
+<h1 id="Separating-main-for-testing"><a href="#Separating-main-for-testing" class="headerlink" title="Separating main() for testing"></a>Separating main() for testing</h1><p><img src="/cli/chapter06-linking/../../../../../assets/bbede21d72185c852fda91f4f015612f.webp"></p>
+<p><img src="/cli/chapter06-linking/../../../../../assets/acea788ff6d689c523458b145642c738.webp"></p>
+<p>感觉不是很方便啊？</p>
+
+    </div>
+
+    
+    
+    
+
+      <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/cpp/" rel="tag"># cpp</a>
+              <a href="/tags/cmake/" rel="tag"># cmake</a>
+              <a href="/tags/modern-cmake-for-cpp/" rel="tag"># modern-cmake-for-cpp</a>
+          </div>
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/cli/chapter07-managing-dependencies/" rel="prev" title="chapter07 - managing dependencies">
+      <i class="fa fa-chevron-left"></i> chapter07 - managing dependencies
+    </a></div>
+      <div class="post-nav-item">
+    <a href="/cli/chapter04-a-%E6%A2%B3%E7%90%86%E4%BE%9D%E8%B5%96%E6%98%AF%E5%A6%82%E4%BD%95%E5%88%9B%E5%BB%BA%E7%9A%84/" rel="next" title="chapter04.a - 梳理依赖是如何创建的">
+      chapter04.a - 梳理依赖是如何创建的 <i class="fa fa-chevron-right"></i>
+    </a></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+
+
+          </div>
+          
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#%E7%A8%8B%E5%BA%8F%E5%88%86%E6%AE%B5"><span class="nav-text">程序分段</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%BA%93%E7%9A%84%E5%88%86%E7%B1%BB"><span class="nav-text">库的分类</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#MODULE"><span class="nav-text">MODULE</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Position-independent-code"><span class="nav-text">Position-independent code</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Dynamically-linked-duplicated-symbols"><span class="nav-text">Dynamically linked duplicated symbols</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#The-order-of-linking-and-unresolved-symbols"><span class="nav-text">The order of linking and unresolved symbols</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Separating-main-for-testing"><span class="nav-text">Separating main() for testing</span></a></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+  <p class="site-author-name" itemprop="name">Hxhue</p>
+  <div class="site-description" itemprop="description"></div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">210</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+            <a href="/categories/">
+          
+        <span class="site-state-item-count">6</span>
+        <span class="site-state-item-name">分类</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+            <a href="/tags/">
+          
+        <span class="site-state-item-count">47</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author motion-element">
+      <span class="links-of-author-item">
+        <a href="https://github.com/hxhue" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;hxhue" rel="noopener" target="_blank"><i class="fab fa-github fa-fw"></i></a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="https://stackoverflow.com/users/13785815" title="StackOverflow → https:&#x2F;&#x2F;stackoverflow.com&#x2F;users&#x2F;13785815" rel="noopener" target="_blank"><i class="fab fa-stack-overflow fa-fw"></i></a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="mailto:simooncake@gmail.com" title="Email → mailto:simooncake@gmail.com" rel="noopener" target="_blank"><i class="fa fa-envelope fa-fw"></i></a>
+      </span>
+  </div>
+
+
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+
+<div class="copyright">
+  
+  &copy; 
+  <span itemprop="copyrightYear">2024</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Hxhue</span>
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item-icon">
+      <i class="fa fa-chart-area"></i>
+    </span>
+      <span class="post-meta-item-text">站点总字数：</span>
+    <span title="站点总字数">117k</span>
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item-icon">
+      <i class="fa fa-coffee"></i>
+    </span>
+      <span class="post-meta-item-text">站点阅读时长 &asymp;</span>
+    <span title="站点阅读时长">7:07</span>
+</div>
+  <div class="powered-by">由 <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Gemini</a> 强力驱动
+  </div><script color="0,0,255" opacity="0.5" zIndex="-1" count="99" src="https://cdn.jsdelivr.net/npm/canvas-nest.js@1/dist/canvas-nest.js"></script>
+
+        
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="//cdn.jsdelivr.net/npm/pangu@4/dist/browser/pangu.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/pisces.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+
+
+
+  
+
+
+
+
+  
+<script src="/js/local-search.js"></script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+</body>
+</html>
