@@ -1,0 +1,578 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 7.1.1">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+  <link rel="stylesheet" href="/lib/pace/pace-theme-minimal.min.css">
+  <script src="/lib/pace/pace.min.js"></script>
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"hxhue.github.io","root":"/","scheme":"Gemini","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"always","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":true,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":true,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},"path":"search.xml"};
+  </script>
+
+  <meta name="description" content="组策略和注册表的关联组策略和注册表的内容是分别存储的，修改组策略并不会直接修改注册表。仅仅是在组策略刷新时，策略文件中的内容会被同步到注册表中。而且，组策略只维持自己的缓存，从不读取注册表中的值！ 当注册表不经过组策略编辑器被改动时，如果想要使用组策略管理相关项，可能需要先显式设置组策略中的项目为另外一个值，然后再改过来。  https:&#x2F;&#x2F;superuser.com&#x2F;a&#x2F;1192458 Loca">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Windows 合集">
+<meta property="og:url" content="https://hxhue.github.io/systems/windows-%E5%90%88%E9%9B%86/index.html">
+<meta property="og:site_name" content="Hxhue&#39;s Blog">
+<meta property="og:description" content="组策略和注册表的关联组策略和注册表的内容是分别存储的，修改组策略并不会直接修改注册表。仅仅是在组策略刷新时，策略文件中的内容会被同步到注册表中。而且，组策略只维持自己的缓存，从不读取注册表中的值！ 当注册表不经过组策略编辑器被改动时，如果想要使用组策略管理相关项，可能需要先显式设置组策略中的项目为另外一个值，然后再改过来。  https:&#x2F;&#x2F;superuser.com&#x2F;a&#x2F;1192458 Loca">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://hxhue.github.io/systems/assets/03904667cc69b9f4289b47e335e109de.jpeg">
+<meta property="og:image" content="https://hxhue.github.io/systems/assets/fb3f63a43e5eb7fd1ff56c99b20f8a98.png">
+<meta property="og:image" content="https://hxhue.github.io/systems/assets/8026377257cc607896dc55b7a840ce2f.jpeg">
+<meta property="og:image" content="https://hxhue.github.io/systems/assets/d9f0aa31d5bd9d36c26e7bcd57f5199c.png">
+<meta property="og:image" content="https://hxhue.github.io/systems/assets/7fa21c6087b5456903c0aa0e3c364933.png">
+<meta property="article:published_time" content="2023-08-12T07:17:00.000Z">
+<meta property="article:modified_time" content="2024-03-19T04:11:07.008Z">
+<meta property="article:author" content="Hxhue">
+<meta property="article:tag" content="windows">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://hxhue.github.io/systems/assets/03904667cc69b9f4289b47e335e109de.jpeg">
+
+<link rel="canonical" href="https://hxhue.github.io/systems/windows-%E5%90%88%E9%9B%86/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'zh-CN'
+  };
+</script>
+
+  <title>Windows 合集 | Hxhue's Blog</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+<!-- hexo injector head_end start --><style>a { word-break: break-all; }</style><!-- hexo injector head_end end --><link rel="alternate" href="/atom.xml" title="Hxhue's Blog" type="application/atom+xml">
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">Hxhue's Blog</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+        <i class="fa fa-search fa-fw fa-lg"></i>
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="main-menu menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档</a>
+
+  </li>
+        <li class="menu-item menu-item-about">
+
+    <a href="/about/" rel="section"><i class="fa fa-user fa-fw"></i>关于</a>
+
+  </li>
+        <li class="menu-item menu-item-tags">
+
+    <a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>标签</a>
+
+  </li>
+        <li class="menu-item menu-item-categories">
+
+    <a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>分类</a>
+
+  </li>
+      <li class="menu-item menu-item-search">
+        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>搜索
+        </a>
+      </li>
+  </ul>
+</nav>
+
+
+
+  <div class="search-pop-overlay">
+    <div class="popup search-popup">
+        <div class="search-header">
+  <span class="search-icon">
+    <i class="fa fa-search"></i>
+  </span>
+  <div class="search-input-container">
+    <input autocomplete="off" autocapitalize="off"
+           placeholder="搜索..." spellcheck="false"
+           type="search" class="search-input">
+  </div>
+  <span class="popup-btn-close">
+    <i class="fa fa-times-circle"></i>
+  </span>
+</div>
+<div id="search-result">
+  <div id="no-result">
+    <i class="fa fa-spinner fa-pulse fa-5x fa-fw"></i>
+  </div>
+</div>
+
+    </div>
+  </div>
+
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post posts-expand">
+            
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://hxhue.github.io/systems/windows-%E5%90%88%E9%9B%86/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="Hxhue">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Hxhue's Blog">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          Windows 合集
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2023-08-12 15:17:00" itemprop="dateCreated datePublished" datetime="2023-08-12T15:17:00+08:00">2023-08-12</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2024-03-19 12:11:07" itemprop="dateModified" datetime="2024-03-19T12:11:07+08:00">2024-03-19</time>
+              </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/systems/" itemprop="url" rel="index"><span itemprop="name">systems</span></a>
+                </span>
+            </span>
+
+          <br>
+            <span class="post-meta-item" title="本文字数">
+              <span class="post-meta-item-icon">
+                <i class="far fa-file-word"></i>
+              </span>
+                <span class="post-meta-item-text">本文字数：</span>
+              <span>1.5k</span>
+            </span>
+            <span class="post-meta-item" title="阅读时长">
+              <span class="post-meta-item-icon">
+                <i class="far fa-clock"></i>
+              </span>
+                <span class="post-meta-item-text">阅读时长 &asymp;</span>
+              <span>5 分钟</span>
+            </span>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <h1 id="组策略和注册表的关联"><a href="#组策略和注册表的关联" class="headerlink" title="组策略和注册表的关联"></a>组策略和注册表的关联</h1><p>组策略和注册表的内容是分别存储的，修改组策略并不会直接修改注册表。仅仅是在组策略刷新时，策略文件中的内容会被同步到注册表中。而且，组策略只维持自己的缓存，从不读取注册表中的值！</p>
+<p>当注册表不经过组策略编辑器被改动时，如果想要使用组策略管理相关项，可能需要先显式设置组策略中的项目为另外一个值，然后再改过来。</p>
+<blockquote>
+<p><a target="_blank" rel="noopener" href="https://superuser.com/a/1192458">https://superuser.com/a/1192458</a></p>
+<p><em>Local</em> group policy settings (which is what I believe you are referring to in your post) are stored in <code>registry.pol</code> files located in <code>C:\Windows\system32\GroupPolicy</code>. These files overwrite the corresponding keys in the registry every time the system performs a group policy refresh. The editor never actually reads the registry to see what settings it contains.</p>
+<p>其中 <code>C:\Windows\system32\GroupPolicy</code> 是一个隐藏文件夹。</p>
+</blockquote>
+<h2 id="家庭版下强行开启组策略编辑器，操作不生效？"><a href="#家庭版下强行开启组策略编辑器，操作不生效？" class="headerlink" title="家庭版下强行开启组策略编辑器，操作不生效？"></a>家庭版下强行开启组策略编辑器，操作不生效？</h2><p>编辑组策略后观察 <code>registry.pol</code> 文件，发现数据的确被写入了。比如启用“Windows 更新不包括驱动程序”，对应的文件如下：</p>
+<p><img src="/systems/windows-%E5%90%88%E9%9B%86/../assets/03904667cc69b9f4289b47e335e109de.jpeg"></p>
+<p>其中 <code>01 00 00 00</code> 表示“已启用”。这里看上去是一个字符按照两个字节存储，而整数又是 4 字节小端存储。</p>
+<p>使用 <code>gpupdate /force</code> 强行刷新组策略，在 <code>事件查看器 &gt; Windows 日志 &gt; 系统</code> 中，能看到：</p>
+<figure class="highlight txt"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">已成功为此计算机处理组策略设置。已经检测到并应用了 1 个组策略对象的新设置。</span><br></pre></td></tr></table></figure>
+
+<p><strong>但策略设置并没有被同步到注册表中。</strong></p>
+<h1 id="Windows-家庭版启用组策略编辑器"><a href="#Windows-家庭版启用组策略编辑器" class="headerlink" title="Windows 家庭版启用组策略编辑器"></a>Windows 家庭版启用组策略编辑器</h1><p>可以用脚本启用，但是<strong>不推荐</strong>！虽然能编辑，但内容并不生效。可以转而使用注册表来完成相同的功能。网上流传的脚本如下（需要管理员权限）：</p>
+<figure class="highlight bat"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">pushd</span> &quot;%~dp0&quot;</span><br><span class="line"><span class="built_in">dir</span> /b <span class="variable">%SystemRoot%</span>\servicing\Packages\Microsoft-Windows-GroupPolicy-ClientExtensions-Package~<span class="number">3</span>*.mum &gt;List.txt</span><br><span class="line"><span class="built_in">dir</span> /b <span class="variable">%SystemRoot%</span>\servicing\Packages\Microsoft-Windows-GroupPolicy-ClientTools-Package~<span class="number">3</span>*.mum &gt;&gt;List.txt</span><br><span class="line"><span class="keyword">for</span> /f <span class="variable">%%i</span> <span class="keyword">in</span> (&#x27;<span class="built_in">findstr</span> /i . List.txt <span class="number">2</span>^&gt;<span class="built_in">nul</span>&#x27;) <span class="keyword">do</span> dism /online /norestart /add-package:&quot;<span class="variable">%SystemRoot%</span>\servicing\Packages\<span class="variable">%%i</span>&quot;</span><br><span class="line"><span class="built_in">pause</span></span><br></pre></td></tr></table></figure>
+
+<h1 id="更改-Windows-用户文件夹名称"><a href="#更改-Windows-用户文件夹名称" class="headerlink" title="更改 Windows 用户文件夹名称"></a>更改 Windows 用户文件夹名称</h1><p>首先取消 OneDrive 对于桌面的同步！防止旧用户名被删除后还被桌面使用。</p>
+<p><a target="_blank" rel="noopener" href="https://www.elevenforum.com/t/enable-or-disable-built-in-administrator-account-in-windows-11.709/">https://www.elevenforum.com/t/enable-or-disable-built-in-administrator-account-in-windows-11.709/</a></p>
+<p><a target="_blank" rel="noopener" href="https://www.tenforums.com/tutorials/89060-change-name-user-profile-folder-windows-10-a.html">https://www.tenforums.com/tutorials/89060-change-name-user-profile-folder-windows-10-a.html</a></p>
+<p>然后还要修改 USERNAME 环境变量（需要在控制面版里面找到用户）。</p>
+<h2 id="是否要创建软链接？"><a href="#是否要创建软链接？" class="headerlink" title="是否要创建软链接？"></a>是否要创建软链接？</h2><p>&#x3D;&#x3D;如果不创建软链接，很多东西就需要重新安装，包括 Obsidian、VS Code、Notepad3、miniconda3 和安装在用户上的字体。&#x3D;&#x3D;还有很多注册表项目……所以最好还是留个软链接。</p>
+<h2 id="效益"><a href="#效益" class="headerlink" title="效益"></a>效益</h2><p>不如重新创建一个用户。</p>
+<h1 id="为-Java-注册关联文件"><a href="#为-Java-注册关联文件" class="headerlink" title="为 Java 注册关联文件"></a>为 Java 注册关联文件</h1><p>使用 Java_HOME，然后在环境变量中引用。环境变量可以从开始中搜索进入。Jar 文件的关联需要使用 cmd（powershell 不行）的 assoc 命令和 ftype 命令。<strong>如果有旧的关联，需要换一个名字！不要用同一个名字来关联！</strong></p>
+<table>
+<thead>
+<tr>
+<th>命令</th>
+<th>效果</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>ftype jarfile</code></td>
+<td>查看该程序类型当前的关联</td>
+</tr>
+<tr>
+<td><code>ftype jarfile=</code></td>
+<td>清空当前的关联</td>
+</tr>
+<tr>
+<td><code>ftype jarfile=&quot;path/to/javaw.exe&quot; -jar &quot;%1&quot; %*</code></td>
+<td>关联该程序为使用 jar 打开</td>
+</tr>
+<tr>
+<td><code>assoc .jar</code></td>
+<td>查看该文件类型当前的关联</td>
+</tr>
+<tr>
+<td><code>assoc .jar=jarfile</code></td>
+<td>和名称为 jarfile 的项目连接起来</td>
+</tr>
+</tbody></table>
+<p>另外，在 Java SE9 之前，windows 上的 GUI 程序不会随着显示屏缩放设置缩放。所以我升级到了 Java11。</p>
+<h1 id="开机输入密码后进用户界面慢"><a href="#开机输入密码后进用户界面慢" class="headerlink" title="开机输入密码后进用户界面慢"></a>开机输入密码后进用户界面慢</h1><p>可能是暂存目录太大了，影响系统工作。用 <code>cd %temp%</code> 进入目录，用 <code>explorer .</code> 打开这里，然后删掉里面所有的文件（可能需要显示隐藏文件）并重启。由于缓存目录过期会自动清理，所以有时候会有一种过一段时间开机又正常了的假象。上次清理的时候缓存目录有 10G。下面两个帖子提到了这一点：</p>
+<p><a target="_blank" rel="noopener" href="https://www.reddit.com/r/techsupport/comments/gh0v9e/long_black_screen_before_login_windows_10/">https://www.reddit.com/r/techsupport/comments/gh0v9e/long_black_screen_before_login_windows_10/</a></p>
+<p><a target="_blank" rel="noopener" href="https://www.tenforums.com/performance-maintenance/155024-startup-takes-too-long-winlogon-init.html">https://www.tenforums.com/performance-maintenance/155024-startup-takes-too-long-winlogon-init.html</a></p>
+<h1 id="WiFi-有网络但是还是有小地球"><a href="#WiFi-有网络但是还是有小地球" class="headerlink" title="WiFi 有网络但是还是有小地球"></a>WiFi 有网络但是还是有小地球</h1><p>可能是 DNS 服务器 ping 不通，可以试一下 ping。如果 ping 不上，看看能不能把静态配置的 DNS 服务器改成自动获取。</p>
+<h1 id="安全中心闪退"><a href="#安全中心闪退" class="headerlink" title="安全中心闪退"></a>安全中心闪退</h1><p><a target="_blank" rel="noopener" href="https://m.ithome.com/html/570853.htm">https://m.ithome.com/html/570853.htm</a></p>
+<h1 id="解决高-CPU-问题"><a href="#解决高-CPU-问题" class="headerlink" title="解决高 CPU 问题"></a>解决高 CPU 问题</h1><h2 id="Windows-Defender"><a href="#Windows-Defender" class="headerlink" title="Windows Defender"></a><strong>Windows Defender</strong></h2><p>改注册表、组策略里面有个二级选项可以关闭 Windows defender 的实时保护（不太好找）。</p>
+<p><img src="/systems/windows-%E5%90%88%E9%9B%86/../assets/fb3f63a43e5eb7fd1ff56c99b20f8a98.png"></p>
+<p>上一级的 <code>关闭 Mircosoft Defender 防病毒</code> 看上去是无效的？</p>
+<p><strong>实时保护关闭之后还要在 Windows Defender 页面关掉其他几个相关项目，否则实时保护会自动打开。如果不在组策略中关闭实时保护，则重启后实时保护会自动打开，所以这两件事都要做。</strong></p>
+<p><img src="/systems/windows-%E5%90%88%E9%9B%86/../assets/8026377257cc607896dc55b7a840ce2f.jpeg"></p>
+<h2 id="Microsoft-兼容性遥测"><a href="#Microsoft-兼容性遥测" class="headerlink" title="Microsoft 兼容性遥测"></a><strong>Microsoft 兼容性遥测</strong></h2><p>最全的方法：<a target="_blank" rel="noopener" href="https://blog.pcrisk.com/windows/13450-fix-microsoft-compatibility-telemetry-high-cpu-usage">https://blog.pcrisk.com/windows/13450-fix-microsoft-compatibility-telemetry-high-cpu-usage</a></p>
+<p>这个看上去可能靠谱一点：</p>
+<blockquote>
+<p>这个是微软 Windows 10 的兼容性检测助手，</p>
+<p>1.按下“Win+R”，输入 services.msc 打开服务。</p>
+<p>2.进入到服务列表找到 <code>Connected User Experiences and Telemetry</code> ，<code>Program Compatibility Assistant Service</code> 服务项</p>
+<p>3.打开服务，将服务进行禁用。</p>
+</blockquote>
+<h1 id="WSL-localhost-在-Firefox-上连接很慢"><a href="#WSL-localhost-在-Firefox-上连接很慢" class="headerlink" title="WSL localhost 在 Firefox 上连接很慢"></a>WSL localhost 在 Firefox 上连接很慢</h1><p><img src="/systems/windows-%E5%90%88%E9%9B%86/../assets/d9f0aa31d5bd9d36c26e7bcd57f5199c.png"></p>
+<p>这张图给出了原因。</p>
+<h1 id="防止-Windows-更新在更新的时候降级驱动"><a href="#防止-Windows-更新在更新的时候降级驱动" class="headerlink" title="防止 Windows 更新在更新的时候降级驱动"></a>防止 Windows 更新在更新的时候降级驱动</h1><p>如果是专业版，就编辑组策略：</p>
+<p><img src="/systems/windows-%E5%90%88%E9%9B%86/../assets/7fa21c6087b5456903c0aa0e3c364933.png"></p>
+<p>还可以使用 <a href="/systems/windows-%E5%90%88%E9%9B%86/../../../../../private/%E7%AC%94%E8%AE%B0%E6%9C%AC%E9%80%89%E8%B4%AD/%E6%A3%80%E6%9F%A5%E6%96%B0%20Windows%20%E7%AC%94%E8%AE%B0%E6%9C%AC%E5%92%8C%E5%AE%89%E8%A3%85%E7%B3%BB%E7%BB%9F/#%E7%A6%81%E6%AD%A2%E5%9C%A8%E6%A3%80%E6%9F%A5%E6%9B%B4%E6%96%B0%E6%97%B6%E6%8D%8E%E5%B8%A6%E9%A9%B1%E5%8A%A8"></a> 中的给出的修改注册表的方法。</p>
+<h1 id="Word-文档关闭时显示“正在保存”很长时间"><a href="#Word-文档关闭时显示“正在保存”很长时间" class="headerlink" title="Word 文档关闭时显示“正在保存”很长时间"></a>Word 文档关闭时显示“正在保存”很长时间</h1><p><strong>在隐私设置中关闭全部联机体验</strong>。会使得自动保存不可用，频繁手动保存即可。</p>
+<h1 id="MSYS2-的-ls-无法正确显示中文文件名"><a href="#MSYS2-的-ls-无法正确显示中文文件名" class="headerlink" title="MSYS2 的 ls 无法正确显示中文文件名"></a>MSYS2 的 <code>ls</code> 无法正确显示中文文件名</h1><p>可能是环境变量 <code>LANG</code> 没有被设置。设置它的值为 <code>zh_CN.UTF-8</code> 即可。（<code>en_US.UTF-8</code> 也是可以显示中文的，这就是没有设置的问题，可以用 <code>locale</code> 检查。）</p>
+<p><code>LC_ALL</code> 的优先级大于 <code>LANG</code>，默认是没有设置的，也不需要管。</p>
+
+    </div>
+
+    
+    
+    
+
+      <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/windows/" rel="tag"># windows</a>
+          </div>
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/systems/windows-%E6%8F%90%E7%A4%BA%E8%A2%AB%E7%AE%A1%E7%90%86%E5%91%98%E7%A6%81%E6%AD%A2%E5%AE%89%E8%A3%85%E6%A0%B8%E6%98%BE%E9%A9%B1%E5%8A%A8%E3%80%81wsl-%E4%B9%9F%E6%97%A0%E6%B3%95%E5%90%AF%E5%8A%A8/" rel="prev" title="Windows 提示被管理员禁止安装核显驱动、WSL 也无法启动">
+      <i class="fa fa-chevron-left"></i> Windows 提示被管理员禁止安装核显驱动、WSL 也无法启动
+    </a></div>
+      <div class="post-nav-item">
+    <a href="/systems/windows-11-%E7%A6%81%E7%94%A8%E7%AC%94%E8%AE%B0%E6%9C%AC%E9%94%AE%E7%9B%98/" rel="next" title="Windows 11 禁用笔记本键盘">
+      Windows 11 禁用笔记本键盘 <i class="fa fa-chevron-right"></i>
+    </a></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+
+
+          </div>
+          
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#%E7%BB%84%E7%AD%96%E7%95%A5%E5%92%8C%E6%B3%A8%E5%86%8C%E8%A1%A8%E7%9A%84%E5%85%B3%E8%81%94"><span class="nav-text">组策略和注册表的关联</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%AE%B6%E5%BA%AD%E7%89%88%E4%B8%8B%E5%BC%BA%E8%A1%8C%E5%BC%80%E5%90%AF%E7%BB%84%E7%AD%96%E7%95%A5%E7%BC%96%E8%BE%91%E5%99%A8%EF%BC%8C%E6%93%8D%E4%BD%9C%E4%B8%8D%E7%94%9F%E6%95%88%EF%BC%9F"><span class="nav-text">家庭版下强行开启组策略编辑器，操作不生效？</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Windows-%E5%AE%B6%E5%BA%AD%E7%89%88%E5%90%AF%E7%94%A8%E7%BB%84%E7%AD%96%E7%95%A5%E7%BC%96%E8%BE%91%E5%99%A8"><span class="nav-text">Windows 家庭版启用组策略编辑器</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E6%9B%B4%E6%94%B9-Windows-%E7%94%A8%E6%88%B7%E6%96%87%E4%BB%B6%E5%A4%B9%E5%90%8D%E7%A7%B0"><span class="nav-text">更改 Windows 用户文件夹名称</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%98%AF%E5%90%A6%E8%A6%81%E5%88%9B%E5%BB%BA%E8%BD%AF%E9%93%BE%E6%8E%A5%EF%BC%9F"><span class="nav-text">是否要创建软链接？</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%95%88%E7%9B%8A"><span class="nav-text">效益</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E4%B8%BA-Java-%E6%B3%A8%E5%86%8C%E5%85%B3%E8%81%94%E6%96%87%E4%BB%B6"><span class="nav-text">为 Java 注册关联文件</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%BC%80%E6%9C%BA%E8%BE%93%E5%85%A5%E5%AF%86%E7%A0%81%E5%90%8E%E8%BF%9B%E7%94%A8%E6%88%B7%E7%95%8C%E9%9D%A2%E6%85%A2"><span class="nav-text">开机输入密码后进用户界面慢</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#WiFi-%E6%9C%89%E7%BD%91%E7%BB%9C%E4%BD%86%E6%98%AF%E8%BF%98%E6%98%AF%E6%9C%89%E5%B0%8F%E5%9C%B0%E7%90%83"><span class="nav-text">WiFi 有网络但是还是有小地球</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%AE%89%E5%85%A8%E4%B8%AD%E5%BF%83%E9%97%AA%E9%80%80"><span class="nav-text">安全中心闪退</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E8%A7%A3%E5%86%B3%E9%AB%98-CPU-%E9%97%AE%E9%A2%98"><span class="nav-text">解决高 CPU 问题</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#Windows-Defender"><span class="nav-text">Windows Defender</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Microsoft-%E5%85%BC%E5%AE%B9%E6%80%A7%E9%81%A5%E6%B5%8B"><span class="nav-text">Microsoft 兼容性遥测</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#WSL-localhost-%E5%9C%A8-Firefox-%E4%B8%8A%E8%BF%9E%E6%8E%A5%E5%BE%88%E6%85%A2"><span class="nav-text">WSL localhost 在 Firefox 上连接很慢</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E9%98%B2%E6%AD%A2-Windows-%E6%9B%B4%E6%96%B0%E5%9C%A8%E6%9B%B4%E6%96%B0%E7%9A%84%E6%97%B6%E5%80%99%E9%99%8D%E7%BA%A7%E9%A9%B1%E5%8A%A8"><span class="nav-text">防止 Windows 更新在更新的时候降级驱动</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Word-%E6%96%87%E6%A1%A3%E5%85%B3%E9%97%AD%E6%97%B6%E6%98%BE%E7%A4%BA%E2%80%9C%E6%AD%A3%E5%9C%A8%E4%BF%9D%E5%AD%98%E2%80%9D%E5%BE%88%E9%95%BF%E6%97%B6%E9%97%B4"><span class="nav-text">Word 文档关闭时显示“正在保存”很长时间</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#MSYS2-%E7%9A%84-ls-%E6%97%A0%E6%B3%95%E6%AD%A3%E7%A1%AE%E6%98%BE%E7%A4%BA%E4%B8%AD%E6%96%87%E6%96%87%E4%BB%B6%E5%90%8D"><span class="nav-text">MSYS2 的 ls 无法正确显示中文文件名</span></a></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+  <p class="site-author-name" itemprop="name">Hxhue</p>
+  <div class="site-description" itemprop="description"></div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">220</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+            <a href="/categories/">
+          
+        <span class="site-state-item-count">6</span>
+        <span class="site-state-item-name">分类</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+            <a href="/tags/">
+          
+        <span class="site-state-item-count">49</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author motion-element">
+      <span class="links-of-author-item">
+        <a href="https://github.com/hxhue" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;hxhue" rel="noopener" target="_blank"><i class="fab fa-github fa-fw"></i></a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="https://stackoverflow.com/users/13785815" title="StackOverflow → https:&#x2F;&#x2F;stackoverflow.com&#x2F;users&#x2F;13785815" rel="noopener" target="_blank"><i class="fab fa-stack-overflow fa-fw"></i></a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="mailto:simooncake@gmail.com" title="Email → mailto:simooncake@gmail.com" rel="noopener" target="_blank"><i class="fa fa-envelope fa-fw"></i></a>
+      </span>
+  </div>
+
+
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+
+<div class="copyright">
+  
+  &copy; 
+  <span itemprop="copyrightYear">2024</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Hxhue</span>
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item-icon">
+      <i class="fa fa-chart-area"></i>
+    </span>
+      <span class="post-meta-item-text">站点总字数：</span>
+    <span title="站点总字数">121k</span>
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item-icon">
+      <i class="fa fa-coffee"></i>
+    </span>
+      <span class="post-meta-item-text">站点阅读时长 &asymp;</span>
+    <span title="站点阅读时长">7:20</span>
+</div>
+  <div class="powered-by">由 <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Gemini</a> 强力驱动
+  </div><script color="0,0,255" opacity="0.5" zIndex="-1" count="99" src="https://cdn.jsdelivr.net/npm/canvas-nest.js@1/dist/canvas-nest.js"></script>
+
+        
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="//cdn.jsdelivr.net/npm/pangu@4/dist/browser/pangu.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/pisces.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+
+
+
+  
+
+
+
+
+  
+<script src="/js/local-search.js"></script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+</body>
+</html>

@@ -191,7 +191,7 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="https://hxhue.github.io/cli/bash-%E9%85%8D%E7%BD%AE/">
+    <link itemprop="mainEntityOfPage" href="https://hxhue.github.io/programming/python-%E5%88%A4%E6%96%AD%E5%AD%97%E7%AC%A6%E4%B8%B2%E6%98%AF%E5%90%A6%E4%B8%BA%E7%A9%BA/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="image" content="/images/avatar.gif">
@@ -205,7 +205,7 @@
       <header class="post-header">
         <h2 class="post-title" itemprop="name headline">
           
-            <a href="/cli/bash-%E9%85%8D%E7%BD%AE/" class="post-title-link" itemprop="url">bash 配置</a>
+            <a href="/programming/python-%E5%88%A4%E6%96%AD%E5%AD%97%E7%AC%A6%E4%B8%B2%E6%98%AF%E5%90%A6%E4%B8%BA%E7%A9%BA/" class="post-title-link" itemprop="url">Python 判断字符串是否为空</a>
         </h2>
 
         <div class="post-meta">
@@ -215,14 +215,14 @@
               </span>
               <span class="post-meta-item-text">发表于</span>
 
-              <time title="创建时间：2023-08-12 15:17:00" itemprop="dateCreated datePublished" datetime="2023-08-12T15:17:00+08:00">2023-08-12</time>
+              <time title="创建时间：2023-08-15 00:11:00" itemprop="dateCreated datePublished" datetime="2023-08-15T00:11:00+08:00">2023-08-15</time>
             </span>
               <span class="post-meta-item">
                 <span class="post-meta-item-icon">
                   <i class="far fa-calendar-check"></i>
                 </span>
                 <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2024-03-18 16:06:37" itemprop="dateModified" datetime="2024-03-18T16:06:37+08:00">2024-03-18</time>
+                <time title="修改时间：2024-03-15 16:31:51" itemprop="dateModified" datetime="2024-03-15T16:31:51+08:00">2024-03-15</time>
               </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
@@ -230,7 +230,7 @@
               </span>
               <span class="post-meta-item-text">分类于</span>
                 <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/cli/" itemprop="url" rel="index"><span itemprop="name">CLI</span></a>
+                  <a href="/categories/programming/" itemprop="url" rel="index"><span itemprop="name">programming</span></a>
                 </span>
             </span>
 
@@ -240,7 +240,7 @@
                 <i class="far fa-file-word"></i>
               </span>
                 <span class="post-meta-item-text">本文字数：</span>
-              <span>236</span>
+              <span>14</span>
             </span>
             <span class="post-meta-item" title="阅读时长">
               <span class="post-meta-item-icon">
@@ -259,13 +259,8 @@
     <div class="post-body" itemprop="articleBody">
 
       
-          <h1 id="bash-的两个配置文件"><a href="#bash-的两个配置文件" class="headerlink" title="bash 的两个配置文件"></a>bash 的两个配置文件</h1><p>login 时只加载 <code>.bash_profile</code>（如果存在），其他时候只加载 <code>.bashrc</code>。</p>
-<p>最好是把内容放在 <code>.bashrc</code>，然后让 ~&#x2F;.bash_profile 去 <code>source ~/.bashrc</code>。</p>
-<p>虽然 <code>~/.bashrc</code> 是所有非登陆的 bash 都会读，但默认的 <code>~/.bashrc</code> 的开头检查了当前是否为交互终端，如果不是则退出。如果非要绕过这个限制，可以强制一个终端为交互终端：<code>bash -i</code>。</p>
-<blockquote>
-<p>Windows 的 Cygwin 目录下自己有 home。因此要让它的 ~&#x2F;.bashrc 去 source Windows 用户目录的 ~&#x2F;.bashrc，不然会出现两处配置不一致的情况。</p>
-</blockquote>
-<h1 id="bash-显示-git-分支"><a href="#bash-显示-git-分支" class="headerlink" title="bash 显示 git 分支"></a>bash 显示 git 分支</h1><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="title">parse_git_branch</span></span>() &#123;</span><br><span class="line">    <span class="keyword">if</span> ! [[ $(git rev-parse --is-bare-repository 2&gt;/dev/null) == <span class="literal">true</span> ]]; <span class="keyword">then</span></span><br><span class="line">        <span class="built_in">local</span> BRANCH=<span class="string">&quot;<span class="subst">$(git branch 2&gt;/dev/null | sed -e &#x27;/^[^*]/d&#x27; -e &#x27;s/* \(.*\)/\1/&#x27;)</span>&quot;</span></span><br><span class="line">        [[ <span class="string">&quot;<span class="variable">$&#123;BRANCH&#125;</span>&quot;</span> == <span class="string">&quot;&quot;</span> ]] &amp;&amp; <span class="built_in">return</span> 0</span><br><span class="line">        <span class="built_in">local</span> MSG=<span class="string">&quot;<span class="subst">$(git status 2&gt; /dev/null | tail -n1)</span>&quot;</span></span><br><span class="line">        <span class="keyword">if</span> [[ <span class="string">&quot;<span class="variable">$MSG</span>&quot;</span> != <span class="string">&quot;nothing to commit&quot;</span>* ]]; <span class="keyword">then</span></span><br><span class="line">            <span class="built_in">echo</span> -n <span class="string">&quot;(<span class="variable">$&#123;BRANCH&#125;</span>*) &quot;</span></span><br><span class="line">        <span class="keyword">else</span></span><br><span class="line">            <span class="built_in">echo</span> -n <span class="string">&quot;(<span class="variable">$&#123;BRANCH&#125;</span>) &quot;</span></span><br><span class="line">        <span class="keyword">fi</span></span><br><span class="line">    <span class="keyword">fi</span></span><br><span class="line">&#125;</span><br><span class="line">EXITCODE=<span class="string">&#x27;$(code=$?; if (( code )); then echo -ne &quot;\[\e[91m\][$code]\[\e[00m\] &quot;; fi)&#x27;</span></span><br><span class="line"><span class="built_in">export</span> PS1=<span class="string">&quot;<span class="variable">$&#123;EXITCODE&#125;</span>\u \[\e[32m\]\w \[\e[00m\]\[\e[91m\]\$(parse_git_branch)\[\e[00m\]$ &quot;</span></span><br></pre></td></tr></table></figure>
+          <figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">def</span> <span class="title function_">empty</span>(<span class="params">s</span>): <span class="keyword">return</span> s <span class="keyword">is</span> <span class="literal">None</span> <span class="keyword">or</span> <span class="built_in">len</span>(s) == <span class="number">0</span> <span class="keyword">or</span> s.isblank()</span><br></pre></td></tr></table></figure>
+
 
       
     </div>
@@ -285,7 +280,7 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="https://hxhue.github.io/cli/tmux/">
+    <link itemprop="mainEntityOfPage" href="https://hxhue.github.io/programming/cttcg-%E9%99%84%E5%BD%95-e-concept/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="image" content="/images/avatar.gif">
@@ -299,7 +294,7 @@
       <header class="post-header">
         <h2 class="post-title" itemprop="name headline">
           
-            <a href="/cli/tmux/" class="post-title-link" itemprop="url">tmux</a>
+            <a href="/programming/cttcg-%E9%99%84%E5%BD%95-e-concept/" class="post-title-link" itemprop="url">CTTCG 附录 E Concept</a>
         </h2>
 
         <div class="post-meta">
@@ -309,14 +304,14 @@
               </span>
               <span class="post-meta-item-text">发表于</span>
 
-              <time title="创建时间：2023-08-12 15:17:00" itemprop="dateCreated datePublished" datetime="2023-08-12T15:17:00+08:00">2023-08-12</time>
+              <time title="创建时间：2023-08-12 21:47:45" itemprop="dateCreated datePublished" datetime="2023-08-12T21:47:45+08:00">2023-08-12</time>
             </span>
               <span class="post-meta-item">
                 <span class="post-meta-item-icon">
                   <i class="far fa-calendar-check"></i>
                 </span>
                 <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2024-03-15 23:20:22" itemprop="dateModified" datetime="2024-03-15T23:20:22+08:00">2024-03-15</time>
+                <time title="修改时间：2024-03-15 16:31:51" itemprop="dateModified" datetime="2024-03-15T16:31:51+08:00">2024-03-15</time>
               </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
@@ -324,7 +319,7 @@
               </span>
               <span class="post-meta-item-text">分类于</span>
                 <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/cli/" itemprop="url" rel="index"><span itemprop="name">CLI</span></a>
+                  <a href="/categories/programming/" itemprop="url" rel="index"><span itemprop="name">programming</span></a>
                 </span>
             </span>
 
@@ -334,7 +329,7 @@
                 <i class="far fa-file-word"></i>
               </span>
                 <span class="post-meta-item-text">本文字数：</span>
-              <span>159</span>
+              <span>373</span>
             </span>
             <span class="post-meta-item" title="阅读时长">
               <span class="post-meta-item-icon">
@@ -353,121 +348,401 @@
     <div class="post-body" itemprop="articleBody">
 
       
-          <p>配置文件在 <code>~/.tmux.conf</code>。</p>
-<p>开启鼠标（可能是最正常的操作逻辑了）：</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">set</span> -g mouse on</span><br></pre></td></tr></table></figure>
+          <h1 id="定义和使用-concept"><a href="#定义和使用-concept" class="headerlink" title="定义和使用 concept"></a>定义和使用 concept</h1><p>下面演示了几种 C++20 支持的定义 concept 的方式：</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">template</span> &lt;<span class="keyword">typename</span> T&gt;</span><br><span class="line"><span class="keyword">concept</span> StringConcept = <span class="built_in">requires</span>(T t) &#123;</span><br><span class="line">    <span class="keyword">typename</span> T::iterator; <span class="comment">// 1. 检查类型存在性</span></span><br><span class="line">    t.<span class="built_in">data</span>();             <span class="comment">// 2. 检查表达式合法性</span></span><br><span class="line"></span><br><span class="line">    <span class="comment">// 3. 将表达式作为concept的第一个参数，要求concept成立（额外参数从第二个参数起放置）</span></span><br><span class="line">    &#123; t.<span class="built_in">c_str</span>() &#125; -&gt; std::same_as&lt;<span class="type">char</span> <span class="type">const</span> *&gt;;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 4. 用 requires 语句引入子条件</span></span><br><span class="line">    <span class="keyword">requires</span> std::is_pointer_v&lt;<span class="keyword">decltype</span>(t.<span class="built_in">data</span>())&gt;;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 5. 除了requires体之外还能用其他编译期常量表达式做约束</span></span><br><span class="line">&#125; &amp;&amp; (<span class="built_in">sizeof</span>(T) &gt; <span class="number">8</span>) &amp;&amp; !std::is_aggregate_v&lt;T&gt;;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">template</span>&lt;StringConcept Str&gt;</span></span><br><span class="line"><span class="function"><span class="type">void</span> <span class="title">takeString</span><span class="params">(Str <span class="type">const</span> &amp;s)</span> </span>&#123; &#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="type">int</span> <span class="title">main</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    <span class="built_in">takeString</span>(std::string&#123;<span class="string">&quot;hello&quot;</span>&#125;);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 
-<p>打开之后能够支持切换 window、panel，调整 panel 之间的相对大小。右键还有一些便捷操作。比如 mark 提供复制功能。</p>
-<ul>
-<li><code>ctrl</code> + <code>b</code> 是默认的 prefix 按键，先按这个 prefix 键然后按其他按键可以使用特殊功能</li>
-<li><code>d</code> 是 detach</li>
-<li><code>%</code> 是左右分屏（产生新的 panel）</li>
-<li><code>&quot;</code> 是上下分屏（产生新的 panel）</li>
-<li><code>z</code> 是暂时最大化</li>
-<li><code>c</code> 是创建新的窗口（window）</li>
-</ul>
-<p>对正在运行的 tmux 重载配置： <a target="_blank" rel="noopener" href="https://unix.stackexchange.com/questions/516800/how-do-i-enable-tmux-mouse-support">https://unix.stackexchange.com/questions/516800/how-do-i-enable-tmux-mouse-support</a></p>
+<p>在模板中加上 <code>requires</code> 条件则相对比较简单。只需要在 <strong>模板参数后，函数返回值前面</strong>，或者 <strong>函数体前面</strong> 加上 <code>requires</code> 约束。<code>requires</code> 约束能使用一般的条件表达式，也能把 concept 当成 type trait 使用。比如：</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">template</span> &lt;<span class="keyword">typename</span> T&gt;</span><br><span class="line"><span class="function"><span class="keyword">requires</span> HasPlus&lt;T&gt;</span></span><br><span class="line"><span class="function"><span class="type">int</span> <span class="title">f</span><span class="params">(T p)</span></span></span><br><span class="line"><span class="function"></span>&#123;&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">template</span> &lt;<span class="keyword">typename</span> T&gt;</span><br><span class="line"><span class="function"><span class="type">int</span> <span class="title">g</span><span class="params">(T p)</span></span></span><br><span class="line"><span class="function"><span class="keyword">requires</span> HasPlus&lt;T&gt;</span></span><br><span class="line"><span class="function"></span>&#123;&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 注意 requires 约束的位置比较灵活</span></span><br></pre></td></tr></table></figure>
 
-      
-    </div>
-
-    
-    
-    
-      <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  
-  
-  
-
-      
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="https://hxhue.github.io/cli/vim/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/avatar.gif">
-      <meta itemprop="name" content="Hxhue">
-      <meta itemprop="description" content="">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Hxhue's Blog">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          
-            <a href="/cli/vim/" class="post-title-link" itemprop="url">vim</a>
-        </h2>
-
-        <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-calendar"></i>
-              </span>
-              <span class="post-meta-item-text">发表于</span>
-
-              <time title="创建时间：2023-08-12 15:17:00" itemprop="dateCreated datePublished" datetime="2023-08-12T15:17:00+08:00">2023-08-12</time>
-            </span>
-              <span class="post-meta-item">
-                <span class="post-meta-item-icon">
-                  <i class="far fa-calendar-check"></i>
-                </span>
-                <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2024-03-18 16:48:40" itemprop="dateModified" datetime="2024-03-18T16:48:40+08:00">2024-03-18</time>
-              </span>
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-folder"></i>
-              </span>
-              <span class="post-meta-item-text">分类于</span>
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/cli/" itemprop="url" rel="index"><span itemprop="name">CLI</span></a>
-                </span>
-            </span>
-
-          <br>
-            <span class="post-meta-item" title="本文字数">
-              <span class="post-meta-item-icon">
-                <i class="far fa-file-word"></i>
-              </span>
-                <span class="post-meta-item-text">本文字数：</span>
-              <span>461</span>
-            </span>
-            <span class="post-meta-item" title="阅读时长">
-              <span class="post-meta-item-icon">
-                <i class="far fa-clock"></i>
-              </span>
-                <span class="post-meta-item-text">阅读时长 &asymp;</span>
-              <span>2 分钟</span>
-            </span>
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          <h1 id="vim-配置文件位置"><a href="#vim-配置文件位置" class="headerlink" title="vim 配置文件位置"></a>vim 配置文件位置</h1><p>使用 <code>:scriptnames</code> 查看。</p>
-<p>neovim + Windows 的配置文件：<code>%userprofile%\AppData\Local\nvim\init.vim</code></p>
-<p>macOS 和 Linux：<code>~/.config/nvim/init.vim</code></p>
-<h1 id="自用基础配置"><a href="#自用基础配置" class="headerlink" title="自用基础配置"></a>自用基础配置</h1><figure class="highlight vim"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">set</span> <span class="keyword">number</span></span><br><span class="line"><span class="keyword">set</span> relativenumber</span><br><span class="line"><span class="keyword">set</span> expandtab</span><br><span class="line"><span class="keyword">set</span> ss=<span class="number">4</span></span><br><span class="line"><span class="keyword">set</span> tabstop=<span class="number">4</span></span><br><span class="line"><span class="keyword">set</span> <span class="built_in">shiftwidth</span>=<span class="number">4</span></span><br></pre></td></tr></table></figure>
-
-<h1 id="在打开文件之前执行命令"><a href="#在打开文件之前执行命令" class="headerlink" title="在打开文件之前执行命令"></a>在打开文件之前执行命令</h1><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">vim <span class="string">&quot;+set ff=unix&quot;</span> <span class="string">&quot;+wq&quot;</span> 文件名</span><br></pre></td></tr></table></figure>
+<p>上方代码中 <code>template&lt;StringConcept Str&gt;</code> 是对 <code>template&lt;typename Str&gt; requires StringConcept&lt;Str&gt;</code> 的缩写。只有单参数 concept 可以用这种简写方法。（<em>是的，concept 可以有多个参数！</em>）</p>
+<h1 id="concept-下的重载选择"><a href="#concept-下的重载选择" class="headerlink" title="concept 下的重载选择"></a>concept 下的重载选择</h1><p>如果一个 concept 中显式使用了另外一个 concept（可以通过 <code>requires</code> 体中的 <code>requires</code> 语句，也可以通过 concept 定义中的 <code>&amp;&amp;</code> 逻辑连词），则前者比后者严格。如果两个 concept 都能启用模板，则更严格的那个被选择。</p>
           <!--noindex-->
             <div class="post-button">
-              <a class="btn" href="/cli/vim/#more" rel="contents">
+              <a class="btn" href="/programming/cttcg-%E9%99%84%E5%BD%95-e-concept/#more" rel="contents">
                 阅读全文 &raquo;
               </a>
             </div>
           <!--/noindex-->
         
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://hxhue.github.io/programming/cttcg-%E9%99%84%E5%BD%95-b-value-categories/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="Hxhue">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Hxhue's Blog">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/programming/cttcg-%E9%99%84%E5%BD%95-b-value-categories/" class="post-title-link" itemprop="url">CTTCG 附录 B Value Categories</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2023-08-12 21:47:45" itemprop="dateCreated datePublished" datetime="2023-08-12T21:47:45+08:00">2023-08-12</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2024-03-15 16:31:51" itemprop="dateModified" datetime="2024-03-15T16:31:51+08:00">2024-03-15</time>
+              </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/programming/" itemprop="url" rel="index"><span itemprop="name">programming</span></a>
+                </span>
+            </span>
+
+          <br>
+            <span class="post-meta-item" title="本文字数">
+              <span class="post-meta-item-icon">
+                <i class="far fa-file-word"></i>
+              </span>
+                <span class="post-meta-item-text">本文字数：</span>
+              <span>277</span>
+            </span>
+            <span class="post-meta-item" title="阅读时长">
+              <span class="post-meta-item-icon">
+                <i class="far fa-clock"></i>
+              </span>
+                <span class="post-meta-item-text">阅读时长 &asymp;</span>
+              <span>1 分钟</span>
+            </span>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <p>对于变量而言，其括号表达式的值属性是左值引用。但由于 <code>decltype</code> 有特殊效果，直接对变量 <code>x</code> 使用 <code>decltype(x)</code> 并不遵循这一点，为此可以按照下面说的使用 <code>decltype((x))</code>。</p>
+<blockquote>
+<p>With the keyword decltype (introduced in C++11), it is possible to check the value category of any C++ expression. For any expression <code>x</code>, <code>decltype((x))</code> (note the double parentheses) yields:</p>
+<ul>
+<li><code>type</code> if <code>x</code> is a prvalue</li>
+<li><code>type&amp;</code> if <code>x</code> is an lvalue</li>
+<li><code>type&amp;&amp;</code> if <code>x</code> is an xvalue</li>
+</ul>
+<p>The double parentheses in <code>decltype((x))</code> are needed to avoid producing the declared type of a named entity in case where the expression <code>x</code> does indeed name an entity (in other cases, the paren-theses have no effect). For example, if the expression <code>x</code> simply names a variable <code>v</code>, the construct without parentheses becomes <code>decltype(v)</code>, which produces the type of the variable <code>v</code> rather than a type reﬂecting the value category of the expression <code>x</code> referring to that variable.</p>
+</blockquote>
+<p>例子：</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;iostream&gt;</span></span></span><br><span class="line"></span><br><span class="line"><span class="keyword">template</span>&lt;<span class="keyword">typename</span> T&gt;</span><br><span class="line"><span class="keyword">struct</span> <span class="title class_">value_category</span> &#123;</span><br><span class="line">    <span class="type">static</span> <span class="keyword">constexpr</span> <span class="keyword">auto</span> value = <span class="string">&quot;prvalue&quot;</span>;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="keyword">template</span>&lt;<span class="keyword">typename</span> T&gt;</span><br><span class="line"><span class="keyword">struct</span> <span class="title class_">value_category</span>&lt;T&amp;&gt; &#123;</span><br><span class="line">    <span class="type">static</span> <span class="keyword">constexpr</span> <span class="keyword">auto</span> value = <span class="string">&quot;lvalue&quot;</span>;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="keyword">template</span>&lt;<span class="keyword">typename</span> T&gt;</span><br><span class="line"><span class="keyword">struct</span> <span class="title class_">value_category</span>&lt;T&amp;&amp;&gt; &#123;</span><br><span class="line">    <span class="type">static</span> <span class="keyword">constexpr</span> <span class="keyword">auto</span> value = <span class="string">&quot;xvalue&quot;</span>;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="comment">// Get value category of an expression</span></span><br><span class="line"><span class="meta">#<span class="keyword">define</span> VALUE_CATEGORY(expr) value_category<span class="string">&lt;decltype((expr))&gt;</span>::value</span></span><br><span class="line"><span class="meta">#<span class="keyword">define</span> PRINT(expr) printf(<span class="string">&quot;(%s) : %s\n&quot;</span>, #expr, VALUE_CATEGORY(expr))</span></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="type">int</span> <span class="title">main</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    <span class="built_in">PRINT</span>(<span class="number">4</span>);   <span class="comment">// prvalue</span></span><br><span class="line">    <span class="type">int</span> x;</span><br><span class="line">    <span class="type">int</span> &amp;y = x;</span><br><span class="line">    <span class="type">int</span> &amp;&amp;z = (<span class="type">int</span> &amp;&amp;)x;</span><br><span class="line">    <span class="built_in">PRINT</span>(x);   <span class="comment">// lvalue</span></span><br><span class="line">    <span class="built_in">PRINT</span>(y);   <span class="comment">// lvalue</span></span><br><span class="line">    <span class="built_in">PRINT</span>(z);   <span class="comment">// lvalue</span></span><br><span class="line">    <span class="built_in">PRINT</span>(x+<span class="number">1</span>); <span class="comment">// prvalue</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://hxhue.github.io/systems/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="Hxhue">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Hxhue's Blog">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/systems/" class="post-title-link" itemprop="url">未命名</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2023-08-12 15:17:15" itemprop="dateCreated datePublished" datetime="2023-08-12T15:17:15+08:00">2023-08-12</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2023-08-31 14:28:32" itemprop="dateModified" datetime="2023-08-31T14:28:32+08:00">2023-08-31</time>
+              </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/systems/" itemprop="url" rel="index"><span itemprop="name">systems</span></a>
+                </span>
+            </span>
+
+          <br>
+            <span class="post-meta-item" title="本文字数">
+              <span class="post-meta-item-icon">
+                <i class="far fa-file-word"></i>
+              </span>
+                <span class="post-meta-item-text">本文字数：</span>
+              <span>100</span>
+            </span>
+            <span class="post-meta-item" title="阅读时长">
+              <span class="post-meta-item-icon">
+                <i class="far fa-clock"></i>
+              </span>
+                <span class="post-meta-item-text">阅读时长 &asymp;</span>
+              <span>1 分钟</span>
+            </span>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <h1 id="sed-i"><a href="#sed-i" class="headerlink" title="sed -i"></a>sed -i</h1><p>macOS sed 的 -i 需要指定参数，如果不需要备份文件，需要显式给出 <code>sed -i &#39;&#39;</code>。不然可以用 <code>gsed</code> 命令（用brew安装）。</p>
+<h1 id="xargs"><a href="#xargs" class="headerlink" title="xargs"></a>xargs</h1><p>如果没有收到输入，就不会运行。而 GNU 的 xargs 在没有收到输入时会只运行右侧命令而不附带参数。要想GNU xargs在此时不运行命令，需要使用<code>-r</code>选项。</p>
+
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://hxhue.github.io/cli/makefile/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="Hxhue">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Hxhue's Blog">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/cli/makefile/" class="post-title-link" itemprop="url">Makefile</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2023-08-12 15:17:00" itemprop="dateCreated datePublished" datetime="2023-08-12T15:17:00+08:00">2023-08-12</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2024-03-19 12:29:24" itemprop="dateModified" datetime="2024-03-19T12:29:24+08:00">2024-03-19</time>
+              </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/cli/" itemprop="url" rel="index"><span itemprop="name">CLI</span></a>
+                </span>
+            </span>
+
+          <br>
+            <span class="post-meta-item" title="本文字数">
+              <span class="post-meta-item-icon">
+                <i class="far fa-file-word"></i>
+              </span>
+                <span class="post-meta-item-text">本文字数：</span>
+              <span>182</span>
+            </span>
+            <span class="post-meta-item" title="阅读时长">
+              <span class="post-meta-item-icon">
+                <i class="far fa-clock"></i>
+              </span>
+                <span class="post-meta-item-text">阅读时长 &asymp;</span>
+              <span>1 分钟</span>
+            </span>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <h1 id="和"><a href="#和" class="headerlink" title="$() 和 ${}"></a><code>$()</code> 和 <code>$&#123;&#125;</code></h1><p>除了 <code>$</code> 之外，<code>$()</code> 和 <code>$&#123;&#125;</code> 都是 make 替换变量的语法。但是 <code>$&#123;&#125;</code> 还能被某些 shell（比如 bash）继续替换。</p>
+<p>此外，它们也能调用 make 提供的命令，比如字符串替换、过滤和调用 shell。</p>
+<h1 id="Shell-函数无法正常传递-参数"><a href="#Shell-函数无法正常传递-参数" class="headerlink" title="Shell 函数无法正常传递 * 参数"></a>Shell 函数无法正常传递 <code>*</code> 参数</h1><p>是因为 make 传参的时候将引号去掉了，导致星号又被 shell 解释了一次（我用的 MSYS2）。</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">$ <span class="built_in">cat</span> Makefile</span><br><span class="line">all:</span><br><span class="line">        <span class="built_in">echo</span> \&#x27;*\&#x27;</span><br><span class="line">$ make</span><br><span class="line"><span class="built_in">echo</span> \&#x27;*\&#x27;</span><br><span class="line"><span class="string">&#x27;*&#x27;</span></span><br><span class="line">$ nvim Makefile</span><br><span class="line">$ <span class="built_in">cat</span> Makefile</span><br><span class="line">all:</span><br><span class="line">        <span class="built_in">echo</span> <span class="string">&#x27;*&#x27;</span></span><br><span class="line">$ make</span><br><span class="line"><span class="built_in">echo</span> <span class="string">&#x27;*&#x27;</span></span><br><span class="line">Makefile</span><br></pre></td></tr></table></figure>
+
+<h1 id="兼容性"><a href="#兼容性" class="headerlink" title="兼容性"></a>兼容性</h1><ul>
+<li>使用 <code>./</code> 来表示路径，不要使用 <code>.\</code>。（但是这样 cmd 解释不了，得用 bash 才行）</li>
+<li>使用命令名来调用，不要使用 <code>.exe</code> 后缀。</li>
+</ul>
+          <!--noindex-->
+            <div class="post-button">
+              <a class="btn" href="/cli/makefile/#more" rel="contents">
+                阅读全文 &raquo;
+              </a>
+            </div>
+          <!--/noindex-->
+        
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://hxhue.github.io/unsorted/%E4%BD%BF%E7%94%A8-iosevka%EF%BC%88%E7%AD%89%E8%B7%9D%E6%9B%B4%E7%BA%B1%E9%BB%91%E4%BD%93%EF%BC%89-%E5%AD%97%E4%BD%93%E7%9A%84%E5%9D%91/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="Hxhue">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Hxhue's Blog">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/unsorted/%E4%BD%BF%E7%94%A8-iosevka%EF%BC%88%E7%AD%89%E8%B7%9D%E6%9B%B4%E7%BA%B1%E9%BB%91%E4%BD%93%EF%BC%89-%E5%AD%97%E4%BD%93%E7%9A%84%E5%9D%91/" class="post-title-link" itemprop="url">使用 Iosevka（等距更纱黑体） 字体的坑</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2023-08-12 15:17:00" itemprop="dateCreated datePublished" datetime="2023-08-12T15:17:00+08:00">2023-08-12</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2024-03-18 16:44:28" itemprop="dateModified" datetime="2024-03-18T16:44:28+08:00">2024-03-18</time>
+              </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/unsorted/" itemprop="url" rel="index"><span itemprop="name">unsorted</span></a>
+                </span>
+            </span>
+
+          <br>
+            <span class="post-meta-item" title="本文字数">
+              <span class="post-meta-item-icon">
+                <i class="far fa-file-word"></i>
+              </span>
+                <span class="post-meta-item-text">本文字数：</span>
+              <span>27</span>
+            </span>
+            <span class="post-meta-item" title="阅读时长">
+              <span class="post-meta-item-icon">
+                <i class="far fa-clock"></i>
+              </span>
+                <span class="post-meta-item-text">阅读时长 &asymp;</span>
+              <span>1 分钟</span>
+            </span>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <p>虽然展开字体在预览中描述的是 Extended，但是实际使用时需要写成 Expanded。</p>
+
       
     </div>
 
@@ -569,6 +844,109 @@
           <!--noindex-->
             <div class="post-button">
               <a class="btn" href="/programming/openjdk-concurrenthashmap/#more" rel="contents">
+                阅读全文 &raquo;
+              </a>
+            </div>
+          <!--/noindex-->
+        
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://hxhue.github.io/programming/openjdk-java-memory-order/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="Hxhue">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Hxhue's Blog">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/programming/openjdk-java-memory-order/" class="post-title-link" itemprop="url">OpenJDK: Java Memory Order</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2023-08-12 15:17:00" itemprop="dateCreated datePublished" datetime="2023-08-12T15:17:00+08:00">2023-08-12</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2024-03-15 16:45:06" itemprop="dateModified" datetime="2024-03-15T16:45:06+08:00">2024-03-15</time>
+              </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/programming/" itemprop="url" rel="index"><span itemprop="name">programming</span></a>
+                </span>
+            </span>
+
+          <br>
+            <span class="post-meta-item" title="本文字数">
+              <span class="post-meta-item-icon">
+                <i class="far fa-file-word"></i>
+              </span>
+                <span class="post-meta-item-text">本文字数：</span>
+              <span>1.2k</span>
+            </span>
+            <span class="post-meta-item" title="阅读时长">
+              <span class="post-meta-item-icon">
+                <i class="far fa-clock"></i>
+              </span>
+                <span class="post-meta-item-text">阅读时长 &asymp;</span>
+              <span>4 分钟</span>
+            </span>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <p>CPU 内存屏障：<a target="_blank" rel="noopener" href="https://sf-zhou.github.io/programming/memory_barrier.html">https://sf-zhou.github.io/programming/memory_barrier.html</a></p>
+<p>volatile 与内存屏障总结： <a target="_blank" rel="noopener" href="https://zhuanlan.zhihu.com/p/43526907">https://zhuanlan.zhihu.com/p/43526907</a> <strong>下面几段都是直接引用的</strong>，但是因为不喜欢引用样式所以没用。</p>
+<p>X86-64 下仅支持一种指令重排：Store-Load ，即读操作可能会重排到写操作前面，同时不同线程的写操作并没有保证全局可见，例子见《Intel® 64 and IA-32 Architectures Software Developer’s Manual》手册 8.6.1、8.2.3.7 节。要注意的是这个问题只能用 mfence 解决，不能靠组合 sfence 和 lfence 解决。（用 sfence+lfence 组合仅可以解决重排问题，但不能解决全局可见性问题，简单理解不如视为 <code>sfence</code> 和 <code>lfence</code> 本身也能乱序重排）</p>
+<p>X86-64 一般情况根本不会需要使用 <code>lfence</code> 与 <code>sfence</code> 这两个指令，除非操作 Write-Through 内存或使用 non-temporal 指令（NT 指令，属于 SSE 指令集），比如 <code>movntdq</code>, <code>movnti</code>,<br>maskmovq，这些指令也使用 Write-Through 内存策略，通常使用在图形学或视频处理，Linux 编程里就需要使用 GNC 提供的专门的函数（例子见参考资料 13：Memory part 5: What programmers can do）。</p>
+<p>下面是 GNU 中的三种内存屏障定义方法，结合了编译器屏障和三种 CPU 屏障指令</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">define</span> lfence() __asm__ __volatile__(<span class="string">&quot;lfence&quot;</span>: : :<span class="string">&quot;memory&quot;</span>)</span></span><br><span class="line"><span class="meta">#<span class="keyword">define</span> sfence() __asm__ __volatile__(<span class="string">&quot;sfence&quot;</span>: : :<span class="string">&quot;memory&quot;</span>)</span></span><br><span class="line"><span class="meta">#<span class="keyword">define</span> mfence() __asm__ __volatile__(<span class="string">&quot;mfence&quot;</span>: : :<span class="string">&quot;memory&quot;</span>)</span></span><br></pre></td></tr></table></figure>
+
+<p>代码中仍然使用 <code>lfence()</code> 与 <code>sfence()</code> 这两个内存屏障应该也是一种长远的考虑。按照 Interface 写代码是最保险的，万一 Intel 以后出一个采用弱一致模型的 CPU，遗留代码出问题就不好了。目前在 X86 下面视为编译器屏障即可。</p>
+<h1 id="sun-misc-Unsafe"><a href="#sun-misc-Unsafe" class="headerlink" title="sun.misc.Unsafe"></a>sun.misc.Unsafe</h1>
+          <!--noindex-->
+            <div class="post-button">
+              <a class="btn" href="/programming/openjdk-java-memory-order/#more" rel="contents">
                 阅读全文 &raquo;
               </a>
             </div>
@@ -776,426 +1154,10 @@
   
   
 
-      
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="https://hxhue.github.io/programming/openjdk-java-memory-order/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/avatar.gif">
-      <meta itemprop="name" content="Hxhue">
-      <meta itemprop="description" content="">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Hxhue's Blog">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          
-            <a href="/programming/openjdk-java-memory-order/" class="post-title-link" itemprop="url">OpenJDK: Java Memory Order</a>
-        </h2>
-
-        <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-calendar"></i>
-              </span>
-              <span class="post-meta-item-text">发表于</span>
-
-              <time title="创建时间：2023-08-12 15:17:00" itemprop="dateCreated datePublished" datetime="2023-08-12T15:17:00+08:00">2023-08-12</time>
-            </span>
-              <span class="post-meta-item">
-                <span class="post-meta-item-icon">
-                  <i class="far fa-calendar-check"></i>
-                </span>
-                <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2024-03-15 16:45:06" itemprop="dateModified" datetime="2024-03-15T16:45:06+08:00">2024-03-15</time>
-              </span>
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-folder"></i>
-              </span>
-              <span class="post-meta-item-text">分类于</span>
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/programming/" itemprop="url" rel="index"><span itemprop="name">programming</span></a>
-                </span>
-            </span>
-
-          <br>
-            <span class="post-meta-item" title="本文字数">
-              <span class="post-meta-item-icon">
-                <i class="far fa-file-word"></i>
-              </span>
-                <span class="post-meta-item-text">本文字数：</span>
-              <span>1.2k</span>
-            </span>
-            <span class="post-meta-item" title="阅读时长">
-              <span class="post-meta-item-icon">
-                <i class="far fa-clock"></i>
-              </span>
-                <span class="post-meta-item-text">阅读时长 &asymp;</span>
-              <span>4 分钟</span>
-            </span>
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          <p>CPU 内存屏障：<a target="_blank" rel="noopener" href="https://sf-zhou.github.io/programming/memory_barrier.html">https://sf-zhou.github.io/programming/memory_barrier.html</a></p>
-<p>volatile 与内存屏障总结： <a target="_blank" rel="noopener" href="https://zhuanlan.zhihu.com/p/43526907">https://zhuanlan.zhihu.com/p/43526907</a> <strong>下面几段都是直接引用的</strong>，但是因为不喜欢引用样式所以没用。</p>
-<p>X86-64 下仅支持一种指令重排：Store-Load ，即读操作可能会重排到写操作前面，同时不同线程的写操作并没有保证全局可见，例子见《Intel® 64 and IA-32 Architectures Software Developer’s Manual》手册 8.6.1、8.2.3.7 节。要注意的是这个问题只能用 mfence 解决，不能靠组合 sfence 和 lfence 解决。（用 sfence+lfence 组合仅可以解决重排问题，但不能解决全局可见性问题，简单理解不如视为 <code>sfence</code> 和 <code>lfence</code> 本身也能乱序重排）</p>
-<p>X86-64 一般情况根本不会需要使用 <code>lfence</code> 与 <code>sfence</code> 这两个指令，除非操作 Write-Through 内存或使用 non-temporal 指令（NT 指令，属于 SSE 指令集），比如 <code>movntdq</code>, <code>movnti</code>,<br>maskmovq，这些指令也使用 Write-Through 内存策略，通常使用在图形学或视频处理，Linux 编程里就需要使用 GNC 提供的专门的函数（例子见参考资料 13：Memory part 5: What programmers can do）。</p>
-<p>下面是 GNU 中的三种内存屏障定义方法，结合了编译器屏障和三种 CPU 屏障指令</p>
-<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">define</span> lfence() __asm__ __volatile__(<span class="string">&quot;lfence&quot;</span>: : :<span class="string">&quot;memory&quot;</span>)</span></span><br><span class="line"><span class="meta">#<span class="keyword">define</span> sfence() __asm__ __volatile__(<span class="string">&quot;sfence&quot;</span>: : :<span class="string">&quot;memory&quot;</span>)</span></span><br><span class="line"><span class="meta">#<span class="keyword">define</span> mfence() __asm__ __volatile__(<span class="string">&quot;mfence&quot;</span>: : :<span class="string">&quot;memory&quot;</span>)</span></span><br></pre></td></tr></table></figure>
-
-<p>代码中仍然使用 <code>lfence()</code> 与 <code>sfence()</code> 这两个内存屏障应该也是一种长远的考虑。按照 Interface 写代码是最保险的，万一 Intel 以后出一个采用弱一致模型的 CPU，遗留代码出问题就不好了。目前在 X86 下面视为编译器屏障即可。</p>
-<h1 id="sun-misc-Unsafe"><a href="#sun-misc-Unsafe" class="headerlink" title="sun.misc.Unsafe"></a>sun.misc.Unsafe</h1>
-          <!--noindex-->
-            <div class="post-button">
-              <a class="btn" href="/programming/openjdk-java-memory-order/#more" rel="contents">
-                阅读全文 &raquo;
-              </a>
-            </div>
-          <!--/noindex-->
-        
-      
-    </div>
-
-    
-    
-    
-      <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  
-  
-  
-
-      
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="https://hxhue.github.io/programming/openjdk-project-loom/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/avatar.gif">
-      <meta itemprop="name" content="Hxhue">
-      <meta itemprop="description" content="">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Hxhue's Blog">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          
-            <a href="/programming/openjdk-project-loom/" class="post-title-link" itemprop="url">OpenJDK: Project Loom</a>
-        </h2>
-
-        <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-calendar"></i>
-              </span>
-              <span class="post-meta-item-text">发表于</span>
-
-              <time title="创建时间：2023-08-12 15:17:00" itemprop="dateCreated datePublished" datetime="2023-08-12T15:17:00+08:00">2023-08-12</time>
-            </span>
-              <span class="post-meta-item">
-                <span class="post-meta-item-icon">
-                  <i class="far fa-calendar-check"></i>
-                </span>
-                <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2024-03-16 13:24:18" itemprop="dateModified" datetime="2024-03-16T13:24:18+08:00">2024-03-16</time>
-              </span>
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-folder"></i>
-              </span>
-              <span class="post-meta-item-text">分类于</span>
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/programming/" itemprop="url" rel="index"><span itemprop="name">programming</span></a>
-                </span>
-            </span>
-
-          <br>
-            <span class="post-meta-item" title="本文字数">
-              <span class="post-meta-item-icon">
-                <i class="far fa-file-word"></i>
-              </span>
-                <span class="post-meta-item-text">本文字数：</span>
-              <span>377</span>
-            </span>
-            <span class="post-meta-item" title="阅读时长">
-              <span class="post-meta-item-icon">
-                <i class="far fa-clock"></i>
-              </span>
-                <span class="post-meta-item-text">阅读时长 &asymp;</span>
-              <span>1 分钟</span>
-            </span>
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          <h1 id="互斥：锁"><a href="#互斥：锁" class="headerlink" title="互斥：锁"></a>互斥：锁</h1><p>现在对象锁不尊重虚拟线程，但是 JUC 下的锁是尊重虚拟线程的。</p>
-<h1 id="共享：ScopedValue"><a href="#共享：ScopedValue" class="headerlink" title="共享：ScopedValue"></a>共享：ScopedValue</h1><p>ThreadLocal 和虚拟线程配合的不是很好，尽管功能上 ThreadLocal 是支持虚拟线程的，但是由于虚拟线程数量众多、生命周期短，使用 ThreadLocal 时虽然保证了线程安全，却创建了大量对象——这个问题在平台线程上就不明显。JEP 429 ScopedValues (Java 20) 是为了解决这个问题的。</p>
-<p>💡 ThreadLocal 和线程池配合的也不是很好，因此短期任务结束后，将线程放回池中之前要及时清理数据。</p>
-<p><img src="/programming/openjdk-project-loom/../../../../assets/4511b39ce04195c20d424e568b78a4ba.png"></p>
-<p>ScopedValue 用 where 绑定共享变量，用 call 来启动虚拟线程，这样虚拟线程及子虚拟线程能够在调用环境中通过之前捕获的键（图中为 KEY）来获取值，这里使用方式也类似于之前的 ThreadLocal 查表。于是，一些本可以共享的变量实现了共享。</p>
-<p>另外，ScopedValue 没有 remove() 方法，因为 .call() 返回后 KEY 就随着虚拟线程结束而解绑了。如果直接获取而对应值不存在，则会抛出异常；有必要时用 isBound() 来检查。</p>
-          <!--noindex-->
-            <div class="post-button">
-              <a class="btn" href="/programming/openjdk-project-loom/#more" rel="contents">
-                阅读全文 &raquo;
-              </a>
-            </div>
-          <!--/noindex-->
-        
-      
-    </div>
-
-    
-    
-    
-      <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  
-  
-  
-
-      
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="https://hxhue.github.io/programming/%E8%AF%BB-on-java-8/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/avatar.gif">
-      <meta itemprop="name" content="Hxhue">
-      <meta itemprop="description" content="">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Hxhue's Blog">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          
-            <a href="/programming/%E8%AF%BB-on-java-8/" class="post-title-link" itemprop="url">读 On Java 8</a>
-        </h2>
-
-        <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-calendar"></i>
-              </span>
-              <span class="post-meta-item-text">发表于</span>
-
-              <time title="创建时间：2023-08-12 15:17:00" itemprop="dateCreated datePublished" datetime="2023-08-12T15:17:00+08:00">2023-08-12</time>
-            </span>
-              <span class="post-meta-item">
-                <span class="post-meta-item-icon">
-                  <i class="far fa-calendar-check"></i>
-                </span>
-                <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2024-03-16 13:24:18" itemprop="dateModified" datetime="2024-03-16T13:24:18+08:00">2024-03-16</time>
-              </span>
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-folder"></i>
-              </span>
-              <span class="post-meta-item-text">分类于</span>
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/programming/" itemprop="url" rel="index"><span itemprop="name">programming</span></a>
-                </span>
-            </span>
-
-          <br>
-            <span class="post-meta-item" title="本文字数">
-              <span class="post-meta-item-icon">
-                <i class="far fa-file-word"></i>
-              </span>
-                <span class="post-meta-item-text">本文字数：</span>
-              <span>6.5k</span>
-            </span>
-            <span class="post-meta-item" title="阅读时长">
-              <span class="post-meta-item-icon">
-                <i class="far fa-clock"></i>
-              </span>
-                <span class="post-meta-item-text">阅读时长 &asymp;</span>
-              <span>24 分钟</span>
-            </span>
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          <h1 id="Chapter-00-11"><a href="#Chapter-00-11" class="headerlink" title="Chapter 00-11"></a>Chapter 00-11</h1><p>Java 对象构造顺序：1、基类 2、所有域 3、初始化块 4、自身的构造函数</p>
-<figure class="highlight jsx"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">jshell&gt; a = <span class="keyword">new</span> <span class="title class_">Foo</span>()</span><br><span class="line"><span class="title class_">Value</span> initialization</span><br><span class="line"><span class="title class_">Initialization</span> block</span><br><span class="line"><span class="title class_">Constructor</span></span><br></pre></td></tr></table></figure>
-
-<p>为接口提供默认实现：</p>
-<p><img src="/programming/%E8%AF%BB-on-java-8/../../../../assets/630546bf2b71cdf127d9f96b76c05aa1.png"></p>
-<p>逆变、协变、不变的关系：</p>
-<p><img src="/programming/%E8%AF%BB-on-java-8/../../../../assets/3e7c37a37ad6d2386c55e8ac2a421164.png"></p>
-<p>在 Java 的子类中 override 了父类的方法，返回一个协变类型也是可以的。比如基类规定的是返回 Object，重写的方法里面是可以写返回任意对象的。</p>
-          <!--noindex-->
-            <div class="post-button">
-              <a class="btn" href="/programming/%E8%AF%BB-on-java-8/#more" rel="contents">
-                阅读全文 &raquo;
-              </a>
-            </div>
-          <!--/noindex-->
-        
-      
-    </div>
-
-    
-    
-    
-      <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  
-  
-  
-
-      
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="https://hxhue.github.io/programming/rust-%E7%A8%8B%E5%BA%8F%E8%AE%BE%E8%AE%A1%E8%AF%AD%E8%A8%80-%E7%AC%AC%E4%B8%80%E5%8D%B0%E8%B1%A1/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/avatar.gif">
-      <meta itemprop="name" content="Hxhue">
-      <meta itemprop="description" content="">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Hxhue's Blog">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          
-            <a href="/programming/rust-%E7%A8%8B%E5%BA%8F%E8%AE%BE%E8%AE%A1%E8%AF%AD%E8%A8%80-%E7%AC%AC%E4%B8%80%E5%8D%B0%E8%B1%A1/" class="post-title-link" itemprop="url">Rust 程序设计语言 第一印象</a>
-        </h2>
-
-        <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-calendar"></i>
-              </span>
-              <span class="post-meta-item-text">发表于</span>
-
-              <time title="创建时间：2023-08-12 15:17:00" itemprop="dateCreated datePublished" datetime="2023-08-12T15:17:00+08:00">2023-08-12</time>
-            </span>
-              <span class="post-meta-item">
-                <span class="post-meta-item-icon">
-                  <i class="far fa-calendar-check"></i>
-                </span>
-                <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2024-03-16 13:24:18" itemprop="dateModified" datetime="2024-03-16T13:24:18+08:00">2024-03-16</time>
-              </span>
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-folder"></i>
-              </span>
-              <span class="post-meta-item-text">分类于</span>
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/programming/" itemprop="url" rel="index"><span itemprop="name">programming</span></a>
-                </span>
-            </span>
-
-          <br>
-            <span class="post-meta-item" title="本文字数">
-              <span class="post-meta-item-icon">
-                <i class="far fa-file-word"></i>
-              </span>
-                <span class="post-meta-item-text">本文字数：</span>
-              <span>971</span>
-            </span>
-            <span class="post-meta-item" title="阅读时长">
-              <span class="post-meta-item-icon">
-                <i class="far fa-clock"></i>
-              </span>
-                <span class="post-meta-item-text">阅读时长 &asymp;</span>
-              <span>4 分钟</span>
-            </span>
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          <p>首先看这个：</p>
-<p><img src="/programming/rust-%E7%A8%8B%E5%BA%8F%E8%AE%BE%E8%AE%A1%E8%AF%AD%E8%A8%80-%E7%AC%AC%E4%B8%80%E5%8D%B0%E8%B1%A1/../../../../assets/fee648949a294fc8593f0a4dbbef67b1.png"></p>
-<p>C++中在 C++14 之后可以使用 <code>&#39;</code> 来分隔数字字面量。而 Java 和 Rust 在设计阶段很早的时候就支持了用 <code>_</code> 来分隔数字。</p>
-<p>个人感受：</p>
-<ul>
-<li>处处充斥强制移动语义。相关的是 Drop Trait，而基本类型还实现了 Copy Trait。（所有权和 C++ RAII 想要解决的问题相似）</li>
-<li>默认定义是常量，包括引用默认是常引用。（和 C++ 相反）</li>
-<li>允许同一个作用域内 shadow，试图把变量名当成真正的标签来用（类似 Python）。</li>
-<li>错误处理用 expect，比 try-catch 简洁。</li>
-<li>内置元组和 range、if 条件不需要加括号。</li>
-<li>很多实用包都得用 crate，在标准库中没提供……</li>
-</ul>
-<h1 id="认识所有权"><a href="#认识所有权" class="headerlink" title="认识所有权"></a>认识所有权</h1><p>同一生存期，对对象 A 的可变引用将排斥任何对对象 A 的其他引用。当且仅当所有引用都是常量引用时编译才能够通过。一个引用的作用域从声明的地方开始一直持续到最后一次使用为止。编译器能够把这一点检查出来。如果最后一次使用结束了，就不参与和其他引用的排斥行为了。</p>
-<blockquote>
-<p style="margin-bottom: 0px"><font size="+3">✏️</font><font size="+1"><strong> NOTE</strong></font></p>
-<p><code>str</code> 类型好像见不到，只能见到 <code>str&amp;</code> 类型。由于是引用，它自己没有所有权。</p>
-</blockquote>
-          <!--noindex-->
-            <div class="post-button">
-              <a class="btn" href="/programming/rust-%E7%A8%8B%E5%BA%8F%E8%AE%BE%E8%AE%A1%E8%AF%AD%E8%A8%80-%E7%AC%AC%E4%B8%80%E5%8D%B0%E8%B1%A1/#more" rel="contents">
-                阅读全文 &raquo;
-              </a>
-            </div>
-          <!--/noindex-->
-        
-      
-    </div>
-
-    
-    
-    
-      <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  
-  
-  
-
 
   
   <nav class="pagination">
-    <a class="extend prev" rel="prev" href="/page/11/"><i class="fa fa-angle-left" aria-label="上一页"></i></a><a class="page-number" href="/">1</a><span class="space">&hellip;</span><a class="page-number" href="/page/11/">11</a><span class="page-number current">12</span><a class="page-number" href="/page/13/">13</a><span class="space">&hellip;</span><a class="page-number" href="/page/21/">21</a><a class="extend next" rel="next" href="/page/13/"><i class="fa fa-angle-right" aria-label="下一页"></i></a>
+    <a class="extend prev" rel="prev" href="/page/11/"><i class="fa fa-angle-left" aria-label="上一页"></i></a><a class="page-number" href="/">1</a><span class="space">&hellip;</span><a class="page-number" href="/page/11/">11</a><span class="page-number current">12</span><a class="page-number" href="/page/13/">13</a><span class="space">&hellip;</span><a class="page-number" href="/page/22/">22</a><a class="extend next" rel="next" href="/page/13/"><i class="fa fa-angle-right" aria-label="下一页"></i></a>
   </nav>
 
 
@@ -1261,7 +1223,7 @@
       <div class="site-state-item site-state-posts">
           <a href="/archives/">
         
-          <span class="site-state-item-count">210</span>
+          <span class="site-state-item-count">220</span>
           <span class="site-state-item-name">日志</span>
         </a>
       </div>
@@ -1274,7 +1236,7 @@
       <div class="site-state-item site-state-tags">
             <a href="/tags/">
           
-        <span class="site-state-item-count">47</span>
+        <span class="site-state-item-count">49</span>
         <span class="site-state-item-name">标签</span></a>
       </div>
   </nav>
@@ -1322,13 +1284,13 @@
       <i class="fa fa-chart-area"></i>
     </span>
       <span class="post-meta-item-text">站点总字数：</span>
-    <span title="站点总字数">117k</span>
+    <span title="站点总字数">121k</span>
     <span class="post-meta-divider">|</span>
     <span class="post-meta-item-icon">
       <i class="fa fa-coffee"></i>
     </span>
       <span class="post-meta-item-text">站点阅读时长 &asymp;</span>
-    <span title="站点阅读时长">7:07</span>
+    <span title="站点阅读时长">7:20</span>
 </div>
   <div class="powered-by">由 <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Gemini</a> 强力驱动
   </div><script color="0,0,255" opacity="0.5" zIndex="-1" count="99" src="https://cdn.jsdelivr.net/npm/canvas-nest.js@1/dist/canvas-nest.js"></script>

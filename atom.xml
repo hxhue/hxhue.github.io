@@ -119,8 +119,8 @@
   
   <entry>
     <title>创建内网 Overleaf</title>
-    <link href="https://hxhue.github.io/system/%E5%88%9B%E5%BB%BA%E5%86%85%E7%BD%91-overleaf/"/>
-    <id>https://hxhue.github.io/system/%E5%88%9B%E5%BB%BA%E5%86%85%E7%BD%91-overleaf/</id>
+    <link href="https://hxhue.github.io/systems/%E5%88%9B%E5%BB%BA%E5%86%85%E7%BD%91-overleaf/"/>
+    <id>https://hxhue.github.io/systems/%E5%88%9B%E5%BB%BA%E5%86%85%E7%BD%91-overleaf/</id>
     <published>2024-03-14T14:48:00.000Z</published>
     <updated>2024-03-15T08:31:51.013Z</updated>
     
@@ -136,7 +136,7 @@
     
     
     
-    <category term="system" scheme="https://hxhue.github.io/categories/system/"/>
+    <category term="systems" scheme="https://hxhue.github.io/categories/systems/"/>
     
     
     <category term="latex" scheme="https://hxhue.github.io/tags/latex/"/>
@@ -235,6 +235,39 @@
   </entry>
   
   <entry>
+    <title>(CppCon 2023) Lock-free Atomic Shared Pointers Without a Split Reference Count</title>
+    <link href="https://hxhue.github.io/programming/cppcon-2023-lock-free-atomic-shared-pointers-without-a-split-reference-count/"/>
+    <id>https://hxhue.github.io/programming/cppcon-2023-lock-free-atomic-shared-pointers-without-a-split-reference-count/</id>
+    <published>2024-03-05T12:21:00.000Z</published>
+    <updated>2024-03-15T08:41:11.533Z</updated>
+    
+    <content type="html"><![CDATA[<p><a href="https://youtu.be/lNPZV9Iqo3U?si=lS1hf2ND4SS-6ELB">https://youtu.be/lNPZV9Iqo3U?si=lS1hf2ND4SS-6ELB</a> by Daniel Anderson</p><p><code>std::shared_ptr</code> 的原子引用计数是线程安全的，但是：</p><ol><li>对它指向的对象的访问不是线程安全的</li><li>对它本身的读写不是线程安全的</li></ol><p>这个 lecture 主要考虑第 2 点。在有一个全局或者类似全局的共享指针时，需要注意这个。</p><p>首先不能使用 <code>std::atomic&lt;std::shared_ptr&gt;</code>，因为这个类型不是无锁的，有造成阻塞的可能。</p><p>然后可以考虑用一个单独的原子变量来计数（这样就会同时有一个 <code>std::atomic&lt;int&gt;</code> 和一个 <code>std::shared_ptr</code>），确保 store 操作和 load 操作的安全性（不会 load 到一个引用计数已经归零然后被删掉的 <code>std::shared_ptr</code> 或者说控制块；一旦控制块被 delete，其他线程在控制块上的查询操作即对引用计数的原子读就会出现非法内存访问。）</p><p>有些库甚至更进一步地实现了 split reference counted shared pointer，也就是把上一段的机制集成在了 <code>std::shared_ptr</code> 的内部，这比在外围做并发保护效率会高一些。</p><p>然后 lecture 的重点是介绍 hazard pointer。使用 hazard pointer 保护对象时，控制块引用计数归零可以删掉对象，但不是马上 delete 掉这个控制块，而是使用 <code>retire</code> 方法，使得其他线程能够继续查询控制块。在没有线程查询控制块时再删除 retired control blocks，同样是把复杂度从用户移向了库的实现者。C++26 有可能会加入这个头文件。</p>]]></content>
+    
+    
+    <summary type="html">&lt;p&gt;&lt;a href=&quot;https://youtu.be/lNPZV9Iqo3U?si=lS1hf2ND4SS-6ELB&quot;&gt;https://youtu.be/lNPZV9Iqo3U?si=lS1hf2ND4SS-6ELB&lt;/a&gt; by Daniel Anderson&lt;/p&gt;
+&lt;p&gt;&lt;code&gt;std::shared_ptr&lt;/code&gt; 的原子引用计数是线程安全的，但是：&lt;/p&gt;
+&lt;ol&gt;
+&lt;li&gt;对它指向的对象的访问不是线程安全的&lt;/li&gt;
+&lt;li&gt;对它本身的读写不是线程安全的&lt;/li&gt;
+&lt;/ol&gt;
+&lt;p&gt;这个 lecture 主要考虑第 2 点。在有一个全局或者类似全局的共享指针时，需要注意这个。&lt;/p&gt;
+&lt;p&gt;首先不能使用 &lt;code&gt;std::atomic&amp;lt;std::shared_ptr&amp;gt;&lt;/code&gt;，因为这个类型不是无锁的，有造成阻塞的可能。&lt;/p&gt;
+&lt;p&gt;然后可以考虑用一个单独的原子变量来计数（这样就会同时有一个 &lt;code&gt;std::atomic&amp;lt;int&amp;gt;&lt;/code&gt; 和一个 &lt;code&gt;std::shared_ptr&lt;/code&gt;），确保 store 操作和 load 操作的安全性（不会 load 到一个引用计数已经归零然后被删掉的 &lt;code&gt;std::shared_ptr&lt;/code&gt; 或者说控制块；一旦控制块被 delete，其他线程在控制块上的查询操作即对引用计数的原子读就会出现非法内存访问。）&lt;/p&gt;
+&lt;p&gt;有些库甚至更进一步地实现了 split reference counted shared pointer，也就是把上一段的机制集成在了 &lt;code&gt;std::shared_ptr&lt;/code&gt; 的内部，这比在外围做并发保护效率会高一些。&lt;/p&gt;
+&lt;p&gt;然后 lecture 的重点是介绍 hazard pointer。使用 hazard pointer 保护对象时，控制块引用计数归零可以删掉对象，但不是马上 delete 掉这个控制块，而是使用 &lt;code&gt;retire&lt;/code&gt; 方法，使得其他线程能够继续查询控制块。在没有线程查询控制块时再删除 retired control blocks，同样是把复杂度从用户移向了库的实现者。C++26 有可能会加入这个头文件。&lt;/p&gt;</summary>
+    
+    
+    
+    <category term="programming" scheme="https://hxhue.github.io/categories/programming/"/>
+    
+    
+    <category term="cpp" scheme="https://hxhue.github.io/tags/cpp/"/>
+    
+    <category term="cppcon" scheme="https://hxhue.github.io/tags/cppcon/"/>
+    
+  </entry>
+  
+  <entry>
     <title>(CppCon 2018) 105 STL Algorithms in Less Than an Hour</title>
     <link href="https://hxhue.github.io/programming/cppcon-2018-105-stl-algorithms-in-less-than-an-hour/"/>
     <id>https://hxhue.github.io/programming/cppcon-2018-105-stl-algorithms-in-less-than-an-hour/</id>
@@ -259,39 +292,6 @@
     1. 在需要按照一定顺序遍历，比如倒序遍历的时候，可以用 rbegin/rend/for_each 来完成。
     2. for_each 可以指定执行策略，比如并行执行。
 &lt;/code&gt;&lt;/pre&gt;</summary>
-    
-    
-    
-    <category term="programming" scheme="https://hxhue.github.io/categories/programming/"/>
-    
-    
-    <category term="cpp" scheme="https://hxhue.github.io/tags/cpp/"/>
-    
-    <category term="cppcon" scheme="https://hxhue.github.io/tags/cppcon/"/>
-    
-  </entry>
-  
-  <entry>
-    <title>(CppCon 2023) Lock-free Atomic Shared Pointers Without a Split Reference Count</title>
-    <link href="https://hxhue.github.io/programming/cppcon-2023-lock-free-atomic-shared-pointers-without-a-split-reference-count/"/>
-    <id>https://hxhue.github.io/programming/cppcon-2023-lock-free-atomic-shared-pointers-without-a-split-reference-count/</id>
-    <published>2024-03-05T12:21:00.000Z</published>
-    <updated>2024-03-15T08:41:11.533Z</updated>
-    
-    <content type="html"><![CDATA[<p><a href="https://youtu.be/lNPZV9Iqo3U?si=lS1hf2ND4SS-6ELB">https://youtu.be/lNPZV9Iqo3U?si=lS1hf2ND4SS-6ELB</a> by Daniel Anderson</p><p><code>std::shared_ptr</code> 的原子引用计数是线程安全的，但是：</p><ol><li>对它指向的对象的访问不是线程安全的</li><li>对它本身的读写不是线程安全的</li></ol><p>这个 lecture 主要考虑第 2 点。在有一个全局或者类似全局的共享指针时，需要注意这个。</p><p>首先不能使用 <code>std::atomic&lt;std::shared_ptr&gt;</code>，因为这个类型不是无锁的，有造成阻塞的可能。</p><p>然后可以考虑用一个单独的原子变量来计数（这样就会同时有一个 <code>std::atomic&lt;int&gt;</code> 和一个 <code>std::shared_ptr</code>），确保 store 操作和 load 操作的安全性（不会 load 到一个引用计数已经归零然后被删掉的 <code>std::shared_ptr</code> 或者说控制块；一旦控制块被 delete，其他线程在控制块上的查询操作即对引用计数的原子读就会出现非法内存访问。）</p><p>有些库甚至更进一步地实现了 split reference counted shared pointer，也就是把上一段的机制集成在了 <code>std::shared_ptr</code> 的内部，这比在外围做并发保护效率会高一些。</p><p>然后 lecture 的重点是介绍 hazard pointer。使用 hazard pointer 保护对象时，控制块引用计数归零可以删掉对象，但不是马上 delete 掉这个控制块，而是使用 <code>retire</code> 方法，使得其他线程能够继续查询控制块。在没有线程查询控制块时再删除 retired control blocks，同样是把复杂度从用户移向了库的实现者。C++26 有可能会加入这个头文件。</p>]]></content>
-    
-    
-    <summary type="html">&lt;p&gt;&lt;a href=&quot;https://youtu.be/lNPZV9Iqo3U?si=lS1hf2ND4SS-6ELB&quot;&gt;https://youtu.be/lNPZV9Iqo3U?si=lS1hf2ND4SS-6ELB&lt;/a&gt; by Daniel Anderson&lt;/p&gt;
-&lt;p&gt;&lt;code&gt;std::shared_ptr&lt;/code&gt; 的原子引用计数是线程安全的，但是：&lt;/p&gt;
-&lt;ol&gt;
-&lt;li&gt;对它指向的对象的访问不是线程安全的&lt;/li&gt;
-&lt;li&gt;对它本身的读写不是线程安全的&lt;/li&gt;
-&lt;/ol&gt;
-&lt;p&gt;这个 lecture 主要考虑第 2 点。在有一个全局或者类似全局的共享指针时，需要注意这个。&lt;/p&gt;
-&lt;p&gt;首先不能使用 &lt;code&gt;std::atomic&amp;lt;std::shared_ptr&amp;gt;&lt;/code&gt;，因为这个类型不是无锁的，有造成阻塞的可能。&lt;/p&gt;
-&lt;p&gt;然后可以考虑用一个单独的原子变量来计数（这样就会同时有一个 &lt;code&gt;std::atomic&amp;lt;int&amp;gt;&lt;/code&gt; 和一个 &lt;code&gt;std::shared_ptr&lt;/code&gt;），确保 store 操作和 load 操作的安全性（不会 load 到一个引用计数已经归零然后被删掉的 &lt;code&gt;std::shared_ptr&lt;/code&gt; 或者说控制块；一旦控制块被 delete，其他线程在控制块上的查询操作即对引用计数的原子读就会出现非法内存访问。）&lt;/p&gt;
-&lt;p&gt;有些库甚至更进一步地实现了 split reference counted shared pointer，也就是把上一段的机制集成在了 &lt;code&gt;std::shared_ptr&lt;/code&gt; 的内部，这比在外围做并发保护效率会高一些。&lt;/p&gt;
-&lt;p&gt;然后 lecture 的重点是介绍 hazard pointer。使用 hazard pointer 保护对象时，控制块引用计数归零可以删掉对象，但不是马上 delete 掉这个控制块，而是使用 &lt;code&gt;retire&lt;/code&gt; 方法，使得其他线程能够继续查询控制块。在没有线程查询控制块时再删除 retired control blocks，同样是把复杂度从用户移向了库的实现者。C++26 有可能会加入这个头文件。&lt;/p&gt;</summary>
     
     
     
@@ -395,8 +395,8 @@
   
   <entry>
     <title>deb 包里面装的是什么？</title>
-    <link href="https://hxhue.github.io/system/deb-%E5%8C%85%E9%87%8C%E9%9D%A2%E8%A3%85%E7%9A%84%E6%98%AF%E4%BB%80%E4%B9%88%EF%BC%9F/"/>
-    <id>https://hxhue.github.io/system/deb-%E5%8C%85%E9%87%8C%E9%9D%A2%E8%A3%85%E7%9A%84%E6%98%AF%E4%BB%80%E4%B9%88%EF%BC%9F/</id>
+    <link href="https://hxhue.github.io/systems/deb-%E5%8C%85%E9%87%8C%E9%9D%A2%E8%A3%85%E7%9A%84%E6%98%AF%E4%BB%80%E4%B9%88%EF%BC%9F/"/>
+    <id>https://hxhue.github.io/systems/deb-%E5%8C%85%E9%87%8C%E9%9D%A2%E8%A3%85%E7%9A%84%E6%98%AF%E4%BB%80%E4%B9%88%EF%BC%9F/</id>
     <published>2024-02-09T03:52:00.000Z</published>
     <updated>2024-03-18T09:03:52.222Z</updated>
     
@@ -416,7 +416,7 @@
     
     
     
-    <category term="system" scheme="https://hxhue.github.io/categories/system/"/>
+    <category term="systems" scheme="https://hxhue.github.io/categories/systems/"/>
     
     
     <category term="linux" scheme="https://hxhue.github.io/tags/linux/"/>
