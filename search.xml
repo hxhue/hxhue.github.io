@@ -220,13 +220,13 @@
     <content><![CDATA[<h1 id="如果用-Intellisense"><a href="#如果用-Intellisense" class="headerlink" title="如果用 Intellisense"></a>如果用 Intellisense</h1><p>以文件 <code>.vscode/c_cpp_properties.json</code> 中 <code>configuration</code> 的 <code>configurationProvider</code> 的值来分类。</p>
 <h2 id="ms-vscode-cmake-tools"><a href="#ms-vscode-cmake-tools" class="headerlink" title="ms-vscode.cmake-tools"></a>ms-vscode.cmake-tools</h2><p><strong>缺点：文件不在编译数据库中时 include 路径不正确（对新文件不友好）</strong>。</p>
 <p><strong><code>configurationProvider</code> 是 <code>ms-vscode.cmake-tools</code> 时</strong>，<code>compileCommands</code> 和 <code>includePath</code> 设置是无效的。这个时候如果 <code>compile_commands.json</code> （编译数据库）中没有这个文件（尤其是 <code>CMakeLists.txt</code> 中可能尚未加入新编写的文件的情况），或者编译数据库尚未配置（需要先编译生成一次)，include 路径就不正确。</p>
-<p><img src="/developer/vs-code-cmake-%E5%B7%A5%E7%A8%8B%E4%B8%AD-c-%E6%8F%90%E7%A4%BA%E4%B8%8D%E6%AD%A3%E5%B8%B8/../assets/39ddf74b092f7dcc7a570c2326e530e4.jpeg"></p>
+<p><img src="/developer/vs-code-cmake-%E5%B7%A5%E7%A8%8B%E4%B8%AD-c-%E6%8F%90%E7%A4%BA%E4%B8%8D%E6%AD%A3%E5%B8%B8/../../../../assets/39ddf74b092f7dcc7a570c2326e530e4.jpeg"></p>
 <figure class="highlight txt"><table><tr><td class="code"><pre><span class="line">[10/26/2023, 7:45:25 PM] &quot;xxxx.cc&quot; not found in &quot;$&#123;workspaceFolder&#125;/build/compile_commands.json&quot;. &#x27;includePath&#x27; from c_cpp_properties.json in folder &#x27;nexusnet&#x27; will be used for this file instead.s</span><br></pre></td></tr></table></figure>
 
 <p>这段话的意思：由于文件（是新创建的，所以暂时）并不在 <code>compile_commands.json</code> 中，不会给文件应用和工程相同的 include 路径，而且怎么加都没有用！</p>
 <h2 id="ms-vscode-cpp-tools-或者未配置"><a href="#ms-vscode-cpp-tools-或者未配置" class="headerlink" title="ms-vscode.cpp-tools 或者未配置"></a>ms-vscode.cpp-tools 或者未配置</h2><p>缺点：文件不在编译数据库中时 include 路径采用 <code>includePath</code> 的值（对新文件不友好，手工调整 <code>includePath</code> 又很累）+ 对宏的检查不准确。</p>
 <p><strong><code>configurationProvider</code> 是 <code>ms-vscode.cpp-tools</code> 或者没有配置时</strong>，<code>compileCommands</code> 和 <code>includePath</code> 设置则是有效的。文件尚不在编译数据库中时会采用 <code>includePath</code> 的设置。只是想要解决找不到 cuda 的问题很简单：</p>
-<p><img src="/developer/vs-code-cmake-%E5%B7%A5%E7%A8%8B%E4%B8%AD-c-%E6%8F%90%E7%A4%BA%E4%B8%8D%E6%AD%A3%E5%B8%B8/../assets/9d9c574b291e2ab151bc6d54ec15d06a.jpeg"></p>
+<p><img src="/developer/vs-code-cmake-%E5%B7%A5%E7%A8%8B%E4%B8%AD-c-%E6%8F%90%E7%A4%BA%E4%B8%8D%E6%AD%A3%E5%B8%B8/../../../../assets/9d9c574b291e2ab151bc6d54ec15d06a.jpeg"></p>
 <p>但是这样有一个新的问题：include 需要在 <code>c_cpp_properties.json</code> 和 CMakeLists.txt 中维护两份。所以最好还是直接将文件及时加入到 CMakeLists.txt 中比较好。</p>
 <p>另外，使用 <code>ms-vscode.cpp-tools</code> 作为配置提供者时，宏的定义往往不准确，不建议这么做。</p>
 <h1 id="如果用-clangd"><a href="#如果用-clangd" class="headerlink" title="如果用 clangd"></a>如果用 clangd</h1><p>缺点：对 cuda 支持不好 + 比 intellisense 的搜索更加死板，暂时不支持 Doxygen。</p>
@@ -284,7 +284,7 @@
     <content><![CDATA[<h1 id="消除烦人的错误提示"><a href="#消除烦人的错误提示" class="headerlink" title="消除烦人的错误提示"></a>消除烦人的错误提示</h1><p>如果是自动保存，则会有烦人的错误提示。即便是打开勿扰模式也会提示错误消息。</p>
 <p>需要在设置中关闭 LaTeX 相关的消息。</p>
 <h1 id="无法编译中文"><a href="#无法编译中文" class="headerlink" title="无法编译中文"></a>无法编译中文</h1><p>在 <code>&quot;latex-workshop.latex.tools&quot;</code> 中改一个参数。</p>
-<p><img src="/developer/vs-code-%E4%B8%8A%E5%86%99-latex/../../../../../assets/4f424a2d52e9950ffe40178fd8a9725f.jpeg"></p>
+<p><img src="/developer/vs-code-%E4%B8%8A%E5%86%99-latex/../../../../assets/4f424a2d52e9950ffe40178fd8a9725f.jpeg"></p>
 <p>每次保存之后不自动使用中文：在 VS Code 的设置中加入这一行并重启。</p>
 <figure class="highlight json"><table><tr><td class="code"><pre><span class="line"><span class="attr">&quot;latex-workshop.latex.recipe.default&quot;</span><span class="punctuation">:</span> <span class="string">&quot;latexmk (xelatex)&quot;</span><span class="punctuation">,</span></span><br></pre></td></tr></table></figure>
 
@@ -311,7 +311,7 @@
     <url>/developer/vs-code-%E7%BB%88%E7%AB%AF%E5%AD%97%E7%AC%A6%E9%97%B4%E8%B7%9D%E8%BF%87%E5%AE%BD/</url>
     <content><![CDATA[<h1 id="终端字体间距过宽"><a href="#终端字体间距过宽" class="headerlink" title="终端字体间距过宽"></a>终端字体间距过宽</h1><p>有时候恢复终端就会出现这种情况（比如显示屏分辨率变化）。暂且尝试的方法是<strong>显式设置终端字体</strong>（而不是把终端字体留空，让其隐式使用编辑器字体）。感觉还是没有用！</p>
 <p><a href="https://github.com/microsoft/vscode/issues/120004">https://github.com/microsoft/vscode/issues/120004</a></p>
-<p><img src="/developer/vs-code-%E7%BB%88%E7%AB%AF%E5%AD%97%E7%AC%A6%E9%97%B4%E8%B7%9D%E8%BF%87%E5%AE%BD/../../../../../assets/5d7d2181b688b6e053ccb2677173540f.jpeg"></p>
+<p><img src="/developer/vs-code-%E7%BB%88%E7%AB%AF%E5%AD%97%E7%AC%A6%E9%97%B4%E8%B7%9D%E8%BF%87%E5%AE%BD/../../../../assets/5d7d2181b688b6e053ccb2677173540f.jpeg"></p>
 <p>将 <code>terminal.integrated.letterSpacing</code> 改成别的值再改回 0（默认值）就能恢复。</p>
 <p>“终端字体间距过宽”的复现：</p>
 <ol>
@@ -366,7 +366,7 @@
   <entry>
     <title>在 VS Code 中使用 clangd</title>
     <url>/developer/%E5%9C%A8-vs-code-%E4%B8%AD%E4%BD%BF%E7%94%A8-clangd/</url>
-    <content><![CDATA[<h1 id="设置-VS-Code-clangd-检查的语言标准为-C-17"><a href="#设置-VS-Code-clangd-检查的语言标准为-C-17" class="headerlink" title="设置 VS Code clangd 检查的语言标准为 C++17"></a>设置 VS Code clangd 检查的语言标准为 C++17</h1><p><img src="/developer/%E5%9C%A8-vs-code-%E4%B8%AD%E4%BD%BF%E7%94%A8-clangd/../../../../../assets/75a1c84faccb284ac8b51a1f07d3fc57.png"></p>
+    <content><![CDATA[<h1 id="设置-VS-Code-clangd-检查的语言标准为-C-17"><a href="#设置-VS-Code-clangd-检查的语言标准为-C-17" class="headerlink" title="设置 VS Code clangd 检查的语言标准为 C++17"></a>设置 VS Code clangd 检查的语言标准为 C++17</h1><p><img src="/developer/%E5%9C%A8-vs-code-%E4%B8%AD%E4%BD%BF%E7%94%A8-clangd/../../../../assets/75a1c84faccb284ac8b51a1f07d3fc57.png"></p>
 <p>Set <code>-std</code> in the <code>.yaml</code> file and then reload window of VS Code.</p>
 <figure class="highlight yaml"><table><tr><td class="code"><pre><span class="line"><span class="attr">CompileFlags:</span></span><br><span class="line">    <span class="attr">Add:</span></span><br><span class="line">      [</span><br><span class="line">        <span class="string">--std=c++17</span>,</span><br><span class="line">        <span class="string">-Wno-documentation</span>,</span><br><span class="line">        <span class="string">-Wno-missing-prototypes</span>,</span><br><span class="line">      ]</span><br><span class="line"><span class="attr">Diagnostics:</span></span><br><span class="line">  <span class="attr">ClangTidy:</span></span><br><span class="line">    <span class="attr">Add:</span></span><br><span class="line">    [</span><br><span class="line">        <span class="string">performance-*</span>,</span><br><span class="line">        <span class="string">bugprone-*</span>,</span><br><span class="line">        <span class="string">modernize-*</span>,</span><br><span class="line">        <span class="string">clang-analyzer-*</span>,</span><br><span class="line">        <span class="string">readability-identifier*</span>,</span><br><span class="line">    ]</span><br><span class="line">    <span class="attr">CheckOptions:</span></span><br><span class="line">      <span class="attr">readability-identifier-naming.VariableCase:</span> <span class="string">camelCase</span></span><br></pre></td></tr></table></figure>
 
@@ -2147,7 +2147,7 @@ cp: target &#39;B&#39;: No such file or directory
 <p>根据上面的网页，转发代理允许目标机器对 client 的 key challenge（从已知公钥构造）转发到本地机器上，会打开一个 socket，这样特权用户就能通过服务器侧的 socket 获取本地的 ssh-agent 的信息，很不安全；而代理跳转是利用了 stdin 和 stdout 传递信息，而且通过了 ssh 加密。</p>
 <p><a href="http://www.unixwiz.net/techtips/ssh-agent-forwarding.html">http://www.unixwiz.net/techtips/ssh-agent-forwarding.html</a></p>
 <p>这篇文章是最清楚的，介绍了从 ssh 密码连接、公钥连接到 ssh-agent、agent 转发以及 key challenge 构造。它将 ssh agent 描述为在 ssh 建立连接过程中替代 ssh 完成 key challenge 的第三方程序。构造好 key response 之后还是从 ssh 发回去。</p>
-<p><img src="/cli/ssh-%E9%85%8D%E7%BD%AE/../assets/23b4c00e127c45a5c19b172490438bc5.webp"></p>
+<p><img src="/cli/ssh-%E9%85%8D%E7%BD%AE/../../../../assets/23b4c00e127c45a5c19b172490438bc5.webp"></p>
 <h2 id="它们解决了什么问题？"><a href="#它们解决了什么问题？" class="headerlink" title="它们解决了什么问题？"></a>它们解决了什么问题？</h2><p>ForwardAgent 解决的是密钥持有问题，可以将网络通路上多个服务器的密钥集中在本机一起管理。ProxyJump 解决的是跨服务器连接的问题，但由于它是直接转发了 stdin 和 stdout，就像本地 ssh 直接和最终目标机通信一样，所以也利于密钥的集中存放。</p>
 ]]></content>
       <categories>
@@ -2484,11 +2484,11 @@ cp: target &#39;B&#39;: No such file or directory
 
 <h2 id="选择-0：bind-，但在-Windows-中设置防火墙"><a href="#选择-0：bind-，但在-Windows-中设置防火墙" class="headerlink" title="选择 0：bind *，但在 Windows 中设置防火墙"></a>选择 0：<code>bind *</code>，但在 Windows 中设置防火墙</h2><p>看起来很复杂。</p>
 <h2 id="选择-1：填写-bind-地址（无法解决问题）"><a href="#选择-1：填写-bind-地址（无法解决问题）" class="headerlink" title="选择 1：填写 bind 地址（无法解决问题）"></a>选择 1：填写 bind 地址（无法解决问题）</h2><p>点击 Allow LAN 右边的按钮，可以看到本机上常用的网卡。这里可以把 WSL 的网关 ip 填上。缺点：<strong>由于只能填写一个 bind 地址，所以这样做本机无法代理！</strong> 重启 clash 之后也会发现 Port 变成了随机的；虽然系统代理打开了，但是 clash 拒绝了 Windows 应用的连接。</p>
-<p><img src="/systems/clash/../assets/c36a0917ace7141a3deec42f47d9c40d.jpeg"></p>
+<p><img src="/systems/clash/../../../../assets/c36a0917ace7141a3deec42f47d9c40d.jpeg"></p>
 <h2 id="选择-2：在配置中添加-authentication（可以一定程度解决问题，但是不完全）"><a href="#选择-2：在配置中添加-authentication（可以一定程度解决问题，但是不完全）" class="headerlink" title="选择 2：在配置中添加 authentication（可以一定程度解决问题，但是不完全）"></a>选择 2：在配置中添加 authentication（可以一定程度解决问题，但是不完全）</h2><p>使用认证后系统代理无法工作！！网上建议添加 Windows 凭据：</p>
-<p><img src="/systems/clash/../assets/5a8fbd9a979d502511715036bec008fb.jpg"></p>
+<p><img src="/systems/clash/../../../../assets/5a8fbd9a979d502511715036bec008fb.jpg"></p>
 <p><strong>或者</strong>打开 clash 系统代理，再进入设置中的网络代理页面，也会提示输入凭据：</p>
-<p><img src="/systems/clash/../assets/028793479d314d87f3df82b766245801.jpg"></p>
+<p><img src="/systems/clash/../../../../assets/028793479d314d87f3df82b766245801.jpg"></p>
 <p>但即便是这样设置也有问题，比如 <strong>OneDrive 无法连接</strong>。</p>
 <h1 id="为所有配置添加额外规则"><a href="#为所有配置添加额外规则" class="headerlink" title="为所有配置添加额外规则"></a>为所有配置添加额外规则</h1><h2 id="选择-1：mixin（JavaScript）"><a href="#选择-1：mixin（JavaScript）" class="headerlink" title="选择 1：mixin（JavaScript）"></a>选择 1：mixin（JavaScript）</h2><p>更新时间：2023 年 9 月 6 日</p>
 <p>mixin 需要切换配置才能生效。</p>
@@ -2661,7 +2661,7 @@ cp: target &#39;B&#39;: No such file or directory
 <p>其中 <code>C:\Windows\system32\GroupPolicy</code> 是一个隐藏文件夹。</p>
 </blockquote>
 <h2 id="家庭版下强行开启组策略编辑器，操作不生效？"><a href="#家庭版下强行开启组策略编辑器，操作不生效？" class="headerlink" title="家庭版下强行开启组策略编辑器，操作不生效？"></a>家庭版下强行开启组策略编辑器，操作不生效？</h2><p>编辑组策略后观察 <code>registry.pol</code> 文件，发现数据的确被写入了。比如启用“Windows 更新不包括驱动程序”，对应的文件如下：</p>
-<p><img src="/systems/windows-%E5%90%88%E9%9B%86/../assets/03904667cc69b9f4289b47e335e109de.jpeg"></p>
+<p><img src="/systems/windows-%E5%90%88%E9%9B%86/../../../../assets/03904667cc69b9f4289b47e335e109de.jpeg"></p>
 <p>其中 <code>01 00 00 00</code> 表示“已启用”。这里看上去是一个字符按照两个字节存储，而整数又是 4 字节小端存储。</p>
 <p>使用 <code>gpupdate /force</code> 强行刷新组策略，在 <code>事件查看器 &gt; Windows 日志 &gt; 系统</code> 中，能看到：</p>
 <figure class="highlight txt"><table><tr><td class="code"><pre><span class="line">已成功为此计算机处理组策略设置。已经检测到并应用了 1 个组策略对象的新设置。</span><br></pre></td></tr></table></figure>
@@ -2712,10 +2712,10 @@ cp: target &#39;B&#39;: No such file or directory
 <h1 id="WiFi-有网络但是还是有小地球"><a href="#WiFi-有网络但是还是有小地球" class="headerlink" title="WiFi 有网络但是还是有小地球"></a>WiFi 有网络但是还是有小地球</h1><p>可能是 DNS 服务器 ping 不通，可以试一下 ping。如果 ping 不上，看看能不能把静态配置的 DNS 服务器改成自动获取。</p>
 <h1 id="安全中心闪退"><a href="#安全中心闪退" class="headerlink" title="安全中心闪退"></a>安全中心闪退</h1><p><a href="https://m.ithome.com/html/570853.htm">https://m.ithome.com/html/570853.htm</a></p>
 <h1 id="解决高-CPU-问题"><a href="#解决高-CPU-问题" class="headerlink" title="解决高 CPU 问题"></a>解决高 CPU 问题</h1><h2 id="Windows-Defender"><a href="#Windows-Defender" class="headerlink" title="Windows Defender"></a><strong>Windows Defender</strong></h2><p>改注册表、组策略里面有个二级选项可以关闭 Windows defender 的实时保护（不太好找）。</p>
-<p><img src="/systems/windows-%E5%90%88%E9%9B%86/../assets/fb3f63a43e5eb7fd1ff56c99b20f8a98.png"></p>
+<p><img src="/systems/windows-%E5%90%88%E9%9B%86/../../../../assets/fb3f63a43e5eb7fd1ff56c99b20f8a98.png"></p>
 <p>上一级的 <code>关闭 Mircosoft Defender 防病毒</code> 看上去是无效的？</p>
 <p><strong>实时保护关闭之后还要在 Windows Defender 页面关掉其他几个相关项目，否则实时保护会自动打开。如果不在组策略中关闭实时保护，则重启后实时保护会自动打开，所以这两件事都要做。</strong></p>
-<p><img src="/systems/windows-%E5%90%88%E9%9B%86/../assets/8026377257cc607896dc55b7a840ce2f.jpeg"></p>
+<p><img src="/systems/windows-%E5%90%88%E9%9B%86/../../../../assets/8026377257cc607896dc55b7a840ce2f.jpeg"></p>
 <h2 id="Microsoft-兼容性遥测"><a href="#Microsoft-兼容性遥测" class="headerlink" title="Microsoft 兼容性遥测"></a><strong>Microsoft 兼容性遥测</strong></h2><p>最全的方法：<a href="https://blog.pcrisk.com/windows/13450-fix-microsoft-compatibility-telemetry-high-cpu-usage">https://blog.pcrisk.com/windows/13450-fix-microsoft-compatibility-telemetry-high-cpu-usage</a></p>
 <p>这个看上去可能靠谱一点：</p>
 <blockquote>
@@ -2724,10 +2724,10 @@ cp: target &#39;B&#39;: No such file or directory
 <p>2.进入到服务列表找到 <code>Connected User Experiences and Telemetry</code> ，<code>Program Compatibility Assistant Service</code> 服务项</p>
 <p>3.打开服务，将服务进行禁用。</p>
 </blockquote>
-<h1 id="WSL-localhost-在-Firefox-上连接很慢"><a href="#WSL-localhost-在-Firefox-上连接很慢" class="headerlink" title="WSL localhost 在 Firefox 上连接很慢"></a>WSL localhost 在 Firefox 上连接很慢</h1><p><img src="/systems/windows-%E5%90%88%E9%9B%86/../assets/d9f0aa31d5bd9d36c26e7bcd57f5199c.png"></p>
+<h1 id="WSL-localhost-在-Firefox-上连接很慢"><a href="#WSL-localhost-在-Firefox-上连接很慢" class="headerlink" title="WSL localhost 在 Firefox 上连接很慢"></a>WSL localhost 在 Firefox 上连接很慢</h1><p><img src="/systems/windows-%E5%90%88%E9%9B%86/../../../../assets/d9f0aa31d5bd9d36c26e7bcd57f5199c.png"></p>
 <p>这张图给出了原因。</p>
 <h1 id="防止-Windows-更新在更新的时候降级驱动"><a href="#防止-Windows-更新在更新的时候降级驱动" class="headerlink" title="防止 Windows 更新在更新的时候降级驱动"></a>防止 Windows 更新在更新的时候降级驱动</h1><p>如果是专业版，就编辑组策略：</p>
-<p><img src="/systems/windows-%E5%90%88%E9%9B%86/../assets/7fa21c6087b5456903c0aa0e3c364933.png"></p>
+<p><img src="/systems/windows-%E5%90%88%E9%9B%86/../../../../assets/7fa21c6087b5456903c0aa0e3c364933.png"></p>
 <p>还可以使用 <a href="/systems/windows-%E5%90%88%E9%9B%86/../../../../../private/%E7%AC%94%E8%AE%B0%E6%9C%AC%E9%80%89%E8%B4%AD/%E6%A3%80%E6%9F%A5%E6%96%B0%20Windows%20%E7%AC%94%E8%AE%B0%E6%9C%AC%E5%92%8C%E5%AE%89%E8%A3%85%E7%B3%BB%E7%BB%9F/#%E7%A6%81%E6%AD%A2%E5%9C%A8%E6%A3%80%E6%9F%A5%E6%9B%B4%E6%96%B0%E6%97%B6%E6%8D%8E%E5%B8%A6%E9%A9%B1%E5%8A%A8"></a> 中的给出的修改注册表的方法。</p>
 <h1 id="Word-文档关闭时显示“正在保存”很长时间"><a href="#Word-文档关闭时显示“正在保存”很长时间" class="headerlink" title="Word 文档关闭时显示“正在保存”很长时间"></a>Word 文档关闭时显示“正在保存”很长时间</h1><p><strong>在隐私设置中关闭全部联机体验</strong>。会使得自动保存不可用，频繁手动保存即可。</p>
 <h1 id="MSYS2-的-ls-无法正确显示中文文件名"><a href="#MSYS2-的-ls-无法正确显示中文文件名" class="headerlink" title="MSYS2 的 ls 无法正确显示中文文件名"></a>MSYS2 的 <code>ls</code> 无法正确显示中文文件名</h1><p>可能是环境变量 <code>LANG</code> 没有被设置。设置它的值为 <code>zh_CN.UTF-8</code> 即可。（<code>en_US.UTF-8</code> 也是可以显示中文的，这就是没有设置的问题，可以用 <code>locale</code> 检查。）</p>
