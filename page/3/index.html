@@ -417,7 +417,7 @@
               </span>
               <span class="post-meta-item-text">分类于</span>
                 <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/developer/" itemprop="url" rel="index"><span itemprop="name">developer</span></a>
+                  <a href="/categories/developer/" itemprop="url" rel="index"><span itemprop="name">Developer</span></a>
                 </span>
             </span>
 
@@ -593,7 +593,7 @@
                   <i class="far fa-calendar-check"></i>
                 </span>
                 <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2024-03-20 14:47:15" itemprop="dateModified" datetime="2024-03-20T14:47:15+08:00">2024-03-20</time>
+                <time title="修改时间：2024-03-21 16:27:13" itemprop="dateModified" datetime="2024-03-21T16:27:13+08:00">2024-03-21</time>
               </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
@@ -601,7 +601,7 @@
               </span>
               <span class="post-meta-item-text">分类于</span>
                 <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/programming/" itemprop="url" rel="index"><span itemprop="name">programming</span></a>
+                  <a href="/categories/programming/" itemprop="url" rel="index"><span itemprop="name">Programming</span></a>
                 </span>
             </span>
 
@@ -698,7 +698,7 @@
                   <i class="far fa-calendar-check"></i>
                 </span>
                 <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2024-03-20 14:47:14" itemprop="dateModified" datetime="2024-03-20T14:47:14+08:00">2024-03-20</time>
+                <time title="修改时间：2024-03-21 16:27:13" itemprop="dateModified" datetime="2024-03-21T16:27:13+08:00">2024-03-21</time>
               </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
@@ -771,7 +771,7 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="https://hxhue.github.io/cli/chapter01-basic/">
+    <link itemprop="mainEntityOfPage" href="https://hxhue.github.io/cli/chapter03-first-cmake-project/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="image" content="/images/avatar.gif">
@@ -785,7 +785,7 @@
       <header class="post-header">
         <h2 class="post-title" itemprop="name headline">
           
-            <a href="/cli/chapter01-basic/" class="post-title-link" itemprop="url">chapter01 - basic</a>
+            <a href="/cli/chapter03-first-cmake-project/" class="post-title-link" itemprop="url">chapter03 - first cmake project</a>
         </h2>
 
         <div class="post-meta">
@@ -802,7 +802,7 @@
                   <i class="far fa-calendar-check"></i>
                 </span>
                 <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2024-03-20 14:47:14" itemprop="dateModified" datetime="2024-03-20T14:47:14+08:00">2024-03-20</time>
+                <time title="修改时间：2024-03-21 16:27:13" itemprop="dateModified" datetime="2024-03-21T16:27:13+08:00">2024-03-21</time>
               </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
@@ -820,14 +820,14 @@
                 <i class="far fa-file-word"></i>
               </span>
                 <span class="post-meta-item-text">本文字数：</span>
-              <span>1.1k</span>
+              <span>1.4k</span>
             </span>
             <span class="post-meta-item" title="阅读时长">
               <span class="post-meta-item-icon">
                 <i class="far fa-clock"></i>
               </span>
                 <span class="post-meta-item-text">阅读时长 &asymp;</span>
-              <span>4 分钟</span>
+              <span>5 分钟</span>
             </span>
 
         </div>
@@ -839,18 +839,18 @@
     <div class="post-body" itemprop="articleBody">
 
       
-          <p>三个 stages：配置、生成、构建。</p>
-<p>配置会生成 CMakeCache。生成是用它去生成 build tree 的其他内容。</p>
-<h1 id="Generating-a-Build-System"><a href="#Generating-a-Build-System" class="headerlink" title="Generating a Build System"></a>Generating a Build System</h1><p><strong>生成 build tree</strong>：</p>
-<pre><code>cmake -B build/ -S source/
-</code></pre>
-<p>最好不要使用无参数的 cmake。</p>
-<p><strong>选择生成器</strong>：</p>
-<pre><code>cmake -G &lt;generator&gt;
-</code></pre>
+          <h1 id="cmake-minimal-required"><a href="#cmake-minimal-required" class="headerlink" title="cmake_minimal_required"></a>cmake_minimal_required</h1><p><code>cmake_minimal_required(VERSION xxx)</code> 是项目都应该有的说明。因为它指定了最小的版本，而且还会隐式去调用 <code>cmake_policy</code>，这样即便 cmake 版本更新了，policy 没变，旧项目仍然可以正常构建。</p>
+<blockquote>
+<p style="margin-bottom: 0px"><font size="+2">✏️</font><font size="+1"><strong> Note</strong></font></p>
+<p>cmake policy 是每次 cmake 有不向后兼容的改动时增加的标志。</p>
+</blockquote>
+<p>VERSION 可以是一个范围 <code>a...b</code>，如果只有一个值则是最小版本要求。</p>
+<h1 id="project"><a href="#project" class="headerlink" title="project"></a>project</h1><p><code>project</code> 命令用来设置项目名、版本、还有语言等。</p>
+<p><img src="/cli/chapter03-first-cmake-project/../../../../../assets/20ddfe76203d6c6d79c90737d5b92ad0.webp"></p>
+<p>默认的语言是 C 和 CXX 两个（不包含 CUDA）。对于 C++ 项目设置语言为 CXX 的好处是 cmake 不再会为所有语言检查编译器的存在情况，配置时间会短一些（对于 hello-world 项目，在 6 core Intel(R) Core(TM) i7-8750H CPU @ 2.20GHz + <strong>wsl2</strong> 中 CXX 的配置时间是 200 ms，C 和 CXX 的配置时间是 345 ms）。</p>
           <!--noindex-->
             <div class="post-button">
-              <a class="btn" href="/cli/chapter01-basic/#more" rel="contents">
+              <a class="btn" href="/cli/chapter03-first-cmake-project/#more" rel="contents">
                 阅读全文 &raquo;
               </a>
             </div>
@@ -905,7 +905,7 @@
                   <i class="far fa-calendar-check"></i>
                 </span>
                 <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2024-03-20 14:47:14" itemprop="dateModified" datetime="2024-03-20T14:47:14+08:00">2024-03-20</time>
+                <time title="修改时间：2024-03-21 16:27:13" itemprop="dateModified" datetime="2024-03-21T16:27:13+08:00">2024-03-21</time>
               </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
@@ -980,6 +980,109 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://hxhue.github.io/cli/chapter01-basic/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="Hxhue">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Hxhue's Blog">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/cli/chapter01-basic/" class="post-title-link" itemprop="url">chapter01 - basic</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2024-02-01 23:01:00" itemprop="dateCreated datePublished" datetime="2024-02-01T23:01:00+08:00">2024-02-01</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2024-03-21 16:27:13" itemprop="dateModified" datetime="2024-03-21T16:27:13+08:00">2024-03-21</time>
+              </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/cli/" itemprop="url" rel="index"><span itemprop="name">CLI</span></a>
+                </span>
+            </span>
+
+          <br>
+            <span class="post-meta-item" title="本文字数">
+              <span class="post-meta-item-icon">
+                <i class="far fa-file-word"></i>
+              </span>
+                <span class="post-meta-item-text">本文字数：</span>
+              <span>1.1k</span>
+            </span>
+            <span class="post-meta-item" title="阅读时长">
+              <span class="post-meta-item-icon">
+                <i class="far fa-clock"></i>
+              </span>
+                <span class="post-meta-item-text">阅读时长 &asymp;</span>
+              <span>4 分钟</span>
+            </span>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <p>三个 stages：配置、生成、构建。</p>
+<p>配置会生成 CMakeCache。生成是用它去生成 build tree 的其他内容。</p>
+<h1 id="Generating-a-Build-System"><a href="#Generating-a-Build-System" class="headerlink" title="Generating a Build System"></a>Generating a Build System</h1><p><strong>生成 build tree</strong>：</p>
+<pre><code>cmake -B build/ -S source/
+</code></pre>
+<p>最好不要使用无参数的 cmake。</p>
+<p><strong>选择生成器</strong>：</p>
+<pre><code>cmake -G &lt;generator&gt;
+</code></pre>
+          <!--noindex-->
+            <div class="post-button">
+              <a class="btn" href="/cli/chapter01-basic/#more" rel="contents">
+                阅读全文 &raquo;
+              </a>
+            </div>
+          <!--/noindex-->
+        
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
     <link itemprop="mainEntityOfPage" href="https://hxhue.github.io/cli/chapter02-cmake-language/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -1011,7 +1114,7 @@
                   <i class="far fa-calendar-check"></i>
                 </span>
                 <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2024-03-20 14:47:14" itemprop="dateModified" datetime="2024-03-20T14:47:14+08:00">2024-03-20</time>
+                <time title="修改时间：2024-03-21 16:27:13" itemprop="dateModified" datetime="2024-03-21T16:27:13+08:00">2024-03-21</time>
               </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
@@ -1061,109 +1164,6 @@
           <!--noindex-->
             <div class="post-button">
               <a class="btn" href="/cli/chapter02-cmake-language/#more" rel="contents">
-                阅读全文 &raquo;
-              </a>
-            </div>
-          <!--/noindex-->
-        
-      
-    </div>
-
-    
-    
-    
-      <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  
-  
-  
-
-      
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="https://hxhue.github.io/cli/chapter03-first-cmake-project/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/avatar.gif">
-      <meta itemprop="name" content="Hxhue">
-      <meta itemprop="description" content="">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Hxhue's Blog">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          
-            <a href="/cli/chapter03-first-cmake-project/" class="post-title-link" itemprop="url">chapter03 - first cmake project</a>
-        </h2>
-
-        <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-calendar"></i>
-              </span>
-              <span class="post-meta-item-text">发表于</span>
-
-              <time title="创建时间：2024-02-01 23:01:00" itemprop="dateCreated datePublished" datetime="2024-02-01T23:01:00+08:00">2024-02-01</time>
-            </span>
-              <span class="post-meta-item">
-                <span class="post-meta-item-icon">
-                  <i class="far fa-calendar-check"></i>
-                </span>
-                <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2024-03-20 14:47:14" itemprop="dateModified" datetime="2024-03-20T14:47:14+08:00">2024-03-20</time>
-              </span>
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-folder"></i>
-              </span>
-              <span class="post-meta-item-text">分类于</span>
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/cli/" itemprop="url" rel="index"><span itemprop="name">CLI</span></a>
-                </span>
-            </span>
-
-          <br>
-            <span class="post-meta-item" title="本文字数">
-              <span class="post-meta-item-icon">
-                <i class="far fa-file-word"></i>
-              </span>
-                <span class="post-meta-item-text">本文字数：</span>
-              <span>1.4k</span>
-            </span>
-            <span class="post-meta-item" title="阅读时长">
-              <span class="post-meta-item-icon">
-                <i class="far fa-clock"></i>
-              </span>
-                <span class="post-meta-item-text">阅读时长 &asymp;</span>
-              <span>5 分钟</span>
-            </span>
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          <h1 id="cmake-minimal-required"><a href="#cmake-minimal-required" class="headerlink" title="cmake_minimal_required"></a>cmake_minimal_required</h1><p><code>cmake_minimal_required(VERSION xxx)</code> 是项目都应该有的说明。因为它指定了最小的版本，而且还会隐式去调用 <code>cmake_policy</code>，这样即便 cmake 版本更新了，policy 没变，旧项目仍然可以正常构建。</p>
-<blockquote>
-<p style="margin-bottom: 0px"><font size="+2">✏️</font><font size="+1"><strong> Note</strong></font></p>
-<p>cmake policy 是每次 cmake 有不向后兼容的改动时增加的标志。</p>
-</blockquote>
-<p>VERSION 可以是一个范围 <code>a...b</code>，如果只有一个值则是最小版本要求。</p>
-<h1 id="project"><a href="#project" class="headerlink" title="project"></a>project</h1><p><code>project</code> 命令用来设置项目名、版本、还有语言等。</p>
-<p><img src="/cli/chapter03-first-cmake-project/../../../../../assets/20ddfe76203d6c6d79c90737d5b92ad0.webp"></p>
-<p>默认的语言是 C 和 CXX 两个（不包含 CUDA）。对于 C++ 项目设置语言为 CXX 的好处是 cmake 不再会为所有语言检查编译器的存在情况，配置时间会短一些（对于 hello-world 项目，在 6 core Intel(R) Core(TM) i7-8750H CPU @ 2.20GHz + <strong>wsl2</strong> 中 CXX 的配置时间是 200 ms，C 和 CXX 的配置时间是 345 ms）。</p>
-          <!--noindex-->
-            <div class="post-button">
-              <a class="btn" href="/cli/chapter03-first-cmake-project/#more" rel="contents">
                 阅读全文 &raquo;
               </a>
             </div>
