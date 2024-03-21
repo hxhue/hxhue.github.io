@@ -137,6 +137,11 @@
     <a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>分类</a>
 
   </li>
+        <li class="menu-item menu-item-友链">
+
+    <a href="/friends/" rel="section"><i class="fa fa-heart fa-fw"></i>友链</a>
+
+  </li>
       <li class="menu-item menu-item-search">
         <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>搜索
         </a>
@@ -294,7 +299,7 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="https://hxhue.github.io/cli/chapter02-a-%E6%80%BB%E7%BB%93%E5%B8%B8%E7%94%A8%E7%9A%84-cmake-%E5%8F%98%E9%87%8F/">
+    <link itemprop="mainEntityOfPage" href="https://hxhue.github.io/cli/chapter04-targets/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="image" content="/images/avatar.gif">
@@ -308,7 +313,7 @@
       <header class="post-header">
         <h2 class="post-title" itemprop="name headline">
           
-            <a href="/cli/chapter02-a-%E6%80%BB%E7%BB%93%E5%B8%B8%E7%94%A8%E7%9A%84-cmake-%E5%8F%98%E9%87%8F/" class="post-title-link" itemprop="url">chapter02.a - 总结常用的 CMake 变量</a>
+            <a href="/cli/chapter04-targets/" class="post-title-link" itemprop="url">chapter04 - targets</a>
         </h2>
 
         <div class="post-meta">
@@ -325,7 +330,7 @@
                   <i class="far fa-calendar-check"></i>
                 </span>
                 <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2024-03-21 16:27:13" itemprop="dateModified" datetime="2024-03-21T16:27:13+08:00">2024-03-21</time>
+                <time title="修改时间：2024-03-21 16:39:32" itemprop="dateModified" datetime="2024-03-21T16:39:32+08:00">2024-03-21</time>
               </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
@@ -343,14 +348,14 @@
                 <i class="far fa-file-word"></i>
               </span>
                 <span class="post-meta-item-text">本文字数：</span>
-              <span>144</span>
+              <span>2.7k</span>
             </span>
             <span class="post-meta-item" title="阅读时长">
               <span class="post-meta-item-icon">
                 <i class="far fa-clock"></i>
               </span>
                 <span class="post-meta-item-text">阅读时长 &asymp;</span>
-              <span>1 分钟</span>
+              <span>10 分钟</span>
             </span>
 
         </div>
@@ -362,21 +367,25 @@
     <div class="post-body" itemprop="articleBody">
 
       
-          <h1 id="PROJECT"><a href="#PROJECT" class="headerlink" title="PROJECT_*"></a><code>PROJECT_*</code></h1><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">PROJECT_SOURCE_DIR</span><br><span class="line">PROJECT_BINARY_DIR</span><br></pre></td></tr></table></figure>
+          <h1 id="创建-target"><a href="#创建-target" class="headerlink" title="创建 target"></a>创建 target</h1><p>三种方式：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">add_executable     # 默认在 ALL 中</span><br><span class="line">add_library        # 默认在 ALL 中</span><br><span class="line">add_custom_target  # 默认不在 ALL 中</span><br><span class="line"># add_custom_command 是创建文件的方式，但是不是创建 target</span><br></pre></td></tr></table></figure>
 
+<p><code>add_library</code>: <a target="_blank" rel="noopener" href="https://cmake.org/cmake/help/latest/command/add_library.html#object-libraries">https://cmake.org/cmake/help/latest/command/add_library.html#object-libraries</a></p>
+<ul>
+<li>Normal library: 如果不指定 <code>STATIC</code>&#x2F;<code>SHARED</code>&#x2F;<code>MODULE</code>，<code>add_library</code> 会根据 <code>BUILD_SHARED_LIBS</code> 变量去决定是否使用 <code>SHARED</code> 还是 <code>STATIC</code>。</li>
+<li>Object library: 生成目标文件。</li>
+<li>Interface library：不生成文件。用来打包传播属性。</li>
+<li>Imported library：<code>IMPORTED</code> 属性和 <code>STATIC</code> 等是可以叠加的。<code>IMPORTED</code> 库是<strong>已经被编译好的库</strong>，不需要另外编译，但是需要用 <code>set_target_property</code> 来设置其位置。</li>
+<li>Alias library</li>
+</ul>
+<p><code>add_custom_target</code> 可以有多条命令，而且不一定有产物。<code>add_custom_target</code> 创建的 target 是默认不 ALL 的！和 <code>add_custom_command</code> 的对比看后文。</p>
+<p>可以手动用 <code>add_dependencies</code> 创建新的依赖关系。主要是用来维护编译顺序的（比如检查 checksum 的自定义任务必须得在目标已经生成之后）。</p>
 <blockquote>
-<p>不存在 <code>PROJECT_LIST_DIR</code>。</p>
+<p>target 的依赖声明可以不按照顺序，cmake 会扫描整个文件再去构建依赖。</p>
 </blockquote>
-<p><code>PROJECT_*</code> 变量会随着 <code>project</code> 命令的出现而变更。</p>
-<h1 id="CMAKE"><a href="#CMAKE" class="headerlink" title="CMAKE_*"></a><code>CMAKE_*</code></h1><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">CMAKE_SOURCE_DIR</span><br><span class="line">CMAKE_BINARY_DIR</span><br></pre></td></tr></table></figure>
-
-<blockquote>
-<p>也不存在 <code>CMAKE_LIST_DIR</code>。</p>
-</blockquote>
-<p>和本次 cmake 命令有关。</p>
           <!--noindex-->
             <div class="post-button">
-              <a class="btn" href="/cli/chapter02-a-%E6%80%BB%E7%BB%93%E5%B8%B8%E7%94%A8%E7%9A%84-cmake-%E5%8F%98%E9%87%8F/#more" rel="contents">
+              <a class="btn" href="/cli/chapter04-targets/#more" rel="contents">
                 阅读全文 &raquo;
               </a>
             </div>
@@ -617,7 +626,7 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="https://hxhue.github.io/cli/chapter09-program-analysis-tools/">
+    <link itemprop="mainEntityOfPage" href="https://hxhue.github.io/cli/chapter08-testing/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="image" content="/images/avatar.gif">
@@ -631,7 +640,7 @@
       <header class="post-header">
         <h2 class="post-title" itemprop="name headline">
           
-            <a href="/cli/chapter09-program-analysis-tools/" class="post-title-link" itemprop="url">chapter09 - program analysis tools</a>
+            <a href="/cli/chapter08-testing/" class="post-title-link" itemprop="url">chapter08 - testing</a>
         </h2>
 
         <div class="post-meta">
@@ -648,7 +657,7 @@
                   <i class="far fa-calendar-check"></i>
                 </span>
                 <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2024-03-15 23:34:53" itemprop="dateModified" datetime="2024-03-15T23:34:53+08:00">2024-03-15</time>
+                <time title="修改时间：2024-03-21 16:27:13" itemprop="dateModified" datetime="2024-03-21T16:27:13+08:00">2024-03-21</time>
               </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
@@ -666,14 +675,14 @@
                 <i class="far fa-file-word"></i>
               </span>
                 <span class="post-meta-item-text">本文字数：</span>
-              <span>465</span>
+              <span>1.3k</span>
             </span>
             <span class="post-meta-item" title="阅读时长">
               <span class="post-meta-item-icon">
                 <i class="far fa-clock"></i>
               </span>
                 <span class="post-meta-item-text">阅读时长 &asymp;</span>
-              <span>2 分钟</span>
+              <span>5 分钟</span>
             </span>
 
         </div>
@@ -685,29 +694,17 @@
     <div class="post-body" itemprop="articleBody">
 
       
-          <h1 id="说明"><a href="#说明" class="headerlink" title="说明"></a>说明</h1><p>这一章节是作者将一些分析工具以函数或内置支持的形式自动化地加入到了 CMake 构建工程的过程中了。</p>
-<h1 id="格式化"><a href="#格式化" class="headerlink" title="格式化"></a>格式化</h1><p>clang-format</p>
-<h1 id="静态检查"><a href="#静态检查" class="headerlink" title="静态检查"></a>静态检查</h1><ol>
-<li>clang-tidy</li>
-<li>cpplint（按照 Google Coding Style 检查）</li>
-<li>cppcheck</li>
-<li>include-what-you-use</li>
-<li>link what you use（CMake 内置）</li>
-</ol>
-<p>静态检查受到 CMake 的直接支持：</p>
+          <h1 id="CTest"><a href="#CTest" class="headerlink" title="CTest"></a>CTest</h1><h2 id="基本用法"><a href="#基本用法" class="headerlink" title="基本用法"></a>基本用法</h2><p>&#x3D;&#x3D;要使用 CTest 和相关的东西需要调用 <code>enable_testing</code>。&#x3D;&#x3D;</p>
+<p>ctest 是要在 build tree 执行的。</p>
+<p>ctest 也能直接编译和运行（两步合为一步），但是要手动提供测试命令（有点奇怪）。</p>
+<p><img src="/cli/chapter08-testing/../../../../../assets/7ca10eeb58885e9b9539c3406ecab01a.webp"></p>
+<p>Dry run：</p>
 <blockquote>
-<p>All we need to do is set an appropriate target property to a semicolon-separated list containing the path to the checker’s executable, followed by any command-line options that should be forwarded to the checker.</p>
-<ul>
-<li><code>&lt;LANG&gt;_CLANG_TIDY</code></li>
-<li><code>&lt;LANG&gt;_CPPCHECK</code></li>
-<li><code>&lt;LANG&gt;_CPPLINT</code></li>
-<li><code>&lt;LANG&gt;_INCLUDE_WHAT_YOU_USE</code></li>
-<li><code>LINK_WHAT_YOU_USE</code></li>
-</ul>
+<p>CTest offers an -N option, which disables execution and only prints a list.</p>
 </blockquote>
           <!--noindex-->
             <div class="post-button">
-              <a class="btn" href="/cli/chapter09-program-analysis-tools/#more" rel="contents">
+              <a class="btn" href="/cli/chapter08-testing/#more" rel="contents">
                 阅读全文 &raquo;
               </a>
             </div>
@@ -833,6 +830,120 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://hxhue.github.io/cli/chapter09-program-analysis-tools/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="Hxhue">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Hxhue's Blog">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/cli/chapter09-program-analysis-tools/" class="post-title-link" itemprop="url">chapter09 - program analysis tools</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2024-02-01 23:01:00" itemprop="dateCreated datePublished" datetime="2024-02-01T23:01:00+08:00">2024-02-01</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2024-03-15 23:34:53" itemprop="dateModified" datetime="2024-03-15T23:34:53+08:00">2024-03-15</time>
+              </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/cli/" itemprop="url" rel="index"><span itemprop="name">CLI</span></a>
+                </span>
+            </span>
+
+          <br>
+            <span class="post-meta-item" title="本文字数">
+              <span class="post-meta-item-icon">
+                <i class="far fa-file-word"></i>
+              </span>
+                <span class="post-meta-item-text">本文字数：</span>
+              <span>465</span>
+            </span>
+            <span class="post-meta-item" title="阅读时长">
+              <span class="post-meta-item-icon">
+                <i class="far fa-clock"></i>
+              </span>
+                <span class="post-meta-item-text">阅读时长 &asymp;</span>
+              <span>2 分钟</span>
+            </span>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <h1 id="说明"><a href="#说明" class="headerlink" title="说明"></a>说明</h1><p>这一章节是作者将一些分析工具以函数或内置支持的形式自动化地加入到了 CMake 构建工程的过程中了。</p>
+<h1 id="格式化"><a href="#格式化" class="headerlink" title="格式化"></a>格式化</h1><p>clang-format</p>
+<h1 id="静态检查"><a href="#静态检查" class="headerlink" title="静态检查"></a>静态检查</h1><ol>
+<li>clang-tidy</li>
+<li>cpplint（按照 Google Coding Style 检查）</li>
+<li>cppcheck</li>
+<li>include-what-you-use</li>
+<li>link what you use（CMake 内置）</li>
+</ol>
+<p>静态检查受到 CMake 的直接支持：</p>
+<blockquote>
+<p>All we need to do is set an appropriate target property to a semicolon-separated list containing the path to the checker’s executable, followed by any command-line options that should be forwarded to the checker.</p>
+<ul>
+<li><code>&lt;LANG&gt;_CLANG_TIDY</code></li>
+<li><code>&lt;LANG&gt;_CPPCHECK</code></li>
+<li><code>&lt;LANG&gt;_CPPLINT</code></li>
+<li><code>&lt;LANG&gt;_INCLUDE_WHAT_YOU_USE</code></li>
+<li><code>LINK_WHAT_YOU_USE</code></li>
+</ul>
+</blockquote>
+          <!--noindex-->
+            <div class="post-button">
+              <a class="btn" href="/cli/chapter09-program-analysis-tools/#more" rel="contents">
+                阅读全文 &raquo;
+              </a>
+            </div>
+          <!--/noindex-->
+        
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
     <link itemprop="mainEntityOfPage" href="https://hxhue.github.io/cli/chapter10-documents/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -912,108 +1023,6 @@
 <p>doxygen 用的是 Javadoc 的格式。</p>
 <p>通过设置 <code>DOXYGEN_HTML_EXTRA_STYLESHEET</code> 选项可以修改输出文档的样式。比如 <a target="_blank" rel="noopener" href="https://github.com/jothepro/doxygen-awesome-css">https://github.com/jothepro/doxygen-awesome-css</a> 就是一个比较现代化的样式。</p>
 
-      
-    </div>
-
-    
-    
-    
-      <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  
-  
-  
-
-      
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="https://hxhue.github.io/cli/chapter08-testing/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/avatar.gif">
-      <meta itemprop="name" content="Hxhue">
-      <meta itemprop="description" content="">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Hxhue's Blog">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          
-            <a href="/cli/chapter08-testing/" class="post-title-link" itemprop="url">chapter08 - testing</a>
-        </h2>
-
-        <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-calendar"></i>
-              </span>
-              <span class="post-meta-item-text">发表于</span>
-
-              <time title="创建时间：2024-02-01 23:01:00" itemprop="dateCreated datePublished" datetime="2024-02-01T23:01:00+08:00">2024-02-01</time>
-            </span>
-              <span class="post-meta-item">
-                <span class="post-meta-item-icon">
-                  <i class="far fa-calendar-check"></i>
-                </span>
-                <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2024-03-21 16:27:13" itemprop="dateModified" datetime="2024-03-21T16:27:13+08:00">2024-03-21</time>
-              </span>
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-folder"></i>
-              </span>
-              <span class="post-meta-item-text">分类于</span>
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/cli/" itemprop="url" rel="index"><span itemprop="name">CLI</span></a>
-                </span>
-            </span>
-
-          <br>
-            <span class="post-meta-item" title="本文字数">
-              <span class="post-meta-item-icon">
-                <i class="far fa-file-word"></i>
-              </span>
-                <span class="post-meta-item-text">本文字数：</span>
-              <span>1.3k</span>
-            </span>
-            <span class="post-meta-item" title="阅读时长">
-              <span class="post-meta-item-icon">
-                <i class="far fa-clock"></i>
-              </span>
-                <span class="post-meta-item-text">阅读时长 &asymp;</span>
-              <span>5 分钟</span>
-            </span>
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          <h1 id="CTest"><a href="#CTest" class="headerlink" title="CTest"></a>CTest</h1><h2 id="基本用法"><a href="#基本用法" class="headerlink" title="基本用法"></a>基本用法</h2><p>&#x3D;&#x3D;要使用 CTest 和相关的东西需要调用 <code>enable_testing</code>。&#x3D;&#x3D;</p>
-<p>ctest 是要在 build tree 执行的。</p>
-<p>ctest 也能直接编译和运行（两步合为一步），但是要手动提供测试命令（有点奇怪）。</p>
-<p><img src="/cli/chapter08-testing/../../../../../assets/7ca10eeb58885e9b9539c3406ecab01a.webp"></p>
-<p>Dry run：</p>
-<blockquote>
-<p>CTest offers an -N option, which disables execution and only prints a list.</p>
-</blockquote>
-          <!--noindex-->
-            <div class="post-button">
-              <a class="btn" href="/cli/chapter08-testing/#more" rel="contents">
-                阅读全文 &raquo;
-              </a>
-            </div>
-          <!--/noindex-->
-        
       
     </div>
 

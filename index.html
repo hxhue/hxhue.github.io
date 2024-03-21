@@ -137,6 +137,11 @@
     <a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>分类</a>
 
   </li>
+        <li class="menu-item menu-item-友链">
+
+    <a href="/friends/" rel="section"><i class="fa fa-heart fa-fw"></i>友链</a>
+
+  </li>
       <li class="menu-item menu-item-search">
         <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>搜索
         </a>
@@ -953,6 +958,111 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://hxhue.github.io/programming/cppcon-2023-lock-free-atomic-shared-pointers-without-a-split-reference-count/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="Hxhue">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Hxhue's Blog">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/programming/cppcon-2023-lock-free-atomic-shared-pointers-without-a-split-reference-count/" class="post-title-link" itemprop="url">(CppCon 2023) Lock-free Atomic Shared Pointers Without a Split Reference Count</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2024-03-05 20:21:00" itemprop="dateCreated datePublished" datetime="2024-03-05T20:21:00+08:00">2024-03-05</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2024-03-15 16:41:11" itemprop="dateModified" datetime="2024-03-15T16:41:11+08:00">2024-03-15</time>
+              </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/programming/" itemprop="url" rel="index"><span itemprop="name">Programming</span></a>
+                </span>
+            </span>
+
+          <br>
+            <span class="post-meta-item" title="本文字数">
+              <span class="post-meta-item-icon">
+                <i class="far fa-file-word"></i>
+              </span>
+                <span class="post-meta-item-text">本文字数：</span>
+              <span>410</span>
+            </span>
+            <span class="post-meta-item" title="阅读时长">
+              <span class="post-meta-item-icon">
+                <i class="far fa-clock"></i>
+              </span>
+                <span class="post-meta-item-text">阅读时长 &asymp;</span>
+              <span>1 分钟</span>
+            </span>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <p><a target="_blank" rel="noopener" href="https://youtu.be/lNPZV9Iqo3U?si=lS1hf2ND4SS-6ELB">https://youtu.be/lNPZV9Iqo3U?si=lS1hf2ND4SS-6ELB</a> by Daniel Anderson</p>
+<p><code>std::shared_ptr</code> 的原子引用计数是线程安全的，但是：</p>
+<ol>
+<li>对它指向的对象的访问不是线程安全的</li>
+<li>对它本身的读写不是线程安全的</li>
+</ol>
+<p>这个 lecture 主要考虑第 2 点。在有一个全局或者类似全局的共享指针时，需要注意这个。</p>
+<p>首先不能使用 <code>std::atomic&lt;std::shared_ptr&gt;</code>，因为这个类型不是无锁的，有造成阻塞的可能。</p>
+<p>然后可以考虑用一个单独的原子变量来计数（这样就会同时有一个 <code>std::atomic&lt;int&gt;</code> 和一个 <code>std::shared_ptr</code>），确保 store 操作和 load 操作的安全性（不会 load 到一个引用计数已经归零然后被删掉的 <code>std::shared_ptr</code> 或者说控制块；一旦控制块被 delete，其他线程在控制块上的查询操作即对引用计数的原子读就会出现非法内存访问。）</p>
+<p>有些库甚至更进一步地实现了 split reference counted shared pointer，也就是把上一段的机制集成在了 <code>std::shared_ptr</code> 的内部，这比在外围做并发保护效率会高一些。</p>
+<p>然后 lecture 的重点是介绍 hazard pointer。使用 hazard pointer 保护对象时，控制块引用计数归零可以删掉对象，但不是马上 delete 掉这个控制块，而是使用 <code>retire</code> 方法，使得其他线程能够继续查询控制块。在没有线程查询控制块时再删除 retired control blocks，同样是把复杂度从用户移向了库的实现者。C++26 有可能会加入这个头文件。</p>
+          <!--noindex-->
+            <div class="post-button">
+              <a class="btn" href="/programming/cppcon-2023-lock-free-atomic-shared-pointers-without-a-split-reference-count/#more" rel="contents">
+                阅读全文 &raquo;
+              </a>
+            </div>
+          <!--/noindex-->
+        
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
     <link itemprop="mainEntityOfPage" href="https://hxhue.github.io/programming/cppcon-2018-105-stl-algorithms-in-less-than-an-hour/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -1039,111 +1149,6 @@
           <!--noindex-->
             <div class="post-button">
               <a class="btn" href="/programming/cppcon-2018-105-stl-algorithms-in-less-than-an-hour/#more" rel="contents">
-                阅读全文 &raquo;
-              </a>
-            </div>
-          <!--/noindex-->
-        
-      
-    </div>
-
-    
-    
-    
-      <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  
-  
-  
-
-      
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="https://hxhue.github.io/programming/cppcon-2023-lock-free-atomic-shared-pointers-without-a-split-reference-count/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/avatar.gif">
-      <meta itemprop="name" content="Hxhue">
-      <meta itemprop="description" content="">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Hxhue's Blog">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          
-            <a href="/programming/cppcon-2023-lock-free-atomic-shared-pointers-without-a-split-reference-count/" class="post-title-link" itemprop="url">(CppCon 2023) Lock-free Atomic Shared Pointers Without a Split Reference Count</a>
-        </h2>
-
-        <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-calendar"></i>
-              </span>
-              <span class="post-meta-item-text">发表于</span>
-
-              <time title="创建时间：2024-03-05 20:21:00" itemprop="dateCreated datePublished" datetime="2024-03-05T20:21:00+08:00">2024-03-05</time>
-            </span>
-              <span class="post-meta-item">
-                <span class="post-meta-item-icon">
-                  <i class="far fa-calendar-check"></i>
-                </span>
-                <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2024-03-15 16:41:11" itemprop="dateModified" datetime="2024-03-15T16:41:11+08:00">2024-03-15</time>
-              </span>
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-folder"></i>
-              </span>
-              <span class="post-meta-item-text">分类于</span>
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/programming/" itemprop="url" rel="index"><span itemprop="name">Programming</span></a>
-                </span>
-            </span>
-
-          <br>
-            <span class="post-meta-item" title="本文字数">
-              <span class="post-meta-item-icon">
-                <i class="far fa-file-word"></i>
-              </span>
-                <span class="post-meta-item-text">本文字数：</span>
-              <span>410</span>
-            </span>
-            <span class="post-meta-item" title="阅读时长">
-              <span class="post-meta-item-icon">
-                <i class="far fa-clock"></i>
-              </span>
-                <span class="post-meta-item-text">阅读时长 &asymp;</span>
-              <span>1 分钟</span>
-            </span>
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          <p><a target="_blank" rel="noopener" href="https://youtu.be/lNPZV9Iqo3U?si=lS1hf2ND4SS-6ELB">https://youtu.be/lNPZV9Iqo3U?si=lS1hf2ND4SS-6ELB</a> by Daniel Anderson</p>
-<p><code>std::shared_ptr</code> 的原子引用计数是线程安全的，但是：</p>
-<ol>
-<li>对它指向的对象的访问不是线程安全的</li>
-<li>对它本身的读写不是线程安全的</li>
-</ol>
-<p>这个 lecture 主要考虑第 2 点。在有一个全局或者类似全局的共享指针时，需要注意这个。</p>
-<p>首先不能使用 <code>std::atomic&lt;std::shared_ptr&gt;</code>，因为这个类型不是无锁的，有造成阻塞的可能。</p>
-<p>然后可以考虑用一个单独的原子变量来计数（这样就会同时有一个 <code>std::atomic&lt;int&gt;</code> 和一个 <code>std::shared_ptr</code>），确保 store 操作和 load 操作的安全性（不会 load 到一个引用计数已经归零然后被删掉的 <code>std::shared_ptr</code> 或者说控制块；一旦控制块被 delete，其他线程在控制块上的查询操作即对引用计数的原子读就会出现非法内存访问。）</p>
-<p>有些库甚至更进一步地实现了 split reference counted shared pointer，也就是把上一段的机制集成在了 <code>std::shared_ptr</code> 的内部，这比在外围做并发保护效率会高一些。</p>
-<p>然后 lecture 的重点是介绍 hazard pointer。使用 hazard pointer 保护对象时，控制块引用计数归零可以删掉对象，但不是马上 delete 掉这个控制块，而是使用 <code>retire</code> 方法，使得其他线程能够继续查询控制块。在没有线程查询控制块时再删除 retired control blocks，同样是把复杂度从用户移向了库的实现者。C++26 有可能会加入这个头文件。</p>
-          <!--noindex-->
-            <div class="post-button">
-              <a class="btn" href="/programming/cppcon-2023-lock-free-atomic-shared-pointers-without-a-split-reference-count/#more" rel="contents">
                 阅读全文 &raquo;
               </a>
             </div>
