@@ -465,105 +465,6 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="https://hxhue.github.io/programming/cttcg-%E9%99%84%E5%BD%95-b-value-categories/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/avatar.gif">
-      <meta itemprop="name" content="Hxhue">
-      <meta itemprop="description" content="">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Hxhue's Blog">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          
-            <a href="/programming/cttcg-%E9%99%84%E5%BD%95-b-value-categories/" class="post-title-link" itemprop="url">CTTCG 附录 B Value Categories</a>
-        </h2>
-
-        <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-calendar"></i>
-              </span>
-              <span class="post-meta-item-text">发表于</span>
-
-              <time title="创建时间：2023-08-12 21:47:45" itemprop="dateCreated datePublished" datetime="2023-08-12T21:47:45+08:00">2023-08-12</time>
-            </span>
-              <span class="post-meta-item">
-                <span class="post-meta-item-icon">
-                  <i class="far fa-calendar-check"></i>
-                </span>
-                <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2024-03-15 16:31:51" itemprop="dateModified" datetime="2024-03-15T16:31:51+08:00">2024-03-15</time>
-              </span>
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-folder"></i>
-              </span>
-              <span class="post-meta-item-text">分类于</span>
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/programming/" itemprop="url" rel="index"><span itemprop="name">Programming</span></a>
-                </span>
-            </span>
-
-          <br>
-            <span class="post-meta-item" title="本文字数">
-              <span class="post-meta-item-icon">
-                <i class="far fa-file-word"></i>
-              </span>
-                <span class="post-meta-item-text">本文字数：</span>
-              <span>277</span>
-            </span>
-            <span class="post-meta-item" title="阅读时长">
-              <span class="post-meta-item-icon">
-                <i class="far fa-clock"></i>
-              </span>
-                <span class="post-meta-item-text">阅读时长 &asymp;</span>
-              <span>1 分钟</span>
-            </span>
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          <p>对于变量而言，其括号表达式的值属性是左值引用。但由于 <code>decltype</code> 有特殊效果，直接对变量 <code>x</code> 使用 <code>decltype(x)</code> 并不遵循这一点，为此可以按照下面说的使用 <code>decltype((x))</code>。</p>
-<blockquote>
-<p>With the keyword decltype (introduced in C++11), it is possible to check the value category of any C++ expression. For any expression <code>x</code>, <code>decltype((x))</code> (note the double parentheses) yields:</p>
-<ul>
-<li><code>type</code> if <code>x</code> is a prvalue</li>
-<li><code>type&amp;</code> if <code>x</code> is an lvalue</li>
-<li><code>type&amp;&amp;</code> if <code>x</code> is an xvalue</li>
-</ul>
-<p>The double parentheses in <code>decltype((x))</code> are needed to avoid producing the declared type of a named entity in case where the expression <code>x</code> does indeed name an entity (in other cases, the paren-theses have no effect). For example, if the expression <code>x</code> simply names a variable <code>v</code>, the construct without parentheses becomes <code>decltype(v)</code>, which produces the type of the variable <code>v</code> rather than a type reﬂecting the value category of the expression <code>x</code> referring to that variable.</p>
-</blockquote>
-<p>例子：</p>
-<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;iostream&gt;</span></span></span><br><span class="line"></span><br><span class="line"><span class="keyword">template</span>&lt;<span class="keyword">typename</span> T&gt;</span><br><span class="line"><span class="keyword">struct</span> <span class="title class_">value_category</span> &#123;</span><br><span class="line">    <span class="type">static</span> <span class="keyword">constexpr</span> <span class="keyword">auto</span> value = <span class="string">&quot;prvalue&quot;</span>;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="keyword">template</span>&lt;<span class="keyword">typename</span> T&gt;</span><br><span class="line"><span class="keyword">struct</span> <span class="title class_">value_category</span>&lt;T&amp;&gt; &#123;</span><br><span class="line">    <span class="type">static</span> <span class="keyword">constexpr</span> <span class="keyword">auto</span> value = <span class="string">&quot;lvalue&quot;</span>;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="keyword">template</span>&lt;<span class="keyword">typename</span> T&gt;</span><br><span class="line"><span class="keyword">struct</span> <span class="title class_">value_category</span>&lt;T&amp;&amp;&gt; &#123;</span><br><span class="line">    <span class="type">static</span> <span class="keyword">constexpr</span> <span class="keyword">auto</span> value = <span class="string">&quot;xvalue&quot;</span>;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="comment">// Get value category of an expression</span></span><br><span class="line"><span class="meta">#<span class="keyword">define</span> VALUE_CATEGORY(expr) value_category<span class="string">&lt;decltype((expr))&gt;</span>::value</span></span><br><span class="line"><span class="meta">#<span class="keyword">define</span> PRINT(expr) printf(<span class="string">&quot;(%s) : %s\n&quot;</span>, #expr, VALUE_CATEGORY(expr))</span></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="type">int</span> <span class="title">main</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    <span class="built_in">PRINT</span>(<span class="number">4</span>);   <span class="comment">// prvalue</span></span><br><span class="line">    <span class="type">int</span> x;</span><br><span class="line">    <span class="type">int</span> &amp;y = x;</span><br><span class="line">    <span class="type">int</span> &amp;&amp;z = (<span class="type">int</span> &amp;&amp;)x;</span><br><span class="line">    <span class="built_in">PRINT</span>(x);   <span class="comment">// lvalue</span></span><br><span class="line">    <span class="built_in">PRINT</span>(y);   <span class="comment">// lvalue</span></span><br><span class="line">    <span class="built_in">PRINT</span>(z);   <span class="comment">// lvalue</span></span><br><span class="line">    <span class="built_in">PRINT</span>(x+<span class="number">1</span>); <span class="comment">// prvalue</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-      
-    </div>
-
-    
-    
-    
-      <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  
-  
-  
-
-      
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
     <link itemprop="mainEntityOfPage" href="https://hxhue.github.io/programming/cttcg-%E9%99%84%E5%BD%95-e-concept/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -648,6 +549,105 @@
             </div>
           <!--/noindex-->
         
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://hxhue.github.io/programming/cttcg-%E9%99%84%E5%BD%95-b-value-categories/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="Hxhue">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Hxhue's Blog">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/programming/cttcg-%E9%99%84%E5%BD%95-b-value-categories/" class="post-title-link" itemprop="url">CTTCG 附录 B Value Categories</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2023-08-12 21:47:45" itemprop="dateCreated datePublished" datetime="2023-08-12T21:47:45+08:00">2023-08-12</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2024-03-15 16:31:51" itemprop="dateModified" datetime="2024-03-15T16:31:51+08:00">2024-03-15</time>
+              </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/programming/" itemprop="url" rel="index"><span itemprop="name">Programming</span></a>
+                </span>
+            </span>
+
+          <br>
+            <span class="post-meta-item" title="本文字数">
+              <span class="post-meta-item-icon">
+                <i class="far fa-file-word"></i>
+              </span>
+                <span class="post-meta-item-text">本文字数：</span>
+              <span>277</span>
+            </span>
+            <span class="post-meta-item" title="阅读时长">
+              <span class="post-meta-item-icon">
+                <i class="far fa-clock"></i>
+              </span>
+                <span class="post-meta-item-text">阅读时长 &asymp;</span>
+              <span>1 分钟</span>
+            </span>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <p>对于变量而言，其括号表达式的值属性是左值引用。但由于 <code>decltype</code> 有特殊效果，直接对变量 <code>x</code> 使用 <code>decltype(x)</code> 并不遵循这一点，为此可以按照下面说的使用 <code>decltype((x))</code>。</p>
+<blockquote>
+<p>With the keyword decltype (introduced in C++11), it is possible to check the value category of any C++ expression. For any expression <code>x</code>, <code>decltype((x))</code> (note the double parentheses) yields:</p>
+<ul>
+<li><code>type</code> if <code>x</code> is a prvalue</li>
+<li><code>type&amp;</code> if <code>x</code> is an lvalue</li>
+<li><code>type&amp;&amp;</code> if <code>x</code> is an xvalue</li>
+</ul>
+<p>The double parentheses in <code>decltype((x))</code> are needed to avoid producing the declared type of a named entity in case where the expression <code>x</code> does indeed name an entity (in other cases, the paren-theses have no effect). For example, if the expression <code>x</code> simply names a variable <code>v</code>, the construct without parentheses becomes <code>decltype(v)</code>, which produces the type of the variable <code>v</code> rather than a type reﬂecting the value category of the expression <code>x</code> referring to that variable.</p>
+</blockquote>
+<p>例子：</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;iostream&gt;</span></span></span><br><span class="line"></span><br><span class="line"><span class="keyword">template</span>&lt;<span class="keyword">typename</span> T&gt;</span><br><span class="line"><span class="keyword">struct</span> <span class="title class_">value_category</span> &#123;</span><br><span class="line">    <span class="type">static</span> <span class="keyword">constexpr</span> <span class="keyword">auto</span> value = <span class="string">&quot;prvalue&quot;</span>;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="keyword">template</span>&lt;<span class="keyword">typename</span> T&gt;</span><br><span class="line"><span class="keyword">struct</span> <span class="title class_">value_category</span>&lt;T&amp;&gt; &#123;</span><br><span class="line">    <span class="type">static</span> <span class="keyword">constexpr</span> <span class="keyword">auto</span> value = <span class="string">&quot;lvalue&quot;</span>;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="keyword">template</span>&lt;<span class="keyword">typename</span> T&gt;</span><br><span class="line"><span class="keyword">struct</span> <span class="title class_">value_category</span>&lt;T&amp;&amp;&gt; &#123;</span><br><span class="line">    <span class="type">static</span> <span class="keyword">constexpr</span> <span class="keyword">auto</span> value = <span class="string">&quot;xvalue&quot;</span>;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="comment">// Get value category of an expression</span></span><br><span class="line"><span class="meta">#<span class="keyword">define</span> VALUE_CATEGORY(expr) value_category<span class="string">&lt;decltype((expr))&gt;</span>::value</span></span><br><span class="line"><span class="meta">#<span class="keyword">define</span> PRINT(expr) printf(<span class="string">&quot;(%s) : %s\n&quot;</span>, #expr, VALUE_CATEGORY(expr))</span></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="type">int</span> <span class="title">main</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    <span class="built_in">PRINT</span>(<span class="number">4</span>);   <span class="comment">// prvalue</span></span><br><span class="line">    <span class="type">int</span> x;</span><br><span class="line">    <span class="type">int</span> &amp;y = x;</span><br><span class="line">    <span class="type">int</span> &amp;&amp;z = (<span class="type">int</span> &amp;&amp;)x;</span><br><span class="line">    <span class="built_in">PRINT</span>(x);   <span class="comment">// lvalue</span></span><br><span class="line">    <span class="built_in">PRINT</span>(y);   <span class="comment">// lvalue</span></span><br><span class="line">    <span class="built_in">PRINT</span>(z);   <span class="comment">// lvalue</span></span><br><span class="line">    <span class="built_in">PRINT</span>(x+<span class="number">1</span>); <span class="comment">// prvalue</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
       
     </div>
 
@@ -1273,7 +1273,7 @@
       <i class="fa fa-coffee"></i>
     </span>
       <span class="post-meta-item-text">站点阅读时长 &asymp;</span>
-    <span title="站点阅读时长">7:52</span>
+    <span title="站点阅读时长">7:53</span>
 </div>
   <div class="powered-by">由 <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Gemini</a> 强力驱动
   </div><script color="0,0,255" opacity="0.5" zIndex="-1" count="99" src="https://cdn.jsdelivr.net/npm/canvas-nest.js@1/dist/canvas-nest.js"></script>

@@ -31,7 +31,7 @@
 <meta property="og:locale" content="zh_CN">
 <meta property="og:image" content="https://hxhue.github.io/assets/6765d315b8badcdac5361e8300adfe91.png">
 <meta property="article:published_time" content="2023-08-12T07:17:00.000Z">
-<meta property="article:modified_time" content="2024-03-21T08:27:14.070Z">
+<meta property="article:modified_time" content="2024-03-21T09:55:35.170Z">
 <meta property="article:author" content="Hxhue">
 <meta property="article:tag" content="cpp">
 <meta name="twitter:card" content="summary">
@@ -229,7 +229,7 @@
                   <i class="far fa-calendar-check"></i>
                 </span>
                 <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2024-03-21 16:27:14" itemprop="dateModified" datetime="2024-03-21T16:27:14+08:00">2024-03-21</time>
+                <time title="修改时间：2024-03-21 17:55:35" itemprop="dateModified" datetime="2024-03-21T17:55:35+08:00">2024-03-21</time>
               </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
@@ -288,7 +288,7 @@
 <p>r 定义行中 seven 的 <code>T</code> 类型是 <code>Widget &amp;</code>，引用折叠后得到的返回值类型是 <code>Widget &amp;</code>。而 rr 定义行中 seven 的 T 类型是 <code>Widget</code>，得到的返回值类型是<code>Widget &amp;&amp;</code>。</p>
 <h2 id="意料之外的函数重载选择"><a href="#意料之外的函数重载选择" class="headerlink" title="意料之外的函数重载选择"></a>意料之外的函数重载选择</h2><figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">struct</span> <span class="title class_">Sam</span> &#123;</span><br><span class="line">    <span class="built_in">Sam</span>(Widget&amp;);        <span class="comment">// #1</span></span><br><span class="line">    <span class="built_in">Sam</span>(<span class="type">const</span> Widget&amp;);  <span class="comment">// #2</span></span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="function">Sam <span class="title">twelve</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    Widget w;</span><br><span class="line">    <span class="keyword">return</span> w;  <span class="comment">// calls #2 since C++20 because P1155</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 
-<p>这是由于 C++20 返回值类型是由函数重载规则定义的。先把返回值当右值，不能匹配时又当成左值匹配（前面 <a href="/programming/p2266r3-simpler-implicit-move-%E5%AF%B9-c-23-%E5%87%BD%E6%95%B0%E8%BF%94%E5%9B%9E%E5%80%BC%E8%AF%AD%E4%B9%89%E7%9A%84%E6%94%B9%E5%8F%98/../../../../_archive/cpp/c++/P2266R3%20Simpler%20implicit%20move%20%E5%AF%B9%20C++23%20%E5%87%BD%E6%95%B0%E8%BF%94%E5%9B%9E%E5%80%BC%E8%AF%AD%E4%B9%89%E7%9A%84%E6%94%B9%E5%8F%98/">C++20 允许将亡值变量隐式移动</a> 也说过）。当右值匹配时，和常引用的匹配度更高，这样产生的结果很奇怪。</p>
+<p>这是由于 C++20 返回值类型是由函数重载规则定义的。先把返回值当右值，不能匹配时又当成左值匹配。当右值匹配时，和常引用的匹配度更高，这样产生的结果很奇怪。</p>
 <p><a target="_blank" rel="noopener" href="https://www.open-std.org/jtc1/sc22/wg21/docs/papers/2022/p2266r3.html#two-resolutions%5D(https://www.open-std.org/jtc1/sc22/wg21/docs/papers/2022/p2266r3.html#two-resolutions%5D(https://www.open-std.org/jtc1/sc22/wg21/docs/papers/2022/p2266r3.html#two-resolutions">链接</a></p>
 <h1 id="C-23-禁止将将亡值绑定到左值引用返回值，并加入返回值值属性的特殊规则"><a href="#C-23-禁止将将亡值绑定到左值引用返回值，并加入返回值值属性的特殊规则" class="headerlink" title="C++23 禁止将将亡值绑定到左值引用返回值，并加入返回值值属性的特殊规则"></a>C++23 禁止将将亡值绑定到左值引用返回值，并加入返回值值属性的特殊规则</h1><p><strong>主要是处理 C++20 新规则的表述导致的诸多不合理情景，同时也解决了部分引用悬挂的错误。</strong></p>
 <p><img src="/programming/p2266r3-simpler-implicit-move-%E5%AF%B9-c-23-%E5%87%BD%E6%95%B0%E8%BF%94%E5%9B%9E%E5%80%BC%E8%AF%AD%E4%B9%89%E7%9A%84%E6%94%B9%E5%8F%98/../../../../../assets/6765d315b8badcdac5361e8300adfe91.png"></p>
@@ -328,12 +328,12 @@
         
     <div class="post-nav">
       <div class="post-nav-item">
-    <a href="/programming/pod/" rel="prev" title="POD">
-      <i class="fa fa-chevron-left"></i> POD
+    <a href="/programming/inheritance/" rel="prev" title="Inheritance">
+      <i class="fa fa-chevron-left"></i> Inheritance
     </a></div>
       <div class="post-nav-item">
-    <a href="/programming/heterogeneous-lookup/" rel="next" title="Heterogeneous Lookup">
-      Heterogeneous Lookup <i class="fa fa-chevron-right"></i>
+    <a href="/programming/hidden-friends/" rel="next" title="Hidden Friends">
+      Hidden Friends <i class="fa fa-chevron-right"></i>
     </a></div>
     </div>
       </footer>
@@ -474,7 +474,7 @@
       <i class="fa fa-coffee"></i>
     </span>
       <span class="post-meta-item-text">站点阅读时长 &asymp;</span>
-    <span title="站点阅读时长">7:52</span>
+    <span title="站点阅读时长">7:53</span>
 </div>
   <div class="powered-by">由 <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Gemini</a> 强力驱动
   </div><script color="0,0,255" opacity="0.5" zIndex="-1" count="99" src="https://cdn.jsdelivr.net/npm/canvas-nest.js@1/dist/canvas-nest.js"></script>

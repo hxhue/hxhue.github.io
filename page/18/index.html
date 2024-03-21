@@ -191,108 +191,6 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="https://hxhue.github.io/programming/heterogeneous-lookup/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/avatar.gif">
-      <meta itemprop="name" content="Hxhue">
-      <meta itemprop="description" content="">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Hxhue's Blog">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          
-            <a href="/programming/heterogeneous-lookup/" class="post-title-link" itemprop="url">Heterogeneous Lookup</a>
-        </h2>
-
-        <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-calendar"></i>
-              </span>
-              <span class="post-meta-item-text">发表于</span>
-
-              <time title="创建时间：2023-08-12 15:17:00" itemprop="dateCreated datePublished" datetime="2023-08-12T15:17:00+08:00">2023-08-12</time>
-            </span>
-              <span class="post-meta-item">
-                <span class="post-meta-item-icon">
-                  <i class="far fa-calendar-check"></i>
-                </span>
-                <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2024-03-15 16:31:51" itemprop="dateModified" datetime="2024-03-15T16:31:51+08:00">2024-03-15</time>
-              </span>
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-folder"></i>
-              </span>
-              <span class="post-meta-item-text">分类于</span>
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/programming/" itemprop="url" rel="index"><span itemprop="name">Programming</span></a>
-                </span>
-            </span>
-
-          <br>
-            <span class="post-meta-item" title="本文字数">
-              <span class="post-meta-item-icon">
-                <i class="far fa-file-word"></i>
-              </span>
-                <span class="post-meta-item-text">本文字数：</span>
-              <span>494</span>
-            </span>
-            <span class="post-meta-item" title="阅读时长">
-              <span class="post-meta-item-icon">
-                <i class="far fa-clock"></i>
-              </span>
-                <span class="post-meta-item-text">阅读时长 &asymp;</span>
-              <span>2 分钟</span>
-            </span>
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          <p><a target="_blank" rel="noopener" href="https://www.cppstories.com/2021/heterogeneous-access-cpp20/">https://www.cppstories.com/2021/heterogeneous-access-cpp20/</a></p>
-<h1 id="C-14-加入了对有序容器的异质查找"><a href="#C-14-加入了对有序容器的异质查找" class="headerlink" title="C++ 14 加入了对有序容器的异质查找"></a>C++ 14 加入了对有序容器的异质查找</h1><p>用户的工作量很小，对标准库中的类型，只需要加上第三个模板参数：<code>std::less&lt;&gt;</code>（它的默认参数是 void）。<code>std::less&lt;void&gt;</code> 类中申明了 <code>is_transparent</code> 类型，所以可以用于异质查找。</p>
-<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line">std::map&lt;std::string, <span class="type">int</span>&gt; intMap &#123;</span><br><span class="line">    &#123; <span class="string">&quot;Hello Super Long String&quot;</span>, <span class="number">1</span> &#125;,</span><br><span class="line">    &#123; <span class="string">&quot;Another Longish String&quot;</span>, <span class="number">2</span> &#125;,</span><br><span class="line">    &#123; <span class="string">&quot;This cannot fall into SSO buffer&quot;</span>, <span class="number">3</span> &#125;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line">std::cout &lt;&lt; <span class="string">&quot;Lookup in intMap with by const char*:\\n&quot;</span>;</span><br><span class="line">std::cout &lt;&lt; intMap.<span class="built_in">contains</span>(<span class="string">&quot;Hello Super Long String&quot;</span>) &lt;&lt; <span class="string">&#x27;\\n&#x27;</span>;</span><br><span class="line"><span class="comment">//</span></span><br><span class="line">std::map&lt;std::string, <span class="type">int</span>, std::less&lt;&gt;&gt; trIntMap &#123;</span><br><span class="line">    &#123; <span class="string">&quot;Hello Super Long String&quot;</span>, <span class="number">1</span> &#125;,</span><br><span class="line">    &#123; <span class="string">&quot;Another Longish String&quot;</span>, <span class="number">2</span> &#125;,</span><br><span class="line">    &#123;<span class="string">&quot;This cannot fall into SSO buffer&quot;</span>, <span class="number">3</span> &#125;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line">std::cout &lt;&lt; <span class="string">&quot;Lookup in trIntMap by const char*: \\n&quot;</span>;</span><br><span class="line">std::cout &lt;&lt; trIntMap.<span class="built_in">contains</span>(<span class="string">&quot;Hello Super Long String&quot;</span>) &lt;&lt; <span class="string">&#x27;\\n&#x27;</span>;</span><br></pre></td></tr></table></figure>
-
-<h1 id="C-20-加入了对无序容器的异质查找"><a href="#C-20-加入了对无序容器的异质查找" class="headerlink" title="C++ 20 加入了对无序容器的异质查找"></a><strong>C++ 20 加入了对无序容器的异质查找</strong></h1><p>需要提供标注 <code>is_transparent</code> 的 hash 算子和等于算子。等于算子一般可以直接用 std::equal_to&lt;&gt;，但 hash 算子常常需要我们自己提供。</p>
-<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">struct</span> <span class="title class_">string_hash</span> &#123;</span><br><span class="line">  <span class="keyword">using</span> is_transparent = <span class="type">void</span>;</span><br><span class="line">  [nodiscard](/programming/heterogeneous-lookup/../nodiscard) <span class="function"><span class="type">size_t</span> <span class="title">operator</span><span class="params">()</span><span class="params">(<span class="type">const</span> <span class="type">char</span> *txt)</span> <span class="type">const</span> </span>&#123;</span><br><span class="line">    <span class="comment">// 对指针的hash只考虑了地址，所以要选用string_view的hash</span></span><br><span class="line">    <span class="keyword">return</span> std::hash&lt;std::string_view&gt;&#123;&#125;(txt);</span><br><span class="line">  &#125;</span><br><span class="line">  [nodiscard](/programming/heterogeneous-lookup/../nodiscard) <span class="function"><span class="type">size_t</span> <span class="title">operator</span><span class="params">()</span><span class="params">(std::string_view txt)</span> <span class="type">const</span> </span>&#123;</span><br><span class="line">    <span class="keyword">return</span> std::hash&lt;std::string_view&gt;&#123;&#125;(txt);</span><br><span class="line">  &#125;</span><br><span class="line">  [nodiscard](/programming/heterogeneous-lookup/../nodiscard) <span class="function"><span class="type">size_t</span> <span class="title">operator</span><span class="params">()</span><span class="params">(<span class="type">const</span> std::string &amp;txt)</span> <span class="type">const</span> </span>&#123;</span><br><span class="line">    <span class="comment">// string和string_view的hash方式一样</span></span><br><span class="line">    <span class="comment">// 但用string的特化会减少一次从string到string_view的构造</span></span><br><span class="line">    <span class="keyword">return</span> std::hash&lt;std::string&gt;&#123;&#125;(txt);</span><br><span class="line">  &#125;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line">std::unordered_map&lt;std::string, <span class="type">int</span>, string_hash, std::equal_to&lt;&gt;&gt;</span><br><span class="line">      intMapTransparent &#123;</span><br><span class="line">    &#123; <span class="string">&quot;Hello Super Long String&quot;</span>, <span class="number">1</span> &#125;,</span><br><span class="line">    &#123; <span class="string">&quot;Another Longish String&quot;</span>, <span class="number">2</span> &#125;,</span><br><span class="line">    &#123;<span class="string">&quot;This cannot fall into SSO buffer&quot;</span>, <span class="number">3</span> &#125;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="type">bool</span> found = intMapTransparent.<span class="built_in">contains</span>(<span class="string">&quot;Hello Super Long String&quot;</span>);</span><br><span class="line">std::cout &lt;&lt; <span class="string">&quot;Found: &quot;</span> &lt;&lt; std::boolalpha &lt;&lt; found &lt;&lt; <span class="string">&#x27;\\n&#x27;</span>;</span><br></pre></td></tr></table></figure>
-
-<h1 id="为什么-C-不把异质容器的查找作为默认？"><a href="#为什么-C-不把异质容器的查找作为默认？" class="headerlink" title="为什么 C++ 不把异质容器的查找作为默认？"></a>为什么 C++ 不把异质容器的查找作为默认？</h1>
-          <!--noindex-->
-            <div class="post-button">
-              <a class="btn" href="/programming/heterogeneous-lookup/#more" rel="contents">
-                阅读全文 &raquo;
-              </a>
-            </div>
-          <!--/noindex-->
-        
-      
-    </div>
-
-    
-    
-    
-      <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  
-  
-  
-
-      
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
     <link itemprop="mainEntityOfPage" href="https://hxhue.github.io/programming/p2266r3-simpler-implicit-move-%E5%AF%B9-c-23-%E5%87%BD%E6%95%B0%E8%BF%94%E5%9B%9E%E5%80%BC%E8%AF%AD%E4%B9%89%E7%9A%84%E6%94%B9%E5%8F%98/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -324,7 +222,7 @@
                   <i class="far fa-calendar-check"></i>
                 </span>
                 <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2024-03-21 16:27:14" itemprop="dateModified" datetime="2024-03-21T16:27:14+08:00">2024-03-21</time>
+                <time title="修改时间：2024-03-21 17:55:35" itemprop="dateModified" datetime="2024-03-21T17:55:35+08:00">2024-03-21</time>
               </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
@@ -375,6 +273,124 @@
             </div>
           <!--/noindex-->
         
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://hxhue.github.io/programming/inheritance/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="Hxhue">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Hxhue's Blog">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/programming/inheritance/" class="post-title-link" itemprop="url">Inheritance</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2023-08-12 15:17:00" itemprop="dateCreated datePublished" datetime="2023-08-12T15:17:00+08:00">2023-08-12</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2024-03-15 16:31:51" itemprop="dateModified" datetime="2024-03-15T16:31:51+08:00">2024-03-15</time>
+              </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/programming/" itemprop="url" rel="index"><span itemprop="name">Programming</span></a>
+                </span>
+            </span>
+
+          <br>
+            <span class="post-meta-item" title="本文字数">
+              <span class="post-meta-item-icon">
+                <i class="far fa-file-word"></i>
+              </span>
+                <span class="post-meta-item-text">本文字数：</span>
+              <span>146</span>
+            </span>
+            <span class="post-meta-item" title="阅读时长">
+              <span class="post-meta-item-icon">
+                <i class="far fa-clock"></i>
+              </span>
+                <span class="post-meta-item-text">阅读时长 &asymp;</span>
+              <span>1 分钟</span>
+            </span>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <table>
+<thead>
+<tr>
+<th></th>
+<th>public</th>
+<th>protected</th>
+<th>private</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>共有继承</td>
+<td>public</td>
+<td>protected</td>
+<td>不可见</td>
+</tr>
+<tr>
+<td>私有继承</td>
+<td>private</td>
+<td>private</td>
+<td>不可见</td>
+</tr>
+<tr>
+<td>保护继承</td>
+<td>protected</td>
+<td>protected</td>
+<td>不可见</td>
+</tr>
+</tbody></table>
+<p>可见继承属性就是对于来自基类的 public 和 protected 成员进行一个取最小权限的操作（定义权限 public &gt; protected &gt; private）。</p>
+<p>struct 和 class 的数据定义没有区别。语法上区别是：struct 定义默认继承种类是 public，class 定义默认继承类型是 private，<strong>这和基类用 struct 还是 class 声明的无关</strong>。</p>
+<p>继承多个类时，需要给不同的基类分别指定访问限定符。</p>
+
       
     </div>
 
@@ -571,108 +587,6 @@
           <!--noindex-->
             <div class="post-button">
               <a class="btn" href="/programming/pointer-to-member/#more" rel="contents">
-                阅读全文 &raquo;
-              </a>
-            </div>
-          <!--/noindex-->
-        
-      
-    </div>
-
-    
-    
-    
-      <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  
-  
-  
-
-      
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="https://hxhue.github.io/programming/strict-aliasing/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/avatar.gif">
-      <meta itemprop="name" content="Hxhue">
-      <meta itemprop="description" content="">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Hxhue's Blog">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          
-            <a href="/programming/strict-aliasing/" class="post-title-link" itemprop="url">Strict Aliasing</a>
-        </h2>
-
-        <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-calendar"></i>
-              </span>
-              <span class="post-meta-item-text">发表于</span>
-
-              <time title="创建时间：2023-08-12 15:17:00" itemprop="dateCreated datePublished" datetime="2023-08-12T15:17:00+08:00">2023-08-12</time>
-            </span>
-              <span class="post-meta-item">
-                <span class="post-meta-item-icon">
-                  <i class="far fa-calendar-check"></i>
-                </span>
-                <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2024-03-21 16:27:14" itemprop="dateModified" datetime="2024-03-21T16:27:14+08:00">2024-03-21</time>
-              </span>
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-folder"></i>
-              </span>
-              <span class="post-meta-item-text">分类于</span>
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/programming/" itemprop="url" rel="index"><span itemprop="name">Programming</span></a>
-                </span>
-            </span>
-
-          <br>
-            <span class="post-meta-item" title="本文字数">
-              <span class="post-meta-item-icon">
-                <i class="far fa-file-word"></i>
-              </span>
-                <span class="post-meta-item-text">本文字数：</span>
-              <span>1.8k</span>
-            </span>
-            <span class="post-meta-item" title="阅读时长">
-              <span class="post-meta-item-icon">
-                <i class="far fa-clock"></i>
-              </span>
-                <span class="post-meta-item-text">阅读时长 &asymp;</span>
-              <span>6 分钟</span>
-            </span>
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          <p>文章：<a href="/programming/strict-aliasing/../github.com">What is Strict Aliasing and Why do we Care? (github.com)</a>)</p>
-<p>所谓 Strict Aliasing 就是指为 aliasing 设定条件，使得编译器大多数场景下认为代码没有 aliasing，从而可以激进优化代码。</p>
-<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;iostream&gt;</span></span></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="type">int</span> <span class="title">foo</span><span class="params">( <span class="type">float</span> *f, <span class="type">int</span> *i )</span> </span>&#123;</span><br><span class="line">    *i = <span class="number">1</span>;</span><br><span class="line">    *f = <span class="number">0.f</span>;</span><br><span class="line"></span><br><span class="line">   <span class="keyword">return</span> *i;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="type">int</span> <span class="title">main</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    <span class="type">int</span> x = <span class="number">0</span>;</span><br><span class="line"></span><br><span class="line">    std::cout &lt;&lt; x &lt;&lt; <span class="string">&quot;\n&quot;</span>;   <span class="comment">// Expect 0</span></span><br><span class="line">    x = <span class="built_in">foo</span>(<span class="built_in">reinterpret_cast</span>&lt;<span class="type">float</span>*&gt;(&amp;x), &amp;x);</span><br><span class="line">    std::cout &lt;&lt; x &lt;&lt; <span class="string">&quot;\n&quot;</span>;   <span class="comment">// Expect 0?</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<p>上述代码在 <code>gcc 13.1 -O2</code> 下编译，第二行打印结果为 1。编译器认为 f 和 i 指针必定不重合，所以直接返回了 1。</p>
-<h1 id="什么时候-Aliasing-是允许的？"><a href="#什么时候-Aliasing-是允许的？" class="headerlink" title="什么时候 Aliasing 是允许的？"></a>什么时候 Aliasing 是允许的？</h1><p>比较复杂，而且 C 和 C++ 的要求不同。在 alias 可用时，编译器不会像上面那样激进优化。下面只提到了一部分规则。</p>
-<p><strong>允许同类指针</strong>，而且两者都允许给指针加 cv 限定，但是 C++17 还允许 unsigned 和 signed 对应类型之间的别名，C11 不允许（尽管 gcc 和 clang 都是按照允许的方式实现的）。</p>
-<p>最基本的保证是：无论指针如何变化，只要目的类型是对象的真实类型，就能正常使用。但是如何开启一个新对象的生命周期则有区别。<strong>C 语言中只要写入就已经可以按照写入类型启用一个新的生命周期。而在 C++ 必须保存用于写入的指针并在之后始终使用该指针！（C++17 新增了</strong> <code>std::launder</code><strong>，可以不必再保存指针但是要洗一下）</strong></p>
-          <!--noindex-->
-            <div class="post-button">
-              <a class="btn" href="/programming/strict-aliasing/#more" rel="contents">
                 阅读全文 &raquo;
               </a>
             </div>
@@ -1046,7 +960,7 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="https://hxhue.github.io/programming/cppreference-%E5%8D%8F%E7%A8%8B%E4%BE%8B%E5%AD%90%E7%90%86%E8%A7%A3/">
+    <link itemprop="mainEntityOfPage" href="https://hxhue.github.io/programming/strict-aliasing/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="image" content="/images/avatar.gif">
@@ -1060,7 +974,7 @@
       <header class="post-header">
         <h2 class="post-title" itemprop="name headline">
           
-            <a href="/programming/cppreference-%E5%8D%8F%E7%A8%8B%E4%BE%8B%E5%AD%90%E7%90%86%E8%A7%A3/" class="post-title-link" itemprop="url">cppreference 协程例子理解</a>
+            <a href="/programming/strict-aliasing/" class="post-title-link" itemprop="url">Strict Aliasing</a>
         </h2>
 
         <div class="post-meta">
@@ -1077,7 +991,7 @@
                   <i class="far fa-calendar-check"></i>
                 </span>
                 <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2024-03-21 16:27:14" itemprop="dateModified" datetime="2024-03-21T16:27:14+08:00">2024-03-21</time>
+                <time title="修改时间：2024-03-21 16:44:41" itemprop="dateModified" datetime="2024-03-21T16:44:41+08:00">2024-03-21</time>
               </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
@@ -1095,14 +1009,14 @@
                 <i class="far fa-file-word"></i>
               </span>
                 <span class="post-meta-item-text">本文字数：</span>
-              <span>257</span>
+              <span>1.8k</span>
             </span>
             <span class="post-meta-item" title="阅读时长">
               <span class="post-meta-item-icon">
                 <i class="far fa-clock"></i>
               </span>
                 <span class="post-meta-item-text">阅读时长 &asymp;</span>
-              <span>1 分钟</span>
+              <span>6 分钟</span>
             </span>
 
         </div>
@@ -1114,15 +1028,22 @@
     <div class="post-body" itemprop="articleBody">
 
       
-          <p>我的理解是：C++ 的协程是无栈的，这意味着协程只是计算任务，仅在运行时需要栈，在 suspend 之后就会保存状态并脱离栈。要想要跨线程转移计算任务（比如实现工作窃取池），只需要将离栈协程在另外一个线程上 resume 即可。</p>
-<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;coroutine&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;iostream&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;stdexcept&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;thread&gt;</span></span></span><br><span class="line"> </span><br><span class="line"><span class="function"><span class="keyword">auto</span> <span class="title">switch_to_new_thread</span><span class="params">(std::jthread&amp; out)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="keyword">struct</span> <span class="title class_">awaitable</span></span><br><span class="line">    &#123;</span><br><span class="line">        std::jthread* p_out;</span><br><span class="line">        <span class="function"><span class="type">bool</span> <span class="title">await_ready</span><span class="params">()</span> </span>&#123; <span class="keyword">return</span> <span class="literal">false</span>; &#125;</span><br><span class="line">        <span class="function"><span class="type">void</span> <span class="title">await_suspend</span><span class="params">(std::coroutine_handle&lt;&gt; h)</span></span></span><br><span class="line"><span class="function">        </span>&#123;</span><br><span class="line">            std::jthread&amp; out = *p_out;</span><br><span class="line">            <span class="keyword">if</span> (out.<span class="built_in">joinable</span>())</span><br><span class="line">                <span class="keyword">throw</span> std::<span class="built_in">runtime_error</span>(<span class="string">&quot;Output jthread parameter not empty&quot;</span>);</span><br><span class="line">            out = std::<span class="built_in">jthread</span>([h] &#123; h.<span class="built_in">resume</span>(); &#125;);</span><br><span class="line">            <span class="comment">// Potential undefined behavior: accessing potentially destroyed *this</span></span><br><span class="line">            <span class="comment">// std::cout &lt;&lt; &quot;New thread ID: &quot; &lt;&lt; p_out-&gt;get_id() &lt;&lt; &#x27;\n&#x27;;</span></span><br><span class="line">            std::cout &lt;&lt; <span class="string">&quot;New thread ID: &quot;</span> &lt;&lt; out.<span class="built_in">get_id</span>() &lt;&lt; <span class="string">&#x27;\n&#x27;</span>; <span class="comment">// this is OK</span></span><br><span class="line">        &#125;</span><br><span class="line">        <span class="function"><span class="type">void</span> <span class="title">await_resume</span><span class="params">()</span> </span>&#123;&#125;</span><br><span class="line">    &#125;;</span><br><span class="line">    <span class="keyword">return</span> awaitable&#123;&amp;out&#125;;</span><br><span class="line">&#125;</span><br><span class="line"> </span><br><span class="line"><span class="keyword">struct</span> <span class="title class_">task</span></span><br><span class="line">&#123;</span><br><span class="line">    <span class="keyword">struct</span> <span class="title class_">promise_type</span></span><br><span class="line">    &#123;</span><br><span class="line">        <span class="function">task <span class="title">get_return_object</span><span class="params">()</span> </span>&#123; <span class="keyword">return</span> &#123;&#125;; &#125;</span><br><span class="line">        <span class="function">std::suspend_never <span class="title">initial_suspend</span><span class="params">()</span> </span>&#123; <span class="keyword">return</span> &#123;&#125;; &#125;</span><br><span class="line">        <span class="function">std::suspend_never <span class="title">final_suspend</span><span class="params">()</span> <span class="keyword">noexcept</span> </span>&#123; <span class="keyword">return</span> &#123;&#125;; &#125;</span><br><span class="line">        <span class="function"><span class="type">void</span> <span class="title">return_void</span><span class="params">()</span> </span>&#123;&#125;</span><br><span class="line">        <span class="function"><span class="type">void</span> <span class="title">unhandled_exception</span><span class="params">()</span> </span>&#123;&#125;</span><br><span class="line">    &#125;;</span><br><span class="line">&#125;;</span><br><span class="line"> </span><br><span class="line"><span class="function">task <span class="title">resuming_on_new_thread</span><span class="params">(std::jthread&amp; out)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    std::cout &lt;&lt; <span class="string">&quot;Coroutine started on thread: &quot;</span> &lt;&lt; std::this_thread::<span class="built_in">get_id</span>() &lt;&lt; <span class="string">&#x27;\n&#x27;</span>;</span><br><span class="line">    <span class="function"><span class="keyword">co_await</span> <span class="title">switch_to_new_thread</span><span class="params">(out)</span></span>;</span><br><span class="line">    <span class="comment">// awaiter destroyed here</span></span><br><span class="line">    std::cout &lt;&lt; <span class="string">&quot;Coroutine resumed on thread: &quot;</span> &lt;&lt; std::this_thread::<span class="built_in">get_id</span>() &lt;&lt; <span class="string">&#x27;\n&#x27;</span>;</span><br><span class="line">&#125;</span><br><span class="line"> </span><br><span class="line"><span class="function"><span class="type">int</span> <span class="title">main</span><span class="params">()</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    std::jthread out;</span><br><span class="line">    <span class="built_in">resuming_on_new_thread</span>(out);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+          <p>文章：<a target="_blank" rel="noopener" href="https://gist.github.com/shafik/848ae25ee209f698763cffee272a58f8">What is Strict Aliasing and Why do we Care? (github.com)</a></p>
+<p>所谓 Strict Aliasing 就是指为 aliasing 设定条件，使得编译器大多数场景下认为代码没有 aliasing，从而可以激进优化代码。</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;iostream&gt;</span></span></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="type">int</span> <span class="title">foo</span><span class="params">( <span class="type">float</span> *f, <span class="type">int</span> *i )</span> </span>&#123;</span><br><span class="line">    *i = <span class="number">1</span>;</span><br><span class="line">    *f = <span class="number">0.f</span>;</span><br><span class="line"></span><br><span class="line">   <span class="keyword">return</span> *i;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="type">int</span> <span class="title">main</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    <span class="type">int</span> x = <span class="number">0</span>;</span><br><span class="line"></span><br><span class="line">    std::cout &lt;&lt; x &lt;&lt; <span class="string">&quot;\n&quot;</span>;   <span class="comment">// Expect 0</span></span><br><span class="line">    x = <span class="built_in">foo</span>(<span class="built_in">reinterpret_cast</span>&lt;<span class="type">float</span>*&gt;(&amp;x), &amp;x);</span><br><span class="line">    std::cout &lt;&lt; x &lt;&lt; <span class="string">&quot;\n&quot;</span>;   <span class="comment">// Expect 0?</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 
-<p>可能结果：</p>
-<figure class="highlight txt"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">Coroutine started on thread: 139972277602112</span><br><span class="line">New thread ID: 139972267284224</span><br><span class="line">Coroutine resumed on thread: 139972267284224</span><br></pre></td></tr></table></figure>
-
-<p><img src="/programming/cppreference-%E5%8D%8F%E7%A8%8B%E4%BE%8B%E5%AD%90%E7%90%86%E8%A7%A3/../../../../../assets/a4932ad6244b2cd82d79e4204ddce8f8.svg"></p>
-<p>图片比较小，可以看：<a href="/programming/cppreference-%E5%8D%8F%E7%A8%8B%E4%BE%8B%E5%AD%90%E7%90%86%E8%A7%A3/../../../assets/image/cppreference%E5%8D%8F%E7%A8%8B%E4%BE%8B%E5%AD%90%E7%90%86%E8%A7%A3.svg">cppreference协程例子理解.svg</a></p>
-
+<p>上述代码在 <code>gcc 13.1 -O2</code> 下编译，第二行打印结果为 1。编译器认为 f 和 i 指针必定不重合，所以直接返回了 1。</p>
+<h1 id="什么时候-Aliasing-是允许的？"><a href="#什么时候-Aliasing-是允许的？" class="headerlink" title="什么时候 Aliasing 是允许的？"></a>什么时候 Aliasing 是允许的？</h1><p>比较复杂，而且 C 和 C++ 的要求不同。在 alias 可用时，编译器不会像上面那样激进优化。下面只提到了一部分规则。</p>
+<p><strong>允许同类指针</strong>，而且两者都允许给指针加 cv 限定，但是 C++17 还允许 unsigned 和 signed 对应类型之间的别名，C11 不允许（尽管 gcc 和 clang 都是按照允许的方式实现的）。</p>
+<p>最基本的保证是：无论指针如何变化，只要目的类型是对象的真实类型，就能正常使用。但是如何开启一个新对象的生命周期则有区别。<strong>C 语言中只要写入就已经可以按照写入类型启用一个新的生命周期。而在 C++ 必须保存用于写入的指针并在之后始终使用该指针！（C++17 新增了</strong> <code>std::launder</code><strong>，可以不必再保存指针但是要洗一下）</strong></p>
+          <!--noindex-->
+            <div class="post-button">
+              <a class="btn" href="/programming/strict-aliasing/#more" rel="contents">
+                阅读全文 &raquo;
+              </a>
+            </div>
+          <!--/noindex-->
+        
       
     </div>
 
@@ -1217,6 +1138,97 @@
 
 <p>C++ 14 还加入了 <code>decltype(auto)</code>，这个组合不像单独的 <code>auto</code>，不能被 <code>const</code> 等继续修饰。</p>
 
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://hxhue.github.io/programming/enum-class/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="Hxhue">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Hxhue's Blog">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/programming/enum-class/" class="post-title-link" itemprop="url">enum class</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2023-08-12 15:17:00" itemprop="dateCreated datePublished" datetime="2023-08-12T15:17:00+08:00">2023-08-12</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2024-03-15 16:31:51" itemprop="dateModified" datetime="2024-03-15T16:31:51+08:00">2024-03-15</time>
+              </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/programming/" itemprop="url" rel="index"><span itemprop="name">Programming</span></a>
+                </span>
+            </span>
+
+          <br>
+            <span class="post-meta-item" title="本文字数">
+              <span class="post-meta-item-icon">
+                <i class="far fa-file-word"></i>
+              </span>
+                <span class="post-meta-item-text">本文字数：</span>
+              <span>331</span>
+            </span>
+            <span class="post-meta-item" title="阅读时长">
+              <span class="post-meta-item-icon">
+                <i class="far fa-clock"></i>
+              </span>
+                <span class="post-meta-item-text">阅读时长 &asymp;</span>
+              <span>1 分钟</span>
+            </span>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <p>C 风格枚举和 C++ 新增的 enum class：</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">enum</span> &#123; ITEM_A1, ITEM_A2 &#125;;</span><br><span class="line"><span class="keyword">enum</span> <span class="title class_">B</span> &#123; ITEM_B1, ITEM_B2 &#125;;</span><br><span class="line"><span class="comment">// 从 C 沿用来的语法：</span></span><br><span class="line"><span class="comment">// 1. 底层类型默认为int，但也能手动指定</span></span><br><span class="line"><span class="comment">// 2. 枚举名裸露在外</span></span><br><span class="line"><span class="comment">// 区别：</span></span><br><span class="line"><span class="comment">// C 允许前向声明 enum</span></span><br><span class="line"><span class="comment">// C++ 允许枚举列表为空；允许在表示类型时省略 enum 关键字；虽然枚举名裸露但也能通过限定名访问</span></span><br><span class="line"></span><br><span class="line"><span class="comment">// C++ 新增 enum class</span></span><br><span class="line"><span class="keyword">enum</span> <span class="title class_">C</span> &#123; ITEM_C1, ITEM_C2 &#125;;</span><br><span class="line"><span class="comment">// 类型不再裸露，需要使用限定名访问</span></span><br><span class="line"><span class="comment">// 没有默认底层类型，但是可以手动指定</span></span><br></pre></td></tr></table></figure>
+
+<p>C++ enum class 禁止了隐式转换，但是用来表示 id 还是不太方便：</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;type_traits&gt;</span></span></span><br><span class="line"></span><br><span class="line"><span class="keyword">enum</span> <span class="title class_">A</span>: <span class="type">int</span> &#123; ITEM_1 &#125;;</span><br><span class="line"><span class="keyword">enum</span> &#123; ITEM_2 &#125;;</span><br><span class="line"><span class="keyword">enum class</span> <span class="title class_">B</span>: <span class="type">int</span> &#123; ITEM_3 &#125;;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 即便底层类型相同，实际类型也不同</span></span><br><span class="line"><span class="built_in">static_assert</span>(! std::is_same_v&lt;<span class="type">int</span>, A&gt;);</span><br><span class="line"><span class="built_in">static_assert</span>(<span class="built_in">sizeof</span>(<span class="type">int</span>) == <span class="built_in">sizeof</span>(A));</span><br><span class="line"><span class="built_in">static_assert</span>(<span class="built_in">sizeof</span>(<span class="type">int</span>) == <span class="built_in">sizeof</span>(ITEM_2));</span><br><span class="line"><span class="comment">// 枚举不是聚合类</span></span><br><span class="line"><span class="built_in">static_assert</span>(! std::is_aggregate_v&lt;A&gt;);</span><br><span class="line"><span class="built_in">static_assert</span>(! std::is_aggregate_v&lt;B&gt;);</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="type">int</span> <span class="title">main</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    [<span class="type">int</span>](<span class="type">int</span>)&#123;&#125;(ITEM_1);</span><br><span class="line">    [<span class="type">int</span>](<span class="type">int</span>)&#123;&#125;(ITEM_2);</span><br><span class="line">    </span><br><span class="line">    <span class="type">int</span> b3 = (<span class="type">int</span>)B::ITEM_3;</span><br><span class="line">    <span class="comment">// [int](/programming/enum-class/int)&#123-125-B-ITEM-3); // no conversion from B to int</span></span><br><span class="line">    <span class="comment">// [B](/programming/enum-class/B)&#123-125-b3);          // no conversion from int to B</span></span><br><span class="line">    [B](/programming/enum-class/../B)&#123;&#125;(B &#123;b3&#125;);</span><br><span class="line">    <span class="comment">// [B](/programming/enum-class/../B)&#123;&#125;( &#123;b3&#125; ); // 即便是花括号也不能推导，因为枚举不是类</span></span><br><span class="line"></span><br><span class="line">    <span class="comment">// 强类型整数还是用 aggregate 做比较好：</span></span><br><span class="line">    <span class="comment">// 虽然整数到枚举可以使用构造的方式描述，但枚举到整数只能强制转换</span></span><br><span class="line">    <span class="comment">// 作为对比，aggregate 直接访问成员即可</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
       
     </div>
 
@@ -1367,7 +1379,7 @@
       <i class="fa fa-coffee"></i>
     </span>
       <span class="post-meta-item-text">站点阅读时长 &asymp;</span>
-    <span title="站点阅读时长">7:52</span>
+    <span title="站点阅读时长">7:53</span>
 </div>
   <div class="powered-by">由 <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Gemini</a> 强力驱动
   </div><script color="0,0,255" opacity="0.5" zIndex="-1" count="99" src="https://cdn.jsdelivr.net/npm/canvas-nest.js@1/dist/canvas-nest.js"></script>

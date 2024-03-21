@@ -30,7 +30,7 @@
 <meta property="og:description" content="模板参数也可以不是类型，而是值。 非类型参数推导只对直接调用有效模板函数的类型推导只对立即调用有效，而对算法模板这类需要提前知道类型信息的场合无效。比如： 123std::transform (source.begin(), source.end(), &#x2F;&#x2F; start and end of source    dest.begin(),     &#x2F;&#x2F; start of destination">
 <meta property="og:locale" content="zh_CN">
 <meta property="article:published_time" content="2023-08-11T16:00:00.000Z">
-<meta property="article:modified_time" content="2024-03-15T08:31:51.181Z">
+<meta property="article:modified_time" content="2024-03-21T08:33:17.588Z">
 <meta property="article:author" content="Hxhue">
 <meta property="article:tag" content="cpp">
 <meta property="article:tag" content="cpp-templates-the-complete-guide">
@@ -228,7 +228,7 @@
                   <i class="far fa-calendar-check"></i>
                 </span>
                 <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2024-03-15 16:31:51" itemprop="dateModified" datetime="2024-03-15T16:31:51+08:00">2024-03-15</time>
+                <time title="修改时间：2024-03-21 16:33:17" itemprop="dateModified" datetime="2024-03-21T16:33:17+08:00">2024-03-21</time>
               </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
@@ -246,7 +246,7 @@
                 <i class="far fa-file-word"></i>
               </span>
                 <span class="post-meta-item-text">本文字数：</span>
-              <span>792</span>
+              <span>787</span>
             </span>
             <span class="post-meta-item" title="阅读时长">
               <span class="post-meta-item-icon">
@@ -272,7 +272,7 @@
 <p>上面代码中尽管 <code>addValue</code> 的参数可能可以推导出来，但由于 <code>std::transform</code> 要求提前知道函数的类型，去掉参数之后代码无法编译。</p>
 <h1 id="非类型参数的类型限制"><a href="#非类型参数的类型限制" class="headerlink" title="非类型参数的类型限制"></a>非类型参数的类型限制</h1><p><strong>非类型参数不能是浮点数（未来可能可以）。只能是整数、nullptr、指针或左值引用。</strong></p>
 <p>2017 年的 P1714 提案建议增加浮点数，目前找不到后续。不过，gcc 13 在 <code>-std=c++20</code> 时已经提供了浮点数参数功能，clang 暂不支持。</p>
-<p>作为对比，如今 C++20 中某些非 union class type 已经可以作为模板参数，但浮点数不能。见 <a href="/programming/cttcg-03-nontype-template-parameters/../../../../_archive/cpp/c++/private/Class%20types%20in%20NTTP/">Class types in NTTP</a>。</p>
+<p>作为对比，如今 C++20 中某些非 union class type 已经可以作为模板参数，但浮点数不能。</p>
 <p>当参数是指针或引用时，不可以指向字符串字面量、临时值、数据成员或其他子对象；C++11 还要求对象有 external linkage，C++14 要求对象有 external linkage 或者 internal linkage，C++17 对 linkage 没有要求。</p>
 <p>虽然不能使用字符串字面量，但可以使用编译期可定的字符数组的引用作为参数。</p>
 <figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">extern</span> <span class="type">char</span> <span class="type">const</span> s03[] = <span class="string">&quot;hi&quot;</span>; <span class="comment">// external linkage</span></span><br><span class="line"><span class="type">char</span> <span class="type">const</span> s11[] = <span class="string">&quot;hi&quot;</span>;        <span class="comment">// internal linkage</span></span><br><span class="line"><span class="function"><span class="type">int</span> <span class="title">main</span><span class="params">()</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    Message&lt;s03&gt; m03;               <span class="comment">// OK (all versions)</span></span><br><span class="line">    Message&lt;s11&gt; m11;               <span class="comment">// OK since C++11</span></span><br><span class="line">    <span class="type">static</span> <span class="type">char</span> <span class="type">const</span> s17[] = <span class="string">&quot;hi&quot;</span>; <span class="comment">// no linkage</span></span><br><span class="line">    Message&lt;s17&gt; m17;               <span class="comment">// OK since C++17</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
@@ -307,8 +307,8 @@
         
     <div class="post-nav">
       <div class="post-nav-item">
-    <a href="/programming/cttcg-07-by-value-or-by-reference/" rel="prev" title="CTTCG 07 By Value or by Reference">
-      <i class="fa fa-chevron-left"></i> CTTCG 07 By Value or by Reference
+    <a href="/programming/cttcg-04-variadic-templates/" rel="prev" title="CTTCG 04 Variadic Templates">
+      <i class="fa fa-chevron-left"></i> CTTCG 04 Variadic Templates
     </a></div>
       <div class="post-nav-item">
     <a href="/programming/cttcg-02-class-templates/" rel="next" title="CTTCG 02 Class Templates">
@@ -453,7 +453,7 @@
       <i class="fa fa-coffee"></i>
     </span>
       <span class="post-meta-item-text">站点阅读时长 &asymp;</span>
-    <span title="站点阅读时长">7:52</span>
+    <span title="站点阅读时长">7:53</span>
 </div>
   <div class="powered-by">由 <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Gemini</a> 强力驱动
   </div><script color="0,0,255" opacity="0.5" zIndex="-1" count="99" src="https://cdn.jsdelivr.net/npm/canvas-nest.js@1/dist/canvas-nest.js"></script>
