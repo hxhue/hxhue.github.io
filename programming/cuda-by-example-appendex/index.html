@@ -271,7 +271,7 @@
 <figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// mutex 的类型是 int *，而且是分配在 GPU 上的</span></span><br><span class="line">__device__ <span class="type">void</span> <span class="title function_">lock</span><span class="params">( <span class="type">void</span> )</span> &#123;</span><br><span class="line">  <span class="keyword">while</span>( atomicCAS( mutex, <span class="number">0</span>, <span class="number">1</span> ) != <span class="number">0</span> );</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">__device__ <span class="type">void</span> <span class="title function_">unlock</span><span class="params">( <span class="type">void</span> )</span> &#123;</span><br><span class="line">  atomicExch( mutex, <span class="number">1</span> );</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 
 <blockquote>
-<p style="margin-bottom: 0px"><font size="+3">✏️</font><font size="+1"><strong> NOTE</strong></font></p>
+<p style="margin-bottom: 0px"><font size="+2">✏️</font><font size="+1"><strong> Note</strong></font></p>
 <p>这里的 <code>unlock</code> 方法并不是直接对 <code>*mutex</code> 赋值为 1，因为 CUDA 中原子操作和普通的内存访问经过的路径不同，所以应该在 <code>unlock</code> 的时候也统一使用原子操作。</p>
 </blockquote>
 <p>最后的 dot 核函数：</p>
@@ -288,7 +288,7 @@
 <p>首先是计算 hash，然后上锁、加元素、释放锁。每个线程使用的内存区域都是对应于自己位置的，所以 <code>table.pool</code> 中要先分配好足够本次 kv 对数量的空间。</p>
 <p><code>for (int i=0; i&lt;32; i++)</code> 和 <code>if ((tid % 32) == i)</code> 有点难看懂。这么写是因为一个 warp 的大小是 32。如果直接去掉 <code>for</code> 和 <code>if</code>，实际上是要整个 warp 中的 32 个线程都获得锁才能继续向下执行。<strong>这很可能导致死锁</strong>！这里的代码相当于遍历了 warp，让 warp 中的线程一个一个地获取锁，这样总有 warp 能正常向下计算，不会造成死锁。</p>
 <blockquote>
-<p style="margin-bottom: 0px"><font size="+3">✏️</font><font size="+1"><strong> NOTE</strong></font></p>
+<p style="margin-bottom: 0px"><font size="+2">✏️</font><font size="+1"><strong> Note</strong></font></p>
 <p>对比：半 warp 是常量内存请求广播的粒度，而整个 warp 是 warp 中线程在 lockstep 中执行的粒度。</p>
 </blockquote>
 
@@ -389,7 +389,7 @@
       <div class="site-state-item site-state-posts">
           <a href="/archives/">
         
-          <span class="site-state-item-count">220</span>
+          <span class="site-state-item-count">222</span>
           <span class="site-state-item-name">日志</span>
         </a>
       </div>
@@ -450,13 +450,13 @@
       <i class="fa fa-chart-area"></i>
     </span>
       <span class="post-meta-item-text">站点总字数：</span>
-    <span title="站点总字数">121k</span>
+    <span title="站点总字数">130k</span>
     <span class="post-meta-divider">|</span>
     <span class="post-meta-item-icon">
       <i class="fa fa-coffee"></i>
     </span>
       <span class="post-meta-item-text">站点阅读时长 &asymp;</span>
-    <span title="站点阅读时长">7:20</span>
+    <span title="站点阅读时长">7:52</span>
 </div>
   <div class="powered-by">由 <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Gemini</a> 强力驱动
   </div><script color="0,0,255" opacity="0.5" zIndex="-1" count="99" src="https://cdn.jsdelivr.net/npm/canvas-nest.js@1/dist/canvas-nest.js"></script>

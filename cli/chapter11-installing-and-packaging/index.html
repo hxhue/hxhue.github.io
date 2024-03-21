@@ -34,7 +34,7 @@
 <meta property="og:image" content="https://hxhue.github.io/assets/5e75910ef77984fadaa879387f8921a1.webp">
 <meta property="og:image" content="https://hxhue.github.io/assets/33ecd0b25782c14cde3061e906c7688c.webp">
 <meta property="article:published_time" content="2024-02-01T15:01:00.000Z">
-<meta property="article:modified_time" content="2024-03-17T05:24:17.621Z">
+<meta property="article:modified_time" content="2024-03-20T06:47:14.946Z">
 <meta property="article:author" content="Hxhue">
 <meta property="article:tag" content="cpp">
 <meta property="article:tag" content="cmake">
@@ -234,7 +234,7 @@
                   <i class="far fa-calendar-check"></i>
                 </span>
                 <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2024-03-17 13:24:17" itemprop="dateModified" datetime="2024-03-17T13:24:17+08:00">2024-03-17</time>
+                <time title="修改时间：2024-03-20 14:47:14" itemprop="dateModified" datetime="2024-03-20T14:47:14+08:00">2024-03-20</time>
               </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
@@ -305,7 +305,7 @@
 </ul>
 <p><code>install</code> 命令可以指定 <code>DESTINATION</code>&#x2F;<code>PERMISSIONS</code>&#x2F;<code>CONFIGURATIONS</code>&#x2F;<code>OPTIONAL</code> 等参数。在 <code>COMPONENT</code> 模式下，还可以指定 <code>EXCLUDE_FROM_ALL</code>。如果给定的安装位置是相对路径，那么实际上的安装位置是 <code>$&#123;CMAKE_INSTALL_PREFIX&#125; + $&#123;DESTINATION&#125;</code>。</p>
 <h1 id="install-TARGETS"><a href="#install-TARGETS" class="headerlink" title="install(TARGETS)"></a><code>install(TARGETS)</code></h1><blockquote>
-<p style="margin-bottom: 0px"><font size="+3">✏️</font><font size="+1"><strong> NOTE</strong></font></p>
+<p style="margin-bottom: 0px"><font size="+2">✏️</font><font size="+1"><strong> Note</strong></font></p>
 <p><code>OPTIONAL</code> 指的是如果找不到要安装的文件也不报错。<code>CONFIGURATIONS</code> 指的是这个安装对哪些配置（Debug, Release）有效，处在无效配置时这条 <code>install</code> 命令被忽略。</p>
 </blockquote>
 <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">install(TARGETS &lt;target&gt;... [EXPORT &lt;export-name&gt;]</span><br><span class="line">        [&lt;output-artifact-configuration&gt; ...]</span><br><span class="line">        [INCLUDES DESTINATION [&lt;dir&gt; ...]]</span><br><span class="line">        )</span><br></pre></td></tr></table></figure>
@@ -341,7 +341,7 @@
 <figure class="highlight cmake"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">cmake_minimum_required</span>(VERSION <span class="number">3.20</span>.<span class="number">0</span>)</span><br><span class="line"><span class="keyword">project</span>(InstallTargets CXX)</span><br><span class="line"><span class="keyword">add_subdirectory</span>(src bin)</span><br><span class="line"><span class="keyword">include</span>(GNUInstallDirs)</span><br><span class="line"><span class="keyword">install</span>(TARGETS calc</span><br><span class="line">  ARCHIVE</span><br><span class="line">  PUBLIC_HEADER</span><br><span class="line">  DESTINATION <span class="variable">$&#123;CMAKE_INSTALL_INCLUDEDIR&#125;</span>/calc</span><br><span class="line">)</span><br></pre></td></tr></table></figure>
 
 <blockquote>
-<p style="margin-bottom: 0px"><font size="+3">✏️</font><font size="+1"><strong> NOTE</strong></font></p>
+<p style="margin-bottom: 0px"><font size="+2">✏️</font><font size="+1"><strong> Note</strong></font></p>
 <p>在 Debian 12 上测试，<code>CMAKE_INSTALL_INCLUDEDIR</code> 都是 include。拼接上默认的前缀路径就是 usr&#x2F;local&#x2F;include。</p>
 </blockquote>
 <p>这个变量似乎在所有平台上其实都是一样的，但是也有一些变量在不同平台上表现不同，比如：</p>
@@ -354,7 +354,7 @@
 <p>由于版本比较新，而且没有指定静态库成品的安装方式，所以按照默认方式安装了。</p>
 <p>这种基于 target 的安装感觉比基于其他方式的安装更加灵活和方便，毕竟是把很多成品都捆绑在一起了。但是也有缺点，比如必须要给出所有的头文件，手动列举容易形成超长的列表。而且所有头文件都被安装在了同一个目录，丢失了层级关系：</p>
 <blockquote>
-<p style="margin-bottom: 0px"><font size="+3">🚨</font><font size="+1"><strong> WARNING</strong></font></p>
+<p style="margin-bottom: 0px"><font size="+2">⚠</font><font size="+1"><strong> Warning</strong></font></p>
 <p>This works well for this basic case, but there’s a slight drawback: files specified in this way don’t retain their directory structure. They will all be installed in the same destination, even if they’re nested in different base directories.</p>
 </blockquote>
 <p>在 CMake 3.23.0 之后，<code>target_sources</code> 有新选项 <code>FILE_SET</code> 可以更好解决这个问题。</p>
@@ -388,7 +388,7 @@
 <p>It’s a combination of “plain” <code>export(EXPORT)</code> and other <code>install()</code> commands.</p>
 </blockquote>
 <blockquote>
-<p style="margin-bottom: 0px"><font size="+3">✏️</font><font size="+1"><strong> NOTE</strong></font></p>
+<p style="margin-bottom: 0px"><font size="+2">✏️</font><font size="+1"><strong> Note</strong></font></p>
 <p>好像能使用的 <code>EXPORT</code> 参数的 <code>install()</code> 命令除了 <code>install(EXPORT)</code> 本身也就只有 <code>install(TARGETS)</code> 了。</p>
 </blockquote>
 <p>这个命令是用来安装 export 文件的。用 <code>export</code> 或者 <code>install(TARGETS ... EXPORT)</code> 可以生成 export 文件。这个命令不会在构建时在 binary tree 里产生文件哦！</p>
@@ -471,13 +471,13 @@
 
 <p>因为 cpack 还会生成临时的目录 <code>_CPack_Packages</code>，所以最好显式提供 -B 参数，不要生成在当前路径。就算是在 build 里面，将多个包分组在同一个文件夹里面也是更好的做法。</p>
 <blockquote>
-<p style="margin-bottom: 0px"><font size="+3">☢️</font><font size="+1"><strong> CAUTION</strong></font></p>
+<p style="margin-bottom: 0px"><font size="+2">☢️</font><font size="+1"><strong> Caution</strong></font></p>
 <p>cpack 要在 build tree 里面跑，这个和 ctest 一样。</p>
 <p>为什么要在 build tree 里跑呢？因为 build tree 中有生成的 CPackConfig.cmake。如果在别处跑，就不会自动加载这个文件，从而报错：<code>CPack Error: CPack project name not specified</code>。这样的报错很隐晦，因为 cpack 程序并不要求存在 CPackConfig.cmake 才能运行，而我们也使用了 <code>include(CPack)</code> 的写法，没有手动提供必需的变量。</p>
 <p>如果直接在 source tree 里跑，能够通过 <code>--config</code> 选项传入 build tree 中的 CPackConfig.cmake 路径，也是可以成功的。</p>
 </blockquote>
 <blockquote>
-<p style="margin-bottom: 0px"><font size="+3">✏️</font><font size="+1"><strong> NOTE</strong></font></p>
+<p style="margin-bottom: 0px"><font size="+2">✏️</font><font size="+1"><strong> Note</strong></font></p>
 <p>cpack 在 multi-config generator（至少 Ninja Multi-Config 是这样）的 build tree 中默认寻找的是 Release 版本。使用 <code>-C Debug</code> 来允许 Debug 版本的安装。</p>
 </blockquote>
 <p>感觉 CPack 很好用，在写好 install 命令的基础上几乎不必花时间去适配 CPack。主要还是 install 比较复杂。</p>
@@ -501,12 +501,12 @@
         
     <div class="post-nav">
       <div class="post-nav-item">
-    <a href="/cli/chapter08-testing/" rel="prev" title="chapter08 - testing">
-      <i class="fa fa-chevron-left"></i> chapter08 - testing
+    <a href="/cli/chapter11-a-%E5%AF%B9%E6%AF%94-export-%E5%92%8C-install-%E5%91%BD%E4%BB%A4/" rel="prev" title="chapter11.a - 对比 export 和 install 命令">
+      <i class="fa fa-chevron-left"></i> chapter11.a - 对比 export 和 install 命令
     </a></div>
       <div class="post-nav-item">
-    <a href="/cli/chapter06-linking/" rel="next" title="chapter06 - linking">
-      chapter06 - linking <i class="fa fa-chevron-right"></i>
+    <a href="/cli/chapter10-documents/" rel="next" title="chapter10 - documents">
+      chapter10 - documents <i class="fa fa-chevron-right"></i>
     </a></div>
     </div>
       </footer>
@@ -580,7 +580,7 @@
       <div class="site-state-item site-state-posts">
           <a href="/archives/">
         
-          <span class="site-state-item-count">220</span>
+          <span class="site-state-item-count">222</span>
           <span class="site-state-item-name">日志</span>
         </a>
       </div>
@@ -641,13 +641,13 @@
       <i class="fa fa-chart-area"></i>
     </span>
       <span class="post-meta-item-text">站点总字数：</span>
-    <span title="站点总字数">121k</span>
+    <span title="站点总字数">130k</span>
     <span class="post-meta-divider">|</span>
     <span class="post-meta-item-icon">
       <i class="fa fa-coffee"></i>
     </span>
       <span class="post-meta-item-text">站点阅读时长 &asymp;</span>
-    <span title="站点阅读时长">7:20</span>
+    <span title="站点阅读时长">7:52</span>
 </div>
   <div class="powered-by">由 <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Gemini</a> 强力驱动
   </div><script color="0,0,255" opacity="0.5" zIndex="-1" count="99" src="https://cdn.jsdelivr.net/npm/canvas-nest.js@1/dist/canvas-nest.js"></script>

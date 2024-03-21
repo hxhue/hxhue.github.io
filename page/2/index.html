@@ -270,7 +270,7 @@
 <p>nvcc embeds a compiled code image in the resulting executable for each specified <code>&lt;code&gt;</code> architecture, which is a true binary load image for each ‘real’ architecture (such as <code>sm_50</code>), and PTX code for the ‘virtual’ architecture (such as <code>compute_50</code>). During runtime, such embedded PTX code is dynamically compiled by the CUDA runtime system if no binary load image is found for the ‘current’ GPU.</p>
 </blockquote>
 <blockquote>
-<p style="margin-bottom: 0px"><font size="+3">✏️</font><font size="+1"><strong> NOTE</strong></font></p>
+<p style="margin-bottom: 0px"><font size="+2">✏️</font><font size="+1"><strong> Note</strong></font></p>
 <p><code>-arch</code> 选项生成二进制代码，而 <code>-code</code> 选项生成虚拟的 PTX 代码。</p>
 </blockquote>
           <!--noindex-->
@@ -330,7 +330,7 @@
                   <i class="far fa-calendar-check"></i>
                 </span>
                 <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2024-03-16 13:24:17" itemprop="dateModified" datetime="2024-03-16T13:24:17+08:00">2024-03-16</time>
+                <time title="修改时间：2024-03-21 14:41:58" itemprop="dateModified" datetime="2024-03-21T14:41:58+08:00">2024-03-21</time>
               </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
@@ -429,7 +429,7 @@
                   <i class="far fa-calendar-check"></i>
                 </span>
                 <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2024-03-15 16:41:45" itemprop="dateModified" datetime="2024-03-15T16:41:45+08:00">2024-03-15</time>
+                <time title="修改时间：2024-03-21 14:41:58" itemprop="dateModified" datetime="2024-03-21T14:41:58+08:00">2024-03-21</time>
               </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
@@ -947,7 +947,7 @@
 <figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// mutex 的类型是 int *，而且是分配在 GPU 上的</span></span><br><span class="line">__device__ <span class="type">void</span> <span class="title function_">lock</span><span class="params">( <span class="type">void</span> )</span> &#123;</span><br><span class="line">  <span class="keyword">while</span>( atomicCAS( mutex, <span class="number">0</span>, <span class="number">1</span> ) != <span class="number">0</span> );</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">__device__ <span class="type">void</span> <span class="title function_">unlock</span><span class="params">( <span class="type">void</span> )</span> &#123;</span><br><span class="line">  atomicExch( mutex, <span class="number">1</span> );</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 
 <blockquote>
-<p style="margin-bottom: 0px"><font size="+3">✏️</font><font size="+1"><strong> NOTE</strong></font></p>
+<p style="margin-bottom: 0px"><font size="+2">✏️</font><font size="+1"><strong> Note</strong></font></p>
 <p>这里的 <code>unlock</code> 方法并不是直接对 <code>*mutex</code> 赋值为 1，因为 CUDA 中原子操作和普通的内存访问经过的路径不同，所以应该在 <code>unlock</code> 的时候也统一使用原子操作。</p>
 </blockquote>
 <p>最后的 dot 核函数：</p>
@@ -1009,7 +1009,7 @@
                   <i class="far fa-calendar-check"></i>
                 </span>
                 <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2024-03-16 13:24:18" itemprop="dateModified" datetime="2024-03-16T13:24:18+08:00">2024-03-16</time>
+                <time title="修改时间：2024-03-20 14:47:15" itemprop="dateModified" datetime="2024-03-20T14:47:15+08:00">2024-03-20</time>
               </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
@@ -1111,7 +1111,7 @@
                   <i class="far fa-calendar-check"></i>
                 </span>
                 <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2024-03-16 13:24:18" itemprop="dateModified" datetime="2024-03-16T13:24:18+08:00">2024-03-16</time>
+                <time title="修改时间：2024-03-20 14:47:15" itemprop="dateModified" datetime="2024-03-20T14:47:15+08:00">2024-03-20</time>
               </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
@@ -1164,7 +1164,7 @@
 <p>If you were writing host code to be compiled with the host compiler which includes API calls, you would include either <code>cuda.h</code> or <code>cuda_runtime_api.h</code>. If you needed other CUDA language built-ins, like types, and were using the runtime API and compiling with the host compiler, you would include <code>cuda_runtime.h</code>. If you are writing code which will be compiled using nvcc, it is all irrelevant, because nvcc takes care of inclusion of all the required headers automatically without programmer intervention.</p>
 </blockquote>
 <blockquote>
-<p style="margin-bottom: 0px"><font size="+3">🚨</font><font size="+1"><strong> WARNING</strong></font></p>
+<p style="margin-bottom: 0px"><font size="+2">⚠</font><font size="+1"><strong> Warning</strong></font></p>
 <p>书中没讲如何编译，需要预备知识。至少要会像 gcc 一样用 nvcc。</p>
 </blockquote>
           <!--noindex-->
@@ -1192,7 +1192,7 @@
 
   
   <nav class="pagination">
-    <a class="extend prev" rel="prev" href="/"><i class="fa fa-angle-left" aria-label="上一页"></i></a><a class="page-number" href="/">1</a><span class="page-number current">2</span><a class="page-number" href="/page/3/">3</a><span class="space">&hellip;</span><a class="page-number" href="/page/22/">22</a><a class="extend next" rel="next" href="/page/3/"><i class="fa fa-angle-right" aria-label="下一页"></i></a>
+    <a class="extend prev" rel="prev" href="/"><i class="fa fa-angle-left" aria-label="上一页"></i></a><a class="page-number" href="/">1</a><span class="page-number current">2</span><a class="page-number" href="/page/3/">3</a><span class="space">&hellip;</span><a class="page-number" href="/page/23/">23</a><a class="extend next" rel="next" href="/page/3/"><i class="fa fa-angle-right" aria-label="下一页"></i></a>
   </nav>
 
 
@@ -1258,7 +1258,7 @@
       <div class="site-state-item site-state-posts">
           <a href="/archives/">
         
-          <span class="site-state-item-count">220</span>
+          <span class="site-state-item-count">222</span>
           <span class="site-state-item-name">日志</span>
         </a>
       </div>
@@ -1319,13 +1319,13 @@
       <i class="fa fa-chart-area"></i>
     </span>
       <span class="post-meta-item-text">站点总字数：</span>
-    <span title="站点总字数">121k</span>
+    <span title="站点总字数">130k</span>
     <span class="post-meta-divider">|</span>
     <span class="post-meta-item-icon">
       <i class="fa fa-coffee"></i>
     </span>
       <span class="post-meta-item-text">站点阅读时长 &asymp;</span>
-    <span title="站点阅读时长">7:20</span>
+    <span title="站点阅读时长">7:52</span>
 </div>
   <div class="powered-by">由 <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Gemini</a> 强力驱动
   </div><script color="0,0,255" opacity="0.5" zIndex="-1" count="99" src="https://cdn.jsdelivr.net/npm/canvas-nest.js@1/dist/canvas-nest.js"></script>
