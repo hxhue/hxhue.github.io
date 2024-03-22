@@ -10,12 +10,12 @@
   <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
   <link rel="mask-icon" href="/images/logo.svg" color="#222">
 
-<link rel="stylesheet" href="/css/main.css">
+<link rel="stylesheet" href="css/main.css">
 
 
-<link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
-  <link rel="stylesheet" href="/lib/pace/pace-theme-minimal.min.css">
-  <script src="/lib/pace/pace.min.js"></script>
+<link rel="stylesheet" href="lib/font-awesome/css/all.min.css">
+  <link rel="stylesheet" href="lib/pace/pace-theme-minimal.min.css">
+  <script src="lib/pace/pace.min.js"></script>
 
 <script id="hexo-configurations">
     var NexT = window.NexT || {};
@@ -74,7 +74,7 @@
   </style>
 </noscript>
 
-<!-- hexo injector head_end start --><style>a { word-break: break-all; }</style><!-- hexo injector head_end end --><link rel="alternate" href="/atom.xml" title="Hxhue's Blog" type="application/atom+xml">
+<!-- hexo injector head_end start --><style>a { word-break: break-all; }</style><!-- hexo injector head_end end --><link rel="alternate" href="atom.xml" title="Hxhue's Blog" type="application/atom+xml">
 </head>
 
 <body itemscope itemtype="http://schema.org/WebPage">
@@ -114,7 +114,7 @@
   <ul id="menu" class="main-menu menu">
         <li class="menu-item menu-item-home">
 
-    <a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a>
+    <a href="index.html" rel="section"><i class="fa fa-home fa-fw"></i>首页</a>
 
   </li>
         <li class="menu-item menu-item-archives">
@@ -199,7 +199,7 @@
     <link itemprop="mainEntityOfPage" href="https://hxhue.github.io/programming/cppcon-2023-c-memory-model-from-c-11-to-c-23-alex-dathskovsky/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="image" content="images/avatar.gif">
       <meta itemprop="name" content="Hxhue">
       <meta itemprop="description" content="">
     </span>
@@ -210,7 +210,7 @@
       <header class="post-header">
         <h2 class="post-title" itemprop="name headline">
           
-            <a href="/programming/cppcon-2023-c-memory-model-from-c-11-to-c-23-alex-dathskovsky/" class="post-title-link" itemprop="url">CppCon 2023 C++ Memory Model - from C++11 to C++23 - Alex Dathskovsky</a>
+            <a href="programming/cppcon-2023-c-memory-model-from-c-11-to-c-23-alex-dathskovsky/" class="post-title-link" itemprop="url">CppCon 2023 C++ Memory Model - from C++11 to C++23 - Alex Dathskovsky</a>
         </h2>
 
         <div class="post-meta">
@@ -229,7 +229,7 @@
               </span>
               <span class="post-meta-item-text">分类于</span>
                 <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/programming/" itemprop="url" rel="index"><span itemprop="name">Programming</span></a>
+                  <a href="categories/programming/" itemprop="url" rel="index"><span itemprop="name">Programming</span></a>
                 </span>
             </span>
 
@@ -260,21 +260,21 @@
       
           <p>视频链接 <a target="_blank" rel="noopener" href="https://www.youtube.com/watch?v=SVEYNEWZLo4">https://www.youtube.com/watch?v=SVEYNEWZLo4</a></p>
 <h1 id="不要用-Volatile-来同步"><a href="#不要用-Volatile-来同步" class="headerlink" title="不要用 Volatile 来同步"></a>不要用 Volatile 来同步</h1><blockquote>
-<p style="margin-bottom: 0px"><font size="+2">✏️</font><font size="+1"><strong> Note</strong></font></p>
+<p style="margin-bottom: 0px"><font size="+1">✏️<strong> Note</strong></font></p>
 <p>顺带一提：C++20 中，有不少和 volatile 相关的操作都已经被标记为过时。详见 <a target="_blank" rel="noopener" href="https://en.cppreference.com/w/cpp/language/cv">https://en.cppreference.com/w/cpp/language/cv</a></p>
 </blockquote>
-<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;tuple&gt;</span></span></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="type">int</span> <span class="title">main</span><span class="params">()</span> </span>&#123;</span><br><span class="line">  <span class="keyword">volatile</span> <span class="type">int</span> x = <span class="number">0</span>;</span><br><span class="line">  <span class="comment">// C++20</span></span><br><span class="line">  <span class="comment">// 1.1 函数参数不能用 volatile 类型 ❌</span></span><br><span class="line">  <span class="keyword">auto</span> f1 = [](<span class="keyword">volatile</span> <span class="type">int</span>) &#123;&#125;;</span><br><span class="line">  <span class="comment">// 1.2 函数返回值不能 volatile 类型 ❌</span></span><br><span class="line">  <span class="keyword">auto</span> f2 = [](/programming/cppcon-2023-c-memory-model-from-c-11-to-c-23-alex-dathskovsky/) -&gt; <span class="keyword">volatile</span> <span class="type">int</span> &#123; <span class="keyword">return</span> <span class="number">0</span>; &#125;;</span><br><span class="line">  <span class="type">int</span> y = (x = <span class="number">6</span>);</span><br><span class="line">  <span class="comment">// 2 自增、自减运算符不能在 volatile 变量上操作 ❌</span></span><br><span class="line">  x++;</span><br><span class="line">  <span class="comment">// 3. 结构化绑定不能用 volatile ❌</span></span><br><span class="line">  <span class="keyword">auto</span> <span class="keyword">volatile</span> [a, b] = std::tuple&#123;<span class="number">1</span>, <span class="number">3</span>&#125;;</span><br><span class="line">  <span class="comment">// 4. 不能基于 volatile 变量连续赋值，除非是在不评估的环境中</span></span><br><span class="line">  <span class="comment">// 错误 ❌</span></span><br><span class="line">  <span class="type">int</span> z = (x = <span class="number">5</span>);</span><br><span class="line">  <span class="comment">// 会有 -Wunevaluated-expression 警告，正确但是不推荐</span></span><br><span class="line">  <span class="keyword">using</span> T = <span class="keyword">decltype</span>((x = <span class="number">5</span>));</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;tuple&gt;</span></span></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="type">int</span> <span class="title">main</span><span class="params">()</span> </span>&#123;</span><br><span class="line">  <span class="keyword">volatile</span> <span class="type">int</span> x = <span class="number">0</span>;</span><br><span class="line">  <span class="comment">// C++20</span></span><br><span class="line">  <span class="comment">// 1.1 函数参数不能用 volatile 类型 ❌</span></span><br><span class="line">  <span class="keyword">auto</span> f1 = [](<span class="keyword">volatile</span> <span class="type">int</span>) &#123;&#125;;</span><br><span class="line">  <span class="comment">// 1.2 函数返回值不能 volatile 类型 ❌</span></span><br><span class="line">  <span class="keyword">auto</span> f2 = []() -&gt; <span class="keyword">volatile</span> <span class="type">int</span> &#123; <span class="keyword">return</span> <span class="number">0</span>; &#125;;</span><br><span class="line">  <span class="type">int</span> y = (x = <span class="number">6</span>);</span><br><span class="line">  <span class="comment">// 2 自增、自减运算符不能在 volatile 变量上操作 ❌</span></span><br><span class="line">  x++;</span><br><span class="line">  <span class="comment">// 3. 结构化绑定不能用 volatile ❌</span></span><br><span class="line">  <span class="keyword">auto</span> <span class="keyword">volatile</span> [a, b] = std::tuple&#123;<span class="number">1</span>, <span class="number">3</span>&#125;;</span><br><span class="line">  <span class="comment">// 4. 不能基于 volatile 变量连续赋值，除非是在不评估的环境中</span></span><br><span class="line">  <span class="comment">// 错误 ❌</span></span><br><span class="line">  <span class="type">int</span> z = (x = <span class="number">5</span>);</span><br><span class="line">  <span class="comment">// 会有 -Wunevaluated-expression 警告，正确但是不推荐</span></span><br><span class="line">  <span class="keyword">using</span> T = <span class="keyword">decltype</span>((x = <span class="number">5</span>));</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 
 <p>可以用来同步的机制：</p>
 <ol>
 <li>汇编级别的内存屏障指令（见下方图片）</li>
 <li>原子变量和锁</li>
 </ol>
-<p><img src="/programming/cppcon-2023-c-memory-model-from-c-11-to-c-23-alex-dathskovsky/../../../../../assets/C++%20Memory%20Model%20-%20from%20C++11%20to%20C++23%20-%20Alex%20Dathskovsky%20-%20CppCon%202023-20240322102721121.jpg"></p>
+<p><img src="../../../../assets/C++%20Memory%20Model%20-%20from%20C++11%20to%20C++23%20-%20Alex%20Dathskovsky%20-%20CppCon%202023-20240322102721121.jpg"></p>
 <h1 id="Memory-Barriers"><a href="#Memory-Barriers" class="headerlink" title="Memory Barriers"></a>Memory Barriers</h1>
           <!--noindex-->
             <div class="post-button">
-              <a class="btn" href="/programming/cppcon-2023-c-memory-model-from-c-11-to-c-23-alex-dathskovsky/#more" rel="contents">
+              <a class="btn" href="programming/cppcon-2023-c-memory-model-from-c-11-to-c-23-alex-dathskovsky/#more" rel="contents">
                 阅读全文 &raquo;
               </a>
             </div>
@@ -301,7 +301,7 @@
     <link itemprop="mainEntityOfPage" href="https://hxhue.github.io/cli/windows-%E4%B8%8A-docker-%E5%92%8C-hyper-v-%E7%9A%84%E5%9D%91/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="image" content="images/avatar.gif">
       <meta itemprop="name" content="Hxhue">
       <meta itemprop="description" content="">
     </span>
@@ -312,7 +312,7 @@
       <header class="post-header">
         <h2 class="post-title" itemprop="name headline">
           
-            <a href="/cli/windows-%E4%B8%8A-docker-%E5%92%8C-hyper-v-%E7%9A%84%E5%9D%91/" class="post-title-link" itemprop="url">Windows 上 Docker 和 Hyper-V 的坑</a>
+            <a href="cli/windows-%E4%B8%8A-docker-%E5%92%8C-hyper-v-%E7%9A%84%E5%9D%91/" class="post-title-link" itemprop="url">Windows 上 Docker 和 Hyper-V 的坑</a>
         </h2>
 
         <div class="post-meta">
@@ -331,7 +331,7 @@
               </span>
               <span class="post-meta-item-text">分类于</span>
                 <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/cli/" itemprop="url" rel="index"><span itemprop="name">CLI</span></a>
+                  <a href="categories/cli/" itemprop="url" rel="index"><span itemprop="name">CLI</span></a>
                 </span>
             </span>
 
@@ -387,7 +387,7 @@
     <link itemprop="mainEntityOfPage" href="https://hxhue.github.io/cli/docker-attach-%E4%B9%8B%E5%90%8E%E4%B8%8D%E8%83%BD%E9%80%80%E5%87%BA/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="image" content="images/avatar.gif">
       <meta itemprop="name" content="Hxhue">
       <meta itemprop="description" content="">
     </span>
@@ -398,7 +398,7 @@
       <header class="post-header">
         <h2 class="post-title" itemprop="name headline">
           
-            <a href="/cli/docker-attach-%E4%B9%8B%E5%90%8E%E4%B8%8D%E8%83%BD%E9%80%80%E5%87%BA/" class="post-title-link" itemprop="url">Docker attach 之后不能退出</a>
+            <a href="cli/docker-attach-%E4%B9%8B%E5%90%8E%E4%B8%8D%E8%83%BD%E9%80%80%E5%87%BA/" class="post-title-link" itemprop="url">Docker attach 之后不能退出</a>
         </h2>
 
         <div class="post-meta">
@@ -423,7 +423,7 @@
               </span>
               <span class="post-meta-item-text">分类于</span>
                 <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/cli/" itemprop="url" rel="index"><span itemprop="name">CLI</span></a>
+                  <a href="categories/cli/" itemprop="url" rel="index"><span itemprop="name">CLI</span></a>
                 </span>
             </span>
 
@@ -454,7 +454,7 @@
       
           <p>Docker 不能用 <kbd>CTRL</kbd> + <kbd>p</kbd>，<kbd>CTRL</kbd> + <kbd>q</kbd>  退出的解决方案：登录后先用 <code>tty</code> 看自己的终端。然后用另外一个连接 <code>ps -af</code> 看想要终止的 <code>docker</code> 命令的 pid 是多少，然后用 <code>kill -9</code> 强杀。因为杀的是客户端而不是守护进程，所以不需要担心其他正在运行的容器受到影响。</p>
 <blockquote>
-<p style="margin-bottom: 0px"><font size="+2">⚠</font><font size="+1"><strong> Warning</strong></font></p>
+<p style="margin-bottom: 0px"><font size="+1">⚠<strong> Warning</strong></font></p>
 <p>不能用 <code>kill</code>（不带参数），因为 <code>kill</code> 会让 docker 连接优雅退出，所以容器也会被关闭！</p>
 </blockquote>
 <p>这样能更快找到 docker 命令：</p>
@@ -481,7 +481,7 @@
     <link itemprop="mainEntityOfPage" href="https://hxhue.github.io/cli/docker-%E6%9F%A5%E8%AF%A2%E5%92%8C%E7%AE%A1%E7%90%86/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="image" content="images/avatar.gif">
       <meta itemprop="name" content="Hxhue">
       <meta itemprop="description" content="">
     </span>
@@ -492,7 +492,7 @@
       <header class="post-header">
         <h2 class="post-title" itemprop="name headline">
           
-            <a href="/cli/docker-%E6%9F%A5%E8%AF%A2%E5%92%8C%E7%AE%A1%E7%90%86/" class="post-title-link" itemprop="url">Docker 查询和管理</a>
+            <a href="cli/docker-%E6%9F%A5%E8%AF%A2%E5%92%8C%E7%AE%A1%E7%90%86/" class="post-title-link" itemprop="url">Docker 查询和管理</a>
         </h2>
 
         <div class="post-meta">
@@ -517,7 +517,7 @@
               </span>
               <span class="post-meta-item-text">分类于</span>
                 <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/cli/" itemprop="url" rel="index"><span itemprop="name">CLI</span></a>
+                  <a href="categories/cli/" itemprop="url" rel="index"><span itemprop="name">CLI</span></a>
                 </span>
             </span>
 
@@ -549,7 +549,7 @@
           <h1 id="查看所有容器的资源占用"><a href="#查看所有容器的资源占用" class="headerlink" title="查看所有容器的资源占用"></a>查看所有容器的资源占用</h1><p><code>docker stats</code> 可以实时刷新所有容器的占用情况。用 <code>docker stats --no-stream</code> 只看最近一次，而不像 <code>top</code> 一样刷新。不知道哪个容器占用多的时候可以使用这个命令。</p>
 <h1 id="找到进程属于哪一个容器"><a href="#找到进程属于哪一个容器" class="headerlink" title="找到进程属于哪一个容器"></a>找到进程属于哪一个容器</h1><p>一般不同的人用不同的容器，所以找到容器也就找到了程序的启动者。这种是已经从 htop 或者 top 知道哪一个进程消耗资源多，却不知道其所属容器。</p>
 <p>用 <code>pstree -sg</code> 找到进程的父进程。然后在运行的容器中查找对应的进程号。</p>
-<p><img src="/cli/docker-%E6%9F%A5%E8%AF%A2%E5%92%8C%E7%AE%A1%E7%90%86/../../../../assets/Docker%20%E6%9F%A5%E8%AF%A2%E5%92%8C%E7%AE%A1%E7%90%86-20240316130850486.png"></p>
+<p><img src="../../../assets/Docker%20%E6%9F%A5%E8%AF%A2%E5%92%8C%E7%AE%A1%E7%90%86-20240316130850486.png"></p>
 
       
     </div>
@@ -572,7 +572,7 @@
     <link itemprop="mainEntityOfPage" href="https://hxhue.github.io/programming/%E4%B8%8D%E5%90%8C%E7%BC%96%E8%AF%91%E5%99%A8%E5%A6%82%E4%BD%95%E5%A4%84%E7%90%86-c-%E8%AF%AD%E8%A8%80%E5%87%BD%E6%95%B0%E5%90%8D%EF%BC%9F/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="image" content="images/avatar.gif">
       <meta itemprop="name" content="Hxhue">
       <meta itemprop="description" content="">
     </span>
@@ -583,7 +583,7 @@
       <header class="post-header">
         <h2 class="post-title" itemprop="name headline">
           
-            <a href="/programming/%E4%B8%8D%E5%90%8C%E7%BC%96%E8%AF%91%E5%99%A8%E5%A6%82%E4%BD%95%E5%A4%84%E7%90%86-c-%E8%AF%AD%E8%A8%80%E5%87%BD%E6%95%B0%E5%90%8D%EF%BC%9F/" class="post-title-link" itemprop="url">不同编译器如何处理 C 语言函数名？</a>
+            <a href="programming/%E4%B8%8D%E5%90%8C%E7%BC%96%E8%AF%91%E5%99%A8%E5%A6%82%E4%BD%95%E5%A4%84%E7%90%86-c-%E8%AF%AD%E8%A8%80%E5%87%BD%E6%95%B0%E5%90%8D%EF%BC%9F/" class="post-title-link" itemprop="url">不同编译器如何处理 C 语言函数名？</a>
         </h2>
 
         <div class="post-meta">
@@ -608,7 +608,7 @@
               </span>
               <span class="post-meta-item-text">分类于</span>
                 <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/programming/" itemprop="url" rel="index"><span itemprop="name">Programming</span></a>
+                  <a href="categories/programming/" itemprop="url" rel="index"><span itemprop="name">Programming</span></a>
                 </span>
             </span>
 
@@ -668,7 +668,7 @@
     <link itemprop="mainEntityOfPage" href="https://hxhue.github.io/systems/%E5%88%9B%E5%BB%BA%E5%86%85%E7%BD%91-overleaf/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="image" content="images/avatar.gif">
       <meta itemprop="name" content="Hxhue">
       <meta itemprop="description" content="">
     </span>
@@ -679,7 +679,7 @@
       <header class="post-header">
         <h2 class="post-title" itemprop="name headline">
           
-            <a href="/systems/%E5%88%9B%E5%BB%BA%E5%86%85%E7%BD%91-overleaf/" class="post-title-link" itemprop="url">创建内网 Overleaf</a>
+            <a href="systems/%E5%88%9B%E5%BB%BA%E5%86%85%E7%BD%91-overleaf/" class="post-title-link" itemprop="url">创建内网 Overleaf</a>
         </h2>
 
         <div class="post-meta">
@@ -704,7 +704,7 @@
               </span>
               <span class="post-meta-item-text">分类于</span>
                 <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/systems/" itemprop="url" rel="index"><span itemprop="name">Systems</span></a>
+                  <a href="categories/systems/" itemprop="url" rel="index"><span itemprop="name">Systems</span></a>
                 </span>
             </span>
 
@@ -741,7 +741,7 @@
 <h1 id="方案-2：Overleaf-toolkit"><a href="#方案-2：Overleaf-toolkit" class="headerlink" title="方案 2：Overleaf&#x2F;toolkit"></a>方案 2：Overleaf&#x2F;toolkit</h1><p><a target="_blank" rel="noopener" href="https://github.com/overleaf/toolkit/blob/master/doc/quick-start-guide.md">https://github.com/overleaf/toolkit/blob/master/doc/quick-start-guide.md</a></p>
           <!--noindex-->
             <div class="post-button">
-              <a class="btn" href="/systems/%E5%88%9B%E5%BB%BA%E5%86%85%E7%BD%91-overleaf/#more" rel="contents">
+              <a class="btn" href="systems/%E5%88%9B%E5%BB%BA%E5%86%85%E7%BD%91-overleaf/#more" rel="contents">
                 阅读全文 &raquo;
               </a>
             </div>
@@ -768,7 +768,7 @@
     <link itemprop="mainEntityOfPage" href="https://hxhue.github.io/latex/%E8%AE%B0%E5%BD%95%E4%B8%80%E6%AC%A1-latex-%E4%B8%8D%E8%83%BD%E7%BC%96%E8%AF%91%E7%9A%84%E8%A7%A3%E5%86%B3%E8%BF%87%E7%A8%8B/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="image" content="images/avatar.gif">
       <meta itemprop="name" content="Hxhue">
       <meta itemprop="description" content="">
     </span>
@@ -779,7 +779,7 @@
       <header class="post-header">
         <h2 class="post-title" itemprop="name headline">
           
-            <a href="/latex/%E8%AE%B0%E5%BD%95%E4%B8%80%E6%AC%A1-latex-%E4%B8%8D%E8%83%BD%E7%BC%96%E8%AF%91%E7%9A%84%E8%A7%A3%E5%86%B3%E8%BF%87%E7%A8%8B/" class="post-title-link" itemprop="url">记录一次 LaTeX 不能编译的解决过程</a>
+            <a href="latex/%E8%AE%B0%E5%BD%95%E4%B8%80%E6%AC%A1-latex-%E4%B8%8D%E8%83%BD%E7%BC%96%E8%AF%91%E7%9A%84%E8%A7%A3%E5%86%B3%E8%BF%87%E7%A8%8B/" class="post-title-link" itemprop="url">记录一次 LaTeX 不能编译的解决过程</a>
         </h2>
 
         <div class="post-meta">
@@ -804,7 +804,7 @@
               </span>
               <span class="post-meta-item-text">分类于</span>
                 <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/latex/" itemprop="url" rel="index"><span itemprop="name">LaTeX</span></a>
+                  <a href="categories/latex/" itemprop="url" rel="index"><span itemprop="name">LaTeX</span></a>
                 </span>
             </span>
 
@@ -846,7 +846,7 @@
 <p><a target="_blank" rel="noopener" href="https://texdoc.org/serve/fontspec/0">https://texdoc.org/serve/fontspec/0</a></p>
           <!--noindex-->
             <div class="post-button">
-              <a class="btn" href="/latex/%E8%AE%B0%E5%BD%95%E4%B8%80%E6%AC%A1-latex-%E4%B8%8D%E8%83%BD%E7%BC%96%E8%AF%91%E7%9A%84%E8%A7%A3%E5%86%B3%E8%BF%87%E7%A8%8B/#more" rel="contents">
+              <a class="btn" href="latex/%E8%AE%B0%E5%BD%95%E4%B8%80%E6%AC%A1-latex-%E4%B8%8D%E8%83%BD%E7%BC%96%E8%AF%91%E7%9A%84%E8%A7%A3%E5%86%B3%E8%BF%87%E7%A8%8B/#more" rel="contents">
                 阅读全文 &raquo;
               </a>
             </div>
@@ -873,7 +873,7 @@
     <link itemprop="mainEntityOfPage" href="https://hxhue.github.io/programming/%E8%87%AA%E5%AE%9A%E4%B9%89-ostream/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="image" content="images/avatar.gif">
       <meta itemprop="name" content="Hxhue">
       <meta itemprop="description" content="">
     </span>
@@ -884,7 +884,7 @@
       <header class="post-header">
         <h2 class="post-title" itemprop="name headline">
           
-            <a href="/programming/%E8%87%AA%E5%AE%9A%E4%B9%89-ostream/" class="post-title-link" itemprop="url">自定义 ostream</a>
+            <a href="programming/%E8%87%AA%E5%AE%9A%E4%B9%89-ostream/" class="post-title-link" itemprop="url">自定义 ostream</a>
         </h2>
 
         <div class="post-meta">
@@ -909,7 +909,7 @@
               </span>
               <span class="post-meta-item-text">分类于</span>
                 <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/programming/" itemprop="url" rel="index"><span itemprop="name">Programming</span></a>
+                  <a href="categories/programming/" itemprop="url" rel="index"><span itemprop="name">Programming</span></a>
                 </span>
             </span>
 
@@ -964,7 +964,7 @@
     <link itemprop="mainEntityOfPage" href="https://hxhue.github.io/programming/%E6%9C%89%E7%AC%A6%E5%8F%B7%E6%95%B0%E7%AE%97%E6%9C%AF%E6%BA%A2%E5%87%BA%E6%98%AF%E5%AE%9E%E7%8E%B0%E5%AE%9A%E4%B9%89/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="image" content="images/avatar.gif">
       <meta itemprop="name" content="Hxhue">
       <meta itemprop="description" content="">
     </span>
@@ -975,7 +975,7 @@
       <header class="post-header">
         <h2 class="post-title" itemprop="name headline">
           
-            <a href="/programming/%E6%9C%89%E7%AC%A6%E5%8F%B7%E6%95%B0%E7%AE%97%E6%9C%AF%E6%BA%A2%E5%87%BA%E6%98%AF%E5%AE%9E%E7%8E%B0%E5%AE%9A%E4%B9%89/" class="post-title-link" itemprop="url">有符号数算术溢出是实现定义</a>
+            <a href="programming/%E6%9C%89%E7%AC%A6%E5%8F%B7%E6%95%B0%E7%AE%97%E6%9C%AF%E6%BA%A2%E5%87%BA%E6%98%AF%E5%AE%9E%E7%8E%B0%E5%AE%9A%E4%B9%89/" class="post-title-link" itemprop="url">有符号数算术溢出是实现定义</a>
         </h2>
 
         <div class="post-meta">
@@ -1000,7 +1000,7 @@
               </span>
               <span class="post-meta-item-text">分类于</span>
                 <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/programming/" itemprop="url" rel="index"><span itemprop="name">Programming</span></a>
+                  <a href="categories/programming/" itemprop="url" rel="index"><span itemprop="name">Programming</span></a>
                 </span>
             </span>
 
@@ -1042,7 +1042,7 @@
 <h1 id="溢出的定义情况"><a href="#溢出的定义情况" class="headerlink" title="溢出的定义情况"></a>溢出的定义情况</h1><p>算术运算溢出只有在 unsigned 类型上有定义，在浮点数上无定义，在 signed 整数上是 implementation-defined（C++17）或模除定义（C++20，同 unsigned）。</p>
           <!--noindex-->
             <div class="post-button">
-              <a class="btn" href="/programming/%E6%9C%89%E7%AC%A6%E5%8F%B7%E6%95%B0%E7%AE%97%E6%9C%AF%E6%BA%A2%E5%87%BA%E6%98%AF%E5%AE%9E%E7%8E%B0%E5%AE%9A%E4%B9%89/#more" rel="contents">
+              <a class="btn" href="programming/%E6%9C%89%E7%AC%A6%E5%8F%B7%E6%95%B0%E7%AE%97%E6%9C%AF%E6%BA%A2%E5%87%BA%E6%98%AF%E5%AE%9E%E7%8E%B0%E5%AE%9A%E4%B9%89/#more" rel="contents">
                 阅读全文 &raquo;
               </a>
             </div>
@@ -1069,7 +1069,7 @@
     <link itemprop="mainEntityOfPage" href="https://hxhue.github.io/programming/cppcon-2018-105-stl-algorithms-in-less-than-an-hour/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="image" content="images/avatar.gif">
       <meta itemprop="name" content="Hxhue">
       <meta itemprop="description" content="">
     </span>
@@ -1080,7 +1080,7 @@
       <header class="post-header">
         <h2 class="post-title" itemprop="name headline">
           
-            <a href="/programming/cppcon-2018-105-stl-algorithms-in-less-than-an-hour/" class="post-title-link" itemprop="url">(CppCon 2018) 105 STL Algorithms in Less Than an Hour</a>
+            <a href="programming/cppcon-2018-105-stl-algorithms-in-less-than-an-hour/" class="post-title-link" itemprop="url">(CppCon 2018) 105 STL Algorithms in Less Than an Hour</a>
         </h2>
 
         <div class="post-meta">
@@ -1105,7 +1105,7 @@
               </span>
               <span class="post-meta-item-text">分类于</span>
                 <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/programming/" itemprop="url" rel="index"><span itemprop="name">Programming</span></a>
+                  <a href="categories/programming/" itemprop="url" rel="index"><span itemprop="name">Programming</span></a>
                 </span>
             </span>
 
@@ -1141,9 +1141,9 @@
 <p><a target="_blank" rel="noopener" href="https://www.youtube.com/watch?v=2olsGf6JIkU">https://www.youtube.com/watch?v=2olsGf6JIkU</a></p>
 <h1 id="1-Not-Classified-2"><a href="#1-Not-Classified-2" class="headerlink" title="1 Not Classified (2)"></a>1 Not Classified (2)</h1><pre><code>1. transform
 </code></pre>
-<p><img src="/programming/cppcon-2018-105-stl-algorithms-in-less-than-an-hour/../../../../../assets/84fcaeff404297d9e7af540b6eb1f8fc.jpeg"></p>
+<p><img src="../../../../assets/84fcaeff404297d9e7af540b6eb1f8fc.jpeg"></p>
 <p>下面这种重载有点像先 zip 再 transform，但是没有 zip 灵活。</p>
-<p><img src="/programming/cppcon-2018-105-stl-algorithms-in-less-than-an-hour/../../../../../assets/0d98e310a23368a81ad03e73a79d11a9.jpeg"></p>
+<p><img src="../../../../assets/0d98e310a23368a81ad03e73a79d11a9.jpeg"></p>
 <pre><code>2. for_each 不关心选用的函数的返回值类型，主要配合有 side effects 的函数使用。
    在现在有 for(*:*) 语法的情况下，for_each 也并不是完全没用。
     1. 在需要按照一定顺序遍历，比如倒序遍历的时候，可以用 rbegin/rend/for_each 来完成。
@@ -1151,7 +1151,7 @@
 </code></pre>
           <!--noindex-->
             <div class="post-button">
-              <a class="btn" href="/programming/cppcon-2018-105-stl-algorithms-in-less-than-an-hour/#more" rel="contents">
+              <a class="btn" href="programming/cppcon-2018-105-stl-algorithms-in-less-than-an-hour/#more" rel="contents">
                 阅读全文 &raquo;
               </a>
             </div>
@@ -1174,7 +1174,7 @@
 
   
   <nav class="pagination">
-    <span class="page-number current">1</span><a class="page-number" href="/page/2/">2</a><span class="space">&hellip;</span><a class="page-number" href="/page/23/">23</a><a class="extend next" rel="next" href="/page/2/"><i class="fa fa-angle-right" aria-label="下一页"></i></a>
+    <span class="page-number current">1</span><a class="page-number" href="page/2/">2</a><span class="space">&hellip;</span><a class="page-number" href="page/23/">23</a><a class="extend next" rel="next" href="page/2/"><i class="fa fa-angle-right" aria-label="下一页"></i></a>
   </nav>
 
 
@@ -1326,31 +1326,31 @@
   </div>
 
   
-  <script src="/lib/anime.min.js"></script>
+  <script src="lib/anime.min.js"></script>
   <script src="//cdn.jsdelivr.net/npm/pangu@4/dist/browser/pangu.min.js"></script>
-  <script src="/lib/velocity/velocity.min.js"></script>
-  <script src="/lib/velocity/velocity.ui.min.js"></script>
+  <script src="lib/velocity/velocity.min.js"></script>
+  <script src="lib/velocity/velocity.ui.min.js"></script>
 
-<script src="/js/utils.js"></script>
+<script src="js/utils.js"></script>
 
-<script src="/js/motion.js"></script>
-
-
-<script src="/js/schemes/pisces.js"></script>
+<script src="js/motion.js"></script>
 
 
-<script src="/js/next-boot.js"></script>
+<script src="js/schemes/pisces.js"></script>
 
 
-
-
-  
+<script src="js/next-boot.js"></script>
 
 
 
 
   
-<script src="/js/local-search.js"></script>
+
+
+
+
+  
+<script src="js/local-search.js"></script>
 
 
 
