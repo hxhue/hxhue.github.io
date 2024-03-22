@@ -9,6 +9,7 @@
   <link rel="icon" type="image/png" sizes="32x32" href="../../images/favicon-32x32-next.png">
   <link rel="icon" type="image/png" sizes="16x16" href="../../images/favicon-16x16-next.png">
   <link rel="mask-icon" href="../../images/logo.svg" color="#222">
+  <meta name="google-site-verification" content="hwfud_ndcnJHe2Jz7ClToP1nuUA3k7FqZv-0VpFAHjg">
 
 <link rel="stylesheet" href="../../css/main.css">
 
@@ -142,6 +143,11 @@
     <a href="../../friends/" rel="section"><i class="fa fa-heart fa-fw"></i>友链</a>
 
   </li>
+        <li class="menu-item menu-item-sitemap">
+
+    <a href="../../sitemap.xml" rel="section"><i class="sitemap fa-fw"></i>站点地图</a>
+
+  </li>
       <li class="menu-item menu-item-search">
         <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>搜索
         </a>
@@ -196,7 +202,7 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="https://hxhue.github.io/cli/chapter11-installing-and-packaging/">
+    <link itemprop="mainEntityOfPage" href="https://hxhue.github.io/cli/chapter11-a-%E5%AF%B9%E6%AF%94-export-%E5%92%8C-install-%E5%91%BD%E4%BB%A4/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="image" content="../../images/avatar.gif">
@@ -210,7 +216,7 @@
       <header class="post-header">
         <h2 class="post-title" itemprop="name headline">
           
-            <a href="../../cli/chapter11-installing-and-packaging/" class="post-title-link" itemprop="url">chapter11 - installing and packaging</a>
+            <a href="../../cli/chapter11-a-%E5%AF%B9%E6%AF%94-export-%E5%92%8C-install-%E5%91%BD%E4%BB%A4/" class="post-title-link" itemprop="url">chapter11.a - 对比 export 和 install 命令</a>
         </h2>
 
         <div class="post-meta">
@@ -227,7 +233,7 @@
                   <i class="far fa-calendar-check"></i>
                 </span>
                 <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2024-03-21 16:27:13" itemprop="dateModified" datetime="2024-03-21T16:27:13+08:00">2024-03-21</time>
+                <time title="修改时间：2024-03-15 23:34:53" itemprop="dateModified" datetime="2024-03-15T23:34:53+08:00">2024-03-15</time>
               </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
@@ -245,14 +251,14 @@
                 <i class="far fa-file-word"></i>
               </span>
                 <span class="post-meta-item-text">本文字数：</span>
-              <span>4.4k</span>
+              <span>279</span>
             </span>
             <span class="post-meta-item" title="阅读时长">
               <span class="post-meta-item-icon">
                 <i class="far fa-clock"></i>
               </span>
                 <span class="post-meta-item-text">阅读时长 &asymp;</span>
-              <span>16 分钟</span>
+              <span>1 分钟</span>
             </span>
 
         </div>
@@ -264,27 +270,15 @@
     <div class="post-body" itemprop="articleBody">
 
       
-          <h1 id="Exporting-without-installation"><a href="#Exporting-without-installation" class="headerlink" title="Exporting without installation"></a>Exporting without installation</h1><p>使用 <code>export</code> 命令可以创建导出文件，然后其他工程只要 include 这个导出文件就能使用当前这个包中的 target，而不需要先将这个包用 <code>install</code> 安装在系统里。</p>
-<figure class="highlight cmake"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">export</span>(TARGETS [target1 [target2 [...]]]</span><br><span class="line">      [NAMESPACE &lt;namespace&gt;] [APPEND] <span class="keyword">FILE</span> &lt;path&gt;</span><br><span class="line">      [EXPORT_LINK_INTERFACE_LIBRARIES]</span><br></pre></td></tr></table></figure>
+          <p><code>export</code> 和 <code>install</code> 命令都有 <code>TARGETS</code> 和 <code>EXPORT</code> 两种参数形式，所以容易混淆：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">export (TARGETS ...)</span><br><span class="line">  将给定的 targets 导出到 target export file，不会创建 named export</span><br><span class="line"></span><br><span class="line">install(TARGETS ... [EXPORT] ...)</span><br><span class="line">  如果有 EXPORT，除了安装之外，还会顺便从 targets 创建 named export（有两个作用！！这个是我是检查了 cmake_install.cmake 的）</span><br><span class="line"></span><br><span class="line">export (EXPORT  ...)</span><br><span class="line">  将 named export 导出到文件，可以指定名字空间</span><br><span class="line"></span><br><span class="line">install(EXPORT  ...)</span><br><span class="line">  将 named export 安装到系统，和 export(EXPORT ...) 有相似的参数，同样可以指定名字空间</span><br></pre></td></tr></table></figure>
 
-<blockquote>
-<p><code>NAMESPACE</code> is recommended as a hint, stating that the target has been imported from other projects.</p>
-<p><code>APPEND</code> tells CMake that it shouldn’t erase the contents of the file before writing. 也就是说本身会按照 <code>FILE</code> 来覆写文件，但是 <code>APPEND</code> 使得写入方式变成追加。</p>
-<p><code>EXPORT_LINK_INTERFACE_LIBRARIES</code> will export target link dependencies (including imported and config-specific variants).</p>
-</blockquote>
-<p>例子：</p>
-<figure class="highlight cmake"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">cmake_minimum_required</span>(VERSION <span class="number">3.20</span>.<span class="number">0</span>)</span><br><span class="line"><span class="keyword">project</span>(ExportCalcCXX)</span><br><span class="line"><span class="keyword">add_subdirectory</span>(src bin)</span><br><span class="line"><span class="keyword">set</span>(EXPORT_DIR <span class="string">&quot;$&#123;CMAKE_CURRENT_BINARY_DIR&#125;/cmake&quot;</span>)</span><br><span class="line"><span class="keyword">export</span>(TARGETS calc</span><br><span class="line">  <span class="keyword">FILE</span> <span class="string">&quot;$&#123;EXPORT_DIR&#125;/CalcTargets.cmake&quot;</span></span><br><span class="line">  NAMESPACE Calc::</span><br><span class="line">)</span><br><span class="line">...</span><br></pre></td></tr></table></figure>
+<p><code>export</code> 命令用来导出 target export file。<code>install</code> 命令用来安装文件到系统。在 target export file 的场景下，两者都能用于“安装”，但是前者一般是用在安装在临时路径上（参考 <a href="../../../../../_archive/cmake/Modern%20CMake%20for%20C++/chapter11%20-%20installing%20and%20packaging.md#Exporting%20without%20installation">link</a>），而后者是用来安装进系统的。</p>
+<p>例子：unnamed export VS named export</p>
+<figure class="highlight cmake"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># unnamed export</span></span><br><span class="line"><span class="keyword">export</span>(TARGETS calc</span><br><span class="line">       <span class="keyword">FILE</span> <span class="string">&quot;$&#123;EXPORT_DIR&#125;/CalcTargets.cmake&quot;</span></span><br><span class="line">       NAMESPACE Calc::</span><br><span class="line">)</span><br><span class="line"></span><br><span class="line"><span class="comment">#[=[</span></span><br><span class="line">named <span class="keyword">export</span>，同时还有 <span class="keyword">install</span>(TARGETS calc) 的副作用。因而代码相当于：</span><br><span class="line"><span class="keyword">install</span>(TARGETS calc)</span><br><span class="line"><span class="keyword">export</span>(TARGETS calc</span><br><span class="line">       <span class="keyword">FILE</span> <span class="string">&quot;$&#123;EXPORT_DIR&#125;/CalcTargets2.cmake&quot;</span></span><br><span class="line">       NAMESPACE Calc::</span><br><span class="line">)</span><br><span class="line"><span class="comment">#]=]</span></span><br><span class="line"><span class="keyword">install</span>(TARGETS calc <span class="keyword">EXPORT</span> CalcTargets)</span><br><span class="line"><span class="keyword">export</span>(<span class="keyword">EXPORT</span> CalcTargets</span><br><span class="line">       <span class="keyword">FILE</span> <span class="string">&quot;$&#123;EXPORT_DIR&#125;/CalcTargets2.cmake&quot;</span></span><br><span class="line">       NAMESPACE Calc::</span><br><span class="line">)</span><br></pre></td></tr></table></figure>
 
-<p><strong>这段代码将导出文件生成在了 binary tree 里面</strong>，这样的文件不会污染系统，但是可以被其他工程包含进去。还要注意 CMake 在 build tree 中导出的 target export file 里用的是绝对路径，所以不能轻易移动。上面代码还用到了一个名字空间 <code>Calc::</code>，因而创建的 target export file 中声明的 target 是 <code>Calc::calc</code>。</p>
-<p>export 命令还有一个形式：<code>export(EXPORT &lt;export&gt; [NAMESPACE &lt;namespace&gt;] [FILE &lt;path&gt;])</code>。这个形式不需要 targets，但是需要一个之前创建的 export 的名字。</p>
-          <!--noindex-->
-            <div class="post-button">
-              <a class="btn" href="../../cli/chapter11-installing-and-packaging/#more" rel="contents">
-                阅读全文 &raquo;
-              </a>
-            </div>
-          <!--/noindex-->
-        
+<p>这样生成的两个 target export file 的内容是一模一样的。</p>
+
       
     </div>
 

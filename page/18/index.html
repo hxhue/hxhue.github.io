@@ -9,6 +9,7 @@
   <link rel="icon" type="image/png" sizes="32x32" href="../../images/favicon-32x32-next.png">
   <link rel="icon" type="image/png" sizes="16x16" href="../../images/favicon-16x16-next.png">
   <link rel="mask-icon" href="../../images/logo.svg" color="#222">
+  <meta name="google-site-verification" content="hwfud_ndcnJHe2Jz7ClToP1nuUA3k7FqZv-0VpFAHjg">
 
 <link rel="stylesheet" href="../../css/main.css">
 
@@ -142,6 +143,11 @@
     <a href="../../friends/" rel="section"><i class="fa fa-heart fa-fw"></i>友链</a>
 
   </li>
+        <li class="menu-item menu-item-sitemap">
+
+    <a href="../../sitemap.xml" rel="section"><i class="sitemap fa-fw"></i>站点地图</a>
+
+  </li>
       <li class="menu-item menu-item-search">
         <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>搜索
         </a>
@@ -196,7 +202,7 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="https://hxhue.github.io/programming/hidden-friends/">
+    <link itemprop="mainEntityOfPage" href="https://hxhue.github.io/programming/inheritance/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="image" content="../../images/avatar.gif">
@@ -210,7 +216,7 @@
       <header class="post-header">
         <h2 class="post-title" itemprop="name headline">
           
-            <a href="../../programming/hidden-friends/" class="post-title-link" itemprop="url">Hidden Friends</a>
+            <a href="../../programming/inheritance/" class="post-title-link" itemprop="url">Inheritance</a>
         </h2>
 
         <div class="post-meta">
@@ -245,7 +251,7 @@
                 <i class="far fa-file-word"></i>
               </span>
                 <span class="post-meta-item-text">本文字数：</span>
-              <span>357</span>
+              <span>146</span>
             </span>
             <span class="post-meta-item" title="阅读时长">
               <span class="post-meta-item-icon">
@@ -264,16 +270,38 @@
     <div class="post-body" itemprop="articleBody">
 
       
-          <p>下面的代码中，Bar 能够隐式转换成 Foo。想要重载 Foo 的等于运算符至少有三种方案：</p>
-<ol>
-<li>重载全局的 <code>==</code> 运算符</li>
-<li>重载 Foo 中的 hidden friend，即 <code>friend bool operator==(Foo const &amp;a, Foo const &amp;b)</code></li>
-<li>重载 <code>bool operator==(Foo const &amp;a) const</code></li>
-</ol>
-<p>第一种方案会污染全局的名字空间，使得 Bar 和 Bar 之间也能通过转换两个参数进行比较；第三种方案允许第二个参数的隐式类型转换，但要求第一个参数必须是 Foo 类型；第二种方案只要求任一个参数为 Foo 类型，使得 ADL 能够参与找到这个函数，另一个参数则可以通过隐式类型转换来得到。</p>
-<p>成员函数的劣势是由于查找方式和 this 指针的存在，函数失去了对称性。全局函数的劣势则是没有用上 ADL 的优势，hidden friends 在这种情况比较好。</p>
-<p><a target="_blank" rel="noopener" href="https://godbolt.org/z/6sxdno3Yh">https://godbolt.org/z/6sxdno3Yh</a></p>
-<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;iostream&gt;</span></span></span><br><span class="line"></span><br><span class="line"><span class="meta">#<span class="keyword">define</span> HIDDEN_FEIDEND 1</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">struct</span> <span class="title class_">Foo</span> &#123;</span><br><span class="line">    <span class="type">int</span> value&#123;&#125;;</span><br><span class="line"><span class="meta">#<span class="keyword">ifdef</span> HIDDEN_FEIDEND</span></span><br><span class="line">    <span class="keyword">friend</span> <span class="type">bool</span> <span class="keyword">operator</span>==(Foo <span class="type">const</span> &amp;a, Foo <span class="type">const</span> &amp;b) &#123;</span><br><span class="line">        <span class="keyword">return</span> a.value == b.value;</span><br><span class="line">    &#125;</span><br><span class="line"><span class="meta">#<span class="keyword">endif</span></span></span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="keyword">struct</span> <span class="title class_">Bar</span> &#123;</span><br><span class="line">    <span class="type">int</span> value&#123;&#125;;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// Bar can be converted implicitly to Foo.</span></span><br><span class="line">    <span class="comment">// `explicit` keyword makes the conversion explicit.</span></span><br><span class="line">    <span class="comment">// explicit</span></span><br><span class="line">    <span class="function"><span class="keyword">operator</span> <span class="title">Foo</span><span class="params">()</span> <span class="type">const</span> </span>&#123;</span><br><span class="line">        <span class="keyword">return</span> Foo&#123;value&#125;;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="meta">#<span class="keyword">ifndef</span> HIDDEN_FEIDEND</span></span><br><span class="line"><span class="comment">// Normal operator overload that can be found in global scope</span></span><br><span class="line"><span class="type">bool</span> <span class="keyword">operator</span>==(Foo <span class="type">const</span> &amp;a, Foo <span class="type">const</span> &amp;b) &#123;</span><br><span class="line">    <span class="keyword">return</span> a.value == b.value;</span><br><span class="line">&#125;</span><br><span class="line"><span class="meta">#<span class="keyword">endif</span></span></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="type">int</span> <span class="title">main</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    Bar a&#123;<span class="number">-4</span>&#125;, b&#123;<span class="number">1</span>&#125;;</span><br><span class="line">    Foo c&#123;<span class="number">2</span>&#125;;</span><br><span class="line">    <span class="comment">// std::cout &lt;&lt; std::boolalpha &lt;&lt; (a == b) &lt;&lt; &quot;\\n&quot;; // ok if no HIDDEN_FEIDEND</span></span><br><span class="line">    std::cout &lt;&lt; std::boolalpha &lt;&lt; (a == c) &lt;&lt; <span class="string">&quot;\\n&quot;</span>; <span class="comment">// ok</span></span><br><span class="line">    std::cout &lt;&lt; std::boolalpha &lt;&lt; (c == a) &lt;&lt; <span class="string">&quot;\\n&quot;</span>; <span class="comment">// ok</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+          <table>
+<thead>
+<tr>
+<th></th>
+<th>public</th>
+<th>protected</th>
+<th>private</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>共有继承</td>
+<td>public</td>
+<td>protected</td>
+<td>不可见</td>
+</tr>
+<tr>
+<td>私有继承</td>
+<td>private</td>
+<td>private</td>
+<td>不可见</td>
+</tr>
+<tr>
+<td>保护继承</td>
+<td>protected</td>
+<td>protected</td>
+<td>不可见</td>
+</tr>
+</tbody></table>
+<p>可见继承属性就是对于来自基类的 public 和 protected 成员进行一个取最小权限的操作（定义权限 public &gt; protected &gt; private）。</p>
+<p>struct 和 class 的数据定义没有区别。语法上区别是：struct 定义默认继承种类是 public，class 定义默认继承类型是 private，<strong>这和基类用 struct 还是 class 声明的无关</strong>。</p>
+<p>继承多个类时，需要给不同的基类分别指定访问限定符。</p>
+
       
     </div>
 
@@ -392,7 +420,7 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="https://hxhue.github.io/programming/inheritance/">
+    <link itemprop="mainEntityOfPage" href="https://hxhue.github.io/programming/hidden-friends/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="image" content="../../images/avatar.gif">
@@ -406,7 +434,7 @@
       <header class="post-header">
         <h2 class="post-title" itemprop="name headline">
           
-            <a href="../../programming/inheritance/" class="post-title-link" itemprop="url">Inheritance</a>
+            <a href="../../programming/hidden-friends/" class="post-title-link" itemprop="url">Hidden Friends</a>
         </h2>
 
         <div class="post-meta">
@@ -441,7 +469,7 @@
                 <i class="far fa-file-word"></i>
               </span>
                 <span class="post-meta-item-text">本文字数：</span>
-              <span>146</span>
+              <span>357</span>
             </span>
             <span class="post-meta-item" title="阅读时长">
               <span class="post-meta-item-icon">
@@ -460,38 +488,117 @@
     <div class="post-body" itemprop="articleBody">
 
       
-          <table>
-<thead>
-<tr>
-<th></th>
-<th>public</th>
-<th>protected</th>
-<th>private</th>
-</tr>
-</thead>
-<tbody><tr>
-<td>共有继承</td>
-<td>public</td>
-<td>protected</td>
-<td>不可见</td>
-</tr>
-<tr>
-<td>私有继承</td>
-<td>private</td>
-<td>private</td>
-<td>不可见</td>
-</tr>
-<tr>
-<td>保护继承</td>
-<td>protected</td>
-<td>protected</td>
-<td>不可见</td>
-</tr>
-</tbody></table>
-<p>可见继承属性就是对于来自基类的 public 和 protected 成员进行一个取最小权限的操作（定义权限 public &gt; protected &gt; private）。</p>
-<p>struct 和 class 的数据定义没有区别。语法上区别是：struct 定义默认继承种类是 public，class 定义默认继承类型是 private，<strong>这和基类用 struct 还是 class 声明的无关</strong>。</p>
-<p>继承多个类时，需要给不同的基类分别指定访问限定符。</p>
+          <p>下面的代码中，Bar 能够隐式转换成 Foo。想要重载 Foo 的等于运算符至少有三种方案：</p>
+<ol>
+<li>重载全局的 <code>==</code> 运算符</li>
+<li>重载 Foo 中的 hidden friend，即 <code>friend bool operator==(Foo const &amp;a, Foo const &amp;b)</code></li>
+<li>重载 <code>bool operator==(Foo const &amp;a) const</code></li>
+</ol>
+<p>第一种方案会污染全局的名字空间，使得 Bar 和 Bar 之间也能通过转换两个参数进行比较；第三种方案允许第二个参数的隐式类型转换，但要求第一个参数必须是 Foo 类型；第二种方案只要求任一个参数为 Foo 类型，使得 ADL 能够参与找到这个函数，另一个参数则可以通过隐式类型转换来得到。</p>
+<p>成员函数的劣势是由于查找方式和 this 指针的存在，函数失去了对称性。全局函数的劣势则是没有用上 ADL 的优势，hidden friends 在这种情况比较好。</p>
+<p><a target="_blank" rel="noopener" href="https://godbolt.org/z/6sxdno3Yh">https://godbolt.org/z/6sxdno3Yh</a></p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;iostream&gt;</span></span></span><br><span class="line"></span><br><span class="line"><span class="meta">#<span class="keyword">define</span> HIDDEN_FEIDEND 1</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">struct</span> <span class="title class_">Foo</span> &#123;</span><br><span class="line">    <span class="type">int</span> value&#123;&#125;;</span><br><span class="line"><span class="meta">#<span class="keyword">ifdef</span> HIDDEN_FEIDEND</span></span><br><span class="line">    <span class="keyword">friend</span> <span class="type">bool</span> <span class="keyword">operator</span>==(Foo <span class="type">const</span> &amp;a, Foo <span class="type">const</span> &amp;b) &#123;</span><br><span class="line">        <span class="keyword">return</span> a.value == b.value;</span><br><span class="line">    &#125;</span><br><span class="line"><span class="meta">#<span class="keyword">endif</span></span></span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="keyword">struct</span> <span class="title class_">Bar</span> &#123;</span><br><span class="line">    <span class="type">int</span> value&#123;&#125;;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// Bar can be converted implicitly to Foo.</span></span><br><span class="line">    <span class="comment">// `explicit` keyword makes the conversion explicit.</span></span><br><span class="line">    <span class="comment">// explicit</span></span><br><span class="line">    <span class="function"><span class="keyword">operator</span> <span class="title">Foo</span><span class="params">()</span> <span class="type">const</span> </span>&#123;</span><br><span class="line">        <span class="keyword">return</span> Foo&#123;value&#125;;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="meta">#<span class="keyword">ifndef</span> HIDDEN_FEIDEND</span></span><br><span class="line"><span class="comment">// Normal operator overload that can be found in global scope</span></span><br><span class="line"><span class="type">bool</span> <span class="keyword">operator</span>==(Foo <span class="type">const</span> &amp;a, Foo <span class="type">const</span> &amp;b) &#123;</span><br><span class="line">    <span class="keyword">return</span> a.value == b.value;</span><br><span class="line">&#125;</span><br><span class="line"><span class="meta">#<span class="keyword">endif</span></span></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="type">int</span> <span class="title">main</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    Bar a&#123;<span class="number">-4</span>&#125;, b&#123;<span class="number">1</span>&#125;;</span><br><span class="line">    Foo c&#123;<span class="number">2</span>&#125;;</span><br><span class="line">    <span class="comment">// std::cout &lt;&lt; std::boolalpha &lt;&lt; (a == b) &lt;&lt; &quot;\\n&quot;; // ok if no HIDDEN_FEIDEND</span></span><br><span class="line">    std::cout &lt;&lt; std::boolalpha &lt;&lt; (a == c) &lt;&lt; <span class="string">&quot;\\n&quot;</span>; <span class="comment">// ok</span></span><br><span class="line">    std::cout &lt;&lt; std::boolalpha &lt;&lt; (c == a) &lt;&lt; <span class="string">&quot;\\n&quot;</span>; <span class="comment">// ok</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+      
+    </div>
 
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://hxhue.github.io/programming/pointer-to-member/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="../../images/avatar.gif">
+      <meta itemprop="name" content="Hxhue">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Hxhue's Blog">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="../../programming/pointer-to-member/" class="post-title-link" itemprop="url">Pointer to Member</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2023-08-12 15:17:00" itemprop="dateCreated datePublished" datetime="2023-08-12T15:17:00+08:00">2023-08-12</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2024-03-15 16:31:51" itemprop="dateModified" datetime="2024-03-15T16:31:51+08:00">2024-03-15</time>
+              </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="../../categories/programming/" itemprop="url" rel="index"><span itemprop="name">Programming</span></a>
+                </span>
+            </span>
+
+          <br>
+            <span class="post-meta-item" title="本文字数">
+              <span class="post-meta-item-icon">
+                <i class="far fa-file-word"></i>
+              </span>
+                <span class="post-meta-item-text">本文字数：</span>
+              <span>390</span>
+            </span>
+            <span class="post-meta-item" title="阅读时长">
+              <span class="post-meta-item-icon">
+                <i class="far fa-clock"></i>
+              </span>
+                <span class="post-meta-item-text">阅读时长 &asymp;</span>
+              <span>1 分钟</span>
+            </span>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <h1 id="数据成员指针存储的是偏移"><a href="#数据成员指针存储的是偏移" class="headerlink" title="数据成员指针存储的是偏移"></a>数据成员指针存储的是偏移</h1><figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;iostream&gt;</span></span></span><br><span class="line"><span class="keyword">using</span> <span class="keyword">namespace</span> std;</span><br><span class="line"></span><br><span class="line"><span class="keyword">struct</span> <span class="title class_">Foo</span> &#123;</span><br><span class="line">    <span class="type">int</span> x;</span><br><span class="line">    <span class="type">int</span> y;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="type">int</span> <span class="title">main</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    Foo x&#123;<span class="number">2</span>&#125;;</span><br><span class="line">    <span class="type">int</span> Foo::* px = &amp;Foo::x;</span><br><span class="line">    <span class="type">int</span> Foo::* py = &amp;Foo::y;</span><br><span class="line">    cout &lt;&lt; (<span class="type">unsigned</span> <span class="type">long</span> &amp;)px &lt;&lt; endl; <span class="comment">// 输出0</span></span><br><span class="line">    cout &lt;&lt; (<span class="type">unsigned</span> <span class="type">long</span> &amp;)py &lt;&lt; endl; <span class="comment">// 输出4</span></span><br><span class="line">    cout &lt;&lt; <span class="built_in">sizeof</span>(px) &lt;&lt; endl;          <span class="comment">// gcc输出8</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>数据成员指针的大小和实现相关。</p>
+<h1 id="成员函数指针比一般指针占用更多空间"><a href="#成员函数指针比一般指针占用更多空间" class="headerlink" title="成员函数指针比一般指针占用更多空间"></a>成员函数指针比一般指针占用更多空间</h1><p>和编译器相关。gcc 里成员函数指针在 64 位机器下是 16 字节。</p>
+<p>如果成员函数不是虚函数：函数地址固定；this 指针偏移也可以通过类型在编译时计算出来。先偏移后调用，应该只需要 8 个字节。</p>
+<p>如果成员函数是虚函数：</p>
+<p><strong>解释</strong>：</p>
+          <!--noindex-->
+            <div class="post-button">
+              <a class="btn" href="../../programming/pointer-to-member/#more" rel="contents">
+                阅读全文 &raquo;
+              </a>
+            </div>
+          <!--/noindex-->
+        
       
     </div>
 
@@ -712,219 +819,6 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="https://hxhue.github.io/programming/pointer-to-member/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="../../images/avatar.gif">
-      <meta itemprop="name" content="Hxhue">
-      <meta itemprop="description" content="">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Hxhue's Blog">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          
-            <a href="../../programming/pointer-to-member/" class="post-title-link" itemprop="url">Pointer to Member</a>
-        </h2>
-
-        <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-calendar"></i>
-              </span>
-              <span class="post-meta-item-text">发表于</span>
-
-              <time title="创建时间：2023-08-12 15:17:00" itemprop="dateCreated datePublished" datetime="2023-08-12T15:17:00+08:00">2023-08-12</time>
-            </span>
-              <span class="post-meta-item">
-                <span class="post-meta-item-icon">
-                  <i class="far fa-calendar-check"></i>
-                </span>
-                <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2024-03-15 16:31:51" itemprop="dateModified" datetime="2024-03-15T16:31:51+08:00">2024-03-15</time>
-              </span>
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-folder"></i>
-              </span>
-              <span class="post-meta-item-text">分类于</span>
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="../../categories/programming/" itemprop="url" rel="index"><span itemprop="name">Programming</span></a>
-                </span>
-            </span>
-
-          <br>
-            <span class="post-meta-item" title="本文字数">
-              <span class="post-meta-item-icon">
-                <i class="far fa-file-word"></i>
-              </span>
-                <span class="post-meta-item-text">本文字数：</span>
-              <span>390</span>
-            </span>
-            <span class="post-meta-item" title="阅读时长">
-              <span class="post-meta-item-icon">
-                <i class="far fa-clock"></i>
-              </span>
-                <span class="post-meta-item-text">阅读时长 &asymp;</span>
-              <span>1 分钟</span>
-            </span>
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          <h1 id="数据成员指针存储的是偏移"><a href="#数据成员指针存储的是偏移" class="headerlink" title="数据成员指针存储的是偏移"></a>数据成员指针存储的是偏移</h1><figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;iostream&gt;</span></span></span><br><span class="line"><span class="keyword">using</span> <span class="keyword">namespace</span> std;</span><br><span class="line"></span><br><span class="line"><span class="keyword">struct</span> <span class="title class_">Foo</span> &#123;</span><br><span class="line">    <span class="type">int</span> x;</span><br><span class="line">    <span class="type">int</span> y;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="type">int</span> <span class="title">main</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    Foo x&#123;<span class="number">2</span>&#125;;</span><br><span class="line">    <span class="type">int</span> Foo::* px = &amp;Foo::x;</span><br><span class="line">    <span class="type">int</span> Foo::* py = &amp;Foo::y;</span><br><span class="line">    cout &lt;&lt; (<span class="type">unsigned</span> <span class="type">long</span> &amp;)px &lt;&lt; endl; <span class="comment">// 输出0</span></span><br><span class="line">    cout &lt;&lt; (<span class="type">unsigned</span> <span class="type">long</span> &amp;)py &lt;&lt; endl; <span class="comment">// 输出4</span></span><br><span class="line">    cout &lt;&lt; <span class="built_in">sizeof</span>(px) &lt;&lt; endl;          <span class="comment">// gcc输出8</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<p>数据成员指针的大小和实现相关。</p>
-<h1 id="成员函数指针比一般指针占用更多空间"><a href="#成员函数指针比一般指针占用更多空间" class="headerlink" title="成员函数指针比一般指针占用更多空间"></a>成员函数指针比一般指针占用更多空间</h1><p>和编译器相关。gcc 里成员函数指针在 64 位机器下是 16 字节。</p>
-<p>如果成员函数不是虚函数：函数地址固定；this 指针偏移也可以通过类型在编译时计算出来。先偏移后调用，应该只需要 8 个字节。</p>
-<p>如果成员函数是虚函数：</p>
-<p><strong>解释</strong>：</p>
-          <!--noindex-->
-            <div class="post-button">
-              <a class="btn" href="../../programming/pointer-to-member/#more" rel="contents">
-                阅读全文 &raquo;
-              </a>
-            </div>
-          <!--/noindex-->
-        
-      
-    </div>
-
-    
-    
-    
-      <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  
-  
-  
-
-      
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="https://hxhue.github.io/programming/three-way-comparison/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="../../images/avatar.gif">
-      <meta itemprop="name" content="Hxhue">
-      <meta itemprop="description" content="">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Hxhue's Blog">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          
-            <a href="../../programming/three-way-comparison/" class="post-title-link" itemprop="url">Three-way Comparison =</a>
-        </h2>
-
-        <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-calendar"></i>
-              </span>
-              <span class="post-meta-item-text">发表于</span>
-
-              <time title="创建时间：2023-08-12 15:17:00" itemprop="dateCreated datePublished" datetime="2023-08-12T15:17:00+08:00">2023-08-12</time>
-            </span>
-              <span class="post-meta-item">
-                <span class="post-meta-item-icon">
-                  <i class="far fa-calendar-check"></i>
-                </span>
-                <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2024-03-21 16:27:14" itemprop="dateModified" datetime="2024-03-21T16:27:14+08:00">2024-03-21</time>
-              </span>
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-folder"></i>
-              </span>
-              <span class="post-meta-item-text">分类于</span>
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="../../categories/programming/" itemprop="url" rel="index"><span itemprop="name">Programming</span></a>
-                </span>
-            </span>
-
-          <br>
-            <span class="post-meta-item" title="本文字数">
-              <span class="post-meta-item-icon">
-                <i class="far fa-file-word"></i>
-              </span>
-                <span class="post-meta-item-text">本文字数：</span>
-              <span>454</span>
-            </span>
-            <span class="post-meta-item" title="阅读时长">
-              <span class="post-meta-item-icon">
-                <i class="far fa-clock"></i>
-              </span>
-                <span class="post-meta-item-text">阅读时长 &asymp;</span>
-              <span>2 分钟</span>
-            </span>
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          <h1 id="含义"><a href="#含义" class="headerlink" title="含义"></a>含义</h1><p>C++ 20 加入了 <code>&lt;=&gt;</code> 操作符，该操作符会按布局顺序比较成员，比较时会递归使用 <code>&lt;=&gt;</code> 操作符。对于类类型来说，即便默认的 <code>&lt;=&gt;</code> 操作符可用，也必须显式声明为 <code>= default</code>，否则不能使用。</p>
-<blockquote>
-<p>如果需要在 B 类中包含 A 类，同时声明 B 类的默认 <code>&lt;=&gt;</code> 操作符以便比较 B 类对象，则必须同时在 A 类中声明默认的 <code>&lt;=&gt;</code> 操作符。</p>
-</blockquote>
-<p>Three-way comparison operator 的返回值可以是偏序、弱序或强序。体现在 C++ 语言中是：</p>
-<ul>
-<li>偏序：弱序 或者 不可比较。</li>
-<li>弱序：a 和 b 的关系只能是小于、等于、大于之一。比较相等性时常用 <code>!(a &lt; b) &amp;&amp; !(b &lt; a)</code> 的形式。相等的值可以拥有不同的身份。</li>
-<li>强序：a 和 b 的关系只能是小于、等于、大于之一。可以直接用 <code>==</code> 比较相等性，相等则意味着完全一致，可以相互替代。</li>
-</ul>
-<p><img src="../../../../assets/c514b73891d6ffad12fe7d0e440c7ebb.png"></p>
-<blockquote>
-<p><a target="_blank" rel="noopener" href="https://news.ycombinator.com/item?id=20550902">https://news.ycombinator.com/item?id=20550902</a></p>
-<p>In a strong ordering, two objects can only by one smaller, equal or larger than the other. If they are equal, it means that they are substitutable.</p>
-<p>In a weak ordering, two objects can only be one smaller, equivalent or larger than the other. No substitutability is implied.</p>
-<p>In a partial ordering, two objects can be one smaller, equivalent or larger than the other, or just not comparable. Again, no substitutability is implied.</p>
-</blockquote>
-<h1 id="默认-存在的条件"><a href="#默认-存在的条件" class="headerlink" title="默认 &lt;=&gt; 存在的条件"></a>默认 <code>&lt;=&gt;</code> 存在的条件</h1>
-          <!--noindex-->
-            <div class="post-button">
-              <a class="btn" href="../../programming/three-way-comparison/#more" rel="contents">
-                阅读全文 &raquo;
-              </a>
-            </div>
-          <!--/noindex-->
-        
-      
-    </div>
-
-    
-    
-    
-      <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  
-  
-  
-
-      
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
     <link itemprop="mainEntityOfPage" href="https://hxhue.github.io/programming/ub/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -1037,6 +931,118 @@
           <!--noindex-->
             <div class="post-button">
               <a class="btn" href="../../programming/ub/#more" rel="contents">
+                阅读全文 &raquo;
+              </a>
+            </div>
+          <!--/noindex-->
+        
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://hxhue.github.io/programming/three-way-comparison/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="../../images/avatar.gif">
+      <meta itemprop="name" content="Hxhue">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Hxhue's Blog">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="../../programming/three-way-comparison/" class="post-title-link" itemprop="url">Three-way Comparison =</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2023-08-12 15:17:00" itemprop="dateCreated datePublished" datetime="2023-08-12T15:17:00+08:00">2023-08-12</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2024-03-21 16:27:14" itemprop="dateModified" datetime="2024-03-21T16:27:14+08:00">2024-03-21</time>
+              </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="../../categories/programming/" itemprop="url" rel="index"><span itemprop="name">Programming</span></a>
+                </span>
+            </span>
+
+          <br>
+            <span class="post-meta-item" title="本文字数">
+              <span class="post-meta-item-icon">
+                <i class="far fa-file-word"></i>
+              </span>
+                <span class="post-meta-item-text">本文字数：</span>
+              <span>454</span>
+            </span>
+            <span class="post-meta-item" title="阅读时长">
+              <span class="post-meta-item-icon">
+                <i class="far fa-clock"></i>
+              </span>
+                <span class="post-meta-item-text">阅读时长 &asymp;</span>
+              <span>2 分钟</span>
+            </span>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <h1 id="含义"><a href="#含义" class="headerlink" title="含义"></a>含义</h1><p>C++ 20 加入了 <code>&lt;=&gt;</code> 操作符，该操作符会按布局顺序比较成员，比较时会递归使用 <code>&lt;=&gt;</code> 操作符。对于类类型来说，即便默认的 <code>&lt;=&gt;</code> 操作符可用，也必须显式声明为 <code>= default</code>，否则不能使用。</p>
+<blockquote>
+<p>如果需要在 B 类中包含 A 类，同时声明 B 类的默认 <code>&lt;=&gt;</code> 操作符以便比较 B 类对象，则必须同时在 A 类中声明默认的 <code>&lt;=&gt;</code> 操作符。</p>
+</blockquote>
+<p>Three-way comparison operator 的返回值可以是偏序、弱序或强序。体现在 C++ 语言中是：</p>
+<ul>
+<li>偏序：弱序 或者 不可比较。</li>
+<li>弱序：a 和 b 的关系只能是小于、等于、大于之一。比较相等性时常用 <code>!(a &lt; b) &amp;&amp; !(b &lt; a)</code> 的形式。相等的值可以拥有不同的身份。</li>
+<li>强序：a 和 b 的关系只能是小于、等于、大于之一。可以直接用 <code>==</code> 比较相等性，相等则意味着完全一致，可以相互替代。</li>
+</ul>
+<p><img src="../../../../assets/c514b73891d6ffad12fe7d0e440c7ebb.png"></p>
+<blockquote>
+<p><a target="_blank" rel="noopener" href="https://news.ycombinator.com/item?id=20550902">https://news.ycombinator.com/item?id=20550902</a></p>
+<p>In a strong ordering, two objects can only by one smaller, equal or larger than the other. If they are equal, it means that they are substitutable.</p>
+<p>In a weak ordering, two objects can only be one smaller, equivalent or larger than the other. No substitutability is implied.</p>
+<p>In a partial ordering, two objects can be one smaller, equivalent or larger than the other, or just not comparable. Again, no substitutability is implied.</p>
+</blockquote>
+<h1 id="默认-存在的条件"><a href="#默认-存在的条件" class="headerlink" title="默认 &lt;=&gt; 存在的条件"></a>默认 <code>&lt;=&gt;</code> 存在的条件</h1>
+          <!--noindex-->
+            <div class="post-button">
+              <a class="btn" href="../../programming/three-way-comparison/#more" rel="contents">
                 阅读全文 &raquo;
               </a>
             </div>

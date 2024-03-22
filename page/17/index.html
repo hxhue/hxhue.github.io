@@ -9,6 +9,7 @@
   <link rel="icon" type="image/png" sizes="32x32" href="../../images/favicon-32x32-next.png">
   <link rel="icon" type="image/png" sizes="16x16" href="../../images/favicon-16x16-next.png">
   <link rel="mask-icon" href="../../images/logo.svg" color="#222">
+  <meta name="google-site-verification" content="hwfud_ndcnJHe2Jz7ClToP1nuUA3k7FqZv-0VpFAHjg">
 
 <link rel="stylesheet" href="../../css/main.css">
 
@@ -140,6 +141,11 @@
         <li class="menu-item menu-item-友链">
 
     <a href="../../friends/" rel="section"><i class="fa fa-heart fa-fw"></i>友链</a>
+
+  </li>
+        <li class="menu-item menu-item-sitemap">
+
+    <a href="../../sitemap.xml" rel="section"><i class="sitemap fa-fw"></i>站点地图</a>
 
   </li>
       <li class="menu-item menu-item-search">
@@ -286,7 +292,7 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="https://hxhue.github.io/programming/libstdc-std-function/">
+    <link itemprop="mainEntityOfPage" href="https://hxhue.github.io/programming/libstdc-std-set/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="image" content="../../images/avatar.gif">
@@ -300,7 +306,7 @@
       <header class="post-header">
         <h2 class="post-title" itemprop="name headline">
           
-            <a href="../../programming/libstdc-std-function/" class="post-title-link" itemprop="url">(libstdc++) std::function</a>
+            <a href="../../programming/libstdc-std-set/" class="post-title-link" itemprop="url">(libstdc++) std::set</a>
         </h2>
 
         <div class="post-meta">
@@ -317,7 +323,7 @@
                   <i class="far fa-calendar-check"></i>
                 </span>
                 <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2024-03-21 19:59:25" itemprop="dateModified" datetime="2024-03-21T19:59:25+08:00">2024-03-21</time>
+                <time title="修改时间：2024-03-21 16:27:14" itemprop="dateModified" datetime="2024-03-21T16:27:14+08:00">2024-03-21</time>
               </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
@@ -335,14 +341,14 @@
                 <i class="far fa-file-word"></i>
               </span>
                 <span class="post-meta-item-text">本文字数：</span>
-              <span>1.2k</span>
+              <span>533</span>
             </span>
             <span class="post-meta-item" title="阅读时长">
               <span class="post-meta-item-icon">
                 <i class="far fa-clock"></i>
               </span>
                 <span class="post-meta-item-text">阅读时长 &asymp;</span>
-              <span>4 分钟</span>
+              <span>2 分钟</span>
             </span>
 
         </div>
@@ -354,114 +360,31 @@
     <div class="post-body" itemprop="articleBody">
 
       
-          <p><code>libstdc++</code></p>
-<p>文件：<code>bits/std_function.h</code>。</p>
-<p>印象：小对象优化+避免使用虚函数，实际效果略次于虚函数？</p>
-<p>既然性能差不多，为什么避免使用虚函数？不好说。一个猜想是用虚函数需要使用虚表指针，小对象优化的体积上限会被扣除虚表指针的长度。（在 gcc 上是从 16 变成 8 个字节）</p>
-<p>关于成员指针，见 <a href="Pointer%20to%20Member.md">Pointer to Member</a>。</p>
-<h1 id="存储结构"><a href="#存储结构" class="headerlink" title="存储结构"></a>存储结构</h1><p>首先看 <code>std::function</code> 的成员组成：</p>
-<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="type">void</span> <span class="title">swap</span><span class="params">(function&amp; __x)</span> <span class="keyword">noexcept</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    std::<span class="built_in">swap</span>(_M_functor, __x._M_functor);</span><br><span class="line">    std::<span class="built_in">swap</span>(_M_manager, __x._M_manager);</span><br><span class="line">    std::<span class="built_in">swap</span>(_M_invoker, __x._M_invoker);</span><br><span class="line">&#125; <span class="comment">// 模板太长了，成员定义很分散，抄起来很累；这个 swap 函数写的刚刚好</span></span><br></pre></td></tr></table></figure>
+          <p>相关文件：</p>
+<ul>
+<li><code>include/set</code> 头文件按顺序引入了 <code>include/bits/stl_tree.h</code> 和 <code>include/bits/stl_set.h</code>。</li>
+<li><code>include/bits/stl_set.h</code> 定义了 <code>std::set</code>，依赖了 <code>include/bits/stl_tree.h</code> 却没有明确包含它。</li>
+<li><code>include/bits/stl_tree.h</code> 定义了诸多类型，<em>如未明确指出则默认下面提到的类型都是来自于这个头文件</em>。</li>
+<li><code>src/c++98/tree.cc</code> 实现了红黑树用到的非模板算法。这个文件只有 400 多行。</li>
+</ul>
+<p><code>std::set</code> 将实现转发给 <code>_Rb_tree</code> 处理，而它又将实现转发给了 <code>_Rb_tree_impl</code> 处理。</p>
+<p><code>_Rb_tree_impl</code> 继承于：</p>
+<ul>
+<li><code>_Node_allocator</code>：是一个 typedef，实际类型是一个模板类，模板参数和 <code>_Rb_tree</code> 的参数有关。</li>
+<li><code>_Rb_tree_key_compare</code>：是一个模板类，模板参数和 <code>_Rb_tree</code> 有关。</li>
+<li><code>_Rb_tree_header</code>：<strong>非模板类</strong>。包含了 <code>_Rb_tree_node_base</code> 结构和 <code>_Rb_tree_node_count</code>。前者是表示红黑树结点的聚合类，包含了 parent&#x2F;left&#x2F;right&#x2F;color 四个重要成员；后者是结点计数。初始化时，parent&#x2F;left&#x2F;right 都被设置为 header 本身的地址，而 color 被设置为红色，可见这个 header 就是标准库红黑树中的 nil 哨兵。另外，left 和 right 还有最小结点和最大结点的含义。</li>
+</ul>
+<p><img src="../../../../assets/51559a6e75cb84af8da5643275d1f118.png"></p>
+<p>以插入算法举例，由于比较算子在模板中，所以需要用模板方法找到应该插入的位置，这些都在头文件 <code>include/bits/stl_tree.h</code> 中实现。接着调用插入并平衡的函数，该函数只操作指针，不关心结点中包含的值，所以这个部分可以在源文件 <code>src/c++98/tree.cc</code> 中实现，从而减少了代码膨胀。</p>
+<p>按照上面的分析，可以解释以下未定义行为（但是不建议这么写）：</p>
           <!--noindex-->
             <div class="post-button">
-              <a class="btn" href="../../programming/libstdc-std-function/#more" rel="contents">
+              <a class="btn" href="../../programming/libstdc-std-set/#more" rel="contents">
                 阅读全文 &raquo;
               </a>
             </div>
           <!--/noindex-->
         
-      
-    </div>
-
-    
-    
-    
-      <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  
-  
-  
-
-      
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="https://hxhue.github.io/programming/adl/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="../../images/avatar.gif">
-      <meta itemprop="name" content="Hxhue">
-      <meta itemprop="description" content="">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Hxhue's Blog">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          
-            <a href="../../programming/adl/" class="post-title-link" itemprop="url">ADL</a>
-        </h2>
-
-        <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-calendar"></i>
-              </span>
-              <span class="post-meta-item-text">发表于</span>
-
-              <time title="创建时间：2023-08-12 15:17:00" itemprop="dateCreated datePublished" datetime="2023-08-12T15:17:00+08:00">2023-08-12</time>
-            </span>
-              <span class="post-meta-item">
-                <span class="post-meta-item-icon">
-                  <i class="far fa-calendar-check"></i>
-                </span>
-                <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2024-03-15 16:31:51" itemprop="dateModified" datetime="2024-03-15T16:31:51+08:00">2024-03-15</time>
-              </span>
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-folder"></i>
-              </span>
-              <span class="post-meta-item-text">分类于</span>
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="../../categories/programming/" itemprop="url" rel="index"><span itemprop="name">Programming</span></a>
-                </span>
-            </span>
-
-          <br>
-            <span class="post-meta-item" title="本文字数">
-              <span class="post-meta-item-icon">
-                <i class="far fa-file-word"></i>
-              </span>
-                <span class="post-meta-item-text">本文字数：</span>
-              <span>105</span>
-            </span>
-            <span class="post-meta-item" title="阅读时长">
-              <span class="post-meta-item-icon">
-                <i class="far fa-clock"></i>
-              </span>
-                <span class="post-meta-item-text">阅读时长 &asymp;</span>
-              <span>1 分钟</span>
-            </span>
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          <p>例子：</p>
-<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;iostream&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;numeric&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;vector&gt;</span></span></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="type">int</span> <span class="title">main</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    std::vector v&#123;<span class="number">1</span>, <span class="number">3</span>, <span class="number">5</span>&#125;; <span class="comment">// 模板类参数推导：T=int</span></span><br><span class="line">    std::cout &lt;&lt; std::<span class="built_in">accumulate</span>(<span class="built_in">begin</span>(v), <span class="built_in">end</span>(v), <span class="number">0</span>);</span><br><span class="line">    <span class="comment">//        ^^                  ^^        ^^ 都是ADL</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<p>使用 <code>begin</code>、<code>end</code>、<code>swap</code> 等函数模板时，先引入其名字到当前空间中，然后再调用，有助于 ADL 查找到性能更优的函数实现：</p>
-<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">&#123;</span><br><span class="line">    <span class="keyword">using</span> std::swap;</span><br><span class="line">    <span class="built_in">swap</span>(A, B); <span class="comment">// 假设 A 和 B 是已经定义的同类型变量</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-
       
     </div>
 
@@ -579,6 +502,99 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://hxhue.github.io/programming/adl/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="../../images/avatar.gif">
+      <meta itemprop="name" content="Hxhue">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Hxhue's Blog">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="../../programming/adl/" class="post-title-link" itemprop="url">ADL</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2023-08-12 15:17:00" itemprop="dateCreated datePublished" datetime="2023-08-12T15:17:00+08:00">2023-08-12</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2024-03-15 16:31:51" itemprop="dateModified" datetime="2024-03-15T16:31:51+08:00">2024-03-15</time>
+              </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="../../categories/programming/" itemprop="url" rel="index"><span itemprop="name">Programming</span></a>
+                </span>
+            </span>
+
+          <br>
+            <span class="post-meta-item" title="本文字数">
+              <span class="post-meta-item-icon">
+                <i class="far fa-file-word"></i>
+              </span>
+                <span class="post-meta-item-text">本文字数：</span>
+              <span>105</span>
+            </span>
+            <span class="post-meta-item" title="阅读时长">
+              <span class="post-meta-item-icon">
+                <i class="far fa-clock"></i>
+              </span>
+                <span class="post-meta-item-text">阅读时长 &asymp;</span>
+              <span>1 分钟</span>
+            </span>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <p>例子：</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;iostream&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;numeric&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;vector&gt;</span></span></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="type">int</span> <span class="title">main</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    std::vector v&#123;<span class="number">1</span>, <span class="number">3</span>, <span class="number">5</span>&#125;; <span class="comment">// 模板类参数推导：T=int</span></span><br><span class="line">    std::cout &lt;&lt; std::<span class="built_in">accumulate</span>(<span class="built_in">begin</span>(v), <span class="built_in">end</span>(v), <span class="number">0</span>);</span><br><span class="line">    <span class="comment">//        ^^                  ^^        ^^ 都是ADL</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>使用 <code>begin</code>、<code>end</code>、<code>swap</code> 等函数模板时，先引入其名字到当前空间中，然后再调用，有助于 ADL 查找到性能更优的函数实现：</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">&#123;</span><br><span class="line">    <span class="keyword">using</span> std::swap;</span><br><span class="line">    <span class="built_in">swap</span>(A, B); <span class="comment">// 假设 A 和 B 是已经定义的同类型变量</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
     <link itemprop="mainEntityOfPage" href="https://hxhue.github.io/programming/abominable-function/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -672,7 +688,7 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="https://hxhue.github.io/programming/libstdc-std-set/">
+    <link itemprop="mainEntityOfPage" href="https://hxhue.github.io/programming/libstdc-std-function/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="image" content="../../images/avatar.gif">
@@ -686,7 +702,7 @@
       <header class="post-header">
         <h2 class="post-title" itemprop="name headline">
           
-            <a href="../../programming/libstdc-std-set/" class="post-title-link" itemprop="url">(libstdc++) std::set</a>
+            <a href="../../programming/libstdc-std-function/" class="post-title-link" itemprop="url">(libstdc++) std::function</a>
         </h2>
 
         <div class="post-meta">
@@ -703,7 +719,7 @@
                   <i class="far fa-calendar-check"></i>
                 </span>
                 <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2024-03-21 16:27:14" itemprop="dateModified" datetime="2024-03-21T16:27:14+08:00">2024-03-21</time>
+                <time title="修改时间：2024-03-21 19:59:25" itemprop="dateModified" datetime="2024-03-21T19:59:25+08:00">2024-03-21</time>
               </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
@@ -721,14 +737,14 @@
                 <i class="far fa-file-word"></i>
               </span>
                 <span class="post-meta-item-text">本文字数：</span>
-              <span>533</span>
+              <span>1.2k</span>
             </span>
             <span class="post-meta-item" title="阅读时长">
               <span class="post-meta-item-icon">
                 <i class="far fa-clock"></i>
               </span>
                 <span class="post-meta-item-text">阅读时长 &asymp;</span>
-              <span>2 分钟</span>
+              <span>4 分钟</span>
             </span>
 
         </div>
@@ -740,26 +756,16 @@
     <div class="post-body" itemprop="articleBody">
 
       
-          <p>相关文件：</p>
-<ul>
-<li><code>include/set</code> 头文件按顺序引入了 <code>include/bits/stl_tree.h</code> 和 <code>include/bits/stl_set.h</code>。</li>
-<li><code>include/bits/stl_set.h</code> 定义了 <code>std::set</code>，依赖了 <code>include/bits/stl_tree.h</code> 却没有明确包含它。</li>
-<li><code>include/bits/stl_tree.h</code> 定义了诸多类型，<em>如未明确指出则默认下面提到的类型都是来自于这个头文件</em>。</li>
-<li><code>src/c++98/tree.cc</code> 实现了红黑树用到的非模板算法。这个文件只有 400 多行。</li>
-</ul>
-<p><code>std::set</code> 将实现转发给 <code>_Rb_tree</code> 处理，而它又将实现转发给了 <code>_Rb_tree_impl</code> 处理。</p>
-<p><code>_Rb_tree_impl</code> 继承于：</p>
-<ul>
-<li><code>_Node_allocator</code>：是一个 typedef，实际类型是一个模板类，模板参数和 <code>_Rb_tree</code> 的参数有关。</li>
-<li><code>_Rb_tree_key_compare</code>：是一个模板类，模板参数和 <code>_Rb_tree</code> 有关。</li>
-<li><code>_Rb_tree_header</code>：<strong>非模板类</strong>。包含了 <code>_Rb_tree_node_base</code> 结构和 <code>_Rb_tree_node_count</code>。前者是表示红黑树结点的聚合类，包含了 parent&#x2F;left&#x2F;right&#x2F;color 四个重要成员；后者是结点计数。初始化时，parent&#x2F;left&#x2F;right 都被设置为 header 本身的地址，而 color 被设置为红色，可见这个 header 就是标准库红黑树中的 nil 哨兵。另外，left 和 right 还有最小结点和最大结点的含义。</li>
-</ul>
-<p><img src="../../../../assets/51559a6e75cb84af8da5643275d1f118.png"></p>
-<p>以插入算法举例，由于比较算子在模板中，所以需要用模板方法找到应该插入的位置，这些都在头文件 <code>include/bits/stl_tree.h</code> 中实现。接着调用插入并平衡的函数，该函数只操作指针，不关心结点中包含的值，所以这个部分可以在源文件 <code>src/c++98/tree.cc</code> 中实现，从而减少了代码膨胀。</p>
-<p>按照上面的分析，可以解释以下未定义行为（但是不建议这么写）：</p>
+          <p><code>libstdc++</code></p>
+<p>文件：<code>bits/std_function.h</code>。</p>
+<p>印象：小对象优化+避免使用虚函数，实际效果略次于虚函数？</p>
+<p>既然性能差不多，为什么避免使用虚函数？不好说。一个猜想是用虚函数需要使用虚表指针，小对象优化的体积上限会被扣除虚表指针的长度。（在 gcc 上是从 16 变成 8 个字节）</p>
+<p>关于成员指针，见 <a href="Pointer%20to%20Member.md">Pointer to Member</a>。</p>
+<h1 id="存储结构"><a href="#存储结构" class="headerlink" title="存储结构"></a>存储结构</h1><p>首先看 <code>std::function</code> 的成员组成：</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="type">void</span> <span class="title">swap</span><span class="params">(function&amp; __x)</span> <span class="keyword">noexcept</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    std::<span class="built_in">swap</span>(_M_functor, __x._M_functor);</span><br><span class="line">    std::<span class="built_in">swap</span>(_M_manager, __x._M_manager);</span><br><span class="line">    std::<span class="built_in">swap</span>(_M_invoker, __x._M_invoker);</span><br><span class="line">&#125; <span class="comment">// 模板太长了，成员定义很分散，抄起来很累；这个 swap 函数写的刚刚好</span></span><br></pre></td></tr></table></figure>
           <!--noindex-->
             <div class="post-button">
-              <a class="btn" href="../../programming/libstdc-std-set/#more" rel="contents">
+              <a class="btn" href="../../programming/libstdc-std-function/#more" rel="contents">
                 阅读全文 &raquo;
               </a>
             </div>
