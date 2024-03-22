@@ -196,6 +196,108 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://hxhue.github.io/programming/cppcon-2023-c-memory-model-from-c-11-to-c-23-alex-dathskovsky/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="Hxhue">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Hxhue's Blog">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/programming/cppcon-2023-c-memory-model-from-c-11-to-c-23-alex-dathskovsky/" class="post-title-link" itemprop="url">CppCon 2023 C++ Memory Model - from C++11 to C++23 - Alex Dathskovsky</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+              
+
+              <time title="创建时间：2024-03-22 10:12:00 / 修改时间：15:06:45" itemprop="dateCreated datePublished" datetime="2024-03-22T10:12:00+08:00">2024-03-22</time>
+            </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/programming/" itemprop="url" rel="index"><span itemprop="name">Programming</span></a>
+                </span>
+            </span>
+
+          <br>
+            <span class="post-meta-item" title="本文字数">
+              <span class="post-meta-item-icon">
+                <i class="far fa-file-word"></i>
+              </span>
+                <span class="post-meta-item-text">本文字数：</span>
+              <span>2.2k</span>
+            </span>
+            <span class="post-meta-item" title="阅读时长">
+              <span class="post-meta-item-icon">
+                <i class="far fa-clock"></i>
+              </span>
+                <span class="post-meta-item-text">阅读时长 &asymp;</span>
+              <span>8 分钟</span>
+            </span>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <p>视频链接 <a target="_blank" rel="noopener" href="https://www.youtube.com/watch?v=SVEYNEWZLo4">https://www.youtube.com/watch?v=SVEYNEWZLo4</a></p>
+<h1 id="不要用-Volatile-来同步"><a href="#不要用-Volatile-来同步" class="headerlink" title="不要用 Volatile 来同步"></a>不要用 Volatile 来同步</h1><blockquote>
+<p style="margin-bottom: 0px"><font size="+2">✏️</font><font size="+1"><strong> Note</strong></font></p>
+<p>顺带一提：C++20 中，有不少和 volatile 相关的操作都已经被标记为过时。详见 <a target="_blank" rel="noopener" href="https://en.cppreference.com/w/cpp/language/cv">https://en.cppreference.com/w/cpp/language/cv</a></p>
+</blockquote>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;tuple&gt;</span></span></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="type">int</span> <span class="title">main</span><span class="params">()</span> </span>&#123;</span><br><span class="line">  <span class="keyword">volatile</span> <span class="type">int</span> x = <span class="number">0</span>;</span><br><span class="line">  <span class="comment">// C++20</span></span><br><span class="line">  <span class="comment">// 1.1 函数参数不能用 volatile 类型 ❌</span></span><br><span class="line">  <span class="keyword">auto</span> f1 = [](<span class="keyword">volatile</span> <span class="type">int</span>) &#123;&#125;;</span><br><span class="line">  <span class="comment">// 1.2 函数返回值不能 volatile 类型 ❌</span></span><br><span class="line">  <span class="keyword">auto</span> f2 = [](/programming/cppcon-2023-c-memory-model-from-c-11-to-c-23-alex-dathskovsky/) -&gt; <span class="keyword">volatile</span> <span class="type">int</span> &#123; <span class="keyword">return</span> <span class="number">0</span>; &#125;;</span><br><span class="line">  <span class="type">int</span> y = (x = <span class="number">6</span>);</span><br><span class="line">  <span class="comment">// 2 自增、自减运算符不能在 volatile 变量上操作 ❌</span></span><br><span class="line">  x++;</span><br><span class="line">  <span class="comment">// 3. 结构化绑定不能用 volatile ❌</span></span><br><span class="line">  <span class="keyword">auto</span> <span class="keyword">volatile</span> [a, b] = std::tuple&#123;<span class="number">1</span>, <span class="number">3</span>&#125;;</span><br><span class="line">  <span class="comment">// 4. 不能基于 volatile 变量连续赋值，除非是在不评估的环境中</span></span><br><span class="line">  <span class="comment">// 错误 ❌</span></span><br><span class="line">  <span class="type">int</span> z = (x = <span class="number">5</span>);</span><br><span class="line">  <span class="comment">// 会有 -Wunevaluated-expression 警告，正确但是不推荐</span></span><br><span class="line">  <span class="keyword">using</span> T = <span class="keyword">decltype</span>((x = <span class="number">5</span>));</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>可以用来同步的机制：</p>
+<ol>
+<li>汇编级别的内存屏障指令（见下方图片）</li>
+<li>原子变量和锁</li>
+</ol>
+<p><img src="/programming/cppcon-2023-c-memory-model-from-c-11-to-c-23-alex-dathskovsky/../../../../../assets/C++%20Memory%20Model%20-%20from%20C++11%20to%20C++23%20-%20Alex%20Dathskovsky%20-%20CppCon%202023-20240322102721121.jpg"></p>
+<h1 id="Memory-Barriers"><a href="#Memory-Barriers" class="headerlink" title="Memory Barriers"></a>Memory Barriers</h1>
+          <!--noindex-->
+            <div class="post-button">
+              <a class="btn" href="/programming/cppcon-2023-c-memory-model-from-c-11-to-c-23-alex-dathskovsky/#more" rel="contents">
+                阅读全文 &raquo;
+              </a>
+            </div>
+          <!--/noindex-->
+        
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
     <link itemprop="mainEntityOfPage" href="https://hxhue.github.io/cli/windows-%E4%B8%8A-docker-%E5%92%8C-hyper-v-%E7%9A%84%E5%9D%91/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -305,10 +407,16 @@
                 <i class="far fa-calendar"></i>
               </span>
               <span class="post-meta-item-text">发表于</span>
-              
 
-              <time title="创建时间：2024-03-16 13:01:00 / 修改时间：13:02:18" itemprop="dateCreated datePublished" datetime="2024-03-16T13:01:00+08:00">2024-03-16</time>
+              <time title="创建时间：2024-03-16 13:01:00" itemprop="dateCreated datePublished" datetime="2024-03-16T13:01:00+08:00">2024-03-16</time>
             </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2024-03-21 23:50:04" itemprop="dateModified" datetime="2024-03-21T23:50:04+08:00">2024-03-21</time>
+              </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
                 <i class="far fa-folder"></i>
@@ -325,7 +433,7 @@
                 <i class="far fa-file-word"></i>
               </span>
                 <span class="post-meta-item-text">本文字数：</span>
-              <span>146</span>
+              <span>155</span>
             </span>
             <span class="post-meta-item" title="阅读时长">
               <span class="post-meta-item-icon">
@@ -344,7 +452,7 @@
     <div class="post-body" itemprop="articleBody">
 
       
-          <p>Docker 不能用 <code>ctrl + p + q</code> 退出的解决方案：登录后先用 <code>tty</code> 看自己的终端。然后用另外一个连接 <code>ps -af</code> 看想要终止的 <code>docker</code> 命令的 pid 是多少，然后用 <code>kill -9</code> 强杀。因为杀的是客户端而不是守护进程，所以不需要担心其他正在运行的容器受到影响。</p>
+          <p>Docker 不能用 <kbd>CTRL</kbd> + <kbd>p</kbd>，<kbd>CTRL</kbd> + <kbd>q</kbd>  退出的解决方案：登录后先用 <code>tty</code> 看自己的终端。然后用另外一个连接 <code>ps -af</code> 看想要终止的 <code>docker</code> 命令的 pid 是多少，然后用 <code>kill -9</code> 强杀。因为杀的是客户端而不是守护进程，所以不需要担心其他正在运行的容器受到影响。</p>
 <blockquote>
 <p style="margin-bottom: 0px"><font size="+2">⚠</font><font size="+1"><strong> Warning</strong></font></p>
 <p>不能用 <code>kill</code>（不带参数），因为 <code>kill</code> 会让 docker 连接优雅退出，所以容器也会被关闭！</p>
@@ -1063,111 +1171,6 @@
   
   
 
-      
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="https://hxhue.github.io/programming/cppcon-2023-lock-free-atomic-shared-pointers-without-a-split-reference-count/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/avatar.gif">
-      <meta itemprop="name" content="Hxhue">
-      <meta itemprop="description" content="">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Hxhue's Blog">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          
-            <a href="/programming/cppcon-2023-lock-free-atomic-shared-pointers-without-a-split-reference-count/" class="post-title-link" itemprop="url">(CppCon 2023) Lock-free Atomic Shared Pointers Without a Split Reference Count</a>
-        </h2>
-
-        <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-calendar"></i>
-              </span>
-              <span class="post-meta-item-text">发表于</span>
-
-              <time title="创建时间：2024-03-05 20:21:00" itemprop="dateCreated datePublished" datetime="2024-03-05T20:21:00+08:00">2024-03-05</time>
-            </span>
-              <span class="post-meta-item">
-                <span class="post-meta-item-icon">
-                  <i class="far fa-calendar-check"></i>
-                </span>
-                <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2024-03-15 16:41:11" itemprop="dateModified" datetime="2024-03-15T16:41:11+08:00">2024-03-15</time>
-              </span>
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-folder"></i>
-              </span>
-              <span class="post-meta-item-text">分类于</span>
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/programming/" itemprop="url" rel="index"><span itemprop="name">Programming</span></a>
-                </span>
-            </span>
-
-          <br>
-            <span class="post-meta-item" title="本文字数">
-              <span class="post-meta-item-icon">
-                <i class="far fa-file-word"></i>
-              </span>
-                <span class="post-meta-item-text">本文字数：</span>
-              <span>410</span>
-            </span>
-            <span class="post-meta-item" title="阅读时长">
-              <span class="post-meta-item-icon">
-                <i class="far fa-clock"></i>
-              </span>
-                <span class="post-meta-item-text">阅读时长 &asymp;</span>
-              <span>1 分钟</span>
-            </span>
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          <p><a target="_blank" rel="noopener" href="https://youtu.be/lNPZV9Iqo3U?si=lS1hf2ND4SS-6ELB">https://youtu.be/lNPZV9Iqo3U?si=lS1hf2ND4SS-6ELB</a> by Daniel Anderson</p>
-<p><code>std::shared_ptr</code> 的原子引用计数是线程安全的，但是：</p>
-<ol>
-<li>对它指向的对象的访问不是线程安全的</li>
-<li>对它本身的读写不是线程安全的</li>
-</ol>
-<p>这个 lecture 主要考虑第 2 点。在有一个全局或者类似全局的共享指针时，需要注意这个。</p>
-<p>首先不能使用 <code>std::atomic&lt;std::shared_ptr&gt;</code>，因为这个类型不是无锁的，有造成阻塞的可能。</p>
-<p>然后可以考虑用一个单独的原子变量来计数（这样就会同时有一个 <code>std::atomic&lt;int&gt;</code> 和一个 <code>std::shared_ptr</code>），确保 store 操作和 load 操作的安全性（不会 load 到一个引用计数已经归零然后被删掉的 <code>std::shared_ptr</code> 或者说控制块；一旦控制块被 delete，其他线程在控制块上的查询操作即对引用计数的原子读就会出现非法内存访问。）</p>
-<p>有些库甚至更进一步地实现了 split reference counted shared pointer，也就是把上一段的机制集成在了 <code>std::shared_ptr</code> 的内部，这比在外围做并发保护效率会高一些。</p>
-<p>然后 lecture 的重点是介绍 hazard pointer。使用 hazard pointer 保护对象时，控制块引用计数归零可以删掉对象，但不是马上 delete 掉这个控制块，而是使用 <code>retire</code> 方法，使得其他线程能够继续查询控制块。在没有线程查询控制块时再删除 retired control blocks，同样是把复杂度从用户移向了库的实现者。C++26 有可能会加入这个头文件。</p>
-          <!--noindex-->
-            <div class="post-button">
-              <a class="btn" href="/programming/cppcon-2023-lock-free-atomic-shared-pointers-without-a-split-reference-count/#more" rel="contents">
-                阅读全文 &raquo;
-              </a>
-            </div>
-          <!--/noindex-->
-        
-      
-    </div>
-
-    
-    
-    
-      <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  
-  
-  
-
 
   
   <nav class="pagination">
@@ -1237,7 +1240,7 @@
       <div class="site-state-item site-state-posts">
           <a href="/archives/">
         
-          <span class="site-state-item-count">222</span>
+          <span class="site-state-item-count">223</span>
           <span class="site-state-item-name">日志</span>
         </a>
       </div>
@@ -1298,13 +1301,13 @@
       <i class="fa fa-chart-area"></i>
     </span>
       <span class="post-meta-item-text">站点总字数：</span>
-    <span title="站点总字数">130k</span>
+    <span title="站点总字数">132k</span>
     <span class="post-meta-divider">|</span>
     <span class="post-meta-item-icon">
       <i class="fa fa-coffee"></i>
     </span>
       <span class="post-meta-item-text">站点阅读时长 &asymp;</span>
-    <span title="站点阅读时长">7:53</span>
+    <span title="站点阅读时长">8:01</span>
 </div>
   <div class="powered-by">由 <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Gemini</a> 强力驱动
   </div><script color="0,0,255" opacity="0.5" zIndex="-1" count="99" src="https://cdn.jsdelivr.net/npm/canvas-nest.js@1/dist/canvas-nest.js"></script>

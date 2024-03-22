@@ -196,6 +196,103 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://hxhue.github.io/systems/wsl-%E4%B8%8D%E8%83%BD%E4%BD%BF%E7%94%A8-code-%E6%89%93%E5%BC%80-vs-code/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="Hxhue">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Hxhue's Blog">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/systems/wsl-%E4%B8%8D%E8%83%BD%E4%BD%BF%E7%94%A8-code-%E6%89%93%E5%BC%80-vs-code/" class="post-title-link" itemprop="url">WSL 不能使用 code 打开 VS Code</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2023-09-17 10:34:00" itemprop="dateCreated datePublished" datetime="2023-09-17T10:34:00+08:00">2023-09-17</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2024-03-19 11:05:32" itemprop="dateModified" datetime="2024-03-19T11:05:32+08:00">2024-03-19</time>
+              </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/systems/" itemprop="url" rel="index"><span itemprop="name">Systems</span></a>
+                </span>
+            </span>
+
+          <br>
+            <span class="post-meta-item" title="本文字数">
+              <span class="post-meta-item-icon">
+                <i class="far fa-file-word"></i>
+              </span>
+                <span class="post-meta-item-text">本文字数：</span>
+              <span>143</span>
+            </span>
+            <span class="post-meta-item" title="阅读时长">
+              <span class="post-meta-item-icon">
+                <i class="far fa-clock"></i>
+              </span>
+                <span class="post-meta-item-text">阅读时长 &asymp;</span>
+              <span>1 分钟</span>
+            </span>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <p>首先检查 <code>/etc/wsl.conf</code> 配置，如果设置了不追加 Windows 的 PATH，则需要自己额外添加 VS Code 的命令目录到 WSL 中。</p>
+<figure class="highlight toml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># /etc/wsl.conf</span></span><br><span class="line"><span class="section">[boot]</span></span><br><span class="line"><span class="attr">systemd</span>=<span class="literal">true</span></span><br><span class="line"></span><br><span class="line"><span class="section">[interop]</span></span><br><span class="line"><span class="attr">appendWindowsPath</span>=<span class="literal">false</span></span><br></pre></td></tr></table></figure>
+
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># ~/.bashrc 或者其他配置文件</span></span><br><span class="line"><span class="built_in">export</span> PATH=<span class="string">&quot;/mnt/c/Users/Simon/AppData/Local/Programs/Microsoft VS Code/bin:<span class="variable">$PATH</span>&quot;</span></span><br></pre></td></tr></table></figure>
+
+<p>如果报错：</p>
+<figure class="highlight txt"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">/mnt/c/Users/Simon/AppData/Local/Programs/Microsoft VS Code/bin/code: 61: /mnt/c/Users/Simon/AppData/Local/Programs/Microsoft VS Code/Code.exe: Exec format error</span><br></pre></td></tr></table></figure>
+
+<p>则可能是新版 WSL 的 systemd 打包问题。（参考 <a target="_blank" rel="noopener" href="https://github.com/microsoft/WSL/issues/8952#issuecomment-1568212651%EF%BC%89">https://github.com/microsoft/WSL/issues/8952#issuecomment-1568212651）</a></p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">sudo sh -c <span class="string">&#x27;echo :WSLInterop:M::MZ::/init:PF &gt; /usr/lib/binfmt.d/WSLInterop.conf&#x27;</span></span><br><span class="line">sudo systemctl restart systemd-binfmt</span><br></pre></td></tr></table></figure>
+
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
     <link itemprop="mainEntityOfPage" href="https://hxhue.github.io/programming/javascript-spread-operator/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -1120,111 +1217,6 @@
   
   
 
-      
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="https://hxhue.github.io/unsorted/do53%E3%80%81dot%E3%80%81doh-%E9%80%9F%E5%BA%A6%E6%AF%94%E8%BE%83/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/avatar.gif">
-      <meta itemprop="name" content="Hxhue">
-      <meta itemprop="description" content="">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Hxhue's Blog">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          
-            <a href="/unsorted/do53%E3%80%81dot%E3%80%81doh-%E9%80%9F%E5%BA%A6%E6%AF%94%E8%BE%83/" class="post-title-link" itemprop="url">Do53、DoT、DoH 速度比较</a>
-        </h2>
-
-        <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-calendar"></i>
-              </span>
-              <span class="post-meta-item-text">发表于</span>
-
-              <time title="创建时间：2023-08-18 10:41:00" itemprop="dateCreated datePublished" datetime="2023-08-18T10:41:00+08:00">2023-08-18</time>
-            </span>
-              <span class="post-meta-item">
-                <span class="post-meta-item-icon">
-                  <i class="far fa-calendar-check"></i>
-                </span>
-                <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2024-03-18 17:05:54" itemprop="dateModified" datetime="2024-03-18T17:05:54+08:00">2024-03-18</time>
-              </span>
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-folder"></i>
-              </span>
-              <span class="post-meta-item-text">分类于</span>
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/unsorted/" itemprop="url" rel="index"><span itemprop="name">Unsorted</span></a>
-                </span>
-            </span>
-
-          <br>
-            <span class="post-meta-item" title="本文字数">
-              <span class="post-meta-item-icon">
-                <i class="far fa-file-word"></i>
-              </span>
-                <span class="post-meta-item-text">本文字数：</span>
-              <span>350</span>
-            </span>
-            <span class="post-meta-item" title="阅读时长">
-              <span class="post-meta-item-icon">
-                <i class="far fa-clock"></i>
-              </span>
-                <span class="post-meta-item-text">阅读时长 &asymp;</span>
-              <span>1 分钟</span>
-            </span>
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          <h1 id="测试方式"><a href="#测试方式" class="headerlink" title="测试方式"></a>测试方式</h1><p>用 Windows 电脑向阿里云的 <code>223.5.5.5</code> 服务器发送请求。本文只提供一个直观的比较，并不追求全面的讲解。</p>
-<h1 id="DOH"><a href="#DOH" class="headerlink" title="DOH"></a>DOH</h1><p>端口号 443。</p>
-<p>接口比较复杂，要求我们制作一个 dns 查询包，然后将其转换成 base64 编码，再去掉末尾多余的 <code>=</code>（base64 规定不足 4 字节的整数倍则需要补充 <code>=</code>）。然后将得到的字符串作为 <code>dns</code> 参数放在 url 中。返回的结果也是二进制数据。</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">curl -s -o output.txt https://223.5.5.5/dns-query?dns=A6QBAAABAAAAAAAAB2FsaWJhYmEDY29tAAABAAE -w <span class="string">&quot;%&#123;time_total&#125;s\n&quot;</span></span><br></pre></td></tr></table></figure>
-
-<ul>
-<li>Windows 自带 curl：50 ms</li>
-<li>MSYS2 curl：80 ms</li>
-<li>WSL curl：65 ms</li>
-</ul>
-<p>或者直接用 curl 完成查询（需要比较新的版本）：</p>
-          <!--noindex-->
-            <div class="post-button">
-              <a class="btn" href="/unsorted/do53%E3%80%81dot%E3%80%81doh-%E9%80%9F%E5%BA%A6%E6%AF%94%E8%BE%83/#more" rel="contents">
-                阅读全文 &raquo;
-              </a>
-            </div>
-          <!--/noindex-->
-        
-      
-    </div>
-
-    
-    
-    
-      <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  
-  
-  
-
 
   
   <nav class="pagination">
@@ -1294,7 +1286,7 @@
       <div class="site-state-item site-state-posts">
           <a href="/archives/">
         
-          <span class="site-state-item-count">222</span>
+          <span class="site-state-item-count">223</span>
           <span class="site-state-item-name">日志</span>
         </a>
       </div>
@@ -1355,13 +1347,13 @@
       <i class="fa fa-chart-area"></i>
     </span>
       <span class="post-meta-item-text">站点总字数：</span>
-    <span title="站点总字数">130k</span>
+    <span title="站点总字数">132k</span>
     <span class="post-meta-divider">|</span>
     <span class="post-meta-item-icon">
       <i class="fa fa-coffee"></i>
     </span>
       <span class="post-meta-item-text">站点阅读时长 &asymp;</span>
-    <span title="站点阅读时长">7:53</span>
+    <span title="站点阅读时长">8:01</span>
 </div>
   <div class="powered-by">由 <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Gemini</a> 强力驱动
   </div><script color="0,0,255" opacity="0.5" zIndex="-1" count="99" src="https://cdn.jsdelivr.net/npm/canvas-nest.js@1/dist/canvas-nest.js"></script>
