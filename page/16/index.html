@@ -75,7 +75,11 @@
   </style>
 </noscript>
 
-<!-- hexo injector head_end start --><style>a { word-break: break-all; }</style><!-- hexo injector head_end end --><link rel="alternate" href="atom.xml" title="没想好标题" type="application/atom+xml">
+<!-- hexo injector head_end start -->
+    <style>
+      a, code { word-break: break-all; }
+    </style>
+    <!-- hexo injector head_end end --><link rel="alternate" href="atom.xml" title="没想好标题" type="application/atom+xml">
 </head>
 
 <body itemscope itemtype="http://schema.org/WebPage">
@@ -304,102 +308,6 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="https://hxhue.github.io/programming/cpp/cpplang/hidden-friends.html">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="../../images/avatar.gif">
-      <meta itemprop="name" content="(╹ڡ╹ )">
-      <meta itemprop="description" content="">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="没想好标题">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          
-            <a href="../../programming/cpp/cpplang/hidden-friends.html" class="post-title-link" itemprop="url">Hidden Friends</a>
-        </h2>
-
-        <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-calendar"></i>
-              </span>
-              <span class="post-meta-item-text">发表于</span>
-
-              <time title="创建时间：2023-08-12 15:17:00" itemprop="dateCreated datePublished" datetime="2023-08-12T15:17:00+08:00">2023-08-12</time>
-            </span>
-              <span class="post-meta-item">
-                <span class="post-meta-item-icon">
-                  <i class="far fa-calendar-check"></i>
-                </span>
-                <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2024-03-15 16:31:51" itemprop="dateModified" datetime="2024-03-15T16:31:51+08:00">2024-03-15</time>
-              </span>
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-folder"></i>
-              </span>
-              <span class="post-meta-item-text">分类于</span>
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="../../categories/programming/" itemprop="url" rel="index"><span itemprop="name">programming</span></a>
-                </span>
-            </span>
-
-          <br>
-            <span class="post-meta-item" title="本文字数">
-              <span class="post-meta-item-icon">
-                <i class="far fa-file-word"></i>
-              </span>
-                <span class="post-meta-item-text">本文字数：</span>
-              <span>357</span>
-            </span>
-            <span class="post-meta-item" title="阅读时长">
-              <span class="post-meta-item-icon">
-                <i class="far fa-clock"></i>
-              </span>
-                <span class="post-meta-item-text">阅读时长 &asymp;</span>
-              <span>1 分钟</span>
-            </span>
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          <p>下面的代码中，Bar 能够隐式转换成 Foo。想要重载 Foo 的等于运算符至少有三种方案：</p>
-<ol>
-<li>重载全局的 <code>==</code> 运算符</li>
-<li>重载 Foo 中的 hidden friend，即 <code>friend bool operator==(Foo const &amp;a, Foo const &amp;b)</code></li>
-<li>重载 <code>bool operator==(Foo const &amp;a) const</code></li>
-</ol>
-<p>第一种方案会污染全局的名字空间，使得 Bar 和 Bar 之间也能通过转换两个参数进行比较；第三种方案允许第二个参数的隐式类型转换，但要求第一个参数必须是 Foo 类型；第二种方案只要求任一个参数为 Foo 类型，使得 ADL 能够参与找到这个函数，另一个参数则可以通过隐式类型转换来得到。</p>
-<p>成员函数的劣势是由于查找方式和 this 指针的存在，函数失去了对称性。全局函数的劣势则是没有用上 ADL 的优势，hidden friends 在这种情况比较好。</p>
-<p><a target="_blank" rel="noopener" href="https://godbolt.org/z/6sxdno3Yh">https://godbolt.org/z/6sxdno3Yh</a></p>
-<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;iostream&gt;</span></span></span><br><span class="line"></span><br><span class="line"><span class="meta">#<span class="keyword">define</span> HIDDEN_FEIDEND 1</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">struct</span> <span class="title class_">Foo</span> &#123;</span><br><span class="line">    <span class="type">int</span> value&#123;&#125;;</span><br><span class="line"><span class="meta">#<span class="keyword">ifdef</span> HIDDEN_FEIDEND</span></span><br><span class="line">    <span class="keyword">friend</span> <span class="type">bool</span> <span class="keyword">operator</span>==(Foo <span class="type">const</span> &amp;a, Foo <span class="type">const</span> &amp;b) &#123;</span><br><span class="line">        <span class="keyword">return</span> a.value == b.value;</span><br><span class="line">    &#125;</span><br><span class="line"><span class="meta">#<span class="keyword">endif</span></span></span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="keyword">struct</span> <span class="title class_">Bar</span> &#123;</span><br><span class="line">    <span class="type">int</span> value&#123;&#125;;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// Bar can be converted implicitly to Foo.</span></span><br><span class="line">    <span class="comment">// `explicit` keyword makes the conversion explicit.</span></span><br><span class="line">    <span class="comment">// explicit</span></span><br><span class="line">    <span class="function"><span class="keyword">operator</span> <span class="title">Foo</span><span class="params">()</span> <span class="type">const</span> </span>&#123;</span><br><span class="line">        <span class="keyword">return</span> Foo&#123;value&#125;;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="meta">#<span class="keyword">ifndef</span> HIDDEN_FEIDEND</span></span><br><span class="line"><span class="comment">// Normal operator overload that can be found in global scope</span></span><br><span class="line"><span class="type">bool</span> <span class="keyword">operator</span>==(Foo <span class="type">const</span> &amp;a, Foo <span class="type">const</span> &amp;b) &#123;</span><br><span class="line">    <span class="keyword">return</span> a.value == b.value;</span><br><span class="line">&#125;</span><br><span class="line"><span class="meta">#<span class="keyword">endif</span></span></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="type">int</span> <span class="title">main</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    Bar a&#123;<span class="number">-4</span>&#125;, b&#123;<span class="number">1</span>&#125;;</span><br><span class="line">    Foo c&#123;<span class="number">2</span>&#125;;</span><br><span class="line">    <span class="comment">// std::cout &lt;&lt; std::boolalpha &lt;&lt; (a == b) &lt;&lt; &quot;\\n&quot;; // ok if no HIDDEN_FEIDEND</span></span><br><span class="line">    std::cout &lt;&lt; std::boolalpha &lt;&lt; (a == c) &lt;&lt; <span class="string">&quot;\\n&quot;</span>; <span class="comment">// ok</span></span><br><span class="line">    std::cout &lt;&lt; std::boolalpha &lt;&lt; (c == a) &lt;&lt; <span class="string">&quot;\\n&quot;</span>; <span class="comment">// ok</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-      
-    </div>
-
-    
-    
-    
-      <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  
-  
-  
-
-      
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
     <link itemprop="mainEntityOfPage" href="https://hxhue.github.io/programming/cpp/cpplang/inheritance.html">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -500,6 +408,102 @@
 <p>struct 和 class 的数据定义没有区别。语法上区别是：struct 定义默认继承种类是 public，class 定义默认继承类型是 private，<strong>这和基类用 struct 还是 class 声明的无关</strong>。</p>
 <p>继承多个类时，需要给不同的基类分别指定访问限定符。</p>
 
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://hxhue.github.io/programming/cpp/cpplang/hidden-friends.html">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="../../images/avatar.gif">
+      <meta itemprop="name" content="(╹ڡ╹ )">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="没想好标题">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="../../programming/cpp/cpplang/hidden-friends.html" class="post-title-link" itemprop="url">Hidden Friends</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2023-08-12 15:17:00" itemprop="dateCreated datePublished" datetime="2023-08-12T15:17:00+08:00">2023-08-12</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2024-03-15 16:31:51" itemprop="dateModified" datetime="2024-03-15T16:31:51+08:00">2024-03-15</time>
+              </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="../../categories/programming/" itemprop="url" rel="index"><span itemprop="name">programming</span></a>
+                </span>
+            </span>
+
+          <br>
+            <span class="post-meta-item" title="本文字数">
+              <span class="post-meta-item-icon">
+                <i class="far fa-file-word"></i>
+              </span>
+                <span class="post-meta-item-text">本文字数：</span>
+              <span>357</span>
+            </span>
+            <span class="post-meta-item" title="阅读时长">
+              <span class="post-meta-item-icon">
+                <i class="far fa-clock"></i>
+              </span>
+                <span class="post-meta-item-text">阅读时长 &asymp;</span>
+              <span>1 分钟</span>
+            </span>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <p>下面的代码中，Bar 能够隐式转换成 Foo。想要重载 Foo 的等于运算符至少有三种方案：</p>
+<ol>
+<li>重载全局的 <code>==</code> 运算符</li>
+<li>重载 Foo 中的 hidden friend，即 <code>friend bool operator==(Foo const &amp;a, Foo const &amp;b)</code></li>
+<li>重载 <code>bool operator==(Foo const &amp;a) const</code></li>
+</ol>
+<p>第一种方案会污染全局的名字空间，使得 Bar 和 Bar 之间也能通过转换两个参数进行比较；第三种方案允许第二个参数的隐式类型转换，但要求第一个参数必须是 Foo 类型；第二种方案只要求任一个参数为 Foo 类型，使得 ADL 能够参与找到这个函数，另一个参数则可以通过隐式类型转换来得到。</p>
+<p>成员函数的劣势是由于查找方式和 this 指针的存在，函数失去了对称性。全局函数的劣势则是没有用上 ADL 的优势，hidden friends 在这种情况比较好。</p>
+<p><a target="_blank" rel="noopener" href="https://godbolt.org/z/6sxdno3Yh">https://godbolt.org/z/6sxdno3Yh</a></p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;iostream&gt;</span></span></span><br><span class="line"></span><br><span class="line"><span class="meta">#<span class="keyword">define</span> HIDDEN_FEIDEND 1</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">struct</span> <span class="title class_">Foo</span> &#123;</span><br><span class="line">    <span class="type">int</span> value&#123;&#125;;</span><br><span class="line"><span class="meta">#<span class="keyword">ifdef</span> HIDDEN_FEIDEND</span></span><br><span class="line">    <span class="keyword">friend</span> <span class="type">bool</span> <span class="keyword">operator</span>==(Foo <span class="type">const</span> &amp;a, Foo <span class="type">const</span> &amp;b) &#123;</span><br><span class="line">        <span class="keyword">return</span> a.value == b.value;</span><br><span class="line">    &#125;</span><br><span class="line"><span class="meta">#<span class="keyword">endif</span></span></span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="keyword">struct</span> <span class="title class_">Bar</span> &#123;</span><br><span class="line">    <span class="type">int</span> value&#123;&#125;;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// Bar can be converted implicitly to Foo.</span></span><br><span class="line">    <span class="comment">// `explicit` keyword makes the conversion explicit.</span></span><br><span class="line">    <span class="comment">// explicit</span></span><br><span class="line">    <span class="function"><span class="keyword">operator</span> <span class="title">Foo</span><span class="params">()</span> <span class="type">const</span> </span>&#123;</span><br><span class="line">        <span class="keyword">return</span> Foo&#123;value&#125;;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="meta">#<span class="keyword">ifndef</span> HIDDEN_FEIDEND</span></span><br><span class="line"><span class="comment">// Normal operator overload that can be found in global scope</span></span><br><span class="line"><span class="type">bool</span> <span class="keyword">operator</span>==(Foo <span class="type">const</span> &amp;a, Foo <span class="type">const</span> &amp;b) &#123;</span><br><span class="line">    <span class="keyword">return</span> a.value == b.value;</span><br><span class="line">&#125;</span><br><span class="line"><span class="meta">#<span class="keyword">endif</span></span></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="type">int</span> <span class="title">main</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    Bar a&#123;<span class="number">-4</span>&#125;, b&#123;<span class="number">1</span>&#125;;</span><br><span class="line">    Foo c&#123;<span class="number">2</span>&#125;;</span><br><span class="line">    <span class="comment">// std::cout &lt;&lt; std::boolalpha &lt;&lt; (a == b) &lt;&lt; &quot;\\n&quot;; // ok if no HIDDEN_FEIDEND</span></span><br><span class="line">    std::cout &lt;&lt; std::boolalpha &lt;&lt; (a == c) &lt;&lt; <span class="string">&quot;\\n&quot;</span>; <span class="comment">// ok</span></span><br><span class="line">    std::cout &lt;&lt; std::boolalpha &lt;&lt; (c == a) &lt;&lt; <span class="string">&quot;\\n&quot;</span>; <span class="comment">// ok</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
       
     </div>
 

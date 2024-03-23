@@ -82,7 +82,11 @@
   </style>
 </noscript>
 
-<!-- hexo injector head_end start --><style>a { word-break: break-all; }</style><!-- hexo injector head_end end --><link rel="alternate" href="atom.xml" title="没想好标题" type="application/atom+xml">
+<!-- hexo injector head_end start -->
+    <style>
+      a, code { word-break: break-all; }
+    </style>
+    <!-- hexo injector head_end end --><link rel="alternate" href="atom.xml" title="没想好标题" type="application/atom+xml">
 </head>
 
 <body itemscope itemtype="http://schema.org/WebPage">
@@ -282,7 +286,7 @@
 <p>首先把 docker-compose 配置文件下载下来修改好 sharelatex 的端口、sharelatex&#x2F;redis&#x2F;mongo 的映射路径。</p>
 <p>❗ 问题：连接不上 redis。这是因为 sharelatex 仍在使用 <code>SHARELATEX</code> 开头的环境变量，所以要把 <code>OVERLEAF</code> 开头的环境变量复制一份改个前缀。改好之后又提示 mongo 连接不上，还是同样的改法。</p>
 <p>❗ 问题：登陆网页创建账户，提示请联系管理员。找到 <a target="_blank" rel="noopener" href="https://github.com/overleaf/overleaf/wiki/Creating-and-managing-users">https://github.com/overleaf/overleaf/wiki/Creating-and-managing-users</a> 发现我用的是 legacy 的方法。后面也有解决方案，但是我没有继续往下走了。考虑到过时方法还可能出现别的问题，就换成使用 toolkit 了。</p>
-<h1 id="方案-2：Overleaf-toolkit"><a href="#方案-2：Overleaf-toolkit" class="headerlink" title="方案 2：Overleaf&#x2F;toolkit"></a>方案 2：Overleaf&#x2F;toolkit</h1><p><a target="_blank" rel="noopener" href="https//github-com/overleaf/toolkit/blob/master/doc/quick-start-guide.html">https://github.com/overleaf/toolkit/blob/master/doc/quick-start-guide.md</a></p>
+<h1 id="方案-2：Overleaf-toolkit"><a href="#方案-2：Overleaf-toolkit" class="headerlink" title="方案 2：Overleaf&#x2F;toolkit"></a>方案 2：Overleaf&#x2F;toolkit</h1><p><a target="_blank" rel="noopener" href="https://github.com/overleaf/toolkit/blob/master/doc/quick-start-guide.md">https://github.com/overleaf/toolkit/blob/master/doc/quick-start-guide.md</a></p>
 <p>这个新的工具包用的配置都是相对路径，所以只需要改端口，不需要改映射路径了。然后按照说明注册管理员账号，有了管理员账号才能注册普通账户。</p>
 <p>问题：<strong>A</strong> 可上传 zip 大小只有 52.4M。解决方案：先打包一部分上传，然后将剩下的文件夹逐个上传，不过也有限制：<strong>B</strong> 一次只能上传 40 个文件。<strong>C</strong> 而且大量上传还会受到限制，提示：Too many files uploaded, your uploads have been throttled for short period. Please wait 15 minutes and try again.</p>
 <p>开摆！超大型项目还是不要用 overleaf 了，不过到这里也都可以运行了。</p>

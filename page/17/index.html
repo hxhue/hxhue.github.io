@@ -75,7 +75,11 @@
   </style>
 </noscript>
 
-<!-- hexo injector head_end start --><style>a { word-break: break-all; }</style><!-- hexo injector head_end end --><link rel="alternate" href="atom.xml" title="没想好标题" type="application/atom+xml">
+<!-- hexo injector head_end start -->
+    <style>
+      a, code { word-break: break-all; }
+    </style>
+    <!-- hexo injector head_end end --><link rel="alternate" href="atom.xml" title="没想好标题" type="application/atom+xml">
 </head>
 
 <body itemscope itemtype="http://schema.org/WebPage">
@@ -202,100 +206,6 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="https://hxhue.github.io/programming/cpp/cpplang/auto-decltype.html">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="../../images/avatar.gif">
-      <meta itemprop="name" content="(╹ڡ╹ )">
-      <meta itemprop="description" content="">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="没想好标题">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          
-            <a href="../../programming/cpp/cpplang/auto-decltype.html" class="post-title-link" itemprop="url">auto + decltype</a>
-        </h2>
-
-        <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-calendar"></i>
-              </span>
-              <span class="post-meta-item-text">发表于</span>
-
-              <time title="创建时间：2023-08-12 15:17:00" itemprop="dateCreated datePublished" datetime="2023-08-12T15:17:00+08:00">2023-08-12</time>
-            </span>
-              <span class="post-meta-item">
-                <span class="post-meta-item-icon">
-                  <i class="far fa-calendar-check"></i>
-                </span>
-                <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2024-03-15 16:31:51" itemprop="dateModified" datetime="2024-03-15T16:31:51+08:00">2024-03-15</time>
-              </span>
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-folder"></i>
-              </span>
-              <span class="post-meta-item-text">分类于</span>
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="../../categories/programming/" itemprop="url" rel="index"><span itemprop="name">programming</span></a>
-                </span>
-            </span>
-
-          <br>
-            <span class="post-meta-item" title="本文字数">
-              <span class="post-meta-item-icon">
-                <i class="far fa-file-word"></i>
-              </span>
-                <span class="post-meta-item-text">本文字数：</span>
-              <span>115</span>
-            </span>
-            <span class="post-meta-item" title="阅读时长">
-              <span class="post-meta-item-icon">
-                <i class="far fa-clock"></i>
-              </span>
-                <span class="post-meta-item-text">阅读时长 &asymp;</span>
-              <span>1 分钟</span>
-            </span>
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          <h1 id="用于标注函数返回值"><a href="#用于标注函数返回值" class="headerlink" title="用于标注函数返回值"></a>用于标注函数返回值</h1><p>令人意外的是：C++14 加入的返回值推导是一种特殊的类型，和前向声明并不兼容。</p>
-<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="type">int</span> <span class="title">known</span><span class="params">()</span></span>;</span><br><span class="line"><span class="function"><span class="keyword">auto</span> <span class="title">known</span><span class="params">()</span> </span>&#123; <span class="keyword">return</span> <span class="number">42</span>; &#125; <span class="comment">// 错误：类型不兼容</span></span><br><span class="line"><span class="comment">// int known() &#123; return 42; &#125;         // ok</span></span><br><span class="line"><span class="comment">// auto known() -&gt; int &#123; return 42; &#125; // ok</span></span><br></pre></td></tr></table></figure>
-
-<p>同样：</p>
-<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">auto</span> <span class="title">known</span><span class="params">()</span></span>;</span><br><span class="line"><span class="function"><span class="type">int</span> <span class="title">known</span><span class="params">()</span> </span>&#123; <span class="keyword">return</span> <span class="number">42</span>; &#125; <span class="comment">// 错误：类型不兼容</span></span><br><span class="line"><span class="comment">// auto known() &#123; return 42; &#125; // ok</span></span><br></pre></td></tr></table></figure>
-
-<p>C++ 14 还加入了 <code>decltype(auto)</code>，这个组合不像单独的 <code>auto</code>，不能被 <code>const</code> 等继续修饰。</p>
-
-      
-    </div>
-
-    
-    
-    
-      <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  
-  
-  
-
-      
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
     <link itemprop="mainEntityOfPage" href="https://hxhue.github.io/programming/cpp/cpplang/cppreference-%E5%8D%8F%E7%A8%8B%E4%BE%8B%E5%AD%90%E7%90%86%E8%A7%A3.html">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -390,7 +300,7 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="https://hxhue.github.io/programming/cpp/cpplang/enum-class.html">
+    <link itemprop="mainEntityOfPage" href="https://hxhue.github.io/programming/cpp/cpplang/auto-decltype.html">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="image" content="../../images/avatar.gif">
@@ -404,7 +314,7 @@
       <header class="post-header">
         <h2 class="post-title" itemprop="name headline">
           
-            <a href="../../programming/cpp/cpplang/enum-class.html" class="post-title-link" itemprop="url">enum class</a>
+            <a href="../../programming/cpp/cpplang/auto-decltype.html" class="post-title-link" itemprop="url">auto + decltype</a>
         </h2>
 
         <div class="post-meta">
@@ -439,7 +349,7 @@
                 <i class="far fa-file-word"></i>
               </span>
                 <span class="post-meta-item-text">本文字数：</span>
-              <span>331</span>
+              <span>115</span>
             </span>
             <span class="post-meta-item" title="阅读时长">
               <span class="post-meta-item-icon">
@@ -458,11 +368,14 @@
     <div class="post-body" itemprop="articleBody">
 
       
-          <p>C 风格枚举和 C++ 新增的 enum class：</p>
-<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">enum</span> &#123; ITEM_A1, ITEM_A2 &#125;;</span><br><span class="line"><span class="keyword">enum</span> <span class="title class_">B</span> &#123; ITEM_B1, ITEM_B2 &#125;;</span><br><span class="line"><span class="comment">// 从 C 沿用来的语法：</span></span><br><span class="line"><span class="comment">// 1. 底层类型默认为int，但也能手动指定</span></span><br><span class="line"><span class="comment">// 2. 枚举名裸露在外</span></span><br><span class="line"><span class="comment">// 区别：</span></span><br><span class="line"><span class="comment">// C 允许前向声明 enum</span></span><br><span class="line"><span class="comment">// C++ 允许枚举列表为空；允许在表示类型时省略 enum 关键字；虽然枚举名裸露但也能通过限定名访问</span></span><br><span class="line"></span><br><span class="line"><span class="comment">// C++ 新增 enum class</span></span><br><span class="line"><span class="keyword">enum</span> <span class="title class_">C</span> &#123; ITEM_C1, ITEM_C2 &#125;;</span><br><span class="line"><span class="comment">// 类型不再裸露，需要使用限定名访问</span></span><br><span class="line"><span class="comment">// 没有默认底层类型，但是可以手动指定</span></span><br></pre></td></tr></table></figure>
+          <h1 id="用于标注函数返回值"><a href="#用于标注函数返回值" class="headerlink" title="用于标注函数返回值"></a>用于标注函数返回值</h1><p>令人意外的是：C++14 加入的返回值推导是一种特殊的类型，和前向声明并不兼容。</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="type">int</span> <span class="title">known</span><span class="params">()</span></span>;</span><br><span class="line"><span class="function"><span class="keyword">auto</span> <span class="title">known</span><span class="params">()</span> </span>&#123; <span class="keyword">return</span> <span class="number">42</span>; &#125; <span class="comment">// 错误：类型不兼容</span></span><br><span class="line"><span class="comment">// int known() &#123; return 42; &#125;         // ok</span></span><br><span class="line"><span class="comment">// auto known() -&gt; int &#123; return 42; &#125; // ok</span></span><br></pre></td></tr></table></figure>
 
-<p>C++ enum class 禁止了隐式转换，但是用来表示 id 还是不太方便：</p>
-<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;type_traits&gt;</span></span></span><br><span class="line"></span><br><span class="line"><span class="keyword">enum</span> <span class="title class_">A</span>: <span class="type">int</span> &#123; ITEM_1 &#125;;</span><br><span class="line"><span class="keyword">enum</span> &#123; ITEM_2 &#125;;</span><br><span class="line"><span class="keyword">enum class</span> <span class="title class_">B</span>: <span class="type">int</span> &#123; ITEM_3 &#125;;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 即便底层类型相同，实际类型也不同</span></span><br><span class="line"><span class="built_in">static_assert</span>(! std::is_same_v&lt;<span class="type">int</span>, A&gt;);</span><br><span class="line"><span class="built_in">static_assert</span>(<span class="built_in">sizeof</span>(<span class="type">int</span>) == <span class="built_in">sizeof</span>(A));</span><br><span class="line"><span class="built_in">static_assert</span>(<span class="built_in">sizeof</span>(<span class="type">int</span>) == <span class="built_in">sizeof</span>(ITEM_2));</span><br><span class="line"><span class="comment">// 枚举不是聚合类</span></span><br><span class="line"><span class="built_in">static_assert</span>(! std::is_aggregate_v&lt;A&gt;);</span><br><span class="line"><span class="built_in">static_assert</span>(! std::is_aggregate_v&lt;B&gt;);</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="type">int</span> <span class="title">main</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    [<span class="type">int</span>](<span class="type">int</span>)&#123;&#125;(ITEM_1);</span><br><span class="line">    [<span class="type">int</span>](<span class="type">int</span>)&#123;&#125;(ITEM_2);</span><br><span class="line">    </span><br><span class="line">    <span class="type">int</span> b3 = (<span class="type">int</span>)B::ITEM_3;</span><br><span class="line">    <span class="comment">// [int](int)&#123;&#125;(B::ITEM_3); // no conversion from B to int</span></span><br><span class="line">    <span class="comment">// [B](B)&#123;&#125;(b3);          // no conversion from int to B</span></span><br><span class="line">    [B](B)&#123;&#125;(B &#123;b3&#125;);</span><br><span class="line">    <span class="comment">// [B](B)&#123;&#125;( &#123;b3&#125; ); // 即便是花括号也不能推导，因为枚举不是类</span></span><br><span class="line"></span><br><span class="line">    <span class="comment">// 强类型整数还是用 aggregate 做比较好：</span></span><br><span class="line">    <span class="comment">// 虽然整数到枚举可以使用构造的方式描述，但枚举到整数只能强制转换</span></span><br><span class="line">    <span class="comment">// 作为对比，aggregate 直接访问成员即可</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>同样：</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">auto</span> <span class="title">known</span><span class="params">()</span></span>;</span><br><span class="line"><span class="function"><span class="type">int</span> <span class="title">known</span><span class="params">()</span> </span>&#123; <span class="keyword">return</span> <span class="number">42</span>; &#125; <span class="comment">// 错误：类型不兼容</span></span><br><span class="line"><span class="comment">// auto known() &#123; return 42; &#125; // ok</span></span><br></pre></td></tr></table></figure>
+
+<p>C++ 14 还加入了 <code>decltype(auto)</code>，这个组合不像单独的 <code>auto</code>，不能被 <code>const</code> 等继续修饰。</p>
+
       
     </div>
 
@@ -556,6 +469,97 @@
 
 <h1 id="阻止“去掉默认值是单参数构造函数”的隐式转换"><a href="#阻止“去掉默认值是单参数构造函数”的隐式转换" class="headerlink" title="阻止“去掉默认值是单参数构造函数”的隐式转换"></a>阻止“去掉默认值是单参数构造函数”的隐式转换</h1><p>如果将来某个构造函数除了第一个参数之外的其他参数有了默认值，则会引起和单参数构造函数一样的隐式转换问题。</p>
 <figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">class</span> <span class="title class_">A</span> &#123;</span><br><span class="line">    <span class="keyword">public</span>:</span><br><span class="line">        <span class="built_in">A</span>( <span class="type">int</span> b, <span class="type">int</span> c=<span class="number">0</span> ) &#123;&#125; <span class="comment">// A 可以从 int 隐式转换而来</span></span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://hxhue.github.io/programming/cpp/cpplang/enum-class.html">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="../../images/avatar.gif">
+      <meta itemprop="name" content="(╹ڡ╹ )">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="没想好标题">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="../../programming/cpp/cpplang/enum-class.html" class="post-title-link" itemprop="url">enum class</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2023-08-12 15:17:00" itemprop="dateCreated datePublished" datetime="2023-08-12T15:17:00+08:00">2023-08-12</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2024-03-15 16:31:51" itemprop="dateModified" datetime="2024-03-15T16:31:51+08:00">2024-03-15</time>
+              </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="../../categories/programming/" itemprop="url" rel="index"><span itemprop="name">programming</span></a>
+                </span>
+            </span>
+
+          <br>
+            <span class="post-meta-item" title="本文字数">
+              <span class="post-meta-item-icon">
+                <i class="far fa-file-word"></i>
+              </span>
+                <span class="post-meta-item-text">本文字数：</span>
+              <span>331</span>
+            </span>
+            <span class="post-meta-item" title="阅读时长">
+              <span class="post-meta-item-icon">
+                <i class="far fa-clock"></i>
+              </span>
+                <span class="post-meta-item-text">阅读时长 &asymp;</span>
+              <span>1 分钟</span>
+            </span>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <p>C 风格枚举和 C++ 新增的 enum class：</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">enum</span> &#123; ITEM_A1, ITEM_A2 &#125;;</span><br><span class="line"><span class="keyword">enum</span> <span class="title class_">B</span> &#123; ITEM_B1, ITEM_B2 &#125;;</span><br><span class="line"><span class="comment">// 从 C 沿用来的语法：</span></span><br><span class="line"><span class="comment">// 1. 底层类型默认为int，但也能手动指定</span></span><br><span class="line"><span class="comment">// 2. 枚举名裸露在外</span></span><br><span class="line"><span class="comment">// 区别：</span></span><br><span class="line"><span class="comment">// C 允许前向声明 enum</span></span><br><span class="line"><span class="comment">// C++ 允许枚举列表为空；允许在表示类型时省略 enum 关键字；虽然枚举名裸露但也能通过限定名访问</span></span><br><span class="line"></span><br><span class="line"><span class="comment">// C++ 新增 enum class</span></span><br><span class="line"><span class="keyword">enum</span> <span class="title class_">C</span> &#123; ITEM_C1, ITEM_C2 &#125;;</span><br><span class="line"><span class="comment">// 类型不再裸露，需要使用限定名访问</span></span><br><span class="line"><span class="comment">// 没有默认底层类型，但是可以手动指定</span></span><br></pre></td></tr></table></figure>
+
+<p>C++ enum class 禁止了隐式转换，但是用来表示 id 还是不太方便：</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;type_traits&gt;</span></span></span><br><span class="line"></span><br><span class="line"><span class="keyword">enum</span> <span class="title class_">A</span>: <span class="type">int</span> &#123; ITEM_1 &#125;;</span><br><span class="line"><span class="keyword">enum</span> &#123; ITEM_2 &#125;;</span><br><span class="line"><span class="keyword">enum class</span> <span class="title class_">B</span>: <span class="type">int</span> &#123; ITEM_3 &#125;;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 即便底层类型相同，实际类型也不同</span></span><br><span class="line"><span class="built_in">static_assert</span>(! std::is_same_v&lt;<span class="type">int</span>, A&gt;);</span><br><span class="line"><span class="built_in">static_assert</span>(<span class="built_in">sizeof</span>(<span class="type">int</span>) == <span class="built_in">sizeof</span>(A));</span><br><span class="line"><span class="built_in">static_assert</span>(<span class="built_in">sizeof</span>(<span class="type">int</span>) == <span class="built_in">sizeof</span>(ITEM_2));</span><br><span class="line"><span class="comment">// 枚举不是聚合类</span></span><br><span class="line"><span class="built_in">static_assert</span>(! std::is_aggregate_v&lt;A&gt;);</span><br><span class="line"><span class="built_in">static_assert</span>(! std::is_aggregate_v&lt;B&gt;);</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="type">int</span> <span class="title">main</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    [<span class="type">int</span>](<span class="type">int</span>)&#123;&#125;(ITEM_1);</span><br><span class="line">    [<span class="type">int</span>](<span class="type">int</span>)&#123;&#125;(ITEM_2);</span><br><span class="line">    </span><br><span class="line">    <span class="type">int</span> b3 = (<span class="type">int</span>)B::ITEM_3;</span><br><span class="line">    <span class="comment">// [int](int)&#123;&#125;(B::ITEM_3); // no conversion from B to int</span></span><br><span class="line">    <span class="comment">// [B](B)&#123;&#125;(b3);          // no conversion from int to B</span></span><br><span class="line">    [B](B)&#123;&#125;(B &#123;b3&#125;);</span><br><span class="line">    <span class="comment">// [B](B)&#123;&#125;( &#123;b3&#125; ); // 即便是花括号也不能推导，因为枚举不是类</span></span><br><span class="line"></span><br><span class="line">    <span class="comment">// 强类型整数还是用 aggregate 做比较好：</span></span><br><span class="line">    <span class="comment">// 虽然整数到枚举可以使用构造的方式描述，但枚举到整数只能强制转换</span></span><br><span class="line">    <span class="comment">// 作为对比，aggregate 直接访问成员即可</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
       
     </div>
 
@@ -674,101 +678,6 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="https://hxhue.github.io/programming/cpp/cpplang/range-for.html">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="../../images/avatar.gif">
-      <meta itemprop="name" content="(╹ڡ╹ )">
-      <meta itemprop="description" content="">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="没想好标题">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          
-            <a href="../../programming/cpp/cpplang/range-for.html" class="post-title-link" itemprop="url">range-for</a>
-        </h2>
-
-        <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-calendar"></i>
-              </span>
-              <span class="post-meta-item-text">发表于</span>
-
-              <time title="创建时间：2023-08-12 15:17:00" itemprop="dateCreated datePublished" datetime="2023-08-12T15:17:00+08:00">2023-08-12</time>
-            </span>
-              <span class="post-meta-item">
-                <span class="post-meta-item-icon">
-                  <i class="far fa-calendar-check"></i>
-                </span>
-                <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2024-03-15 16:31:51" itemprop="dateModified" datetime="2024-03-15T16:31:51+08:00">2024-03-15</time>
-              </span>
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-folder"></i>
-              </span>
-              <span class="post-meta-item-text">分类于</span>
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="../../categories/programming/" itemprop="url" rel="index"><span itemprop="name">programming</span></a>
-                </span>
-            </span>
-
-          <br>
-            <span class="post-meta-item" title="本文字数">
-              <span class="post-meta-item-icon">
-                <i class="far fa-file-word"></i>
-              </span>
-                <span class="post-meta-item-text">本文字数：</span>
-              <span>205</span>
-            </span>
-            <span class="post-meta-item" title="阅读时长">
-              <span class="post-meta-item-icon">
-                <i class="far fa-clock"></i>
-              </span>
-                <span class="post-meta-item-text">阅读时长 &asymp;</span>
-              <span>1 分钟</span>
-            </span>
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          <p>以前容易出现引用悬挂的问题。在新的语言标准中得到了改进。</p>
-<p>C++11 只是简单的语法糖，只能保证表达式返回值被临时变量接受并保留到循环结束：(<a target="_blank" rel="noopener" href="https://stackoverflow.com/a/51440883">https://stackoverflow.com/a/51440883</a>)</p>
-<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">&#123;</span><br><span class="line">    <span class="keyword">auto</span>&amp;&amp; __range = <span class="built_in">f</span>()[<span class="number">5</span>]; <span class="comment">// (*)</span></span><br><span class="line">    <span class="keyword">auto</span> __begin = __range.<span class="built_in">begin</span>(); <span class="comment">// not exactly, but close enough</span></span><br><span class="line">    <span class="keyword">auto</span> __end = __range.<span class="built_in">end</span>();     <span class="comment">// in C++17, these types can be different</span></span><br><span class="line">    <span class="keyword">for</span> (; __begin != __end; ++__begin) &#123;</span><br><span class="line">        <span class="keyword">auto</span> e = *__begin;</span><br><span class="line">        <span class="comment">// rest of body</span></span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<p>C++20 range-for 生命周期规则一样，不过可以在里面创建临时对象，避免后面引用过程中的悬挂：</p>
-<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;iostream&gt;</span></span></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="type">int</span> <span class="title">main</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    <span class="keyword">for</span> (<span class="keyword">auto</span> lst = &#123;<span class="number">1</span>, <span class="number">2</span>, <span class="number">5</span>, <span class="number">1</span>, <span class="number">71</span>&#125;; <span class="keyword">auto</span> i : lst) &#123;</span><br><span class="line">        std::cout &lt;&lt; i &lt;&lt; <span class="string">&#x27;\n&#x27;</span>;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<p>C++23 则要求在 range-for 括号中创建的临时对象生命周期延长到整个循环结束后。不过截至 2023 年 6 月 3 日，没有编译器实现。</p>
-
-      
-    </div>
-
-    
-    
-    
-      <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  
-  
-  
-
-      
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
     <link itemprop="mainEntityOfPage" href="https://hxhue.github.io/programming/cpp/cpplang/noexcept-throw.html">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -865,7 +774,7 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="https://hxhue.github.io/programming/cpp/cpplang/sizeof.html">
+    <link itemprop="mainEntityOfPage" href="https://hxhue.github.io/programming/cpp/cpplang/range-for.html">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="image" content="../../images/avatar.gif">
@@ -879,7 +788,7 @@
       <header class="post-header">
         <h2 class="post-title" itemprop="name headline">
           
-            <a href="../../programming/cpp/cpplang/sizeof.html" class="post-title-link" itemprop="url">sizeof</a>
+            <a href="../../programming/cpp/cpplang/range-for.html" class="post-title-link" itemprop="url">range-for</a>
         </h2>
 
         <div class="post-meta">
@@ -914,7 +823,7 @@
                 <i class="far fa-file-word"></i>
               </span>
                 <span class="post-meta-item-text">本文字数：</span>
-              <span>71</span>
+              <span>205</span>
             </span>
             <span class="post-meta-item" title="阅读时长">
               <span class="post-meta-item-icon">
@@ -933,13 +842,14 @@
     <div class="post-body" itemprop="articleBody">
 
       
-          <p>下面几个表达式相等：</p>
-<ul>
-<li><code>sizeof(T&amp;)</code></li>
-<li><code>sizeof(T&amp;&amp;)</code></li>
-<li><code>sizeof(T)</code></li>
-</ul>
-<p>也就是说 <code>sizeof</code> 会去掉引用。忘记出处了，twitter 上有人提过一个 quiz，什么类型 <code>T</code> 能满足 <code>struct &#123;T x;&#125;</code> 和 <code>T</code> 的 sizeof 结果不相等，引用类型就满足这样的情况。</p>
+          <p>以前容易出现引用悬挂的问题。在新的语言标准中得到了改进。</p>
+<p>C++11 只是简单的语法糖，只能保证表达式返回值被临时变量接受并保留到循环结束：(<a target="_blank" rel="noopener" href="https://stackoverflow.com/a/51440883">https://stackoverflow.com/a/51440883</a>)</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">&#123;</span><br><span class="line">    <span class="keyword">auto</span>&amp;&amp; __range = <span class="built_in">f</span>()[<span class="number">5</span>]; <span class="comment">// (*)</span></span><br><span class="line">    <span class="keyword">auto</span> __begin = __range.<span class="built_in">begin</span>(); <span class="comment">// not exactly, but close enough</span></span><br><span class="line">    <span class="keyword">auto</span> __end = __range.<span class="built_in">end</span>();     <span class="comment">// in C++17, these types can be different</span></span><br><span class="line">    <span class="keyword">for</span> (; __begin != __end; ++__begin) &#123;</span><br><span class="line">        <span class="keyword">auto</span> e = *__begin;</span><br><span class="line">        <span class="comment">// rest of body</span></span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>C++20 range-for 生命周期规则一样，不过可以在里面创建临时对象，避免后面引用过程中的悬挂：</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;iostream&gt;</span></span></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="type">int</span> <span class="title">main</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    <span class="keyword">for</span> (<span class="keyword">auto</span> lst = &#123;<span class="number">1</span>, <span class="number">2</span>, <span class="number">5</span>, <span class="number">1</span>, <span class="number">71</span>&#125;; <span class="keyword">auto</span> i : lst) &#123;</span><br><span class="line">        std::cout &lt;&lt; i &lt;&lt; <span class="string">&#x27;\n&#x27;</span>;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>C++23 则要求在 range-for 括号中创建的临时对象生命周期延长到整个循环结束后。不过截至 2023 年 6 月 3 日，没有编译器实现。</p>
 
       
     </div>
@@ -1028,6 +938,100 @@
 
       
           <figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">class</span> <span class="title class_">Solution</span> &#123;</span><br><span class="line">   <span class="keyword">public</span>:</span><br><span class="line">    <span class="function">vector&lt;<span class="type">int</span>&gt; <span class="title">searchRange</span><span class="params">(vector&lt;<span class="type">int</span>&gt;&amp; nums, <span class="type">int</span> target)</span> </span>&#123;</span><br><span class="line">        <span class="type">int</span> n = (<span class="type">int</span>)nums.<span class="built_in">size</span>();</span><br><span class="line">        <span class="comment">// lower_bound 的可能实现</span></span><br><span class="line">        <span class="keyword">auto</span> lowerbound = [&amp;](<span class="keyword">auto</span> &amp;&amp;less) &#123;</span><br><span class="line">            <span class="type">int</span> lo = <span class="number">0</span>, hi = n;</span><br><span class="line">            <span class="keyword">while</span> (lo &lt; hi) &#123;</span><br><span class="line">                <span class="type">int</span> mid = (lo + hi) / <span class="number">2</span>;</span><br><span class="line">                <span class="keyword">if</span> (<span class="built_in">less</span>(nums[mid], target)) lo = mid + <span class="number">1</span>;</span><br><span class="line">                <span class="keyword">else</span>                         hi = mid;</span><br><span class="line">            &#125;</span><br><span class="line">            <span class="keyword">return</span> lo;</span><br><span class="line">        &#125;;</span><br><span class="line">        <span class="comment">// std::lower_bound</span></span><br><span class="line">        <span class="type">int</span> left = <span class="built_in">lowerbound</span>(std::less&lt;&gt;&#123;&#125;);</span><br><span class="line">        <span class="comment">// std::upper_bound</span></span><br><span class="line">        <span class="type">int</span> right = <span class="built_in">lowerbound</span>(std::less_equal&lt;&gt;&#123;&#125;);</span><br><span class="line">        <span class="keyword">return</span> (left &lt; n &amp;&amp; nums[left] == target) ? </span><br><span class="line">                vector&lt;<span class="type">int</span>&gt;&#123;left, right<span class="number">-1</span>&#125; : </span><br><span class="line">                vector&lt;<span class="type">int</span>&gt;&#123;<span class="number">-1</span>, <span class="number">-1</span>&#125;;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://hxhue.github.io/programming/cpp/cpplang/sizeof.html">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="../../images/avatar.gif">
+      <meta itemprop="name" content="(╹ڡ╹ )">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="没想好标题">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="../../programming/cpp/cpplang/sizeof.html" class="post-title-link" itemprop="url">sizeof</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2023-08-12 15:17:00" itemprop="dateCreated datePublished" datetime="2023-08-12T15:17:00+08:00">2023-08-12</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2024-03-15 16:31:51" itemprop="dateModified" datetime="2024-03-15T16:31:51+08:00">2024-03-15</time>
+              </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="../../categories/programming/" itemprop="url" rel="index"><span itemprop="name">programming</span></a>
+                </span>
+            </span>
+
+          <br>
+            <span class="post-meta-item" title="本文字数">
+              <span class="post-meta-item-icon">
+                <i class="far fa-file-word"></i>
+              </span>
+                <span class="post-meta-item-text">本文字数：</span>
+              <span>71</span>
+            </span>
+            <span class="post-meta-item" title="阅读时长">
+              <span class="post-meta-item-icon">
+                <i class="far fa-clock"></i>
+              </span>
+                <span class="post-meta-item-text">阅读时长 &asymp;</span>
+              <span>1 分钟</span>
+            </span>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <p>下面几个表达式相等：</p>
+<ul>
+<li><code>sizeof(T&amp;)</code></li>
+<li><code>sizeof(T&amp;&amp;)</code></li>
+<li><code>sizeof(T)</code></li>
+</ul>
+<p>也就是说 <code>sizeof</code> 会去掉引用。忘记出处了，twitter 上有人提过一个 quiz，什么类型 <code>T</code> 能满足 <code>struct &#123;T x;&#125;</code> 和 <code>T</code> 的 sizeof 结果不相等，引用类型就满足这样的情况。</p>
+
       
     </div>
 
