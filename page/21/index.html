@@ -202,7 +202,7 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="https://hxhue.github.io/programming/cttcg-04-variadic-templates/">
+    <link itemprop="mainEntityOfPage" href="https://hxhue.github.io/programming/cpp/cpp-templates-the-complete-guide/06-move-semantics-and-enable-if.html">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="image" content="../../images/avatar.gif">
@@ -216,7 +216,7 @@
       <header class="post-header">
         <h2 class="post-title" itemprop="name headline">
           
-            <a href="../../programming/cttcg-04-variadic-templates/" class="post-title-link" itemprop="url">CTTCG 04 Variadic Templates</a>
+            <a href="../../programming/cpp/cpp-templates-the-complete-guide/06-move-semantics-and-enable-if.html" class="post-title-link" itemprop="url">CTTCG 06 Move Semantics and enable_if</a>
         </h2>
 
         <div class="post-meta">
@@ -233,7 +233,7 @@
                   <i class="far fa-calendar-check"></i>
                 </span>
                 <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2024-03-21 16:27:13" itemprop="dateModified" datetime="2024-03-21T16:27:13+08:00">2024-03-21</time>
+                <time title="修改时间：2024-03-15 16:31:51" itemprop="dateModified" datetime="2024-03-15T16:31:51+08:00">2024-03-15</time>
               </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
@@ -241,7 +241,7 @@
               </span>
               <span class="post-meta-item-text">分类于</span>
                 <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="../../categories/programming/" itemprop="url" rel="index"><span itemprop="name">Programming</span></a>
+                  <a href="../../categories/programming/" itemprop="url" rel="index"><span itemprop="name">programming</span></a>
                 </span>
             </span>
 
@@ -251,14 +251,14 @@
                 <i class="far fa-file-word"></i>
               </span>
                 <span class="post-meta-item-text">本文字数：</span>
-              <span>1k</span>
+              <span>497</span>
             </span>
             <span class="post-meta-item" title="阅读时长">
               <span class="post-meta-item-icon">
                 <i class="far fa-clock"></i>
               </span>
                 <span class="post-meta-item-text">阅读时长 &asymp;</span>
-              <span>4 分钟</span>
+              <span>2 分钟</span>
             </span>
 
         </div>
@@ -270,19 +270,17 @@
     <div class="post-body" itemprop="articleBody">
 
       
-          <blockquote>
-<p>可变长表达式可以对参数包逐个处理。与折叠表达式（相当于函数式编程中的 <strong>reduce</strong>，但如果用上逗号表达式就能表达 <strong>foreach</strong>）不同，可变长表达式（相当于函数式编程中的 <strong>map</strong>）不会改变参数数量，允许的形式也比折叠表达式宽松一点。</p>
-</blockquote>
-<h1 id="参数包（Parameter-Pack）和可变长模板"><a href="#参数包（Parameter-Pack）和可变长模板" class="headerlink" title="参数包（Parameter Pack）和可变长模板"></a>参数包（Parameter Pack）和可变长模板</h1><p>模板函数可以指定参数包，用 <code>sizeof…()</code> 运算符可以获得参数包的数量。<strong>至少有一个参数包的模板称为可变长模板（variadic template）</strong>。</p>
-<h2 id="0-Pack-Expansion：参数传递"><a href="#0-Pack-Expansion：参数传递" class="headerlink" title="0 Pack Expansion：参数传递"></a>0 Pack Expansion：参数传递</h2><p>参数传递。</p>
-<blockquote>
-<p style="margin-bottom: 0px"><font size="+1">✏️<strong> Note</strong></font></p>
-<p>2024 年 2 月 20 日：除了作为函数参数之外，还能用作初始化列表（花括号）的参数。</p>
-</blockquote>
-<h2 id="1-递归：逐个处理"><a href="#1-递归：逐个处理" class="headerlink" title="1 递归：逐个处理"></a>1 递归：逐个处理</h2><figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;iostream&gt;</span></span></span><br><span class="line"><span class="function"><span class="type">void</span> <span class="title">print</span> <span class="params">()</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">template</span>&lt;<span class="keyword">typename</span> T, <span class="keyword">typename</span>... Types&gt;</span></span><br><span class="line"><span class="function"><span class="type">void</span> <span class="title">print</span> <span class="params">(T firstArg, Types... args)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    std::cout &lt;&lt; firstArg &lt;&lt; <span class="string">&#x27;\n&#x27;</span>; <span class="comment">// print first argument</span></span><br><span class="line">    <span class="built_in">print</span>(args...);                <span class="comment">// call print() for remaining arguments</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+          <p>Perfect forwarding:</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">template</span>&lt;<span class="keyword">typename</span> T&gt;</span></span><br><span class="line"><span class="function"><span class="type">void</span> <span class="title">f</span> <span class="params">(T&amp;&amp; val)</span> </span>&#123;</span><br><span class="line">    <span class="built_in">g</span>(std::forward&lt;T&gt;(val)); <span class="comment">// perfect forward val to g()</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>注意，完美转发只对模板参数有效，对依赖于模板参数的类型也是无效的，比如：<code>typename T::iterator&amp;&amp;</code> 是无效的，仍表示严格的右值引用。</p>
+<p>完美转发也不能加 const 属性。添加 const 属性后表示常右值引用（而且这种形式很少被使用）。</p>
+<h1 id="尝试用完美转发简化代码"><a href="#尝试用完美转发简化代码" class="headerlink" title="尝试用完美转发简化代码"></a>尝试用完美转发简化代码</h1><p>设想一个 Person 类，里面只有一个 <code>std::string</code> 类型的 name 数据。已经实现了复制构造函数和移动构造函数。从数据的构造函数有 <code>std::string &amp;&amp;</code> 和 <code>std::string const &amp;</code> 两个重载版本。使用完美转发可以同时写出匹配这两种参数的函数模板，减少代码量。</p>
+<p>💡 事实上，代码量并不会减少，反而会变得复杂。在这种必定需要复制的场合，最好的方式还是接受 <code>std::string</code> 的值类型。下面的讨论假定必须使用模板实现。</p>
+<p>问题在哪里？</p>
           <!--noindex-->
             <div class="post-button">
-              <a class="btn" href="../../programming/cttcg-04-variadic-templates/#more" rel="contents">
+              <a class="btn" href="../../programming/cpp/cpp-templates-the-complete-guide/06-move-semantics-and-enable-if.html#more" rel="contents">
                 阅读全文 &raquo;
               </a>
             </div>
@@ -306,7 +304,7 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="https://hxhue.github.io/programming/cttcg-07-by-value-or-by-reference/">
+    <link itemprop="mainEntityOfPage" href="https://hxhue.github.io/programming/cpp/cpp-templates-the-complete-guide/07-by-value-or-by-reference.html">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="image" content="../../images/avatar.gif">
@@ -320,7 +318,7 @@
       <header class="post-header">
         <h2 class="post-title" itemprop="name headline">
           
-            <a href="../../programming/cttcg-07-by-value-or-by-reference/" class="post-title-link" itemprop="url">CTTCG 07 By Value or by Reference</a>
+            <a href="../../programming/cpp/cpp-templates-the-complete-guide/07-by-value-or-by-reference.html" class="post-title-link" itemprop="url">CTTCG 07 By Value or by Reference</a>
         </h2>
 
         <div class="post-meta">
@@ -345,7 +343,7 @@
               </span>
               <span class="post-meta-item-text">分类于</span>
                 <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="../../categories/programming/" itemprop="url" rel="index"><span itemprop="name">Programming</span></a>
+                  <a href="../../categories/programming/" itemprop="url" rel="index"><span itemprop="name">programming</span></a>
                 </span>
             </span>
 
@@ -381,7 +379,7 @@
 <h1 id="传转发引用：T"><a href="#传转发引用：T" class="headerlink" title="传转发引用：T &amp;&amp;"></a>传转发引用：<code>T &amp;&amp;</code></h1><p>这是 T 唯一可能匹配到引用类型的情况。如果 T 本身就是引用类型，就不能用它创建值类型的同类数据。解决方法有：① 用 type traits 去除引用属性 ② 使用 auto，因为 auto 默认不会匹配到引用。</p>
           <!--noindex-->
             <div class="post-button">
-              <a class="btn" href="../../programming/cttcg-07-by-value-or-by-reference/#more" rel="contents">
+              <a class="btn" href="../../programming/cpp/cpp-templates-the-complete-guide/07-by-value-or-by-reference.html#more" rel="contents">
                 阅读全文 &raquo;
               </a>
             </div>
@@ -405,7 +403,7 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="https://hxhue.github.io/programming/cttcg-08-compile-time-programming/">
+    <link itemprop="mainEntityOfPage" href="https://hxhue.github.io/programming/cpp/cpp-templates-the-complete-guide/09-using-templates-in-practice.html">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="image" content="../../images/avatar.gif">
@@ -419,7 +417,106 @@
       <header class="post-header">
         <h2 class="post-title" itemprop="name headline">
           
-            <a href="../../programming/cttcg-08-compile-time-programming/" class="post-title-link" itemprop="url">CTTCG 08 Compile-Time Programming</a>
+            <a href="../../programming/cpp/cpp-templates-the-complete-guide/09-using-templates-in-practice.html" class="post-title-link" itemprop="url">CTTCG 09 Using Templates in Practice</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2023-08-12 00:00:00" itemprop="dateCreated datePublished" datetime="2023-08-12T00:00:00+08:00">2023-08-12</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2024-03-15 16:31:51" itemprop="dateModified" datetime="2024-03-15T16:31:51+08:00">2024-03-15</time>
+              </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="../../categories/programming/" itemprop="url" rel="index"><span itemprop="name">programming</span></a>
+                </span>
+            </span>
+
+          <br>
+            <span class="post-meta-item" title="本文字数">
+              <span class="post-meta-item-icon">
+                <i class="far fa-file-word"></i>
+              </span>
+                <span class="post-meta-item-text">本文字数：</span>
+              <span>626</span>
+            </span>
+            <span class="post-meta-item" title="阅读时长">
+              <span class="post-meta-item-icon">
+                <i class="far fa-clock"></i>
+              </span>
+                <span class="post-meta-item-text">阅读时长 &asymp;</span>
+              <span>2 分钟</span>
+            </span>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <h1 id="包含模型-The-Inclusion-Model"><a href="#包含模型-The-Inclusion-Model" class="headerlink" title="包含模型 - The Inclusion Model"></a>包含模型 - The Inclusion Model</h1><p>通常模板需要被包含在头文件中工作。</p>
+<p>注意：函数模板完全特化之后也需要 inline 才能够在头文件中使用，否则会出现不同的翻译单元有重复定义的情况。</p>
+<h1 id="改进一：precompiled-headers"><a href="#改进一：precompiled-headers" class="headerlink" title="改进一：precompiled headers"></a>改进一：precompiled headers</h1><p>可以把 pch 理解为编译器中间工作状态的一个 dump。编译器可以在读取到某些源代码之后保存其状态，包括符号表等。如果两个文件中有公共的前缀代码（比如一个标准库的头文件就包含了数千行公共代码），编译器就可以读取预先保存的状态，从而跳过对于这些代码的处理。</p>
+<p>很遗憾的是前缀的判定是必须完全相同，即便改变头文件的包含顺序，其中与宏相关的定义也可能结果不同。由于宏无法从模块中导出，模块将可能解决这一痛点。</p>
+<h1 id="改进二：explicit-template-instantiation"><a href="#改进二：explicit-template-instantiation" class="headerlink" title="改进二：explicit template instantiation"></a>改进二：explicit template instantiation</h1><p>只在头文件中留模板函数的声明，而不是定义。然后在其他的源文件中提供特化的定义。</p>
+          <!--noindex-->
+            <div class="post-button">
+              <a class="btn" href="../../programming/cpp/cpp-templates-the-complete-guide/09-using-templates-in-practice.html#more" rel="contents">
+                阅读全文 &raquo;
+              </a>
+            </div>
+          <!--/noindex-->
+        
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://hxhue.github.io/programming/cpp/cpp-templates-the-complete-guide/08-compile-time-programming.html">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="../../images/avatar.gif">
+      <meta itemprop="name" content="(╹ڡ╹ )">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="没想好标题">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="../../programming/cpp/cpp-templates-the-complete-guide/08-compile-time-programming.html" class="post-title-link" itemprop="url">CTTCG 08 Compile-Time Programming</a>
         </h2>
 
         <div class="post-meta">
@@ -444,7 +541,7 @@
               </span>
               <span class="post-meta-item-text">分类于</span>
                 <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="../../categories/programming/" itemprop="url" rel="index"><span itemprop="name">Programming</span></a>
+                  <a href="../../categories/programming/" itemprop="url" rel="index"><span itemprop="name">programming</span></a>
                 </span>
             </span>
 
@@ -480,7 +577,7 @@
 <p>有一些地方需要注意：寻找函数 candidates 时只会考虑函数模板的函数签名，不会考虑函数体。用 C++14 auto 省略掉返回值类型之后，也不会考虑返回值类型。如果匹配完成之后函数体不能编译，编译器就会报错。</p>
           <!--noindex-->
             <div class="post-button">
-              <a class="btn" href="../../programming/cttcg-08-compile-time-programming/#more" rel="contents">
+              <a class="btn" href="../../programming/cpp/cpp-templates-the-complete-guide/08-compile-time-programming.html#more" rel="contents">
                 阅读全文 &raquo;
               </a>
             </div>
@@ -504,7 +601,7 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="https://hxhue.github.io/programming/cttcg-10-basic-template-terminology/">
+    <link itemprop="mainEntityOfPage" href="https://hxhue.github.io/programming/cpp/cpp-templates-the-complete-guide/10-basic-template-terminology.html">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="image" content="../../images/avatar.gif">
@@ -518,7 +615,7 @@
       <header class="post-header">
         <h2 class="post-title" itemprop="name headline">
           
-            <a href="../../programming/cttcg-10-basic-template-terminology/" class="post-title-link" itemprop="url">CTTCG 10 Basic Template Terminology</a>
+            <a href="../../programming/cpp/cpp-templates-the-complete-guide/10-basic-template-terminology.html" class="post-title-link" itemprop="url">CTTCG 10 Basic Template Terminology</a>
         </h2>
 
         <div class="post-meta">
@@ -543,7 +640,7 @@
               </span>
               <span class="post-meta-item-text">分类于</span>
                 <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="../../categories/programming/" itemprop="url" rel="index"><span itemprop="name">Programming</span></a>
+                  <a href="../../categories/programming/" itemprop="url" rel="index"><span itemprop="name">programming</span></a>
                 </span>
             </span>
 
@@ -583,7 +680,7 @@
 <h1 id="The-One-Definition-Rule（ODR）"><a href="#The-One-Definition-Rule（ODR）" class="headerlink" title="The One-Definition Rule（ODR）"></a>The One-Definition Rule（ODR）</h1>
           <!--noindex-->
             <div class="post-button">
-              <a class="btn" href="../../programming/cttcg-10-basic-template-terminology/#more" rel="contents">
+              <a class="btn" href="../../programming/cpp/cpp-templates-the-complete-guide/10-basic-template-terminology.html#more" rel="contents">
                 阅读全文 &raquo;
               </a>
             </div>
@@ -607,7 +704,7 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="https://hxhue.github.io/programming/cttcg-09-using-templates-in-practice/">
+    <link itemprop="mainEntityOfPage" href="https://hxhue.github.io/programming/cpp/cpp-templates-the-complete-guide/11-generic-libraries.html">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="image" content="../../images/avatar.gif">
@@ -621,106 +718,7 @@
       <header class="post-header">
         <h2 class="post-title" itemprop="name headline">
           
-            <a href="../../programming/cttcg-09-using-templates-in-practice/" class="post-title-link" itemprop="url">CTTCG 09 Using Templates in Practice</a>
-        </h2>
-
-        <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-calendar"></i>
-              </span>
-              <span class="post-meta-item-text">发表于</span>
-
-              <time title="创建时间：2023-08-12 00:00:00" itemprop="dateCreated datePublished" datetime="2023-08-12T00:00:00+08:00">2023-08-12</time>
-            </span>
-              <span class="post-meta-item">
-                <span class="post-meta-item-icon">
-                  <i class="far fa-calendar-check"></i>
-                </span>
-                <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2024-03-15 16:31:51" itemprop="dateModified" datetime="2024-03-15T16:31:51+08:00">2024-03-15</time>
-              </span>
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-folder"></i>
-              </span>
-              <span class="post-meta-item-text">分类于</span>
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="../../categories/programming/" itemprop="url" rel="index"><span itemprop="name">Programming</span></a>
-                </span>
-            </span>
-
-          <br>
-            <span class="post-meta-item" title="本文字数">
-              <span class="post-meta-item-icon">
-                <i class="far fa-file-word"></i>
-              </span>
-                <span class="post-meta-item-text">本文字数：</span>
-              <span>626</span>
-            </span>
-            <span class="post-meta-item" title="阅读时长">
-              <span class="post-meta-item-icon">
-                <i class="far fa-clock"></i>
-              </span>
-                <span class="post-meta-item-text">阅读时长 &asymp;</span>
-              <span>2 分钟</span>
-            </span>
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          <h1 id="包含模型-The-Inclusion-Model"><a href="#包含模型-The-Inclusion-Model" class="headerlink" title="包含模型 - The Inclusion Model"></a>包含模型 - The Inclusion Model</h1><p>通常模板需要被包含在头文件中工作。</p>
-<p>注意：函数模板完全特化之后也需要 inline 才能够在头文件中使用，否则会出现不同的翻译单元有重复定义的情况。</p>
-<h1 id="改进一：precompiled-headers"><a href="#改进一：precompiled-headers" class="headerlink" title="改进一：precompiled headers"></a>改进一：precompiled headers</h1><p>可以把 pch 理解为编译器中间工作状态的一个 dump。编译器可以在读取到某些源代码之后保存其状态，包括符号表等。如果两个文件中有公共的前缀代码（比如一个标准库的头文件就包含了数千行公共代码），编译器就可以读取预先保存的状态，从而跳过对于这些代码的处理。</p>
-<p>很遗憾的是前缀的判定是必须完全相同，即便改变头文件的包含顺序，其中与宏相关的定义也可能结果不同。由于宏无法从模块中导出，模块将可能解决这一痛点。</p>
-<h1 id="改进二：explicit-template-instantiation"><a href="#改进二：explicit-template-instantiation" class="headerlink" title="改进二：explicit template instantiation"></a>改进二：explicit template instantiation</h1><p>只在头文件中留模板函数的声明，而不是定义。然后在其他的源文件中提供特化的定义。</p>
-          <!--noindex-->
-            <div class="post-button">
-              <a class="btn" href="../../programming/cttcg-09-using-templates-in-practice/#more" rel="contents">
-                阅读全文 &raquo;
-              </a>
-            </div>
-          <!--/noindex-->
-        
-      
-    </div>
-
-    
-    
-    
-      <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  
-  
-  
-
-      
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="https://hxhue.github.io/programming/cttcg-11-generic-libraries/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="../../images/avatar.gif">
-      <meta itemprop="name" content="(╹ڡ╹ )">
-      <meta itemprop="description" content="">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="没想好标题">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          
-            <a href="../../programming/cttcg-11-generic-libraries/" class="post-title-link" itemprop="url">CTTCG 11 Generic Libraries</a>
+            <a href="../../programming/cpp/cpp-templates-the-complete-guide/11-generic-libraries.html" class="post-title-link" itemprop="url">CTTCG 11 Generic Libraries</a>
         </h2>
 
         <div class="post-meta">
@@ -745,7 +743,7 @@
               </span>
               <span class="post-meta-item-text">分类于</span>
                 <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="../../categories/programming/" itemprop="url" rel="index"><span itemprop="name">Programming</span></a>
+                  <a href="../../categories/programming/" itemprop="url" rel="index"><span itemprop="name">programming</span></a>
                 </span>
             </span>
 
@@ -780,7 +778,7 @@
 <h2 id="Surrogate-Function-从类型隐式转换得来"><a href="#Surrogate-Function-从类型隐式转换得来" class="headerlink" title="Surrogate Function - 从类型隐式转换得来"></a>Surrogate Function - 从类型隐式转换得来</h2><p>Dummy&#x2F;Surrogate function（哑函数&#x2F;替代函数）指的是某一个函数对象还具有一个到普通函数引用或者普通函数指针的隐式转换，这个转换好的函数就是替代函数。替代函数用到了一次隐式转换，所以在参数匹配均不优于函数对象的其他<code>()</code>操作符重载时不会被选中。但若替代函数是更好的替代，将出现函数使用 ambiguous 的情况。</p>
           <!--noindex-->
             <div class="post-button">
-              <a class="btn" href="../../programming/cttcg-11-generic-libraries/#more" rel="contents">
+              <a class="btn" href="../../programming/cpp/cpp-templates-the-complete-guide/11-generic-libraries.html#more" rel="contents">
                 阅读全文 &raquo;
               </a>
             </div>
@@ -804,7 +802,7 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="https://hxhue.github.io/programming/cttcg-12-fundamentals-in-depth/">
+    <link itemprop="mainEntityOfPage" href="https://hxhue.github.io/programming/cpp/cpp-templates-the-complete-guide/12-fundamentals-in-depth.html">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="image" content="../../images/avatar.gif">
@@ -818,7 +816,7 @@
       <header class="post-header">
         <h2 class="post-title" itemprop="name headline">
           
-            <a href="../../programming/cttcg-12-fundamentals-in-depth/" class="post-title-link" itemprop="url">CTTCG 12 Fundamentals in Depth</a>
+            <a href="../../programming/cpp/cpp-templates-the-complete-guide/12-fundamentals-in-depth.html" class="post-title-link" itemprop="url">CTTCG 12 Fundamentals in Depth</a>
         </h2>
 
         <div class="post-meta">
@@ -843,7 +841,7 @@
               </span>
               <span class="post-meta-item-text">分类于</span>
                 <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="../../categories/programming/" itemprop="url" rel="index"><span itemprop="name">Programming</span></a>
+                  <a href="../../categories/programming/" itemprop="url" rel="index"><span itemprop="name">programming</span></a>
                 </span>
             </span>
 
@@ -878,7 +876,7 @@
 <h2 id="嵌套模板的非原地定义"><a href="#嵌套模板的非原地定义" class="headerlink" title="嵌套模板的非原地定义"></a>嵌套模板的非原地定义</h2><p>想要给类模板中的模板在类外提供定义是比较复杂的，需要嵌套模板参数描述：</p>
           <!--noindex-->
             <div class="post-button">
-              <a class="btn" href="../../programming/cttcg-12-fundamentals-in-depth/#more" rel="contents">
+              <a class="btn" href="../../programming/cpp/cpp-templates-the-complete-guide/12-fundamentals-in-depth.html#more" rel="contents">
                 阅读全文 &raquo;
               </a>
             </div>
@@ -902,7 +900,7 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="https://hxhue.github.io/programming/cttcg-16-specializations-and-overloading/">
+    <link itemprop="mainEntityOfPage" href="https://hxhue.github.io/programming/cpp/cpp-templates-the-complete-guide/13-names-in-templates.html">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="image" content="../../images/avatar.gif">
@@ -916,195 +914,7 @@
       <header class="post-header">
         <h2 class="post-title" itemprop="name headline">
           
-            <a href="../../programming/cttcg-16-specializations-and-overloading/" class="post-title-link" itemprop="url">CTTCG 16 Specializations and Overloading</a>
-        </h2>
-
-        <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-calendar"></i>
-              </span>
-              <span class="post-meta-item-text">发表于</span>
-
-              <time title="创建时间：2023-08-12 00:00:00" itemprop="dateCreated datePublished" datetime="2023-08-12T00:00:00+08:00">2023-08-12</time>
-            </span>
-              <span class="post-meta-item">
-                <span class="post-meta-item-icon">
-                  <i class="far fa-calendar-check"></i>
-                </span>
-                <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2024-03-15 16:31:51" itemprop="dateModified" datetime="2024-03-15T16:31:51+08:00">2024-03-15</time>
-              </span>
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-folder"></i>
-              </span>
-              <span class="post-meta-item-text">分类于</span>
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="../../categories/programming/" itemprop="url" rel="index"><span itemprop="name">Programming</span></a>
-                </span>
-            </span>
-
-          <br>
-            <span class="post-meta-item" title="本文字数">
-              <span class="post-meta-item-icon">
-                <i class="far fa-file-word"></i>
-              </span>
-                <span class="post-meta-item-text">本文字数：</span>
-              <span>19</span>
-            </span>
-            <span class="post-meta-item" title="阅读时长">
-              <span class="post-meta-item-icon">
-                <i class="far fa-clock"></i>
-              </span>
-                <span class="post-meta-item-text">阅读时长 &asymp;</span>
-              <span>1 分钟</span>
-            </span>
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          <p>大部分都不需要专门总结，因此这一小节为空。</p>
-
-      
-    </div>
-
-    
-    
-    
-      <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  
-  
-  
-
-      
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="https://hxhue.github.io/programming/cttcg-17-future-directions/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="../../images/avatar.gif">
-      <meta itemprop="name" content="(╹ڡ╹ )">
-      <meta itemprop="description" content="">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="没想好标题">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          
-            <a href="../../programming/cttcg-17-future-directions/" class="post-title-link" itemprop="url">CTTCG 17 Future Directions</a>
-        </h2>
-
-        <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-calendar"></i>
-              </span>
-              <span class="post-meta-item-text">发表于</span>
-
-              <time title="创建时间：2023-08-12 00:00:00" itemprop="dateCreated datePublished" datetime="2023-08-12T00:00:00+08:00">2023-08-12</time>
-            </span>
-              <span class="post-meta-item">
-                <span class="post-meta-item-icon">
-                  <i class="far fa-calendar-check"></i>
-                </span>
-                <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2024-03-15 16:31:51" itemprop="dateModified" datetime="2024-03-15T16:31:51+08:00">2024-03-15</time>
-              </span>
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-folder"></i>
-              </span>
-              <span class="post-meta-item-text">分类于</span>
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="../../categories/programming/" itemprop="url" rel="index"><span itemprop="name">Programming</span></a>
-                </span>
-            </span>
-
-          <br>
-            <span class="post-meta-item" title="本文字数">
-              <span class="post-meta-item-icon">
-                <i class="far fa-file-word"></i>
-              </span>
-                <span class="post-meta-item-text">本文字数：</span>
-              <span>365</span>
-            </span>
-            <span class="post-meta-item" title="阅读时长">
-              <span class="post-meta-item-icon">
-                <i class="far fa-clock"></i>
-              </span>
-                <span class="post-meta-item-text">阅读时长 &asymp;</span>
-              <span>1 分钟</span>
-            </span>
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          <p>这一章讲的是对未来的展望。</p>
-<h1 id="浮点数和字符串作为模板参数"><a href="#浮点数和字符串作为模板参数" class="headerlink" title="浮点数和字符串作为模板参数"></a>浮点数和字符串作为模板参数</h1><p>浮点数在 gcc C++20 是可以作为非类型模板参数（NTTP）的；clang 不支持。目前 <a target="_blank" rel="noopener" href="https://en.cppreference.com/w/cpp/compiler_support">C++ compiler support - cppreference.com</a> 上也看不到相关的支持项目。</p>
-<p>字符串字面量在 C++20 只能通过隐式转换成简单的对象实现模板参数。<u>15&#x2F;特例：变参列表&#x2F;参数包</u>  一节有描述。字符数组则是早就可以作为模板参数，尽管作为引用其 linkage 在 C++11 和 C++14 有额外的要求。</p>
-<p>当前 class type 和浮点数没有作为非模板参数得到全面的支持，原因很可能是<strong>相等性比较</strong>在<strong>链接</strong>阶段很难进行（浮点数的标准可能不同，或者因为精度缺失会误判；类可能会重载比较操作符）。</p>
-<h1 id="减少类模板-pack-expansion-的限制"><a href="#减少类模板-pack-expansion-的限制" class="headerlink" title="减少类模板 pack expansion 的限制"></a>减少类模板 pack expansion 的限制</h1><p>目前不能在类模板参数中使用多个 pack expansion，而且使用时也必须把它放在最末尾的位置；不仅模板参数声明是这样，填充类模板参数也是这样。</p>
-<h1 id="将-void-作为一种常态类型"><a href="#将-void-作为一种常态类型" class="headerlink" title="将 void 作为一种常态类型"></a>将 <code>void</code> 作为一种常态类型</h1>
-          <!--noindex-->
-            <div class="post-button">
-              <a class="btn" href="../../programming/cttcg-17-future-directions/#more" rel="contents">
-                阅读全文 &raquo;
-              </a>
-            </div>
-          <!--/noindex-->
-        
-      
-    </div>
-
-    
-    
-    
-      <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  
-  
-  
-
-      
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="https://hxhue.github.io/programming/cttcg-13-names-in-templates/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="../../images/avatar.gif">
-      <meta itemprop="name" content="(╹ڡ╹ )">
-      <meta itemprop="description" content="">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="没想好标题">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          
-            <a href="../../programming/cttcg-13-names-in-templates/" class="post-title-link" itemprop="url">CTTCG 13 Names in Templates</a>
+            <a href="../../programming/cpp/cpp-templates-the-complete-guide/13-names-in-templates.html" class="post-title-link" itemprop="url">CTTCG 13 Names in Templates</a>
         </h2>
 
         <div class="post-meta">
@@ -1129,7 +939,7 @@
               </span>
               <span class="post-meta-item-text">分类于</span>
                 <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="../../categories/programming/" itemprop="url" rel="index"><span itemprop="name">Programming</span></a>
+                  <a href="../../categories/programming/" itemprop="url" rel="index"><span itemprop="name">programming</span></a>
                 </span>
             </span>
 
@@ -1165,12 +975,209 @@
 <p>ADL 只会通过参数（也就是显式调用）引入额外的函数和操作符，其他情况下这些名称是不会被自动引入的，比如取一个和参数相关的函数指针。</p>
           <!--noindex-->
             <div class="post-button">
-              <a class="btn" href="../../programming/cttcg-13-names-in-templates/#more" rel="contents">
+              <a class="btn" href="../../programming/cpp/cpp-templates-the-complete-guide/13-names-in-templates.html#more" rel="contents">
                 阅读全文 &raquo;
               </a>
             </div>
           <!--/noindex-->
         
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://hxhue.github.io/programming/cpp/cpp-templates-the-complete-guide/15-template-argument-deduction.html">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="../../images/avatar.gif">
+      <meta itemprop="name" content="(╹ڡ╹ )">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="没想好标题">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="../../programming/cpp/cpp-templates-the-complete-guide/15-template-argument-deduction.html" class="post-title-link" itemprop="url">CTTCG 15 Template Argument Deduction</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2023-08-12 00:00:00" itemprop="dateCreated datePublished" datetime="2023-08-12T00:00:00+08:00">2023-08-12</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2024-03-23 11:39:31" itemprop="dateModified" datetime="2024-03-23T11:39:31+08:00">2024-03-23</time>
+              </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="../../categories/programming/" itemprop="url" rel="index"><span itemprop="name">programming</span></a>
+                </span>
+            </span>
+
+          <br>
+            <span class="post-meta-item" title="本文字数">
+              <span class="post-meta-item-icon">
+                <i class="far fa-file-word"></i>
+              </span>
+                <span class="post-meta-item-text">本文字数：</span>
+              <span>3.5k</span>
+            </span>
+            <span class="post-meta-item" title="阅读时长">
+              <span class="post-meta-item-icon">
+                <i class="far fa-clock"></i>
+              </span>
+                <span class="post-meta-item-text">阅读时长 &asymp;</span>
+              <span>13 分钟</span>
+            </span>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <p>2023 年 5 月 17 日</p>
+<h1 id="推导上下文：Deduced-Context"><a href="#推导上下文：Deduced-Context" class="headerlink" title="推导上下文：Deduced Context"></a>推导上下文：Deduced Context</h1><p>P272 书上</p>
+<ul>
+<li>依赖于模板类型的子类型不是推导上下文。比如 <code>typename X&lt;N&gt;::I</code> 不是。而 <code>X&lt;N&gt;::*</code> 这样的指向成员的指针没有用到子类型，所以是推导上下文。</li>
+<li>非类型模板参数的非平凡表达式不是推导上下文。比如模板 <code>S</code> 和参数 <code>I</code>，<code>S&lt;I+1&gt;</code> 无法提供推导信息。</li>
+</ul>
+<h1 id="如何推导出模板参数"><a href="#如何推导出模板参数" class="headerlink" title="如何推导出模板参数"></a>如何推导出模板参数</h1><ol>
+<li>从参数列表中推导（推导能力是有限制的，比如不能从 <code>typename T::iterator</code> 参数中推出 <code>T</code> 的类型）</li>
+<li>函数模板被取地址时，可以从要求的返回值类型推导：</li>
+</ol>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">template</span>&lt;<span class="keyword">typename</span> T&gt;</span></span><br><span class="line"><span class="function"><span class="type">void</span> <span class="title">f</span><span class="params">(T, T)</span></span>;</span><br><span class="line"></span><br><span class="line"><span class="built_in">void</span> (*pf)(<span class="type">char</span>, <span class="type">char</span>) = &amp;f; <span class="comment">// f的参数T由函数指针的类型确定</span></span><br></pre></td></tr></table></figure>
+
+<ol>
+<li><strong>隐式转换操作符模板</strong>的类型参数 T 由需要转换时所需的类型决定。</li>
+</ol>
+          <!--noindex-->
+            <div class="post-button">
+              <a class="btn" href="../../programming/cpp/cpp-templates-the-complete-guide/15-template-argument-deduction.html#more" rel="contents">
+                阅读全文 &raquo;
+              </a>
+            </div>
+          <!--/noindex-->
+        
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://hxhue.github.io/programming/cpp/cpp-templates-the-complete-guide/16-specializations-and-overloading.html">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="../../images/avatar.gif">
+      <meta itemprop="name" content="(╹ڡ╹ )">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="没想好标题">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="../../programming/cpp/cpp-templates-the-complete-guide/16-specializations-and-overloading.html" class="post-title-link" itemprop="url">CTTCG 16 Specializations and Overloading</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2023-08-12 00:00:00" itemprop="dateCreated datePublished" datetime="2023-08-12T00:00:00+08:00">2023-08-12</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2024-03-15 16:31:51" itemprop="dateModified" datetime="2024-03-15T16:31:51+08:00">2024-03-15</time>
+              </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="../../categories/programming/" itemprop="url" rel="index"><span itemprop="name">programming</span></a>
+                </span>
+            </span>
+
+          <br>
+            <span class="post-meta-item" title="本文字数">
+              <span class="post-meta-item-icon">
+                <i class="far fa-file-word"></i>
+              </span>
+                <span class="post-meta-item-text">本文字数：</span>
+              <span>19</span>
+            </span>
+            <span class="post-meta-item" title="阅读时长">
+              <span class="post-meta-item-icon">
+                <i class="far fa-clock"></i>
+              </span>
+                <span class="post-meta-item-text">阅读时长 &asymp;</span>
+              <span>1 分钟</span>
+            </span>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <p>大部分都不需要专门总结，因此这一小节为空。</p>
+
       
     </div>
 

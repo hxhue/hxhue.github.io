@@ -202,7 +202,7 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="https://hxhue.github.io/cli/chapter03-first-cmake-project/">
+    <link itemprop="mainEntityOfPage" href="https://hxhue.github.io/cli/cmake/modern-cmake-for-cpp/chapter02.html">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="image" content="../../images/avatar.gif">
@@ -216,7 +216,7 @@
       <header class="post-header">
         <h2 class="post-title" itemprop="name headline">
           
-            <a href="../../cli/chapter03-first-cmake-project/" class="post-title-link" itemprop="url">chapter03 - first cmake project</a>
+            <a href="../../cli/cmake/modern-cmake-for-cpp/chapter02.html" class="post-title-link" itemprop="url">chapter02.a - 总结常用的 CMake 变量</a>
         </h2>
 
         <div class="post-meta">
@@ -241,7 +241,7 @@
               </span>
               <span class="post-meta-item-text">分类于</span>
                 <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="../../categories/cli/" itemprop="url" rel="index"><span itemprop="name">CLI</span></a>
+                  <a href="../../categories/cli/" itemprop="url" rel="index"><span itemprop="name">cli</span></a>
                 </span>
             </span>
 
@@ -251,14 +251,14 @@
                 <i class="far fa-file-word"></i>
               </span>
                 <span class="post-meta-item-text">本文字数：</span>
-              <span>1.4k</span>
+              <span>144</span>
             </span>
             <span class="post-meta-item" title="阅读时长">
               <span class="post-meta-item-icon">
                 <i class="far fa-clock"></i>
               </span>
                 <span class="post-meta-item-text">阅读时长 &asymp;</span>
-              <span>5 分钟</span>
+              <span>1 分钟</span>
             </span>
 
         </div>
@@ -270,18 +270,21 @@
     <div class="post-body" itemprop="articleBody">
 
       
-          <h1 id="cmake-minimal-required"><a href="#cmake-minimal-required" class="headerlink" title="cmake_minimal_required"></a>cmake_minimal_required</h1><p><code>cmake_minimal_required(VERSION xxx)</code> 是项目都应该有的说明。因为它指定了最小的版本，而且还会隐式去调用 <code>cmake_policy</code>，这样即便 cmake 版本更新了，policy 没变，旧项目仍然可以正常构建。</p>
+          <h1 id="PROJECT"><a href="#PROJECT" class="headerlink" title="PROJECT_*"></a><code>PROJECT_*</code></h1><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">PROJECT_SOURCE_DIR</span><br><span class="line">PROJECT_BINARY_DIR</span><br></pre></td></tr></table></figure>
+
 <blockquote>
-<p style="margin-bottom: 0px"><font size="+1">✏️<strong> Note</strong></font></p>
-<p>cmake policy 是每次 cmake 有不向后兼容的改动时增加的标志。</p>
+<p>不存在 <code>PROJECT_LIST_DIR</code>。</p>
 </blockquote>
-<p>VERSION 可以是一个范围 <code>a...b</code>，如果只有一个值则是最小版本要求。</p>
-<h1 id="project"><a href="#project" class="headerlink" title="project"></a>project</h1><p><code>project</code> 命令用来设置项目名、版本、还有语言等。</p>
-<p><img src="../../../../assets/20ddfe76203d6c6d79c90737d5b92ad0.webp"></p>
-<p>默认的语言是 C 和 CXX 两个（不包含 CUDA）。对于 C++ 项目设置语言为 CXX 的好处是 cmake 不再会为所有语言检查编译器的存在情况，配置时间会短一些（对于 hello-world 项目，在 6 core Intel(R) Core(TM) i7-8750H CPU @ 2.20GHz + <strong>wsl2</strong> 中 CXX 的配置时间是 200 ms，C 和 CXX 的配置时间是 345 ms）。</p>
+<p><code>PROJECT_*</code> 变量会随着 <code>project</code> 命令的出现而变更。</p>
+<h1 id="CMAKE"><a href="#CMAKE" class="headerlink" title="CMAKE_*"></a><code>CMAKE_*</code></h1><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">CMAKE_SOURCE_DIR</span><br><span class="line">CMAKE_BINARY_DIR</span><br></pre></td></tr></table></figure>
+
+<blockquote>
+<p>也不存在 <code>CMAKE_LIST_DIR</code>。</p>
+</blockquote>
+<p>和本次 cmake 命令有关。</p>
           <!--noindex-->
             <div class="post-button">
-              <a class="btn" href="../../cli/chapter03-first-cmake-project/#more" rel="contents">
+              <a class="btn" href="../../cli/cmake/modern-cmake-for-cpp/chapter02.html#more" rel="contents">
                 阅读全文 &raquo;
               </a>
             </div>
@@ -305,7 +308,7 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="https://hxhue.github.io/cli/chapter04-targets/">
+    <link itemprop="mainEntityOfPage" href="https://hxhue.github.io/cli/cmake/modern-cmake-for-cpp/chapter04.html">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="image" content="../../images/avatar.gif">
@@ -319,7 +322,110 @@
       <header class="post-header">
         <h2 class="post-title" itemprop="name headline">
           
-            <a href="../../cli/chapter04-targets/" class="post-title-link" itemprop="url">chapter04 - targets</a>
+            <a href="../../cli/cmake/modern-cmake-for-cpp/chapter04.html" class="post-title-link" itemprop="url">chapter04.a - 梳理依赖是如何创建的</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2024-02-01 23:01:00" itemprop="dateCreated datePublished" datetime="2024-02-01T23:01:00+08:00">2024-02-01</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2024-03-15 23:34:07" itemprop="dateModified" datetime="2024-03-15T23:34:07+08:00">2024-03-15</time>
+              </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="../../categories/cli/" itemprop="url" rel="index"><span itemprop="name">cli</span></a>
+                </span>
+            </span>
+
+          <br>
+            <span class="post-meta-item" title="本文字数">
+              <span class="post-meta-item-icon">
+                <i class="far fa-file-word"></i>
+              </span>
+                <span class="post-meta-item-text">本文字数：</span>
+              <span>516</span>
+            </span>
+            <span class="post-meta-item" title="阅读时长">
+              <span class="post-meta-item-icon">
+                <i class="far fa-clock"></i>
+              </span>
+                <span class="post-meta-item-text">阅读时长 &asymp;</span>
+              <span>2 分钟</span>
+            </span>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <p>我认为的依赖有两种：</p>
+<ol>
+<li>文件依赖（sources）既有同级依赖（比如 <code>add_custom_command</code> 的 <code>DEPENDS</code> 参数），又有 targets 到 sources 的依赖。</li>
+<li>target 依赖是一种 targets 之间的同级依赖关系。</li>
+</ol>
+<h1 id="Target-依赖"><a href="#Target-依赖" class="headerlink" title="Target 依赖"></a>Target 依赖</h1><p>创建 target 可以用 <code>add_executable</code>&#x2F;<code>add_library</code>&#x2F;<code>add_custom_target</code>。前面两个都默认包含在 all 中，而最后一个默认不包含在 all 中。此外，<code>add_custom_target</code> 如果给的是命令，而不是依赖文件，则创建的 targets 永远处于“需要被构建”的状态；如果给的是文件，则就只是文件依赖。</p>
+<p>可以用 <a target="_blank" rel="noopener" href="https://cmake.org/cmake/help/latest/command/add_dependencies.html"><code>add_dependencies</code></a> 来创建 targets 之间的依赖。</p>
+<h1 id="文件依赖"><a href="#文件依赖" class="headerlink" title="文件依赖"></a>文件依赖</h1><p>如果 target 或者 command（由 <code>add_custom_command</code> 创建）依赖一个源文件，这个文件找不到、但是又被标记了 <code>GENERATED</code> 属性，则会想办法去生成这个文件。</p>
+<p>创建 target 的时候没有给全源文件不要紧，可以用 <a target="_blank" rel="noopener" href="https://cmake.org/cmake/help/latest/command/target_sources.html#target-sources%20%22Permalink%20to%20this%20heading%22"></a> 去追加源文件。</p>
+          <!--noindex-->
+            <div class="post-button">
+              <a class="btn" href="../../cli/cmake/modern-cmake-for-cpp/chapter04.html#more" rel="contents">
+                阅读全文 &raquo;
+              </a>
+            </div>
+          <!--/noindex-->
+        
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://hxhue.github.io/cli/cmake/modern-cmake-for-cpp/chapter04-targets.html">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="../../images/avatar.gif">
+      <meta itemprop="name" content="(╹ڡ╹ )">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="没想好标题">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="../../cli/cmake/modern-cmake-for-cpp/chapter04-targets.html" class="post-title-link" itemprop="url">chapter04 - targets</a>
         </h2>
 
         <div class="post-meta">
@@ -344,7 +450,7 @@
               </span>
               <span class="post-meta-item-text">分类于</span>
                 <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="../../categories/cli/" itemprop="url" rel="index"><span itemprop="name">CLI</span></a>
+                  <a href="../../categories/cli/" itemprop="url" rel="index"><span itemprop="name">cli</span></a>
                 </span>
             </span>
 
@@ -391,7 +497,7 @@
 </blockquote>
           <!--noindex-->
             <div class="post-button">
-              <a class="btn" href="../../cli/chapter04-targets/#more" rel="contents">
+              <a class="btn" href="../../cli/cmake/modern-cmake-for-cpp/chapter04-targets.html#more" rel="contents">
                 阅读全文 &raquo;
               </a>
             </div>
@@ -415,7 +521,7 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="https://hxhue.github.io/cli/chapter04-a-%E6%A2%B3%E7%90%86%E4%BE%9D%E8%B5%96%E6%98%AF%E5%A6%82%E4%BD%95%E5%88%9B%E5%BB%BA%E7%9A%84/">
+    <link itemprop="mainEntityOfPage" href="https://hxhue.github.io/cli/cmake/modern-cmake-for-cpp/chapter06-linking.html">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="image" content="../../images/avatar.gif">
@@ -429,110 +535,7 @@
       <header class="post-header">
         <h2 class="post-title" itemprop="name headline">
           
-            <a href="../../cli/chapter04-a-%E6%A2%B3%E7%90%86%E4%BE%9D%E8%B5%96%E6%98%AF%E5%A6%82%E4%BD%95%E5%88%9B%E5%BB%BA%E7%9A%84/" class="post-title-link" itemprop="url">chapter04.a - 梳理依赖是如何创建的</a>
-        </h2>
-
-        <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-calendar"></i>
-              </span>
-              <span class="post-meta-item-text">发表于</span>
-
-              <time title="创建时间：2024-02-01 23:01:00" itemprop="dateCreated datePublished" datetime="2024-02-01T23:01:00+08:00">2024-02-01</time>
-            </span>
-              <span class="post-meta-item">
-                <span class="post-meta-item-icon">
-                  <i class="far fa-calendar-check"></i>
-                </span>
-                <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2024-03-15 23:34:07" itemprop="dateModified" datetime="2024-03-15T23:34:07+08:00">2024-03-15</time>
-              </span>
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-folder"></i>
-              </span>
-              <span class="post-meta-item-text">分类于</span>
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="../../categories/cli/" itemprop="url" rel="index"><span itemprop="name">CLI</span></a>
-                </span>
-            </span>
-
-          <br>
-            <span class="post-meta-item" title="本文字数">
-              <span class="post-meta-item-icon">
-                <i class="far fa-file-word"></i>
-              </span>
-                <span class="post-meta-item-text">本文字数：</span>
-              <span>516</span>
-            </span>
-            <span class="post-meta-item" title="阅读时长">
-              <span class="post-meta-item-icon">
-                <i class="far fa-clock"></i>
-              </span>
-                <span class="post-meta-item-text">阅读时长 &asymp;</span>
-              <span>2 分钟</span>
-            </span>
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          <p>我认为的依赖有两种：</p>
-<ol>
-<li>文件依赖（sources）既有同级依赖（比如 <code>add_custom_command</code> 的 <code>DEPENDS</code> 参数），又有 targets 到 sources 的依赖。</li>
-<li>target 依赖是一种 targets 之间的同级依赖关系。</li>
-</ol>
-<h1 id="Target-依赖"><a href="#Target-依赖" class="headerlink" title="Target 依赖"></a>Target 依赖</h1><p>创建 target 可以用 <code>add_executable</code>&#x2F;<code>add_library</code>&#x2F;<code>add_custom_target</code>。前面两个都默认包含在 all 中，而最后一个默认不包含在 all 中。此外，<code>add_custom_target</code> 如果给的是命令，而不是依赖文件，则创建的 targets 永远处于“需要被构建”的状态；如果给的是文件，则就只是文件依赖。</p>
-<p>可以用 <a target="_blank" rel="noopener" href="https://cmake.org/cmake/help/latest/command/add_dependencies.html"><code>add_dependencies</code></a> 来创建 targets 之间的依赖。</p>
-<h1 id="文件依赖"><a href="#文件依赖" class="headerlink" title="文件依赖"></a>文件依赖</h1><p>如果 target 或者 command（由 <code>add_custom_command</code> 创建）依赖一个源文件，这个文件找不到、但是又被标记了 <code>GENERATED</code> 属性，则会想办法去生成这个文件。</p>
-<p>创建 target 的时候没有给全源文件不要紧，可以用 <a target="_blank" rel="noopener" href="https://cmake.org/cmake/help/latest/command/target_sources.html#target-sources%20%22Permalink%20to%20this%20heading%22"></a> 去追加源文件。</p>
-          <!--noindex-->
-            <div class="post-button">
-              <a class="btn" href="../../cli/chapter04-a-%E6%A2%B3%E7%90%86%E4%BE%9D%E8%B5%96%E6%98%AF%E5%A6%82%E4%BD%95%E5%88%9B%E5%BB%BA%E7%9A%84/#more" rel="contents">
-                阅读全文 &raquo;
-              </a>
-            </div>
-          <!--/noindex-->
-        
-      
-    </div>
-
-    
-    
-    
-      <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  
-  
-  
-
-      
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="https://hxhue.github.io/cli/chapter06-linking/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="../../images/avatar.gif">
-      <meta itemprop="name" content="(╹ڡ╹ )">
-      <meta itemprop="description" content="">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="没想好标题">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          
-            <a href="../../cli/chapter06-linking/" class="post-title-link" itemprop="url">chapter06 - linking</a>
+            <a href="../../cli/cmake/modern-cmake-for-cpp/chapter06-linking.html" class="post-title-link" itemprop="url">chapter06 - linking</a>
         </h2>
 
         <div class="post-meta">
@@ -557,7 +560,7 @@
               </span>
               <span class="post-meta-item-text">分类于</span>
                 <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="../../categories/cli/" itemprop="url" rel="index"><span itemprop="name">CLI</span></a>
+                  <a href="../../categories/cli/" itemprop="url" rel="index"><span itemprop="name">cli</span></a>
                 </span>
             </span>
 
@@ -607,7 +610,7 @@
 <p>不应该将 <code>MODULE</code> 链接到其他文件。成为 <code>MODULE</code> 的库需要在运行时被显式链接。</p>
           <!--noindex-->
             <div class="post-button">
-              <a class="btn" href="../../cli/chapter06-linking/#more" rel="contents">
+              <a class="btn" href="../../cli/cmake/modern-cmake-for-cpp/chapter06-linking.html#more" rel="contents">
                 阅读全文 &raquo;
               </a>
             </div>
@@ -631,7 +634,7 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="https://hxhue.github.io/cli/chapter05-compiling-c-sources/">
+    <link itemprop="mainEntityOfPage" href="https://hxhue.github.io/cli/cmake/modern-cmake-for-cpp/chapter05-compiling-c-sources.html">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="image" content="../../images/avatar.gif">
@@ -645,7 +648,7 @@
       <header class="post-header">
         <h2 class="post-title" itemprop="name headline">
           
-            <a href="../../cli/chapter05-compiling-c-sources/" class="post-title-link" itemprop="url">chapter05 - compiling c++ sources</a>
+            <a href="../../cli/cmake/modern-cmake-for-cpp/chapter05-compiling-c-sources.html" class="post-title-link" itemprop="url">chapter05 - compiling c++ sources</a>
         </h2>
 
         <div class="post-meta">
@@ -670,7 +673,7 @@
               </span>
               <span class="post-meta-item-text">分类于</span>
                 <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="../../categories/cli/" itemprop="url" rel="index"><span itemprop="name">CLI</span></a>
+                  <a href="../../categories/cli/" itemprop="url" rel="index"><span itemprop="name">cli</span></a>
                 </span>
             </span>
 
@@ -711,7 +714,7 @@
 <p><code>configure_file(&lt;input&gt; &lt;output&gt;)</code> 能够从模板（比如 <code>configure.h.in</code>）中生成各种诸多宏定义的头文件。</p>
           <!--noindex-->
             <div class="post-button">
-              <a class="btn" href="../../cli/chapter05-compiling-c-sources/#more" rel="contents">
+              <a class="btn" href="../../cli/cmake/modern-cmake-for-cpp/chapter05-compiling-c-sources.html#more" rel="contents">
                 阅读全文 &raquo;
               </a>
             </div>
@@ -735,7 +738,7 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="https://hxhue.github.io/cli/chapter07-managing-dependencies/">
+    <link itemprop="mainEntityOfPage" href="https://hxhue.github.io/cli/cmake/modern-cmake-for-cpp/chapter09-program-analysis-tools.html">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="image" content="../../images/avatar.gif">
@@ -749,7 +752,121 @@
       <header class="post-header">
         <h2 class="post-title" itemprop="name headline">
           
-            <a href="../../cli/chapter07-managing-dependencies/" class="post-title-link" itemprop="url">chapter07 - managing dependencies</a>
+            <a href="../../cli/cmake/modern-cmake-for-cpp/chapter09-program-analysis-tools.html" class="post-title-link" itemprop="url">chapter09 - program analysis tools</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2024-02-01 23:01:00" itemprop="dateCreated datePublished" datetime="2024-02-01T23:01:00+08:00">2024-02-01</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2024-03-15 23:34:53" itemprop="dateModified" datetime="2024-03-15T23:34:53+08:00">2024-03-15</time>
+              </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="../../categories/cli/" itemprop="url" rel="index"><span itemprop="name">cli</span></a>
+                </span>
+            </span>
+
+          <br>
+            <span class="post-meta-item" title="本文字数">
+              <span class="post-meta-item-icon">
+                <i class="far fa-file-word"></i>
+              </span>
+                <span class="post-meta-item-text">本文字数：</span>
+              <span>465</span>
+            </span>
+            <span class="post-meta-item" title="阅读时长">
+              <span class="post-meta-item-icon">
+                <i class="far fa-clock"></i>
+              </span>
+                <span class="post-meta-item-text">阅读时长 &asymp;</span>
+              <span>2 分钟</span>
+            </span>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <h1 id="说明"><a href="#说明" class="headerlink" title="说明"></a>说明</h1><p>这一章节是作者将一些分析工具以函数或内置支持的形式自动化地加入到了 CMake 构建工程的过程中了。</p>
+<h1 id="格式化"><a href="#格式化" class="headerlink" title="格式化"></a>格式化</h1><p>clang-format</p>
+<h1 id="静态检查"><a href="#静态检查" class="headerlink" title="静态检查"></a>静态检查</h1><ol>
+<li>clang-tidy</li>
+<li>cpplint（按照 Google Coding Style 检查）</li>
+<li>cppcheck</li>
+<li>include-what-you-use</li>
+<li>link what you use（CMake 内置）</li>
+</ol>
+<p>静态检查受到 CMake 的直接支持：</p>
+<blockquote>
+<p>All we need to do is set an appropriate target property to a semicolon-separated list containing the path to the checker’s executable, followed by any command-line options that should be forwarded to the checker.</p>
+<ul>
+<li><code>&lt;LANG&gt;_CLANG_TIDY</code></li>
+<li><code>&lt;LANG&gt;_CPPCHECK</code></li>
+<li><code>&lt;LANG&gt;_CPPLINT</code></li>
+<li><code>&lt;LANG&gt;_INCLUDE_WHAT_YOU_USE</code></li>
+<li><code>LINK_WHAT_YOU_USE</code></li>
+</ul>
+</blockquote>
+          <!--noindex-->
+            <div class="post-button">
+              <a class="btn" href="../../cli/cmake/modern-cmake-for-cpp/chapter09-program-analysis-tools.html#more" rel="contents">
+                阅读全文 &raquo;
+              </a>
+            </div>
+          <!--/noindex-->
+        
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://hxhue.github.io/cli/cmake/modern-cmake-for-cpp/chapter07-managing-dependencies.html">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="../../images/avatar.gif">
+      <meta itemprop="name" content="(╹ڡ╹ )">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="没想好标题">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="../../cli/cmake/modern-cmake-for-cpp/chapter07-managing-dependencies.html" class="post-title-link" itemprop="url">chapter07 - managing dependencies</a>
         </h2>
 
         <div class="post-meta">
@@ -774,7 +891,7 @@
               </span>
               <span class="post-meta-item-text">分类于</span>
                 <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="../../categories/cli/" itemprop="url" rel="index"><span itemprop="name">CLI</span></a>
+                  <a href="../../categories/cli/" itemprop="url" rel="index"><span itemprop="name">cli</span></a>
                 </span>
             </span>
 
@@ -813,7 +930,7 @@
 <h2 id="Config-mode"><a href="#Config-mode" class="headerlink" title="Config mode"></a>Config mode</h2>
           <!--noindex-->
             <div class="post-button">
-              <a class="btn" href="../../cli/chapter07-managing-dependencies/#more" rel="contents">
+              <a class="btn" href="../../cli/cmake/modern-cmake-for-cpp/chapter07-managing-dependencies.html#more" rel="contents">
                 阅读全文 &raquo;
               </a>
             </div>
@@ -837,7 +954,7 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="https://hxhue.github.io/cli/chapter08-testing/">
+    <link itemprop="mainEntityOfPage" href="https://hxhue.github.io/cli/cmake/modern-cmake-for-cpp/chapter08-testing.html">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="image" content="../../images/avatar.gif">
@@ -851,7 +968,7 @@
       <header class="post-header">
         <h2 class="post-title" itemprop="name headline">
           
-            <a href="../../cli/chapter08-testing/" class="post-title-link" itemprop="url">chapter08 - testing</a>
+            <a href="../../cli/cmake/modern-cmake-for-cpp/chapter08-testing.html" class="post-title-link" itemprop="url">chapter08 - testing</a>
         </h2>
 
         <div class="post-meta">
@@ -876,7 +993,7 @@
               </span>
               <span class="post-meta-item-text">分类于</span>
                 <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="../../categories/cli/" itemprop="url" rel="index"><span itemprop="name">CLI</span></a>
+                  <a href="../../categories/cli/" itemprop="url" rel="index"><span itemprop="name">cli</span></a>
                 </span>
             </span>
 
@@ -915,7 +1032,7 @@
 </blockquote>
           <!--noindex-->
             <div class="post-button">
-              <a class="btn" href="../../cli/chapter08-testing/#more" rel="contents">
+              <a class="btn" href="../../cli/cmake/modern-cmake-for-cpp/chapter08-testing.html#more" rel="contents">
                 阅读全文 &raquo;
               </a>
             </div>
@@ -939,7 +1056,7 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="https://hxhue.github.io/cli/chapter10-documents/">
+    <link itemprop="mainEntityOfPage" href="https://hxhue.github.io/cli/cmake/modern-cmake-for-cpp/chapter10-documents.html">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="image" content="../../images/avatar.gif">
@@ -953,7 +1070,7 @@
       <header class="post-header">
         <h2 class="post-title" itemprop="name headline">
           
-            <a href="../../cli/chapter10-documents/" class="post-title-link" itemprop="url">chapter10 - documents</a>
+            <a href="../../cli/cmake/modern-cmake-for-cpp/chapter10-documents.html" class="post-title-link" itemprop="url">chapter10 - documents</a>
         </h2>
 
         <div class="post-meta">
@@ -978,7 +1095,7 @@
               </span>
               <span class="post-meta-item-text">分类于</span>
                 <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="../../categories/cli/" itemprop="url" rel="index"><span itemprop="name">CLI</span></a>
+                  <a href="../../categories/cli/" itemprop="url" rel="index"><span itemprop="name">cli</span></a>
                 </span>
             </span>
 
@@ -1036,7 +1153,7 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="https://hxhue.github.io/cli/chapter11-installing-and-packaging/">
+    <link itemprop="mainEntityOfPage" href="https://hxhue.github.io/cli/cmake/modern-cmake-for-cpp/chapter11.html">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="image" content="../../images/avatar.gif">
@@ -1050,7 +1167,7 @@
       <header class="post-header">
         <h2 class="post-title" itemprop="name headline">
           
-            <a href="../../cli/chapter11-installing-and-packaging/" class="post-title-link" itemprop="url">chapter11 - installing and packaging</a>
+            <a href="../../cli/cmake/modern-cmake-for-cpp/chapter11.html" class="post-title-link" itemprop="url">chapter11.a - 对比 export 和 install 命令</a>
         </h2>
 
         <div class="post-meta">
@@ -1067,7 +1184,7 @@
                   <i class="far fa-calendar-check"></i>
                 </span>
                 <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2024-03-23 11:30:55" itemprop="dateModified" datetime="2024-03-23T11:30:55+08:00">2024-03-23</time>
+                <time title="修改时间：2024-03-23 11:31:54" itemprop="dateModified" datetime="2024-03-23T11:31:54+08:00">2024-03-23</time>
               </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
@@ -1075,7 +1192,7 @@
               </span>
               <span class="post-meta-item-text">分类于</span>
                 <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="../../categories/cli/" itemprop="url" rel="index"><span itemprop="name">CLI</span></a>
+                  <a href="../../categories/cli/" itemprop="url" rel="index"><span itemprop="name">cli</span></a>
                 </span>
             </span>
 
@@ -1085,14 +1202,14 @@
                 <i class="far fa-file-word"></i>
               </span>
                 <span class="post-meta-item-text">本文字数：</span>
-              <span>4.4k</span>
+              <span>281</span>
             </span>
             <span class="post-meta-item" title="阅读时长">
               <span class="post-meta-item-icon">
                 <i class="far fa-clock"></i>
               </span>
                 <span class="post-meta-item-text">阅读时长 &asymp;</span>
-              <span>16 分钟</span>
+              <span>1 分钟</span>
             </span>
 
         </div>
@@ -1104,141 +1221,15 @@
     <div class="post-body" itemprop="articleBody">
 
       
-          <h1 id="Exporting-without-installation"><a href="#Exporting-without-installation" class="headerlink" title="Exporting without installation"></a>Exporting without installation</h1><p>使用 <code>export</code> 命令可以创建导出文件，然后其他工程只要 include 这个导出文件就能使用当前这个包中的 target，而不需要先将这个包用 <code>install</code> 安装在系统里。</p>
-<figure class="highlight cmake"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">export</span>(TARGETS [target1 [target2 [...]]]</span><br><span class="line">      [NAMESPACE &lt;namespace&gt;] [APPEND] <span class="keyword">FILE</span> &lt;path&gt;</span><br><span class="line">      [EXPORT_LINK_INTERFACE_LIBRARIES]</span><br></pre></td></tr></table></figure>
+          <p><code>export</code> 和 <code>install</code> 命令都有 <code>TARGETS</code> 和 <code>EXPORT</code> 两种参数形式，所以容易混淆：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">export (TARGETS ...)</span><br><span class="line">  将给定的 targets 导出到 target export file，不会创建 named export</span><br><span class="line"></span><br><span class="line">install(TARGETS ... [EXPORT] ...)</span><br><span class="line">  如果有 EXPORT，除了安装之外，还会顺便从 targets 创建 named export（有两个作用！！这个是我是检查了 cmake_install.cmake 的）</span><br><span class="line"></span><br><span class="line">export (EXPORT  ...)</span><br><span class="line">  将 named export 导出到文件，可以指定名字空间</span><br><span class="line"></span><br><span class="line">install(EXPORT  ...)</span><br><span class="line">  将 named export 安装到系统，和 export(EXPORT ...) 有相似的参数，同样可以指定名字空间</span><br></pre></td></tr></table></figure>
 
-<blockquote>
-<p><code>NAMESPACE</code> is recommended as a hint, stating that the target has been imported from other projects.</p>
-<p><code>APPEND</code> tells CMake that it shouldn’t erase the contents of the file before writing. 也就是说本身会按照 <code>FILE</code> 来覆写文件，但是 <code>APPEND</code> 使得写入方式变成追加。</p>
-<p><code>EXPORT_LINK_INTERFACE_LIBRARIES</code> will export target link dependencies (including imported and config-specific variants).</p>
-</blockquote>
-<p>例子：</p>
-<figure class="highlight cmake"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">cmake_minimum_required</span>(VERSION <span class="number">3.20</span>.<span class="number">0</span>)</span><br><span class="line"><span class="keyword">project</span>(ExportCalcCXX)</span><br><span class="line"><span class="keyword">add_subdirectory</span>(src bin)</span><br><span class="line"><span class="keyword">set</span>(EXPORT_DIR <span class="string">&quot;$&#123;CMAKE_CURRENT_BINARY_DIR&#125;/cmake&quot;</span>)</span><br><span class="line"><span class="keyword">export</span>(TARGETS calc</span><br><span class="line">  <span class="keyword">FILE</span> <span class="string">&quot;$&#123;EXPORT_DIR&#125;/CalcTargets.cmake&quot;</span></span><br><span class="line">  NAMESPACE Calc::</span><br><span class="line">)</span><br><span class="line">...</span><br></pre></td></tr></table></figure>
+<p><code>export</code> 命令用来导出 target export file。<code>install</code> 命令用来安装文件到系统。在 target export file 的场景下，两者都能用于“安装”，但是前者一般是用在安装在临时路径上（参考 <a href="chapter11-installing-and-packaging.html#Exporting-without-installation">Exporting without installation</a>），而后者是用来安装进系统的。</p>
+<p>例子：unnamed export VS named export</p>
+<figure class="highlight cmake"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># unnamed export</span></span><br><span class="line"><span class="keyword">export</span>(TARGETS calc</span><br><span class="line">       <span class="keyword">FILE</span> <span class="string">&quot;$&#123;EXPORT_DIR&#125;/CalcTargets.cmake&quot;</span></span><br><span class="line">       NAMESPACE Calc::</span><br><span class="line">)</span><br><span class="line"></span><br><span class="line"><span class="comment">#[=[</span></span><br><span class="line">named <span class="keyword">export</span>，同时还有 <span class="keyword">install</span>(TARGETS calc) 的副作用。因而代码相当于：</span><br><span class="line"><span class="keyword">install</span>(TARGETS calc)</span><br><span class="line"><span class="keyword">export</span>(TARGETS calc</span><br><span class="line">       <span class="keyword">FILE</span> <span class="string">&quot;$&#123;EXPORT_DIR&#125;/CalcTargets2.cmake&quot;</span></span><br><span class="line">       NAMESPACE Calc::</span><br><span class="line">)</span><br><span class="line"><span class="comment">#]=]</span></span><br><span class="line"><span class="keyword">install</span>(TARGETS calc <span class="keyword">EXPORT</span> CalcTargets)</span><br><span class="line"><span class="keyword">export</span>(<span class="keyword">EXPORT</span> CalcTargets</span><br><span class="line">       <span class="keyword">FILE</span> <span class="string">&quot;$&#123;EXPORT_DIR&#125;/CalcTargets2.cmake&quot;</span></span><br><span class="line">       NAMESPACE Calc::</span><br><span class="line">)</span><br></pre></td></tr></table></figure>
 
-<p><strong>这段代码将导出文件生成在了 binary tree 里面</strong>，这样的文件不会污染系统，但是可以被其他工程包含进去。还要注意 CMake 在 build tree 中导出的 target export file 里用的是绝对路径，所以不能轻易移动。上面代码还用到了一个名字空间 <code>Calc::</code>，因而创建的 target export file 中声明的 target 是 <code>Calc::calc</code>。</p>
-<p>export 命令还有一个形式：<code>export(EXPORT &lt;export&gt; [NAMESPACE &lt;namespace&gt;] [FILE &lt;path&gt;])</code>。这个形式不需要 targets，但是需要一个之前创建的 export 的名字。</p>
-          <!--noindex-->
-            <div class="post-button">
-              <a class="btn" href="../../cli/chapter11-installing-and-packaging/#more" rel="contents">
-                阅读全文 &raquo;
-              </a>
-            </div>
-          <!--/noindex-->
-        
-      
-    </div>
+<p>这样生成的两个 target export file 的内容是一模一样的。</p>
 
-    
-    
-    
-      <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  
-  
-  
-
-      
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="https://hxhue.github.io/cli/chapter09-program-analysis-tools/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="../../images/avatar.gif">
-      <meta itemprop="name" content="(╹ڡ╹ )">
-      <meta itemprop="description" content="">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="没想好标题">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          
-            <a href="../../cli/chapter09-program-analysis-tools/" class="post-title-link" itemprop="url">chapter09 - program analysis tools</a>
-        </h2>
-
-        <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-calendar"></i>
-              </span>
-              <span class="post-meta-item-text">发表于</span>
-
-              <time title="创建时间：2024-02-01 23:01:00" itemprop="dateCreated datePublished" datetime="2024-02-01T23:01:00+08:00">2024-02-01</time>
-            </span>
-              <span class="post-meta-item">
-                <span class="post-meta-item-icon">
-                  <i class="far fa-calendar-check"></i>
-                </span>
-                <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2024-03-15 23:34:53" itemprop="dateModified" datetime="2024-03-15T23:34:53+08:00">2024-03-15</time>
-              </span>
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-folder"></i>
-              </span>
-              <span class="post-meta-item-text">分类于</span>
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="../../categories/cli/" itemprop="url" rel="index"><span itemprop="name">CLI</span></a>
-                </span>
-            </span>
-
-          <br>
-            <span class="post-meta-item" title="本文字数">
-              <span class="post-meta-item-icon">
-                <i class="far fa-file-word"></i>
-              </span>
-                <span class="post-meta-item-text">本文字数：</span>
-              <span>465</span>
-            </span>
-            <span class="post-meta-item" title="阅读时长">
-              <span class="post-meta-item-icon">
-                <i class="far fa-clock"></i>
-              </span>
-                <span class="post-meta-item-text">阅读时长 &asymp;</span>
-              <span>2 分钟</span>
-            </span>
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          <h1 id="说明"><a href="#说明" class="headerlink" title="说明"></a>说明</h1><p>这一章节是作者将一些分析工具以函数或内置支持的形式自动化地加入到了 CMake 构建工程的过程中了。</p>
-<h1 id="格式化"><a href="#格式化" class="headerlink" title="格式化"></a>格式化</h1><p>clang-format</p>
-<h1 id="静态检查"><a href="#静态检查" class="headerlink" title="静态检查"></a>静态检查</h1><ol>
-<li>clang-tidy</li>
-<li>cpplint（按照 Google Coding Style 检查）</li>
-<li>cppcheck</li>
-<li>include-what-you-use</li>
-<li>link what you use（CMake 内置）</li>
-</ol>
-<p>静态检查受到 CMake 的直接支持：</p>
-<blockquote>
-<p>All we need to do is set an appropriate target property to a semicolon-separated list containing the path to the checker’s executable, followed by any command-line options that should be forwarded to the checker.</p>
-<ul>
-<li><code>&lt;LANG&gt;_CLANG_TIDY</code></li>
-<li><code>&lt;LANG&gt;_CPPCHECK</code></li>
-<li><code>&lt;LANG&gt;_CPPLINT</code></li>
-<li><code>&lt;LANG&gt;_INCLUDE_WHAT_YOU_USE</code></li>
-<li><code>LINK_WHAT_YOU_USE</code></li>
-</ul>
-</blockquote>
-          <!--noindex-->
-            <div class="post-button">
-              <a class="btn" href="../../cli/chapter09-program-analysis-tools/#more" rel="contents">
-                阅读全文 &raquo;
-              </a>
-            </div>
-          <!--/noindex-->
-        
       
     </div>
 

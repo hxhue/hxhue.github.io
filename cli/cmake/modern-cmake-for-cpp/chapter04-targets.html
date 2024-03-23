@@ -1,0 +1,644 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 7.1.1">
+  <link rel="apple-touch-icon" sizes="180x180" href="../../../images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="../../../images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="../../../images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="../../../images/logo.svg" color="#222">
+  <meta name="google-site-verification" content="hwfud_ndcnJHe2Jz7ClToP1nuUA3k7FqZv-0VpFAHjg">
+
+<link rel="stylesheet" href="../../../css/main.css">
+
+
+<link rel="stylesheet" href="../../../lib/font-awesome/css/all.min.css">
+  <link rel="stylesheet" href="../../../lib/pace/pace-theme-minimal.min.css">
+  <script src="../../../lib/pace/pace.min.js"></script>
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"hxhue.github.io","root":"/","scheme":"Gemini","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"always","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":true,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":true,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},"path":"search.xml"};
+  </script>
+
+  <meta name="description" content="创建 target三种方式： 1234add_executable     # 默认在 ALL 中add_library        # 默认在 ALL 中add_custom_target  # 默认不在 ALL 中# add_custom_command 是创建文件的方式，但是不是创建 target  add_library: https:&#x2F;&#x2F;cmake.org&#x2F;cmake&#x2F;help&#x2F;lat">
+<meta property="og:type" content="article">
+<meta property="og:title" content="chapter04 - targets">
+<meta property="og:url" content="https://hxhue.github.io/cli/cmake/modern-cmake-for-cpp/chapter04-targets.html">
+<meta property="og:site_name" content="没想好标题">
+<meta property="og:description" content="创建 target三种方式： 1234add_executable     # 默认在 ALL 中add_library        # 默认在 ALL 中add_custom_target  # 默认不在 ALL 中# add_custom_command 是创建文件的方式，但是不是创建 target  add_library: https:&#x2F;&#x2F;cmake.org&#x2F;cmake&#x2F;help&#x2F;lat">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://hxhue.github.io/assets/7dd15f4672f9de33ae22ed0e8833e967.webp">
+<meta property="og:image" content="https://hxhue.github.io/assets/f66ec130c95fc8feff789bb1109ee4bc.webp">
+<meta property="og:image" content="https://hxhue.github.io/assets/3f56bae80066f2edf58fb708df2098b0.webp">
+<meta property="og:image" content="https://hxhue.github.io/assets/a09a4ae488f03050715aadddfe27c026.webp">
+<meta property="og:image" content="https://hxhue.github.io/assets/e376a78b518fe3e773ddfe7fd0851dbc.webp">
+<meta property="og:image" content="https://hxhue.github.io/assets/10ac054b7b0a26d0a1af2818631c2b47.webp">
+<meta property="article:published_time" content="2024-02-01T15:01:00.000Z">
+<meta property="article:modified_time" content="2024-03-21T08:39:32.364Z">
+<meta property="article:author" content="(╹ڡ╹ )">
+<meta property="article:tag" content="cpp">
+<meta property="article:tag" content="cmake">
+<meta property="article:tag" content="modern-cmake-for-cpp">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://hxhue.github.io/assets/7dd15f4672f9de33ae22ed0e8833e967.webp">
+
+<link rel="canonical" href="https://hxhue.github.io/cli/cmake/modern-cmake-for-cpp/chapter04-targets.html">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'zh-CN'
+  };
+</script>
+
+  <title>chapter04 - targets | 没想好标题</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+<!-- hexo injector head_end start --><style>a { word-break: break-all; }</style><!-- hexo injector head_end end --><link rel="alternate" href="atom.xml" title="没想好标题" type="application/atom+xml">
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">没想好标题</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+        <i class="fa fa-search fa-fw fa-lg"></i>
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="main-menu menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="../../../index.html" rel="section"><i class="fa fa-home fa-fw"></i>首页</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="../../../archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档</a>
+
+  </li>
+        <li class="menu-item menu-item-about">
+
+    <a href="../../../about/" rel="section"><i class="fa fa-user fa-fw"></i>关于</a>
+
+  </li>
+        <li class="menu-item menu-item-tags">
+
+    <a href="../../../tags/" rel="section"><i class="fa fa-tags fa-fw"></i>标签</a>
+
+  </li>
+        <li class="menu-item menu-item-categories">
+
+    <a href="../../../categories/" rel="section"><i class="fa fa-th fa-fw"></i>分类</a>
+
+  </li>
+        <li class="menu-item menu-item-友情链接">
+
+    <a href="../../../friends/" rel="section"><i class="fa fa-heart fa-fw"></i>友情链接</a>
+
+  </li>
+        <li class="menu-item menu-item-sitemap">
+
+    <a href="../../../sitemap.xml" rel="section"><i class="fa fa-sitemap fa-fw"></i>站点地图</a>
+
+  </li>
+      <li class="menu-item menu-item-search">
+        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>搜索
+        </a>
+      </li>
+  </ul>
+</nav>
+
+
+
+  <div class="search-pop-overlay">
+    <div class="popup search-popup">
+        <div class="search-header">
+  <span class="search-icon">
+    <i class="fa fa-search"></i>
+  </span>
+  <div class="search-input-container">
+    <input autocomplete="off" autocapitalize="off"
+           placeholder="搜索..." spellcheck="false"
+           type="search" class="search-input">
+  </div>
+  <span class="popup-btn-close">
+    <i class="fa fa-times-circle"></i>
+  </span>
+</div>
+<div id="search-result">
+  <div id="no-result">
+    <i class="fa fa-spinner fa-pulse fa-5x fa-fw"></i>
+  </div>
+</div>
+
+    </div>
+  </div>
+
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post posts-expand">
+            
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://hxhue.github.io/cli/cmake/modern-cmake-for-cpp/chapter04-targets.html">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="../../../images/avatar.gif">
+      <meta itemprop="name" content="(╹ڡ╹ )">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="没想好标题">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          chapter04 - targets
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2024-02-01 23:01:00" itemprop="dateCreated datePublished" datetime="2024-02-01T23:01:00+08:00">2024-02-01</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2024-03-21 16:39:32" itemprop="dateModified" datetime="2024-03-21T16:39:32+08:00">2024-03-21</time>
+              </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="../../../categories/cli/" itemprop="url" rel="index"><span itemprop="name">cli</span></a>
+                </span>
+            </span>
+
+          <br>
+            <span class="post-meta-item" title="本文字数">
+              <span class="post-meta-item-icon">
+                <i class="far fa-file-word"></i>
+              </span>
+                <span class="post-meta-item-text">本文字数：</span>
+              <span>2.7k</span>
+            </span>
+            <span class="post-meta-item" title="阅读时长">
+              <span class="post-meta-item-icon">
+                <i class="far fa-clock"></i>
+              </span>
+                <span class="post-meta-item-text">阅读时长 &asymp;</span>
+              <span>10 分钟</span>
+            </span>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <h1 id="创建-target"><a href="#创建-target" class="headerlink" title="创建 target"></a>创建 target</h1><p>三种方式：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">add_executable     # 默认在 ALL 中</span><br><span class="line">add_library        # 默认在 ALL 中</span><br><span class="line">add_custom_target  # 默认不在 ALL 中</span><br><span class="line"># add_custom_command 是创建文件的方式，但是不是创建 target</span><br></pre></td></tr></table></figure>
+
+<p><code>add_library</code>: <a target="_blank" rel="noopener" href="https://cmake.org/cmake/help/latest/command/add_library.html#object-libraries">https://cmake.org/cmake/help/latest/command/add_library.html#object-libraries</a></p>
+<ul>
+<li>Normal library: 如果不指定 <code>STATIC</code>&#x2F;<code>SHARED</code>&#x2F;<code>MODULE</code>，<code>add_library</code> 会根据 <code>BUILD_SHARED_LIBS</code> 变量去决定是否使用 <code>SHARED</code> 还是 <code>STATIC</code>。</li>
+<li>Object library: 生成目标文件。</li>
+<li>Interface library：不生成文件。用来打包传播属性。</li>
+<li>Imported library：<code>IMPORTED</code> 属性和 <code>STATIC</code> 等是可以叠加的。<code>IMPORTED</code> 库是<strong>已经被编译好的库</strong>，不需要另外编译，但是需要用 <code>set_target_property</code> 来设置其位置。</li>
+<li>Alias library</li>
+</ul>
+<p><code>add_custom_target</code> 可以有多条命令，而且不一定有产物。<code>add_custom_target</code> 创建的 target 是默认不 ALL 的！和 <code>add_custom_command</code> 的对比看后文。</p>
+<p>可以手动用 <code>add_dependencies</code> 创建新的依赖关系。主要是用来维护编译顺序的（比如检查 checksum 的自定义任务必须得在目标已经生成之后）。</p>
+<blockquote>
+<p>target 的依赖声明可以不按照顺序，cmake 会扫描整个文件再去构建依赖。</p>
+</blockquote>
+<h1 id="读写-target-的属性"><a href="#读写-target-的属性" class="headerlink" title="读写 target 的属性"></a>读写 target 的属性</h1><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">set_target_properties</span><br><span class="line">get_target_property</span><br></pre></td></tr></table></figure>
+
+<p>cmake 的有些命令是等价的，但是存在一层封装关系。比如用 <code>get_property</code> 和 <code>set_property</code> 也可以，但是不如上面的命令方便。</p>
+<blockquote>
+<p><code>set_property</code> 除了设置 target 还能设置 source 的属性。</p>
+</blockquote>
+<p>其实用 <code>add_dependencies</code> 添加依赖关系也只是写入了 target 的属性，因而<strong>依赖是属性的一种</strong>。</p>
+<h1 id="属性传播"><a href="#属性传播" class="headerlink" title="属性传播"></a>属性传播</h1><p>传播（propagation）有几种方式：</p>
+<ol>
+<li>PRIVATE</li>
+<li>INTERFACE 不会将属性设置给 source，但是设置给需要依赖的目标！</li>
+<li>PUBLIC</li>
+</ol>
+<p><img src="../../../../assets/7dd15f4672f9de33ae22ed0e8833e967.webp"><br>通过属性传播得到的属性发生冲突时，cmake 会报错。因而也有将库版本号作为 INTERFACE 类型的属性给库的做法，这样能够保证项目从多方获得同一个库时版本相同。</p>
+<figure class="highlight cmake"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">cmake_minimum_required</span>(VERSION <span class="number">3.20</span>.<span class="number">0</span>)</span><br><span class="line"><span class="keyword">project</span>(PropagatedProperties CXX)</span><br><span class="line"></span><br><span class="line"><span class="keyword">add_library</span>(source1 empty.cpp)</span><br><span class="line"><span class="keyword">set_property</span>(<span class="keyword">TARGET</span> source1 PROPERTY INTERFACE_LIB_VERSION <span class="number">3</span>)</span><br><span class="line"><span class="keyword">set_target_properties</span>(source1 PROPERTIES</span><br><span class="line">  COMPATIBLE_INTERFACE_STRING LIB_VERSION</span><br><span class="line">)</span><br><span class="line"></span><br><span class="line"><span class="keyword">add_library</span>(source2 empty.cpp)</span><br><span class="line"><span class="keyword">set_property</span>(<span class="keyword">TARGET</span> source2 PROPERTY INTERFACE_LIB_VERSION <span class="number">4</span>)</span><br><span class="line"></span><br><span class="line"><span class="keyword">add_library</span>(destination empty.cpp)</span><br><span class="line"><span class="keyword">target_link_libraries</span>(destination source1 source2)</span><br></pre></td></tr></table></figure>
+
+<h1 id="伪目标"><a href="#伪目标" class="headerlink" title="伪目标"></a>伪目标</h1><p>这些目标在配置过程分析依赖图时是可见的，但是在 buildsystem 中不一定可见。</p>
+<blockquote>
+<p>buildsystem 是一个单词而不是两个。</p>
+</blockquote>
+<h2 id="Imported-targets"><a href="#Imported-targets" class="headerlink" title="Imported targets"></a>Imported targets</h2><p>是用 find_package 找到的。</p>
+<h2 id="Alias-targets"><a href="#Alias-targets" class="headerlink" title="Alias targets"></a>Alias targets</h2><p>因为是伪目标，所以生成的目标在 buildsystem 中找不到（<code>add_executable</code> 和 <code>add_library</code> 都有 <code>ALIAS</code> 选项）。如果有些项目非要找某个特定名称的 target，而且 target 存在但只是名称不同，可以给个 alias。</p>
+<h2 id="Interface-libraries"><a href="#Interface-libraries" class="headerlink" title="Interface libraries"></a>Interface libraries</h2><p><img src="../../../../assets/f66ec130c95fc8feff789bb1109ee4bc.webp"></p>
+<p>这样的库本身是不会被编译的。因为写成了 target，那么 link 这个 target 的就能获得传播来的属性。</p>
+<p>主要作用：</p>
+<ol>
+<li>创建纯头文件的库。</li>
+<li>将多个要传播的属性打包在一个 target 里。</li>
+</ol>
+<p>看不懂这里往 <code>INTERFACE</code> 里面加文件是什么意思，我觉得网上的这种更容易理解：<br><a target="_blank" rel="noopener" href="https://stackoverflow.com/a/45212811/">https://stackoverflow.com/a/45212811/</a></p>
+<figure class="highlight cmake"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">add_library</span>(foo INTERFACE)</span><br><span class="line"><span class="keyword">target_link_libraries</span>(foo INTERFACE <span class="variable">$&#123;FOO_LIBRARIES&#125;</span>)</span><br><span class="line"><span class="keyword">target_include_directories</span>(foo INTERFACE <span class="variable">$&#123;FOO_INCLUDE_DIR&#125;</span>)</span><br><span class="line"><span class="keyword">target_compile_definitions</span>(foo INTERFACE <span class="string">&quot;-DENABLE_FOO&quot;</span>)</span><br></pre></td></tr></table></figure>
+
+<blockquote>
+<p><code>CMAKE_CURRENT_SOURCE_DIR</code> vs <code>CMAKE_CURRENT_LIST_DIR</code>:<br><a target="_blank" rel="noopener" href="https://stackoverflow.com/questions/15662497/difference-between-cmake-current-source-dir-and-cmake-current-list-dir">https://stackoverflow.com/questions/15662497/difference-between-cmake-current-source-dir-and-cmake-current-list-dir</a><br>后者会因为 <code>include</code> 而改变（记住 <code>include</code> 和 <code>add_subdirectory</code> 不同）。被 <code>include</code> 的子 list 内部的 <code>CMAKE_CURRENT_LIST_DIR</code> 是会改变的，但是 source dir 不变。</p>
+</blockquote>
+<p><img src="../../../../assets/3f56bae80066f2edf58fb708df2098b0.webp"></p>
+<p><img src="../../../../assets/a09a4ae488f03050715aadddfe27c026.webp"></p>
+<h2 id="Build-targets"><a href="#Build-targets" class="headerlink" title="Build targets"></a>Build targets</h2><p>可以在构建过程（<code>cmake --build build</code>）中通过 <code>--target</code>&#x2F;<code>-t</code> 参数传入。</p>
+<p><strong>all（小写）就是一个伪 target</strong>。不指定时就会使用这个 target。</p>
+<p>这也是为什么用 <code>add_executable</code> 和 <code>add_library</code> 创建库&#x2F;可执行文件时，有一个选项是 <code>EXCLUDE_FROM_ALL</code>，可能作为库使用的项目的文档和测试代码可以用这个选项来排除编译？而 <code>add_custom_target</code> 则相反，默认是排除在 all 外，除非指定 ALL 选项。</p>
+<p><strong>clean 也是伪 target</strong>。</p>
+<p>Chapter 1 里面提到过 <code>--clean-first</code> 选项，可以在构建前先跑一下 clean。因为 clean 和其他的 target 不能共存，所以这个选项显得有必要，不然就只能调用两次 cmake 命令来构建了。</p>
+<p>为了让 clean 能够正确删除文件，<code>add_custom_target</code> 中生成的文件需要显式用 <code>BYPRODUCTS</code> 选项标注出来。</p>
+<h1 id="Custom-commands"><a href="#Custom-commands" class="headerlink" title="Custom commands"></a>Custom commands</h1><p>和 custom target 有一点点区别。custom target 如果提供的只是命令，那么就没有明显的依赖关系，所以每次都需要重新构建（即不能 cache）。如果 custom target 被其他构建 target 依赖，那么很大一块都需要重新构建。custom target 也有另外一种方式，就是只说明依赖哪些文件，而不是使用命令。比如 <code>add_custom_target(generate_foo DEPENDS foo.h foo.cpp)</code>。</p>
+<p><code>add_custom_command</code> 不会创建 target，但是可以有输出文件（按需构建）和依赖。通过将其输出文件作为其他库或者可执行文件的源码，可以构成依赖关系，从而将 custom command 纳入依赖图中。如果没有被加入依赖图，那么用 <code>add_custom_command</code> 声明的文件是不会运行的哦！</p>
+<p><code>add_custom_command</code> 的输出路径是相对于 <code>$&#123;CMAKE_CURRENT_BINARY_DIR&#125;</code> 的。</p>
+<h2 id="第一种用法：动态生成源码"><a href="#第一种用法：动态生成源码" class="headerlink" title="第一种用法：动态生成源码"></a>第一种用法：动态生成源码</h2><p>例子：让 protobuf 在构建时生成。</p>
+<p><img src="../../../../assets/e376a78b518fe3e773ddfe7fd0851dbc.webp"></p>
+<p>&#x3D;&#x3D;书上的很多写法都像这样： <a target="_blank" rel="noopener" href="https://stackoverflow.com/a/13703745/">https://stackoverflow.com/a/13703745/</a> 被认为 source list 中加入头文件是不必要的。但是这样其实有用！可以加上依赖关系，使得用 <code>add_custom_command</code> 能够被纳入依赖图中。&#x3D;&#x3D;</p>
+<figure class="highlight cmake"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">include_directories</span>(<span class="keyword">include</span>)</span><br><span class="line"></span><br><span class="line"><span class="keyword">add_executable</span>(MyExec</span><br><span class="line">  src/main.c</span><br><span class="line">  src/other_source.c</span><br><span class="line">  <span class="keyword">include</span>/header1.h</span><br><span class="line">  <span class="keyword">include</span>/header2.h</span><br><span class="line">)</span><br></pre></td></tr></table></figure>
+
+<p>如果不给前缀，那么生成的文件应该是在 binary 目录里面。这样就出现了源码在 binary 路径的情况。书中代码生成的是头文件，所以还额外包含了输出目标的头文件：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">target_include_directories(main PRIVATE $&#123;CMAKE_BINARY_DIR&#125;)</span><br></pre></td></tr></table></figure>
+
+<p><code>OUTPUT</code> 的相对路径是当前的 build 路径或 source 路径。build 路径的被优先考虑：</p>
+<blockquote>
+<p>If an output file name is a relative path, its absolute path is determined by interpreting it relative to:</p>
+<ol>
+<li>the build directory corresponding to the current source directory (<a target="_blank" rel="noopener" href="https://cmake.org/cmake/help/latest/variable/CMAKE_CURRENT_BINARY_DIR.html#variable:CMAKE_CURRENT_BINARY_DIR%20%22CMAKE_CURRENT_BINARY_DIR%22"></a>), or</li>
+<li>the current source directory (<a target="_blank" rel="noopener" href="https://cmake.org/cmake/help/latest/variable/CMAKE_CURRENT_SOURCE_DIR.html#variable:CMAKE_CURRENT_SOURCE_DIR%20%22CMAKE_CURRENT_SOURCE_DIR%22"></a>).</li>
+</ol>
+<p>The path in the build directory is preferred unless the path in the source tree is mentioned as an absolute source file path elsewhere in the current directory.</p>
+</blockquote>
+<p><code>OUTPUT</code> 的源码默认带有 <code>GENERATED</code> 属性。对于普通的代码也可以标记此属性，比如：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">set_source_files_properties( details/part.out PROPERTIES GENERATED TRUE )</span><br></pre></td></tr></table></figure>
+
+<p><strong>2024 年 1 月 27 日</strong>：的确是可以依赖子文件夹的未生成文件，但是生成该文件的方式（<code>add_custom_command</code>）必须在当前 LIST 可见。那么如何把生成方法放在用 <code>add_subdirectory</code> 包含进来的子目录呢？</p>
+<blockquote>
+<p>按照网上的说法，如果要依赖来自子文件夹的文件而该文件的生成方式又在子文件夹的 CMakeLists.txt 中，那么需要用 <code>set_source_files_properties</code> 手动给该文件设置 <code>GENERATED</code> 属性。cmake 在 3.20 之前，<code>GENERATED</code> 属性是局限于文件夹内的，对外不可见（见 <a target="_blank" rel="noopener" href="https://stackoverflow.com/a/72018266/">https://stackoverflow.com/a/72018266/</a> ）。但是我在尝试后<strong>没有成功</strong>。大概是因为尽管手动设置 <code>GENERATED</code> 为 <code>TRUE</code> 之后成功 tweak 了源码依赖检查，但是 cmake 依然无法看到来自子目录的构建命令。</p>
+</blockquote>
+<p>实在无法解决又非要将 <code>add_custom_command</code> 放在子目录时，可以用 <code>add_custom_target</code> 创建一个依赖文件的 target 让当前目录的 target 去依赖。（尝试过，已成功。）</p>
+<h2 id="第二种用法：给-target-加-hook"><a href="#第二种用法：给-target-加-hook" class="headerlink" title="第二种用法：给 target 加 hook"></a>第二种用法：给 target 加 hook</h2><p>可以创建一个在 target 构建前后自动运行的 command，但是给定的 target 必须在这个文件夹里面。使用钩子去指定缺失文件生成规则是无效的，因为缺失文件生成规则是要写进子构建系统的（比如 make），写了钩子也不会被转换成子构建系统能够识别的生成规则，即便改了 <code>GENERATED</code> 属性也没用。</p>
+<h1 id="Generator-expressions"><a href="#Generator-expressions" class="headerlink" title="Generator expressions"></a>Generator expressions</h1><p><code>$&lt;&gt;</code>，也是能够放在字符串中被转义的。感觉就像执行了一个命令然后取其输出，就像 bash 的 <code>$()</code> 一样。</p>
+<p>主要是用来解决 the chicken and the eggs problem。生成表达式是在生成阶段展开的，所以能够解决配置阶段无法解决的先后问题。</p>
+<blockquote>
+<p style="margin-bottom: 0px"><font size="+1">✏️<strong> Note</strong></font></p>
+<p>因为生成表达式是在生成阶段才展开的（不能用 message 在 配置过程 打印），所以很难调试他的值。可以用 <code>add_custom_command</code> 将值 echo （<code>$&#123;CMAKE_COMMAND&#125; -E echo $&lt;...&gt;</code>）出来。这样在运行自定义 target 的时候可以打印。</p>
+</blockquote>
+<p>生成表达式语法：</p>
+<p><img src="../../../../assets/10ac054b7b0a26d0a1af2818631c2b47.webp"></p>
+<p>由于生成表达式是在生成阶段才可用，所以生成表达式不能用一般的字符串处理命令。因而有一些专门的字符串处理的生成表达式，同时生成表达式还能够嵌套。</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"># 输出 linux</span><br><span class="line">add_custom_target(sometarget ALL</span><br><span class="line">  COMMAND $&#123;CMAKE_COMMAND&#125; -E echo $&lt;LOWER_CASE:$&lt;PLATFORM_ID&gt;&gt;)</span><br></pre></td></tr></table></figure>
+
+<h2 id="条件、比较和字符串"><a href="#条件、比较和字符串" class="headerlink" title="条件、比较和字符串"></a>条件、比较和字符串</h2><p><a target="_blank" rel="noopener" href="https://cmake.org/cmake/help/latest/manual/cmake-generator-expressions.7.html#genex:IF%20%22Permalink%20to%20this%20definition%22">link</a></p>
+<p><a target="_blank" rel="noopener" href="https://cmake.org/cmake/help/latest/manual/cmake-generator-expressions.7.html#genex:condition%20%22Permalink%20to%20this%20definition%22">link</a> 相当于 <code>$&lt;IF:condition,true_string,&gt;</code> 也就是第三个参数为空。（和 bash 的 <code>$&#123;var:+true_string&#125;</code> 很像。）和命令中的评估不同，这里条件只认 0 和 1，其他值会报错。将其他值送入条件需要用 <code>$&lt;BOOL:string&gt;</code>，评估真值的方式和对待变量是相同的。</p>
+<p>还有 <code>AND</code>&#x2F;<code>OR</code>&#x2F;<code>NOT</code> 运算、版本比较、字符串和数值比较、字符串大小写转换、创建 C 标识符等。</p>
+<h2 id="列表和路径"><a href="#列表和路径" class="headerlink" title="列表和路径"></a>列表和路径</h2><p>比较高级的有列表操作、路径操作。</p>
+<p><code>$&lt;SHELL_PATH:path&gt;</code> 可以转换路径为目标平台的路径（比如 Windows 上用反斜杠）。其参数 <code>path</code> 必须为绝对路径。感觉像是给 Windows 准备的。</p>
+<h2 id="信息检查"><a href="#信息检查" class="headerlink" title="信息检查"></a>信息检查</h2><p>甚至一些在 cmake 中有对应变量的东西在生成表达式也有对应版本（比如 <code>$&lt;C_COMPILER_ID&gt;</code>）</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">add_executable(myapp main.cpp foo.c bar.cpp zot.cu)</span><br><span class="line">target_compile_options(myapp</span><br><span class="line">  PRIVATE $&lt;$&lt;COMPILE_LANGUAGE:CXX&gt;:-fno-exceptions&gt;</span><br><span class="line">)</span><br><span class="line">target_compile_definitions(myapp</span><br><span class="line">  PRIVATE $&lt;$&lt;COMPILE_LANGUAGE:CXX&gt;:COMPILING_CXX&gt;</span><br><span class="line">          $&lt;$&lt;COMPILE_LANGUAGE:CUDA&gt;:COMPILING_CUDA&gt;</span><br><span class="line">)</span><br><span class="line">target_include_directories(myapp</span><br><span class="line">  PRIVATE $&lt;$&lt;COMPILE_LANGUAGE:CXX,CUDA&gt;:/opt/foo/headers&gt;</span><br><span class="line">)</span><br></pre></td></tr></table></figure>
+
+<p>这里用生成表达式而不是变量，是因为文件的后面可能还会用 <code>enable_language</code> 添加新的语言。</p>
+<p><code>$&lt;$&lt;CONFIG:Debug&gt;:DEBUG_MODE&gt;</code> 根据当前是否为 Debug 模式来展开（也就是判断变量 <code>CMAKE_BUILD_TYPE</code> 或者因为 Multi-Config 的 <code>--config</code> 的值）。对于 Unix Makefiles，如果不传入 <code>CMAKE_BUILD_TYPE</code>，结果将是空。对于 Ninja Multi-Config，不传入则使用 Debug。</p>
+<p><code>CONFIG</code> 支持多个参数，也可以把空字符串加进去。</p>
+<blockquote>
+<ol>
+<li>如果 <code>CMAKE_BUILD_TYPE</code> 为空，那么会使用 “&#x3D;&#x3D;toolchain-specific&#x3D;&#x3D; default build type”。听上去不太妙。</li>
+<li>似乎 Unix Makefiles 认为 <code>CMAKE_BUILD_TYPE</code> 不是 Debug，也不是认识的其他模式时，就使用 Release。</li>
+<li>在 Multi-Config 生成器的配置阶段传 <code>CMAKE_BUILD_TYPE</code>，会被警告其没有被使用。</li>
+</ol>
+</blockquote>
+<p>Nexus 有这样的代码：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"># 默认为 Debug 编译模式</span><br><span class="line">if(NOT CMAKE_BUILD_TYPE)</span><br><span class="line">    set(CMAKE_BUILD_TYPE Debug)</span><br><span class="line">endif()</span><br></pre></td></tr></table></figure>
+
+<p>虽然这样是防止了还需要额外判断 <code>CMAKE_BUILD_TYPE</code> 为空的坑，但是这对于多配置生成器在构建阶段才选择 Debug or Release 不友好。</p>
+<p><code>$&lt;TARGET_EXISTS:arg&gt;</code> 判断目标是否存在。</p>
+<p><code>$&lt;COMPILE_LANGUAGE:lang&gt;</code> 判断是否正在用某种语言编译。比如某个库既兼容 C 又兼容 C++，但是想在编译 C++ 时使用 <code>-fno-exceptions</code> 禁用异常，就可以用这个。此外还有 <code>$&lt;LINK_LANGUAGE:lang&gt;</code>。（&#x3D;&#x3D;有点不懂为什么 link 阶段还有语言。&#x3D;&#x3D;）</p>
+<p><code>$&lt;TARGET_NAME_IF_EXISTS:target&gt;</code> 有就提供，没有就为空。</p>
+<p><code>$&lt;TARGET_FILE:target&gt;</code> 查询 target 的输出文件。<br><code>$&lt;TARGET_PROPERTY:target,prop&gt;</code> 查询 target 的属性。</p>
+<h2 id="Escaping"><a href="#Escaping" class="headerlink" title="Escaping"></a>Escaping</h2><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">$&lt;ANGLE-R&gt;</span><br><span class="line">$&lt;COMMA&gt;</span><br><span class="line">$&lt;SEMICOLON&gt;</span><br></pre></td></tr></table></figure>
+
+<p>由于生成时间晚，可以防止转义。</p>
+<p>将变量和生成表达式混用是不妙的。比如变量中可能包含 “&gt;”，展开后提前终止了生成表达式。</p>
+
+    </div>
+
+    
+    
+    
+
+      <footer class="post-footer">
+          <div class="post-tags">
+              <a href="../../../tags/cpp/" rel="tag"># cpp</a>
+              <a href="../../../tags/cmake/" rel="tag"># cmake</a>
+              <a href="../../../tags/modern-cmake-for-cpp/" rel="tag"># modern-cmake-for-cpp</a>
+          </div>
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="chapter06-linking.html" rel="prev" title="chapter06 - linking">
+      <i class="fa fa-chevron-left"></i> chapter06 - linking
+    </a></div>
+      <div class="post-nav-item">
+    <a href="chapter04.html" rel="next" title="chapter04.a - 梳理依赖是如何创建的">
+      chapter04.a - 梳理依赖是如何创建的 <i class="fa fa-chevron-right"></i>
+    </a></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+
+
+          </div>
+          
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%88%9B%E5%BB%BA-target"><span class="nav-text">创建 target</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E8%AF%BB%E5%86%99-target-%E7%9A%84%E5%B1%9E%E6%80%A7"><span class="nav-text">读写 target 的属性</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%B1%9E%E6%80%A7%E4%BC%A0%E6%92%AD"><span class="nav-text">属性传播</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E4%BC%AA%E7%9B%AE%E6%A0%87"><span class="nav-text">伪目标</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#Imported-targets"><span class="nav-text">Imported targets</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Alias-targets"><span class="nav-text">Alias targets</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Interface-libraries"><span class="nav-text">Interface libraries</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Build-targets"><span class="nav-text">Build targets</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Custom-commands"><span class="nav-text">Custom commands</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E7%AC%AC%E4%B8%80%E7%A7%8D%E7%94%A8%E6%B3%95%EF%BC%9A%E5%8A%A8%E6%80%81%E7%94%9F%E6%88%90%E6%BA%90%E7%A0%81"><span class="nav-text">第一种用法：动态生成源码</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E7%AC%AC%E4%BA%8C%E7%A7%8D%E7%94%A8%E6%B3%95%EF%BC%9A%E7%BB%99-target-%E5%8A%A0-hook"><span class="nav-text">第二种用法：给 target 加 hook</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Generator-expressions"><span class="nav-text">Generator expressions</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%9D%A1%E4%BB%B6%E3%80%81%E6%AF%94%E8%BE%83%E5%92%8C%E5%AD%97%E7%AC%A6%E4%B8%B2"><span class="nav-text">条件、比较和字符串</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%88%97%E8%A1%A8%E5%92%8C%E8%B7%AF%E5%BE%84"><span class="nav-text">列表和路径</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%BF%A1%E6%81%AF%E6%A3%80%E6%9F%A5"><span class="nav-text">信息检查</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Escaping"><span class="nav-text">Escaping</span></a></li></ol></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+  <p class="site-author-name" itemprop="name">(╹ڡ╹ )</p>
+  <div class="site-description" itemprop="description"></div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="../../../archives/">
+        
+          <span class="site-state-item-count">223</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+            <a href="../../../categories/">
+          
+        <span class="site-state-item-count">6</span>
+        <span class="site-state-item-name">分类</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+            <a href="../../../tags/">
+          
+        <span class="site-state-item-count">49</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author motion-element">
+      <span class="links-of-author-item">
+        <a href="https://github.com/hxhue" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;hxhue" rel="noopener" target="_blank"><i class="fab fa-github fa-fw"></i></a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="https://stackoverflow.com/users/13785815" title="StackOverflow → https:&#x2F;&#x2F;stackoverflow.com&#x2F;users&#x2F;13785815" rel="noopener" target="_blank"><i class="fab fa-stack-overflow fa-fw"></i></a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="../../../mailto:simooncake@gmail.com" title="Email → mailto:simooncake@gmail.com" rel="noopener" target="_blank"><i class="fa fa-envelope fa-fw"></i></a>
+      </span>
+  </div>
+
+
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+
+<div class="copyright">
+  
+  &copy; 
+  <span itemprop="copyrightYear">2024</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">(╹ڡ╹ )</span>
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item-icon">
+      <i class="fa fa-chart-area"></i>
+    </span>
+      <span class="post-meta-item-text">站点总字数：</span>
+    <span title="站点总字数">132k</span>
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item-icon">
+      <i class="fa fa-coffee"></i>
+    </span>
+      <span class="post-meta-item-text">站点阅读时长 &asymp;</span>
+    <span title="站点阅读时长">8:01</span>
+</div>
+  <div class="powered-by">由 <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Gemini</a> 强力驱动
+  </div><script color="0,0,255" opacity="0.5" zIndex="-1" count="99" src="https://cdn.jsdelivr.net/npm/canvas-nest.js@1/dist/canvas-nest.js"></script>
+
+        
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="../../../lib/anime.min.js"></script>
+  <script src="//cdn.jsdelivr.net/npm/pangu@4/dist/browser/pangu.min.js"></script>
+  <script src="../../../lib/velocity/velocity.min.js"></script>
+  <script src="../../../lib/velocity/velocity.ui.min.js"></script>
+
+<script src="../../../js/utils.js"></script>
+
+<script src="../../../js/motion.js"></script>
+
+
+<script src="../../../js/schemes/pisces.js"></script>
+
+
+<script src="../../../js/next-boot.js"></script>
+
+
+
+
+  
+
+
+
+
+  
+<script src="../../../js/local-search.js"></script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+</body>
+</html>

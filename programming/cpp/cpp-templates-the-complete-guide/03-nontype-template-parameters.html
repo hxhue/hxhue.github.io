@@ -1,0 +1,529 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 7.1.1">
+  <link rel="apple-touch-icon" sizes="180x180" href="../../../images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="../../../images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="../../../images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="../../../images/logo.svg" color="#222">
+  <meta name="google-site-verification" content="hwfud_ndcnJHe2Jz7ClToP1nuUA3k7FqZv-0VpFAHjg">
+
+<link rel="stylesheet" href="../../../css/main.css">
+
+
+<link rel="stylesheet" href="../../../lib/font-awesome/css/all.min.css">
+  <link rel="stylesheet" href="../../../lib/pace/pace-theme-minimal.min.css">
+  <script src="../../../lib/pace/pace.min.js"></script>
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"hxhue.github.io","root":"/","scheme":"Gemini","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"always","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":true,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":true,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},"path":"search.xml"};
+  </script>
+
+  <meta name="description" content="模板参数也可以不是类型，而是值。 非类型参数推导只对直接调用有效模板函数的类型推导只对立即调用有效，而对算法模板这类需要提前知道类型信息的场合无效。比如： 123std::transform (source.begin(), source.end(), &#x2F;&#x2F; start and end of source    dest.begin(),     &#x2F;&#x2F; start of destination">
+<meta property="og:type" content="article">
+<meta property="og:title" content="CTTCG 03 Nontype Template Parameters">
+<meta property="og:url" content="https://hxhue.github.io/programming/cpp/cpp-templates-the-complete-guide/03-nontype-template-parameters.html">
+<meta property="og:site_name" content="没想好标题">
+<meta property="og:description" content="模板参数也可以不是类型，而是值。 非类型参数推导只对直接调用有效模板函数的类型推导只对立即调用有效，而对算法模板这类需要提前知道类型信息的场合无效。比如： 123std::transform (source.begin(), source.end(), &#x2F;&#x2F; start and end of source    dest.begin(),     &#x2F;&#x2F; start of destination">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2023-08-11T16:00:00.000Z">
+<meta property="article:modified_time" content="2024-03-21T08:33:17.588Z">
+<meta property="article:author" content="(╹ڡ╹ )">
+<meta property="article:tag" content="cpp">
+<meta property="article:tag" content="cpp-templates-the-complete-guide">
+<meta name="twitter:card" content="summary">
+
+<link rel="canonical" href="https://hxhue.github.io/programming/cpp/cpp-templates-the-complete-guide/03-nontype-template-parameters.html">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'zh-CN'
+  };
+</script>
+
+  <title>CTTCG 03 Nontype Template Parameters | 没想好标题</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+<!-- hexo injector head_end start --><style>a { word-break: break-all; }</style><!-- hexo injector head_end end --><link rel="alternate" href="atom.xml" title="没想好标题" type="application/atom+xml">
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">没想好标题</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+        <i class="fa fa-search fa-fw fa-lg"></i>
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="main-menu menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="../../../index.html" rel="section"><i class="fa fa-home fa-fw"></i>首页</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="../../../archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档</a>
+
+  </li>
+        <li class="menu-item menu-item-about">
+
+    <a href="../../../about/" rel="section"><i class="fa fa-user fa-fw"></i>关于</a>
+
+  </li>
+        <li class="menu-item menu-item-tags">
+
+    <a href="../../../tags/" rel="section"><i class="fa fa-tags fa-fw"></i>标签</a>
+
+  </li>
+        <li class="menu-item menu-item-categories">
+
+    <a href="../../../categories/" rel="section"><i class="fa fa-th fa-fw"></i>分类</a>
+
+  </li>
+        <li class="menu-item menu-item-友情链接">
+
+    <a href="../../../friends/" rel="section"><i class="fa fa-heart fa-fw"></i>友情链接</a>
+
+  </li>
+        <li class="menu-item menu-item-sitemap">
+
+    <a href="../../../sitemap.xml" rel="section"><i class="fa fa-sitemap fa-fw"></i>站点地图</a>
+
+  </li>
+      <li class="menu-item menu-item-search">
+        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>搜索
+        </a>
+      </li>
+  </ul>
+</nav>
+
+
+
+  <div class="search-pop-overlay">
+    <div class="popup search-popup">
+        <div class="search-header">
+  <span class="search-icon">
+    <i class="fa fa-search"></i>
+  </span>
+  <div class="search-input-container">
+    <input autocomplete="off" autocapitalize="off"
+           placeholder="搜索..." spellcheck="false"
+           type="search" class="search-input">
+  </div>
+  <span class="popup-btn-close">
+    <i class="fa fa-times-circle"></i>
+  </span>
+</div>
+<div id="search-result">
+  <div id="no-result">
+    <i class="fa fa-spinner fa-pulse fa-5x fa-fw"></i>
+  </div>
+</div>
+
+    </div>
+  </div>
+
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post posts-expand">
+            
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://hxhue.github.io/programming/cpp/cpp-templates-the-complete-guide/03-nontype-template-parameters.html">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="../../../images/avatar.gif">
+      <meta itemprop="name" content="(╹ڡ╹ )">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="没想好标题">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          CTTCG 03 Nontype Template Parameters
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2023-08-12 00:00:00" itemprop="dateCreated datePublished" datetime="2023-08-12T00:00:00+08:00">2023-08-12</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2024-03-21 16:33:17" itemprop="dateModified" datetime="2024-03-21T16:33:17+08:00">2024-03-21</time>
+              </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="../../../categories/programming/" itemprop="url" rel="index"><span itemprop="name">programming</span></a>
+                </span>
+            </span>
+
+          <br>
+            <span class="post-meta-item" title="本文字数">
+              <span class="post-meta-item-icon">
+                <i class="far fa-file-word"></i>
+              </span>
+                <span class="post-meta-item-text">本文字数：</span>
+              <span>787</span>
+            </span>
+            <span class="post-meta-item" title="阅读时长">
+              <span class="post-meta-item-icon">
+                <i class="far fa-clock"></i>
+              </span>
+                <span class="post-meta-item-text">阅读时长 &asymp;</span>
+              <span>3 分钟</span>
+            </span>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <p>模板参数也可以不是类型，而是值。</p>
+<h1 id="非类型参数推导只对直接调用有效"><a href="#非类型参数推导只对直接调用有效" class="headerlink" title="非类型参数推导只对直接调用有效"></a>非类型参数推导只对直接调用有效</h1><p>模板函数的类型推导只对立即调用有效，而对算法模板这类需要提前知道类型信息的场合无效。比如：</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">std::<span class="built_in">transform</span> (source.<span class="built_in">begin</span>(), source.<span class="built_in">end</span>(), <span class="comment">// start and end of source</span></span><br><span class="line">    dest.<span class="built_in">begin</span>(),     <span class="comment">// start of destination</span></span><br><span class="line">    addValue&lt;<span class="number">5</span>,<span class="type">int</span>&gt;); <span class="comment">// operation</span></span><br></pre></td></tr></table></figure>
+
+<p>上面代码中尽管 <code>addValue</code> 的参数可能可以推导出来，但由于 <code>std::transform</code> 要求提前知道函数的类型，去掉参数之后代码无法编译。</p>
+<h1 id="非类型参数的类型限制"><a href="#非类型参数的类型限制" class="headerlink" title="非类型参数的类型限制"></a>非类型参数的类型限制</h1><p><strong>非类型参数不能是浮点数（未来可能可以）。只能是整数、nullptr、指针或左值引用。</strong></p>
+<p>2017 年的 P1714 提案建议增加浮点数，目前找不到后续。不过，gcc 13 在 <code>-std=c++20</code> 时已经提供了浮点数参数功能，clang 暂不支持。</p>
+<p>作为对比，如今 C++20 中某些非 union class type 已经可以作为模板参数，但浮点数不能。</p>
+<p>当参数是指针或引用时，不可以指向字符串字面量、临时值、数据成员或其他子对象；C++11 还要求对象有 external linkage，C++14 要求对象有 external linkage 或者 internal linkage，C++17 对 linkage 没有要求。</p>
+<p>虽然不能使用字符串字面量，但可以使用编译期可定的字符数组的引用作为参数。</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">extern</span> <span class="type">char</span> <span class="type">const</span> s03[] = <span class="string">&quot;hi&quot;</span>; <span class="comment">// external linkage</span></span><br><span class="line"><span class="type">char</span> <span class="type">const</span> s11[] = <span class="string">&quot;hi&quot;</span>;        <span class="comment">// internal linkage</span></span><br><span class="line"><span class="function"><span class="type">int</span> <span class="title">main</span><span class="params">()</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    Message&lt;s03&gt; m03;               <span class="comment">// OK (all versions)</span></span><br><span class="line">    Message&lt;s11&gt; m11;               <span class="comment">// OK since C++11</span></span><br><span class="line">    <span class="type">static</span> <span class="type">char</span> <span class="type">const</span> s17[] = <span class="string">&quot;hi&quot;</span>; <span class="comment">// no linkage</span></span><br><span class="line">    Message&lt;s17&gt; m17;               <span class="comment">// OK since C++17</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h1 id="非类型参数可能需要括号包裹"><a href="#非类型参数可能需要括号包裹" class="headerlink" title="非类型参数可能需要括号包裹"></a>非类型参数可能需要括号包裹</h1><p>模板参数中出现表达式时，要使用括号，否则容易出现尖括号被理解成模板参数结束标志，导致无法编译的情况：<code>C&lt;42, sizeof(int) &gt; 4&gt; c;</code> ，应该改成 <code>C&lt;42, (sizeof(int) &gt; 4)&gt; c;</code></p>
+<h1 id="auto-作为非类型参数"><a href="#auto-作为非类型参数" class="headerlink" title="auto 作为非类型参数"></a>auto 作为非类型参数</h1><p>由于非类型参数的通用限制，<code>auto &amp;&amp;</code> 是不允许使用的（非类型参数不能有右值）。允许的有：<code>auto</code> &#x2F; <code>auto &amp;</code> &#x2F; <code>auto const &amp;</code> &#x2F; <code>decltype(auto)</code>。当实际类型为引用时，要求传入的值在编译期具有可计算出的不变地址（全局常量和变量符合要求、纯右值的数字字面量不符合要求）。当实际类型为值时，需要传入的值在编译器有可计算出的不变值（全局常量和数字字面量符合要求）。</p>
+<p>指定非类型参数的类型是 auto 时，仍然可以通过 decltype 手段获得参数，也有了自动推导类型的优势。比如可以编写一个原地分配内存的 Stack 类：</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">Stack&lt;<span class="type">int</span>, <span class="number">20u</span>&gt; stk1;</span><br><span class="line">Stack&lt;<span class="type">int</span>, <span class="number">20</span>&gt; stk2;</span><br></pre></td></tr></table></figure>
+
+<p>这样两个 Stack 对象的 <code>size_type</code> 不同。</p>
+<p>另外， <code>decltype(auto)</code> 可以表示类型完美转发的场景。</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">template</span>&lt;<span class="keyword">decltype</span>(<span class="keyword">auto</span>) N&gt;</span><br><span class="line"><span class="keyword">class</span> <span class="title class_">C</span> &#123;</span><br><span class="line">  <span class="comment">//...</span></span><br><span class="line">&#125;;</span><br><span class="line"><span class="type">int</span> i;</span><br><span class="line">C&lt;(i)&gt; x; <span class="comment">// N is int&amp;</span></span><br></pre></td></tr></table></figure>
+
+<p>上面的代码如果写成 <code>C&lt;i&gt; x</code> 或者模板参数是 <code>auto N</code>，N 的类型就是 int 而不是引用类型。</p>
+<p>💡 既然模板参数要求编译期计算完成，好像在参数中传递引用没有什么意义？</p>
+
+    </div>
+
+    
+    
+    
+
+      <footer class="post-footer">
+          <div class="post-tags">
+              <a href="../../../tags/cpp/" rel="tag"># cpp</a>
+              <a href="../../../tags/cpp-templates-the-complete-guide/" rel="tag"># cpp-templates-the-complete-guide</a>
+          </div>
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="02-class-templates.html" rel="prev" title="CTTCG 02 Class Templates">
+      <i class="fa fa-chevron-left"></i> CTTCG 02 Class Templates
+    </a></div>
+      <div class="post-nav-item">
+    <a href="01-function-templates.html" rel="next" title="CTTCG 01 Function Templates">
+      CTTCG 01 Function Templates <i class="fa fa-chevron-right"></i>
+    </a></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+
+
+          </div>
+          
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#%E9%9D%9E%E7%B1%BB%E5%9E%8B%E5%8F%82%E6%95%B0%E6%8E%A8%E5%AF%BC%E5%8F%AA%E5%AF%B9%E7%9B%B4%E6%8E%A5%E8%B0%83%E7%94%A8%E6%9C%89%E6%95%88"><span class="nav-text">非类型参数推导只对直接调用有效</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E9%9D%9E%E7%B1%BB%E5%9E%8B%E5%8F%82%E6%95%B0%E7%9A%84%E7%B1%BB%E5%9E%8B%E9%99%90%E5%88%B6"><span class="nav-text">非类型参数的类型限制</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E9%9D%9E%E7%B1%BB%E5%9E%8B%E5%8F%82%E6%95%B0%E5%8F%AF%E8%83%BD%E9%9C%80%E8%A6%81%E6%8B%AC%E5%8F%B7%E5%8C%85%E8%A3%B9"><span class="nav-text">非类型参数可能需要括号包裹</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#auto-%E4%BD%9C%E4%B8%BA%E9%9D%9E%E7%B1%BB%E5%9E%8B%E5%8F%82%E6%95%B0"><span class="nav-text">auto 作为非类型参数</span></a></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+  <p class="site-author-name" itemprop="name">(╹ڡ╹ )</p>
+  <div class="site-description" itemprop="description"></div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="../../../archives/">
+        
+          <span class="site-state-item-count">223</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+            <a href="../../../categories/">
+          
+        <span class="site-state-item-count">6</span>
+        <span class="site-state-item-name">分类</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+            <a href="../../../tags/">
+          
+        <span class="site-state-item-count">49</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author motion-element">
+      <span class="links-of-author-item">
+        <a href="https://github.com/hxhue" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;hxhue" rel="noopener" target="_blank"><i class="fab fa-github fa-fw"></i></a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="https://stackoverflow.com/users/13785815" title="StackOverflow → https:&#x2F;&#x2F;stackoverflow.com&#x2F;users&#x2F;13785815" rel="noopener" target="_blank"><i class="fab fa-stack-overflow fa-fw"></i></a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="../../../mailto:simooncake@gmail.com" title="Email → mailto:simooncake@gmail.com" rel="noopener" target="_blank"><i class="fa fa-envelope fa-fw"></i></a>
+      </span>
+  </div>
+
+
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+
+<div class="copyright">
+  
+  &copy; 
+  <span itemprop="copyrightYear">2024</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">(╹ڡ╹ )</span>
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item-icon">
+      <i class="fa fa-chart-area"></i>
+    </span>
+      <span class="post-meta-item-text">站点总字数：</span>
+    <span title="站点总字数">132k</span>
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item-icon">
+      <i class="fa fa-coffee"></i>
+    </span>
+      <span class="post-meta-item-text">站点阅读时长 &asymp;</span>
+    <span title="站点阅读时长">8:01</span>
+</div>
+  <div class="powered-by">由 <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Gemini</a> 强力驱动
+  </div><script color="0,0,255" opacity="0.5" zIndex="-1" count="99" src="https://cdn.jsdelivr.net/npm/canvas-nest.js@1/dist/canvas-nest.js"></script>
+
+        
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="../../../lib/anime.min.js"></script>
+  <script src="//cdn.jsdelivr.net/npm/pangu@4/dist/browser/pangu.min.js"></script>
+  <script src="../../../lib/velocity/velocity.min.js"></script>
+  <script src="../../../lib/velocity/velocity.ui.min.js"></script>
+
+<script src="../../../js/utils.js"></script>
+
+<script src="../../../js/motion.js"></script>
+
+
+<script src="../../../js/schemes/pisces.js"></script>
+
+
+<script src="../../../js/next-boot.js"></script>
+
+
+
+
+  
+
+
+
+
+  
+<script src="../../../js/local-search.js"></script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+</body>
+</html>

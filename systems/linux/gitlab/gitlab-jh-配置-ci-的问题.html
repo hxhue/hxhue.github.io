@@ -1,0 +1,534 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 7.1.1">
+  <link rel="apple-touch-icon" sizes="180x180" href="../../../images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="../../../images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="../../../images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="../../../images/logo.svg" color="#222">
+  <meta name="google-site-verification" content="hwfud_ndcnJHe2Jz7ClToP1nuUA3k7FqZv-0VpFAHjg">
+
+<link rel="stylesheet" href="../../../css/main.css">
+
+
+<link rel="stylesheet" href="../../../lib/font-awesome/css/all.min.css">
+  <link rel="stylesheet" href="../../../lib/pace/pace-theme-minimal.min.css">
+  <script src="../../../lib/pace/pace.min.js"></script>
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"hxhue.github.io","root":"/","scheme":"Gemini","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"always","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":true,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":true,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},"path":"search.xml"};
+  </script>
+
+  <meta name="description" content="在运行有 gitlab-jh 的服务器上启用 runner 没有效果要确保 runner 允许 untagged 的任务。gitlab-runner status 的确是会报错，但是不用管，对结果没有影响。 Runner 的配置gitlab-runner 容器中的配置文件是 &#x2F;etc&#x2F;gitlab-runner&#x2F;config.toml。 123456789101112131415161718192">
+<meta property="og:type" content="article">
+<meta property="og:title" content="gitlab-jh 配置 CI 的问题">
+<meta property="og:url" content="https://hxhue.github.io/systems/linux/gitlab/gitlab-jh-%E9%85%8D%E7%BD%AE-ci-%E7%9A%84%E9%97%AE%E9%A2%98.html">
+<meta property="og:site_name" content="没想好标题">
+<meta property="og:description" content="在运行有 gitlab-jh 的服务器上启用 runner 没有效果要确保 runner 允许 untagged 的任务。gitlab-runner status 的确是会报错，但是不用管，对结果没有影响。 Runner 的配置gitlab-runner 容器中的配置文件是 &#x2F;etc&#x2F;gitlab-runner&#x2F;config.toml。 123456789101112131415161718192">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2023-11-30T14:23:00.000Z">
+<meta property="article:modified_time" content="2024-03-19T10:46:20.682Z">
+<meta property="article:author" content="(╹ڡ╹ )">
+<meta property="article:tag" content="gitlab-jh">
+<meta name="twitter:card" content="summary">
+
+<link rel="canonical" href="https://hxhue.github.io/systems/linux/gitlab/gitlab-jh-%E9%85%8D%E7%BD%AE-ci-%E7%9A%84%E9%97%AE%E9%A2%98.html">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'zh-CN'
+  };
+</script>
+
+  <title>gitlab-jh 配置 CI 的问题 | 没想好标题</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+<!-- hexo injector head_end start --><style>a { word-break: break-all; }</style><!-- hexo injector head_end end --><link rel="alternate" href="atom.xml" title="没想好标题" type="application/atom+xml">
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">没想好标题</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+        <i class="fa fa-search fa-fw fa-lg"></i>
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="main-menu menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="../../../index.html" rel="section"><i class="fa fa-home fa-fw"></i>首页</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="../../../archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档</a>
+
+  </li>
+        <li class="menu-item menu-item-about">
+
+    <a href="../../../about/" rel="section"><i class="fa fa-user fa-fw"></i>关于</a>
+
+  </li>
+        <li class="menu-item menu-item-tags">
+
+    <a href="../../../tags/" rel="section"><i class="fa fa-tags fa-fw"></i>标签</a>
+
+  </li>
+        <li class="menu-item menu-item-categories">
+
+    <a href="../../../categories/" rel="section"><i class="fa fa-th fa-fw"></i>分类</a>
+
+  </li>
+        <li class="menu-item menu-item-友情链接">
+
+    <a href="../../../friends/" rel="section"><i class="fa fa-heart fa-fw"></i>友情链接</a>
+
+  </li>
+        <li class="menu-item menu-item-sitemap">
+
+    <a href="../../../sitemap.xml" rel="section"><i class="fa fa-sitemap fa-fw"></i>站点地图</a>
+
+  </li>
+      <li class="menu-item menu-item-search">
+        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>搜索
+        </a>
+      </li>
+  </ul>
+</nav>
+
+
+
+  <div class="search-pop-overlay">
+    <div class="popup search-popup">
+        <div class="search-header">
+  <span class="search-icon">
+    <i class="fa fa-search"></i>
+  </span>
+  <div class="search-input-container">
+    <input autocomplete="off" autocapitalize="off"
+           placeholder="搜索..." spellcheck="false"
+           type="search" class="search-input">
+  </div>
+  <span class="popup-btn-close">
+    <i class="fa fa-times-circle"></i>
+  </span>
+</div>
+<div id="search-result">
+  <div id="no-result">
+    <i class="fa fa-spinner fa-pulse fa-5x fa-fw"></i>
+  </div>
+</div>
+
+    </div>
+  </div>
+
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post posts-expand">
+            
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://hxhue.github.io/systems/linux/gitlab/gitlab-jh-%E9%85%8D%E7%BD%AE-ci-%E7%9A%84%E9%97%AE%E9%A2%98.html">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="../../../images/avatar.gif">
+      <meta itemprop="name" content="(╹ڡ╹ )">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="没想好标题">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          gitlab-jh 配置 CI 的问题
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2023-11-30 22:23:00" itemprop="dateCreated datePublished" datetime="2023-11-30T22:23:00+08:00">2023-11-30</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2024-03-19 18:46:20" itemprop="dateModified" datetime="2024-03-19T18:46:20+08:00">2024-03-19</time>
+              </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="../../../categories/systems/" itemprop="url" rel="index"><span itemprop="name">systems</span></a>
+                </span>
+            </span>
+
+          <br>
+            <span class="post-meta-item" title="本文字数">
+              <span class="post-meta-item-icon">
+                <i class="far fa-file-word"></i>
+              </span>
+                <span class="post-meta-item-text">本文字数：</span>
+              <span>798</span>
+            </span>
+            <span class="post-meta-item" title="阅读时长">
+              <span class="post-meta-item-icon">
+                <i class="far fa-clock"></i>
+              </span>
+                <span class="post-meta-item-text">阅读时长 &asymp;</span>
+              <span>3 分钟</span>
+            </span>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <h1 id="在运行有-gitlab-jh-的服务器上启用-runner-没有效果"><a href="#在运行有-gitlab-jh-的服务器上启用-runner-没有效果" class="headerlink" title="在运行有 gitlab-jh 的服务器上启用 runner 没有效果"></a>在运行有 gitlab-jh 的服务器上启用 runner 没有效果</h1><p><strong>要确保 runner 允许 untagged 的任务</strong>。gitlab-runner status 的确是会报错，但是不用管，对结果没有影响。</p>
+<h1 id="Runner-的配置"><a href="#Runner-的配置" class="headerlink" title="Runner 的配置"></a>Runner 的配置</h1><p>gitlab-runner 容器中的配置文件是 <code>/etc/gitlab-runner/config.toml</code>。</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br></pre></td><td class="code"><pre><span class="line">concurrent = 4</span><br><span class="line">check_interval = 0</span><br><span class="line"></span><br><span class="line">[session_server]</span><br><span class="line">  session_timeout = 1800</span><br><span class="line"></span><br><span class="line">[runners]</span><br><span class="line">  name = <span class="string">&quot;xxx&quot;</span></span><br><span class="line">  url = <span class="string">&quot;http://xxx.xxx.xxx.xxx:xxxx&quot;</span> <span class="comment"># 要改成内网的，不然太慢，还受到外部服务器的 nginx 传输限制</span></span><br><span class="line">  token = <span class="string">&quot;xxxxxxxx&quot;</span>                  <span class="comment"># 要改</span></span><br><span class="line">  executor = <span class="string">&quot;docker&quot;</span></span><br><span class="line">  [runners.custom_build_dir]</span><br><span class="line">  [runners.cache]</span><br><span class="line">    [runners.cache.s3]</span><br><span class="line">    [runners.cache.gcs]</span><br><span class="line">    [runners.cache.azure]</span><br><span class="line">  [runners.docker]</span><br><span class="line">    tls_verify = <span class="literal">false</span></span><br><span class="line">    image = <span class="string">&quot;ubuntu&quot;</span> <span class="comment"># default runner 其实不用改，因为 CI 任务可以指定不同的镜像</span></span><br><span class="line">    privileged = <span class="literal">false</span></span><br><span class="line">    disable_entrypoint_overwrite = <span class="literal">false</span></span><br><span class="line">    oom_kill_disable = <span class="literal">false</span></span><br><span class="line">    disable_cache = <span class="literal">false</span></span><br><span class="line">    volumes = [<span class="string">&quot;/cache&quot;</span>]           <span class="comment"># 这里做路径映射，如果需要只读，用 ro 而不是 r</span></span><br><span class="line">    shm_size = 0</span><br><span class="line">    gpus = <span class="string">&quot;all&quot;</span>                   <span class="comment"># 没有这个就不能运行 GPU</span></span><br><span class="line">    pull_policy = <span class="string">&quot;if-not-present&quot;</span> <span class="comment"># 没有这个每次都会检查镜像是否最新，对国内网络不友好</span></span><br></pre></td></tr></table></figure>
+
+<h1 id="git-fetch-的时候遇到-lock-文件存在"><a href="#git-fetch-的时候遇到-lock-文件存在" class="headerlink" title="git fetch 的时候遇到 lock 文件存在"></a>git fetch 的时候遇到 lock 文件存在</h1><p><strong>没有解决</strong>。删了也没成功。就把下载模式改成 git clone 了。</p>
+<h1 id="CI-文件中有向无环图的写法"><a href="#CI-文件中有向无环图的写法" class="headerlink" title="CI 文件中有向无环图的写法"></a>CI 文件中有向无环图的写法</h1><p>needs 只能依赖上一阶段或者本阶段的（较高版本），上上阶段是不能依赖的！</p>
+<ul>
+<li>如果 needs 为空，则不依赖任何任务。</li>
+<li>如果 needs 未被定义，则依赖上一阶段所有任务。</li>
+</ul>
+<p>定义了 needs 但没有定义 dependencies 时，dependencies 等同于 needs，这个时候只会得到 needs 的产品。如果没有 needs 和 dependencies，则会获得上一阶段的产品。</p>
+<h1 id="只对-merge-request-跑-CI"><a href="#只对-merge-request-跑-CI" class="headerlink" title="只对 merge request 跑 CI"></a>只对 merge request 跑 CI</h1><p><a target="_blank" rel="noopener" href="https//www-insnet-ne-jp/gitlab/help/ci/merge-request-pipelines/index.html#text-To-configure-pipelines-for-merge-commit-is-pushed-to-GitLab">link</a></p>
+<h1 id="总是花大量时间拉取远程镜像"><a href="#总是花大量时间拉取远程镜像" class="headerlink" title="总是花大量时间拉取远程镜像"></a>总是花大量时间拉取远程镜像</h1><p><a target="_blank" rel="noopener" href="https://forum.gitlab.com/t/runner-cant-use-local-docker-images/5507/6?u=87tjbg9">https://forum.gitlab.com/t/runner-cant-use-local-docker-images/5507/6?u=87tjbg9</a></p>
+<blockquote>
+<p>You should set <code>pull_policy = &quot;if-not-present&quot;</code> in your <code>/etc/gitlab-runner/config.toml</code>. By default, the runner always tries to pull the image from DockerHub.</p>
+</blockquote>
+<p>官方文档 <a target="_blank" rel="noopener" href="https://docs.gitlab.com/runner/executors/docker.html#configure-how-runners-pull-images">https://docs.gitlab.com/runner/executors/docker.html#configure-how-runners-pull-images</a></p>
+<h1 id="报错说上传-artifacts-太大"><a href="#报错说上传-artifacts-太大" class="headerlink" title="报错说上传 artifacts 太大"></a>报错说上传 artifacts 太大</h1><ul>
+<li>将 gitlab 中的 nginx 配置的 <code>client_max_body_size</code> 改大。</li>
+<li>将 gitlab 管理员区域的最大 artifact 大小改大（可以按照实例、组、工程来改，但都只有管理员可以操作）。</li>
+<li>将 gitlab 中的 timeout 时间从 60s 改成 600s（<code>puma[&#39;worker_timeout&#39;] = 600</code>）。文件太大在低带宽情况下传输慢，容易超时。</li>
+</ul>
+<p>配置完成之后不要 <code>gitlab-ctl restart</code>，用 <code>gitlab-ctl reconfigure</code> 会更快一些。</p>
+<p>如果要经过公网服务器中转，上传还受到公网服务器的 nginx 配置的限制。但是这个在本地服务器侧是调整不了的。</p>
+<p><a target="_blank" rel="noopener" href="https://stackoverflow.com/questions/76412982/i-have-changed-my-gitlab-default-url-from-127-0-0-1-but-upload-artifacts-still-p">docker - I have changed my gitlab default url from 127.0.0.1 but upload artifacts still posts to it - Stack Overflow</a><br>修改 <code>/etc/gitlab-runner/config.toml</code> 中的 url，然后 <code>gitlab-runner restart</code>。改成了 <code>http://172.17.0.1:xxxx</code>，也就是本地 ip + 本地 nginx 端口（而不是远程的），注意，不能是 127.0.0.1，因为容器相当于另外一台机器。</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">docker <span class="built_in">exec</span> -it gitlab-runner-1 /bin/bash</span><br><span class="line">apt update &amp;&amp; apt install iproute2 -y</span><br><span class="line">ip route|awk <span class="string">&#x27;/default/ &#123; print $3 &#125;&#x27;</span> <span class="comment"># 查看宿主机的 ip</span></span><br></pre></td></tr></table></figure>
+
+<h1 id="错误：fatal-shallow-file-has-changed-since-we-read-it"><a href="#错误：fatal-shallow-file-has-changed-since-we-read-it" class="headerlink" title="错误：fatal: shallow file has changed since we read it"></a>错误：fatal: shallow file has changed since we read it</h1><p>这个是多个 runners 的并发问题。网上说要用不同的配置。</p>
+<p>如果只要增大并发数，只用一个 runner（而不是创建多个），修改 concurrency 配置即可。</p>
+<p>再用 <code>gitlab-runner restart</code> 重新加载一下配置。之前有错可能是因为几个 runners 都获得了一样的 runners 配置，有一样的名字、token 等？</p>
+
+    </div>
+
+    
+    
+    
+
+      <footer class="post-footer">
+          <div class="post-tags">
+              <a href="../../../tags/gitlab-jh/" rel="tag"># gitlab-jh</a>
+          </div>
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="../../windows/windows-cmd-%E8%BD%AC%E4%B9%89.html" rel="prev" title="Windows cmd 转义">
+      <i class="fa fa-chevron-left"></i> Windows cmd 转义
+    </a></div>
+      <div class="post-nav-item">
+    <a href="../../../cli/docker/docker-%E6%8C%89%E5%AE%B9%E5%99%A8-a-%E7%9A%84%E5%90%AF%E5%8A%A8%E5%8F%82%E6%95%B0%E5%88%9B%E5%BB%BA%E6%96%B0%E5%AE%B9%E5%99%A8-b.html" rel="next" title="Docker 按容器 A 的启动参数创建新容器 B">
+      Docker 按容器 A 的启动参数创建新容器 B <i class="fa fa-chevron-right"></i>
+    </a></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+
+
+          </div>
+          
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%9C%A8%E8%BF%90%E8%A1%8C%E6%9C%89-gitlab-jh-%E7%9A%84%E6%9C%8D%E5%8A%A1%E5%99%A8%E4%B8%8A%E5%90%AF%E7%94%A8-runner-%E6%B2%A1%E6%9C%89%E6%95%88%E6%9E%9C"><span class="nav-text">在运行有 gitlab-jh 的服务器上启用 runner 没有效果</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Runner-%E7%9A%84%E9%85%8D%E7%BD%AE"><span class="nav-text">Runner 的配置</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#git-fetch-%E7%9A%84%E6%97%B6%E5%80%99%E9%81%87%E5%88%B0-lock-%E6%96%87%E4%BB%B6%E5%AD%98%E5%9C%A8"><span class="nav-text">git fetch 的时候遇到 lock 文件存在</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#CI-%E6%96%87%E4%BB%B6%E4%B8%AD%E6%9C%89%E5%90%91%E6%97%A0%E7%8E%AF%E5%9B%BE%E7%9A%84%E5%86%99%E6%B3%95"><span class="nav-text">CI 文件中有向无环图的写法</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%8F%AA%E5%AF%B9-merge-request-%E8%B7%91-CI"><span class="nav-text">只对 merge request 跑 CI</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E6%80%BB%E6%98%AF%E8%8A%B1%E5%A4%A7%E9%87%8F%E6%97%B6%E9%97%B4%E6%8B%89%E5%8F%96%E8%BF%9C%E7%A8%8B%E9%95%9C%E5%83%8F"><span class="nav-text">总是花大量时间拉取远程镜像</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E6%8A%A5%E9%94%99%E8%AF%B4%E4%B8%8A%E4%BC%A0-artifacts-%E5%A4%AA%E5%A4%A7"><span class="nav-text">报错说上传 artifacts 太大</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E9%94%99%E8%AF%AF%EF%BC%9Afatal-shallow-file-has-changed-since-we-read-it"><span class="nav-text">错误：fatal: shallow file has changed since we read it</span></a></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+  <p class="site-author-name" itemprop="name">(╹ڡ╹ )</p>
+  <div class="site-description" itemprop="description"></div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="../../../archives/">
+        
+          <span class="site-state-item-count">223</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+            <a href="../../../categories/">
+          
+        <span class="site-state-item-count">6</span>
+        <span class="site-state-item-name">分类</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+            <a href="../../../tags/">
+          
+        <span class="site-state-item-count">49</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author motion-element">
+      <span class="links-of-author-item">
+        <a href="https://github.com/hxhue" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;hxhue" rel="noopener" target="_blank"><i class="fab fa-github fa-fw"></i></a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="https://stackoverflow.com/users/13785815" title="StackOverflow → https:&#x2F;&#x2F;stackoverflow.com&#x2F;users&#x2F;13785815" rel="noopener" target="_blank"><i class="fab fa-stack-overflow fa-fw"></i></a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="../../../mailto:simooncake@gmail.com" title="Email → mailto:simooncake@gmail.com" rel="noopener" target="_blank"><i class="fa fa-envelope fa-fw"></i></a>
+      </span>
+  </div>
+
+
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+
+<div class="copyright">
+  
+  &copy; 
+  <span itemprop="copyrightYear">2024</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">(╹ڡ╹ )</span>
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item-icon">
+      <i class="fa fa-chart-area"></i>
+    </span>
+      <span class="post-meta-item-text">站点总字数：</span>
+    <span title="站点总字数">132k</span>
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item-icon">
+      <i class="fa fa-coffee"></i>
+    </span>
+      <span class="post-meta-item-text">站点阅读时长 &asymp;</span>
+    <span title="站点阅读时长">8:01</span>
+</div>
+  <div class="powered-by">由 <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Gemini</a> 强力驱动
+  </div><script color="0,0,255" opacity="0.5" zIndex="-1" count="99" src="https://cdn.jsdelivr.net/npm/canvas-nest.js@1/dist/canvas-nest.js"></script>
+
+        
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="../../../lib/anime.min.js"></script>
+  <script src="//cdn.jsdelivr.net/npm/pangu@4/dist/browser/pangu.min.js"></script>
+  <script src="../../../lib/velocity/velocity.min.js"></script>
+  <script src="../../../lib/velocity/velocity.ui.min.js"></script>
+
+<script src="../../../js/utils.js"></script>
+
+<script src="../../../js/motion.js"></script>
+
+
+<script src="../../../js/schemes/pisces.js"></script>
+
+
+<script src="../../../js/next-boot.js"></script>
+
+
+
+
+  
+
+
+
+
+  
+<script src="../../../js/local-search.js"></script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+</body>
+</html>

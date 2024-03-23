@@ -1,0 +1,862 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 7.1.1">
+  <link rel="apple-touch-icon" sizes="180x180" href="../../../images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="../../../images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="../../../images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="../../../images/logo.svg" color="#222">
+  <meta name="google-site-verification" content="hwfud_ndcnJHe2Jz7ClToP1nuUA3k7FqZv-0VpFAHjg">
+
+<link rel="stylesheet" href="../../../css/main.css">
+
+
+<link rel="stylesheet" href="../../../lib/font-awesome/css/all.min.css">
+  <link rel="stylesheet" href="../../../lib/pace/pace-theme-minimal.min.css">
+  <script src="../../../lib/pace/pace.min.js"></script>
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"hxhue.github.io","root":"/","scheme":"Gemini","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"always","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":true,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":true,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},"path":"search.xml"};
+  </script>
+
+  <meta name="description" content="一些需要弄明白的名词：commit range&#x2F;refspec。 git 基础git 的管理方式是记录每个文件的快照。  然后分成三个区：  git add如果一个文件改动了多个地方，但是只想要提交其中的部分行，可以用 git add --patch。这样 git 会启动一个交互式的程序，并询问用户每个 chunk 是否要加入。这种交互式环境提供多种操作，其中 e 操作允许用户使用编辑器">
+<meta property="og:type" content="article">
+<meta property="og:title" content="初读 Pro Git">
+<meta property="og:url" content="https://hxhue.github.io/cli/git/git-pro-the-book/%E5%88%9D%E8%AF%BB-pro-git.html">
+<meta property="og:site_name" content="没想好标题">
+<meta property="og:description" content="一些需要弄明白的名词：commit range&#x2F;refspec。 git 基础git 的管理方式是记录每个文件的快照。  然后分成三个区：  git add如果一个文件改动了多个地方，但是只想要提交其中的部分行，可以用 git add --patch。这样 git 会启动一个交互式的程序，并询问用户每个 chunk 是否要加入。这种交互式环境提供多种操作，其中 e 操作允许用户使用编辑器">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://hxhue.github.io/assets/85fc388c6e2e33f14af4af02b672389b.jpeg">
+<meta property="og:image" content="https://hxhue.github.io/assets/0a706ecf17b1dad0bff56e9c61c58c73.jpeg">
+<meta property="og:image" content="https://hxhue.github.io/assets/9118957388d1d527952877a83ebd98bd.jpeg">
+<meta property="og:image" content="https://hxhue.github.io/assets/930e59e6da017d48c685aa0adad7c504.jpeg">
+<meta property="og:image" content="https://hxhue.github.io/assets/7aa01e45eb251c0bff343cc4b1c6c0bd.jpeg">
+<meta property="og:image" content="https://hxhue.github.io/assets/95cb17c66224099f960a03b94600674a.jpeg">
+<meta property="og:image" content="https://hxhue.github.io/assets/4b20ee0963f5ed0eac88a3bd38609e41.jpeg">
+<meta property="og:image" content="https://hxhue.github.io/assets/1b8a90f1b0ad703c7bae42b5b3621b56.jpeg">
+<meta property="og:image" content="https://hxhue.github.io/assets/43f771beda5ee65164d1626f8e982450.jpeg">
+<meta property="og:image" content="https://hxhue.github.io/assets/5ebfa85039debd727416a3c7fb920a56.jpeg">
+<meta property="og:image" content="https://hxhue.github.io/assets/4fdd0766f10c7df60530856e566bd4fe.jpeg">
+<meta property="article:published_time" content="2023-11-16T15:42:00.000Z">
+<meta property="article:modified_time" content="2024-03-21T08:27:13.778Z">
+<meta property="article:author" content="(╹ڡ╹ )">
+<meta property="article:tag" content="git">
+<meta property="article:tag" content="pro-git-the-book">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://hxhue.github.io/assets/85fc388c6e2e33f14af4af02b672389b.jpeg">
+
+<link rel="canonical" href="https://hxhue.github.io/cli/git/git-pro-the-book/%E5%88%9D%E8%AF%BB-pro-git.html">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'zh-CN'
+  };
+</script>
+
+  <title>初读 Pro Git | 没想好标题</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+<!-- hexo injector head_end start --><style>a { word-break: break-all; }</style><!-- hexo injector head_end end --><link rel="alternate" href="atom.xml" title="没想好标题" type="application/atom+xml">
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">没想好标题</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+        <i class="fa fa-search fa-fw fa-lg"></i>
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="main-menu menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="../../../index.html" rel="section"><i class="fa fa-home fa-fw"></i>首页</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="../../../archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档</a>
+
+  </li>
+        <li class="menu-item menu-item-about">
+
+    <a href="../../../about/" rel="section"><i class="fa fa-user fa-fw"></i>关于</a>
+
+  </li>
+        <li class="menu-item menu-item-tags">
+
+    <a href="../../../tags/" rel="section"><i class="fa fa-tags fa-fw"></i>标签</a>
+
+  </li>
+        <li class="menu-item menu-item-categories">
+
+    <a href="../../../categories/" rel="section"><i class="fa fa-th fa-fw"></i>分类</a>
+
+  </li>
+        <li class="menu-item menu-item-友情链接">
+
+    <a href="../../../friends/" rel="section"><i class="fa fa-heart fa-fw"></i>友情链接</a>
+
+  </li>
+        <li class="menu-item menu-item-sitemap">
+
+    <a href="../../../sitemap.xml" rel="section"><i class="fa fa-sitemap fa-fw"></i>站点地图</a>
+
+  </li>
+      <li class="menu-item menu-item-search">
+        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>搜索
+        </a>
+      </li>
+  </ul>
+</nav>
+
+
+
+  <div class="search-pop-overlay">
+    <div class="popup search-popup">
+        <div class="search-header">
+  <span class="search-icon">
+    <i class="fa fa-search"></i>
+  </span>
+  <div class="search-input-container">
+    <input autocomplete="off" autocapitalize="off"
+           placeholder="搜索..." spellcheck="false"
+           type="search" class="search-input">
+  </div>
+  <span class="popup-btn-close">
+    <i class="fa fa-times-circle"></i>
+  </span>
+</div>
+<div id="search-result">
+  <div id="no-result">
+    <i class="fa fa-spinner fa-pulse fa-5x fa-fw"></i>
+  </div>
+</div>
+
+    </div>
+  </div>
+
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post posts-expand">
+            
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://hxhue.github.io/cli/git/git-pro-the-book/%E5%88%9D%E8%AF%BB-pro-git.html">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="../../../images/avatar.gif">
+      <meta itemprop="name" content="(╹ڡ╹ )">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="没想好标题">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          初读 Pro Git
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2023-11-16 23:42:00" itemprop="dateCreated datePublished" datetime="2023-11-16T23:42:00+08:00">2023-11-16</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2024-03-21 16:27:13" itemprop="dateModified" datetime="2024-03-21T16:27:13+08:00">2024-03-21</time>
+              </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="../../../categories/cli/" itemprop="url" rel="index"><span itemprop="name">cli</span></a>
+                </span>
+            </span>
+
+          <br>
+            <span class="post-meta-item" title="本文字数">
+              <span class="post-meta-item-icon">
+                <i class="far fa-file-word"></i>
+              </span>
+                <span class="post-meta-item-text">本文字数：</span>
+              <span>7.1k</span>
+            </span>
+            <span class="post-meta-item" title="阅读时长">
+              <span class="post-meta-item-icon">
+                <i class="far fa-clock"></i>
+              </span>
+                <span class="post-meta-item-text">阅读时长 &asymp;</span>
+              <span>26 分钟</span>
+            </span>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <p>一些需要弄明白的名词：commit range&#x2F;refspec。</p>
+<h1 id="git-基础"><a href="#git-基础" class="headerlink" title="git 基础"></a>git 基础</h1><p>git 的管理方式是记录每个文件的快照。</p>
+<p><img src="../../../../assets/85fc388c6e2e33f14af4af02b672389b.jpeg"></p>
+<p>然后分成三个区：</p>
+<p><img src="../../../../assets/0a706ecf17b1dad0bff56e9c61c58c73.jpeg"></p>
+<h1 id="git-add"><a href="#git-add" class="headerlink" title="git add"></a>git add</h1><p>如果一个文件改动了多个地方，但是只想要提交其中的部分行，可以用 <code>git add --patch</code>。这样 git 会启动一个交互式的程序，并询问用户每个 chunk 是否要加入。这种交互式环境提供多种操作，其中 <code>e</code> 操作允许用户使用编辑器精准编辑要添加的修改。</p>
+<h1 id="git-status"><a href="#git-status" class="headerlink" title="git status"></a>git status</h1><p><code>git status</code> 可以显示当前工作区的状态。添加 <code>-s</code> 选项，即 <code>git status -s</code>，可以显示更简单（摘要）的状态（很像 VS Code 边栏上的信息）：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">$ git status -s</span><br><span class="line">?? .cache/</span><br><span class="line">?? .clang-tidy</span><br><span class="line">?? utils/clang-tidy.py</span><br></pre></td></tr></table></figure>
+
+<p>输出的有些文件签名是双问号，表示 untracked。</p>
+<h1 id="git-rm"><a href="#git-rm" class="headerlink" title="git rm"></a>git rm</h1><p><strong>关于 <code>git rm --cached</code> 和 <code>git restore --staged</code> 的区别</strong>（<a target="_blank" rel="noopener" href="https://stackoverflow.com/a/65434709/">https://stackoverflow.com/a/65434709/</a>）：</p>
+<blockquote>
+<p><code>git rm --cached file</code>: removes the copy of the file from the index &#x2F; staging-area, without touching the working tree copy. The proposed next commit now lacks the file. If the current commit has the file, and you do in fact make a next commit at this point, the difference between the previous commit and the new commit is that the file is gone.</p>
+<p><code>git restore --staged file</code>: Git copies the file from the HEAD commit into the index, without touching the working tree copy. The index copy and the HEAD copy now match, whether or not they matched before. A new commit made now will have the same copy of the file as the current commit.</p>
+<p>If the current commit lacks the file, this has the effect of removing the file from the index. So in this case it does the same thing as <code>git rm --cached</code>.</p>
+<p><code>git reset file</code>: this copies the HEAD version of the file to the index, just like <code>git restore --staged file</code>.</p>
+</blockquote>
+<p>注意转义星号（git 本身和部分 shell 会解释星号），比如<code>git rm log/\*.log</code>。</p>
+<h1 id="git-log"><a href="#git-log" class="headerlink" title="git log"></a>git log</h1><p><code>git log -p -2</code>（也可以写成 <code>--patch</code>）能够在显示日志的时候同时显示改动的内容（相当于同时做了 diff），然后 <code>-2</code> 限制了只显示最开头的两个 commits（这个选项和 <code>-p</code> 是正交的）。</p>
+<p><code>git log --stat</code> 会在 log 中显示每个 commit 的 summary。</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">$ git <span class="built_in">log</span> --pretty=oneline</span><br><span class="line">ca82a6dff817ec66f44342007202690a93763949 Change version number</span><br><span class="line">085bb3bcb608e1e8451d4b2432f8ecbe6306e7e7 Remove unnecessary <span class="built_in">test</span></span><br><span class="line">a11bef06a3f659402fe7563abf99ad00de2209e6 Initial commit</span><br></pre></td></tr></table></figure>
+
+<p><code>--pretty=oneline</code> 会显示完整的 hash，而 <code>--oneline</code> 只显示前 7 个字符（<code>--pretty=oneline --abbrev-commit</code>）。</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">$ git <span class="built_in">log</span> --pretty=format:<span class="string">&quot;%h - %an, %ar : %s&quot;</span></span><br><span class="line">ca82a6d - Scott Chacon, 6 years ago : Change version number</span><br><span class="line">085bb3b - Scott Chacon, 6 years ago : Remove unnecessary <span class="built_in">test</span></span><br><span class="line">a11bef0 - Scott Chacon, 6 years ago : Initial commit</span><br></pre></td></tr></table></figure>
+
+<p><code>-S</code> 表示搜索，这会过滤整个仓库的 commits（如果仓库很大可能有点慢）并显示所有让给定的字符串的出现次数改变的 commits。</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">$ git <span class="built_in">log</span> -S narrow_cast</span><br><span class="line">commit 287fd454cdaca7bf65b0be8e91c730ebeb6bdecd (HEAD -&gt; types, origin/yx/types)</span><br><span class="line">Author: Yu Xiang &lt;yxiang@zju.edu.cn&gt;</span><br><span class="line">Date:   Thu Nov 16 21:28:44 2023 +0800</span><br><span class="line"></span><br><span class="line">    feat: narrow_cast and sign_cast</span><br></pre></td></tr></table></figure>
+
+<p>显示让特定文件改变的那些提交：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">git <span class="built_in">log</span> -- path/to/file</span><br></pre></td></tr></table></figure>
+
+<p>显示特定 commit 的日志（而不是 HEAD）：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">git <span class="built_in">log</span> master</span><br></pre></td></tr></table></figure>
+
+<h1 id="git-tag"><a href="#git-tag" class="headerlink" title="git tag"></a>git tag</h1><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">$ git tag</span><br><span class="line">v1.0</span><br><span class="line">v2.0</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">$ git tag -l <span class="string">&quot;v1.8.5*&quot;</span></span><br><span class="line">v1.8.5</span><br><span class="line">v1.8.5-rc0</span><br><span class="line">v1.8.5-rc1</span><br><span class="line">v1.8.5-rc2</span><br><span class="line">v1.8.5-rc3</span><br></pre></td></tr></table></figure>
+
+<p><mark>git 支持两种 tag：lightweight 和 annotated</mark>。创建有注释的 tag 可以用于发布，这些信息会详细地存储在 repo 中：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">git tag -a v1.4 -m <span class="string">&quot;my version 1.4&quot;</span></span><br></pre></td></tr></table></figure>
+
+<p><code>-m</code> 和 <code>git commit</code> 的 <code>-m</code> 选项类似，如果不给就会弹出默认的编辑器。</p>
+<p>如果不加 <code>-a</code> 选项，就会创建一个简单的 tag，就像一个不用更新的 branch 一样。这样的 tag 适合临时使用。</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">$ git tag v1.4-lw</span><br><span class="line">$ git show v1.4-lw</span><br><span class="line">commit ca82a6dff817ec66f44342007202690a93763949</span><br><span class="line">Author: Scott Chacon &lt;schacon@gee-mail.com&gt;</span><br><span class="line">Date: Mon Mar 17 21:52:11 2008 -0700</span><br><span class="line">Change version number</span><br></pre></td></tr></table></figure>
+
+<p>给除了 HEAD 以外的 commit 加 tag 的例子（需要多加一个参数）：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">git tag -a v1.2 9fceb02</span><br></pre></td></tr></table></figure>
+
+<blockquote>
+<p>By default, the git push command doesn’t transfer tags to remote servers.</p>
+</blockquote>
+<p><code>git push origin &lt;tagname&gt;</code> 能够把本地的 tag 推送到远程主机。<br><code>git push origin --tags</code> 会将本地的所有 tags（包括 lightweight 和 annotated）推送的远程主机。<br><code>git push origin --follow-tags</code> 会将本地的所有 annotated tags 推送的远程主机。</p>
+<blockquote>
+<p style="margin-bottom: 0px"><font size="+1">✏️<strong> Note</strong></font></p>
+<p>在我阅读 Pro Git 这本书的时候，还没有只推送 lightweight tags 的选项。</p>
+</blockquote>
+<p>删除一个本地的 tag：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">git tag -d v1.4-lw</span><br></pre></td></tr></table></figure>
+
+<p>删除一个远程的 tag：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">git push origin :refs/tags/v1.4-lw</span><br></pre></td></tr></table></figure>
+
+<p>也可以用 <code>git push origin --delete &lt;tagname&gt;</code> 达到同样的效果。</p>
+<h1 id="git-checkout-branch"><a href="#git-checkout-branch" class="headerlink" title="git checkout&#x2F;branch"></a>git checkout&#x2F;branch</h1><p><code>git checkout -b newBranch &lt;commit&gt;</code> 可以从给定的 commit 分叉出一个新分支。这里的 commit 还可以用 branch 或者 tag。这样就不必先 checkout 到给定的分支再创建新的了（两步合成一步）。</p>
+<p>git 的有向无环图结构存储的是 parent 指针（可能有多个），而不是 children 指针。每个分支、tag 都包含了这样的指针。</p>
+<p><strong>创建新的分支但是不 checkout</strong>：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">git branch testing</span><br></pre></td></tr></table></figure>
+
+<p><img src="../../../../assets/9118957388d1d527952877a83ebd98bd.jpeg"></p>
+<p><code>git log --decorate</code> 会在日志中展示每个 commit 和哪些分支关联，相当于 <code>git log --decorate=short</code>。旧 git 不会自动 decorate，而新版已经默认开启了 <code>--decorate=auto</code>。</p>
+<p>创建并转移到新的分支：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">git checkout -b branchA</span><br><span class="line"><span class="comment"># or</span></span><br><span class="line">git switch -c branchA</span><br><span class="line"><span class="comment"># -c is the same as --create</span></span><br></pre></td></tr></table></figure>
+
+<p>git 的 hash 全长是 40 个字符，但是简写是 7 个字符。在 unmerged files 里面留的标记也是连续 7 个 <code>&lt;</code>、<code>=</code>、<code>&gt;</code>。</p>
+<p><code>git branch -v</code> 能显示分支和各分支最近一次的提交。<code>git branch -vv</code> 会比 <code>-v</code> 多显示本地分支和远程分支的 track 关系：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">$ git branch -vv</span><br><span class="line">iss53 7e424c3 [origin/iss53: ahead 2] Add forgotten brackets</span><br><span class="line">master 1ae2a45 [origin/master] Deploy index fix</span><br><span class="line">- serverfix f8674d9 [teamone/server-fix-good: ahead 3, behind 1] This should <span class="keyword">do</span> it</span><br><span class="line">testing 5ea463a Try something new</span><br></pre></td></tr></table></figure>
+
+<blockquote>
+<p>The useful <code>--merged</code> and <code>--no-merged</code> options can filter this list to branches that you have or have not<br>yet merged into the branch you’re currently on.</p>
+</blockquote>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">git branch         <span class="comment"># 显示本地分支</span></span><br><span class="line">git branch -r      <span class="comment"># 显示远程分支</span></span><br><span class="line">git branch --all   <span class="comment"># 显示本地和远程分支</span></span><br></pre></td></tr></table></figure>
+
+<p>在克隆的时候可以指定远程主机的命名（否则是 origin），比如<code>git clone -o booyah</code></p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">$ git push origin serverfix</span><br><span class="line">Counting objects: 24, <span class="keyword">done</span>.</span><br><span class="line">Delta compression using up to 8 threads.</span><br><span class="line">Compressing objects: 100% (15/15), <span class="keyword">done</span>.</span><br><span class="line">Writing objects: 100% (24/24), 1.91 KiB | 0 bytes/s, <span class="keyword">done</span>.</span><br><span class="line">Total 24 (delta 2), reused 0 (delta 0)</span><br><span class="line">To https://github.com/schacon/simplegit</span><br><span class="line">- [new branch] serverfix -&gt; serverfix</span><br></pre></td></tr></table></figure>
+
+<blockquote>
+<p>Git automatically expands the serverfix branch name out to <code>refs/heads/serverfix:refs/heads/serverfix</code>.</p>
+</blockquote>
+<h1 id="三种-track-远程分支的方式"><a href="#三种-track-远程分支的方式" class="headerlink" title="三种 track 远程分支的方式"></a>三种 track 远程分支的方式</h1><p>从给定的分支 checkout 出新分支：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">$ git checkout -b sf origin/serverfix</span><br><span class="line">Branch sf <span class="built_in">set</span> up to track remote branch serverfix from origin.</span><br><span class="line">Switched to a new branch <span class="string">&#x27;sf&#x27;</span></span><br></pre></td></tr></table></figure>
+
+<p>&#x3D;&#x3D;同时，由于 checkout 到的新分支是基于远程分支的，会自动 track！&#x3D;&#x3D;</p>
+<p><strong>track 一个远程分支</strong>的另外一种写法（本地的分支名也是 <code>serverfix</code>）：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">git checkout --track origin/serverfix</span><br></pre></td></tr></table></figure>
+
+<p>这条命令并<strong>不是让当前分支</strong>去 track 远程分支，<strong>而是创建一个同名分支并 track 远程分支</strong>。相当于 <code>git checkout -b severfix origin/serverfix</code>。</p>
+<p>如果 checkout 的分支不存在，而且又恰好有对应的远程分支，可以不加选项地使用 checkout：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">$ git checkout serverfix</span><br><span class="line">Branch serverfix <span class="built_in">set</span> up to track remote branch serverfix from origin.</span><br><span class="line">Switched to a new branch <span class="string">&#x27;serverfix&#x27;</span></span><br></pre></td></tr></table></figure>
+
+<p>要让当前分支去 track 给定的远程分支，可以用 <code>git branch -u</code>：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">$ git branch -u origin/serverfix</span><br><span class="line">Branch serverfix <span class="built_in">set</span> up to track remote branch serverfix from origin.</span><br></pre></td></tr></table></figure>
+
+<p>如果本地分支 track 了远程分支，用 <code>@&#123;u&#125;</code> 或者 <code>@&#123;upstream&#125;</code> 可以代表对应的远程分支。这样在 <code>git merge</code> 等场景会比较方便。</p>
+<h1 id="git-rebase"><a href="#git-rebase" class="headerlink" title="git rebase"></a>git rebase</h1><p><strong>git rebase</strong> 可以用来将分支上的 commits 线性添加到另外一个分支上。</p>
+<p><img src="../../../../assets/930e59e6da017d48c685aa0adad7c504.jpeg"></p>
+<p>在这个例子中，如果想要让 client 的改动放到 master 上，但是不想要 server 的改动也就是 C3 也移动过去，就需要用到 rebase。</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">git rebase --onto master server client</span><br><span class="line"><span class="comment"># 同 git rebase --onto master &quot;$(git merge-base server client)&quot; client</span></span><br></pre></td></tr></table></figure>
+
+<p>上面的命令指定要前往的新分支是 master。而从 server 到 client 是要挑选的 commits 范围。git rebase 会从考虑两个分支的祖先（不包含）到第二个分支（包含）之间的改动。</p>
+<h1 id="git-on-the-server"><a href="#git-on-the-server" class="headerlink" title="git on the server"></a>git on the server</h1><h2 id="四种传输协议"><a href="#四种传输协议" class="headerlink" title="四种传输协议"></a>四种传输协议</h2><p>git 支持四种协议：local&#x2F;http&#x2F;ssh&#x2F;git。</p>
+<p>local 可以是 file:&#x2F;&#x2F; 开头的 url，也可以是本地路径。前者会使用本地网络拷贝，速度较慢。后者会使用硬链接或者直接拷贝文件，速度快但是不如前者干净（比如刚从 svn 转移过来时有不少冗余分支）。</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">/tmp/git-remote $ git remote add origin /root/nexusnet/.git</span><br><span class="line">/tmp/git-remote $ git fetch origin</span><br><span class="line">remote: Enumerating objects: 15548, <span class="keyword">done</span>.</span><br><span class="line">remote: Counting objects: 100% (15548/15548), <span class="keyword">done</span>.</span><br><span class="line">remote: Compressing objects: 100% (5231/5231), <span class="keyword">done</span>.</span><br><span class="line">...</span><br></pre></td></tr></table></figure>
+
+<p>本地协议的终点必须是一个 bare repository，也就是 .git 文件夹，而不包含工作区文件。事实上，远程仓库没有工作区，因为没有人会在远程仓库直接工作。</p>
+<p><strong>用 NFS 搭建的远程访问上的 file:&#x2F;&#x2F; 协议往往速度比 ssh 要慢</strong>。所以除非是可以本地访问（一台大服务器上的多个 docker 容器使用了路径映射），但不建议这种方式。（放在同一台服务器上也不安全吧？）</p>
+<p>git 用的 http 协议分成 smart http 和 dumb http。前者（现在一般使用的是这个）通过 http 协议支持各种功能，后者只能作为一个简单的 http 服务器 serve 裸仓库。裸仓库克隆之后不会自动设置一些信息，比如 objects&#x2F;info&#x2F;packs 和 info&#x2F;refs。</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">$ <span class="built_in">cd</span> /var/www/htdocs/</span><br><span class="line">$ git <span class="built_in">clone</span> --bare /path/to/git_project gitproject.git</span><br><span class="line">$ <span class="built_in">cd</span> gitproject.git</span><br><span class="line">$ <span class="built_in">mv</span> hooks/post-update.sample hooks/post-update</span><br><span class="line">$ <span class="built_in">chmod</span> a+x hooks/post-update</span><br></pre></td></tr></table></figure>
+
+<p>ssh 协议可以不用加 ssh:&#x2F;&#x2F; 前缀（也可以加）：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">git <span class="built_in">clone</span> user@git.example.com:/srv/git/my_project.git</span><br></pre></td></tr></table></figure>
+
+<blockquote>
+<p>Finally, we have the Git protocol. This is a special daemon that comes packaged with Git; it listens on a dedicated port (9418) that provides a service similar to the SSH protocol, but with absolutely no authentication or cryptography.</p>
+</blockquote>
+<p>git 协议还需要创建 git-daemon-export-ok 文件。git 协议是所有人都有权限，不需要认证，所以一般大家只开放 pull 而不开放 push。git 协议是所有协议中最快的，它使用了和 ssh 相同的数据传输协议，但是没有加密传输的开销。另一方面，由于 git 协议不加密，所以 pull 下来的代码可能是不安全的（比如中间人攻击插入恶意代码）。而 https 和 ssh 都是有加密的。</p>
+<p>git 协议需要自己的 daemon，所以搭建起来也不是很容易。</p>
+<h2 id="Bare-Repository"><a href="#Bare-Repository" class="headerlink" title="Bare Repository"></a>Bare Repository</h2><p>在 git init 和 git clone 的时候都能指定 <code>--bare</code> 选项表示裸仓库。</p>
+<blockquote>
+<p>Git will automatically add group write permissions to a repository properly if you run the git init command with the –shared option.</p>
+</blockquote>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">ssh user@git.example.com</span><br><span class="line"><span class="built_in">cd</span> /srv/git/my_project.git</span><br><span class="line">git init --bare --shared</span><br></pre></td></tr></table></figure>
+
+<p>在书里的例子中，&#x2F;srv&#x2F;git&#x2F;my_project.git 本来就是一个裸仓库，所以第三句的含义是将裸仓库初始化成共享仓库。也就是让仓库目录的归属组都有写权限，否则只有仓库目录的归属用户有写权限。（在个人电脑上，归属组和归属用户可能是重名的。）</p>
+<p>裸仓库是直接将正常仓库中的 .git 里的内容写到给定的路径里的，没有 working tree。</p>
+<h2 id="ssh-和-git-shell"><a href="#ssh-和-git-shell" class="headerlink" title="ssh 和 git-shell"></a>ssh 和 git-shell</h2><p>如果安装了 git-shell，可以创建一个名为 git 的用户（只是建议，git 不是特殊的名字）然后改变其登陆 shell：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo chsh git -s $(<span class="built_in">which</span> git-shell)</span><br></pre></td></tr></table></figure>
+
+<p>用户直接登陆通过 ssh 协议 serve 有仓库的服务器时使用 git-shell 的好处是管理者可以给 git-shell 加一些限制规则，从而限制用户可以执行的命令。（现在不会有人用这个吧？）</p>
+<h2 id="其他搭建方式"><a href="#其他搭建方式" class="headerlink" title="其他搭建方式"></a>其他搭建方式</h2><p>Git daemon&#x2F;http&#x2F;GitWeb&#x2F;Gitlab 等，略。</p>
+<p>书中讲的 gitlab 不是搭建 gitlab 容器，而是将项目上传到 gitlab 上，讲的比较浅不用看。</p>
+<h1 id="Distributed-Git"><a href="#Distributed-Git" class="headerlink" title="Distributed Git"></a>Distributed Git</h1><h2 id="Workflow"><a href="#Workflow" class="headerlink" title="Workflow"></a>Workflow</h2><p>这里讲了两种：</p>
+<p><img src="../../../../assets/7aa01e45eb251c0bff343cc4b1c6c0bd.jpeg"></p>
+<p><img src="../../../../assets/95cb17c66224099f960a03b94600674a.jpeg">（仁慈的独裁者）</p>
+<h2 id="检查改动是否有格式问题"><a href="#检查改动是否有格式问题" class="headerlink" title="检查改动是否有格式问题"></a>检查改动是否有格式问题</h2><p><code>git diff --check</code> 能够检查此次改动中：</p>
+<ol>
+<li>空白字符相关的格式问题：文件每一行的末尾是否有多余的空白字符、文件的末尾是否有两个空行（只有一个空行是可以的）等。</li>
+<li>是否有 conflict markers（合并或 rebase 还没有处理完成）。</li>
+</ol>
+<p><strong>在提交前可以跑一下 git diff –cached –check</strong>。</p>
+<h2 id="50-72-规则"><a href="#50-72-规则" class="headerlink" title="50&#x2F;72 规则"></a>50&#x2F;72 规则</h2><p>git commit 信息中标题建议不要超过 50 个字符，正文信息每行不要超过 72 字符。</p>
+<h2 id="Workflow-private-small-team"><a href="#Workflow-private-small-team" class="headerlink" title="Workflow: private small team"></a>Workflow: private small team</h2><p><img src="../../../../assets/4b20ee0963f5ed0eac88a3bd38609e41.jpeg"></p>
+<p>假设想要看看 origin&#x2F;master 比本地的 issue54 多了哪些修改：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">$ git <span class="built_in">log</span> --no-merges issue54..origin/master</span><br><span class="line">commit 738ee872852dfaa9d6634e0dea7a324040193016</span><br><span class="line">Author: John Smith &lt;jsmith@example.com&gt;</span><br><span class="line">Date: Fri May 29 16:01:27 2009 -0700</span><br><span class="line">Remove invalid default value</span><br></pre></td></tr></table></figure>
+
+<p>其中 <code>--no-merges</code> 选项表示不显示 merge 结点（也就是 parents 数量超过 1 个的结点），在这里是 origin&#x2F;master 本身。只是由于用户在运行其他命令之前看不到读者在书中相应位置能看到的图，所以不知道远程到底有没有 merge 结点（毕竟如果知道则可以根据图手动把这个 commit 划入范围之外）。</p>
+<blockquote>
+<p>The <strong>issue54..origin&#x2F;master</strong> syntax is a log filter that asks Git to display only those commits that are <strong>on the latter branch (in this case origin&#x2F;master) and that are not on the first branch</strong>.</p>
+</blockquote>
+<h2 id="Workflow-private-managed-team"><a href="#Workflow-private-managed-team" class="headerlink" title="Workflow: private managed team"></a>Workflow: private managed team</h2><p>除非要删除开发分支，最好不要在合并的时候 squash。因为 squash 合并后只有一个 parent，开发者之后的改动又会需要 rebase！</p>
+<p><code>git merge --no-commit</code> 是指不要创建描述本次合并的 merge commit 结点，但是仍然可能 fast-forward。<code>git merge --no-commit --no-ff</code> 还会禁用 fast-forward。这两个选项都打开就能达到检查合并结果，但是暂不合并的效果。（比如想要测试是否能够成功合并，或者想在合并之前检查一下合并结果再 commit。）</p>
+<h2 id="使用邮件工作：diff-和-patch"><a href="#使用邮件工作：diff-和-patch" class="headerlink" title="使用邮件工作：diff 和 patch"></a>使用邮件工作：diff 和 patch</h2><p><code>diff</code> 和 <code>patch</code> 两个命令本身就在 Linux 中存在（前者生成 patch，后者应用 patch）。但如果可能，使用 <code>git format-patch</code> 和 <code>git am</code>，而不是直接使用这两个命令。</p>
+<p><code>git format-patch</code> 可以生成 patches。</p>
+<blockquote>
+<p>不要用 <code>git diff master</code> 来生成 patch，因为 <code>git diff master</code> 只是简单比较文件的变化情况，如果你的 master 分支并不是 topic 分支的 parent（在 branch 之后已经向前移动了），那么 diff 中会出现有删有增的变化！这个时候应该用 commit range 的两点表示法，否则 patch 之后 master 的新改动会丢失。</p>
+</blockquote>
+<p><code>git apply</code> 可以应用一般的 diff，但是和 patch 命令相比具有原子性，要么全部成功，要么全部失败。<code>git apply --check</code> 可以用来检查本次 apply 是否能够成功，但是不会真的 apply。</p>
+<p><code>git am</code> 是对 <code>git apply</code> 的包装，能够对 mbox 格式的文件处理。mbox 是一系列 diff 文件拼接到一起作为邮件正文传输的一种格式。</p>
+<h2 id="两点式和三点式的-commit-range"><a href="#两点式和三点式的-commit-range" class="headerlink" title="两点式和三点式的 commit range"></a>两点式和三点式的 commit range</h2><p>注意！<strong>不适用于 git diff</strong>！更多见 <a href="初读-pro-git.html#commit-%E8%A1%A8%E7%A4%BA%E6%B3%95">Commit 表示法</a>。</p>
+<p><img src="../../../../assets/1b8a90f1b0ad703c7bae42b5b3621b56.jpeg"> 三点式：出现在 A 但不出现于 B，或者相反。</p>
+<p><img src="../../../../assets/43f771beda5ee65164d1626f8e982450.jpeg"> 两点式：出现在 B 中，但不出现在 A 中。</p>
+<p><code>git log contrib --not master</code> 和 <code>git log master..contrib</code> 效果是一样的。</p>
+<h2 id="在-git-中包含密钥"><a href="#在-git-中包含密钥" class="headerlink" title="在 git 中包含密钥"></a>在 git 中包含密钥</h2><p>可能现在不会用到了。这种导入密钥的方式只会在 git 仓库的 objects 中包含一个文件，并不会让文件出现在工作区。</p>
+<p>导出密钥，并将密钥写入到仓库的 objects 中。</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">$ gpg -a --<span class="built_in">export</span> F721C45A | git hash-object -w --stdin</span><br><span class="line">659ef797d181633c87ec71ac3f9ba29fe5775b92</span><br></pre></td></tr></table></figure>
+
+<p>然后给 objects 一个 tag，防止 gc 的时候丢失（同时也能方便查找）。</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">git tag -a maintainer-pgp-pub 659ef797d181633c87ec71ac3f9ba29fe5775b92</span><br></pre></td></tr></table></figure>
+
+<p>给完 tag 之后后续别人可以通过 tag 找到 hash，然后找到文件并导入：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">git show maintainer-pgp-pub | gpg --import</span><br></pre></td></tr></table></figure>
+
+<p>举个例子，我现在在 darknet 的仓库中（手头有个仓库，顺便打开了）：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line">$ git ls-tree master</span><br><span class="line">100644 blob bea19ff44fcb77ccca5448e730bd154327088a30    .gitignore</span><br><span class="line">100644 blob a50f7d700ba02bfacd50f59b315311cf4d0bbda2    LICENSE</span><br><span class="line">100644 blob 8b1a9d8189b3b9f4479221d52882ce36fdc73a62    LICENSE.fuck</span><br><span class="line">100644 blob c54113271e15057c4def6676693eb96fd6362b28    LICENSE.gen</span><br><span class="line">100644 blob 9cecc1d4669ee8af2ca727a5d8cde10cd8b2d7cc    LICENSE.gpl</span><br><span class="line">100644 blob 6728bd28d319c68ae04944fb034118dcc4c9aa09    LICENSE.meta</span><br><span class="line">100644 blob 5bd806ce16ea5053c8631793787362439375026e    LICENSE.mit</span><br><span class="line">100644 blob 5b8709acc43e7b76ed69758a52a9eaffaba775e6    LICENSE.v1</span><br><span class="line">100644 blob 63e15e657fa3e47455598beaf8f27df4386f5a9e    Makefile</span><br><span class="line">100644 blob fb58c2640038a963cd573d121e4fab59399f67dc    README.md</span><br><span class="line">040000 tree b789d4e25fb76862394c3805d2a529d49c353ae9    cfg</span><br><span class="line">040000 tree 7751b6063e5b86ef67fd155b2d4496c5c85d4516    data</span><br><span class="line">040000 tree da080efd69a73cdfd765b1785e0df5fcee769a52    examples</span><br><span class="line">040000 tree 87a27ca1a74b281df2301d41b7a5b359c5322335    include</span><br><span class="line">040000 tree 5cf5ca862a8e43ac9276a84c7187680d32754aa0    python</span><br><span class="line">040000 tree f5c65d4da6faf9f382a28a7f766d1c2247453150    scripts</span><br><span class="line">040000 tree e4da33bf1850bf3c6eab30232e299acddf672b62    src</span><br></pre></td></tr></table></figure>
+
+<p>使用 <code>git show &#123;hash&#125;</code>，如果 hash 对应某个 blob，将直接展示快照的内容。</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">$ git show a50f7d700ba02bfacd50f59b315311cf4d0bbda2</span><br><span class="line">                                  YOLO LICENSE</span><br><span class="line">                             Version 2, July 29 2016</span><br><span class="line"></span><br><span class="line">THIS SOFTWARE LICENSE IS PROVIDED <span class="string">&quot;ALL CAPS&quot;</span> SO THAT YOU KNOW IT IS SUPER</span><br><span class="line">SERIOUS AND YOU DON<span class="string">&#x27;T MESS AROUND WITH COPYRIGHT LAW BECAUSE YOU WILL GET IN</span></span><br><span class="line"><span class="string">TROUBLE HERE ARE SOME OTHER BUZZWORDS COMMONLY IN THESE THINGS WARRANTIES</span></span><br><span class="line"><span class="string">LIABILITY CONTRACT TORT LIABLE CLAIMS RESTRICTION MERCHANTABILITY. NOW HERE&#x27;</span>S</span><br><span class="line">THE REAL LICENSE:</span><br><span class="line"></span><br><span class="line">0. Darknet is public domain.</span><br><span class="line">1. Do whatever you want with it.</span><br><span class="line">2. Stop emailing me about it!</span><br></pre></td></tr></table></figure>
+
+<p>如果 hash 对应一个 tree，会列举文件夹：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line">$ git show 7751b6063e5b86ef67fd155b2d4496c5c85d4516</span><br><span class="line">tree 7751b6063e5b86ef67fd155b2d4496c5c85d4516</span><br><span class="line"></span><br><span class="line">9k.labels</span><br><span class="line">9k.names</span><br><span class="line">9k.tree</span><br><span class="line">coco.names</span><br><span class="line">coco9k.map</span><br><span class="line">dog.jpg</span><br><span class="line">eagle.jpg</span><br><span class="line">giraffe.jpg</span><br><span class="line">goal.txt</span><br><span class="line">horses.jpg</span><br><span class="line">imagenet.labels.list</span><br><span class="line">imagenet.shortnames.list</span><br><span class="line">inet9k.map</span><br><span class="line">kite.jpg</span><br><span class="line">labels/</span><br><span class="line">openimages.names</span><br><span class="line">person.jpg</span><br><span class="line">scream.jpg</span><br><span class="line">voc.names</span><br></pre></td></tr></table></figure>
+
+<p>如果 hash 对应一个 commit，对显示 commit 的日志。</p>
+<h2 id="为-commit-创建可读的名称"><a href="#为-commit-创建可读的名称" class="headerlink" title="为 commit 创建可读的名称"></a>为 commit 创建可读的名称</h2><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">$ git describe master</span><br><span class="line">v1.6.2-rc1-20-g8c5b85c</span><br><span class="line"><span class="comment">########## ^^  ^^^^^^^</span></span><br><span class="line"><span class="comment">#      /    |     \</span></span><br><span class="line"><span class="comment"># last tag  |   partial sha1</span></span><br><span class="line"><span class="comment">#           |</span></span><br><span class="line"><span class="comment">#   commits since the tag</span></span><br></pre></td></tr></table></figure>
+
+<blockquote>
+<p>In response, Git generates a string consisting of the name of the most recent tag earlier than that commit, followed by the number of commits since that tag, followed finally by a partial SHA-1 value of the commit being described (prefixed with the letter “g” meaning Git).</p>
+</blockquote>
+<p>但是必须得让 git 先找到对应分支上最近的 tag，才能用 describe。也就是说无 tag 的时候是不能 describe 的，会报错。</p>
+<p>默认情况下，git describe 描述的 tags 的只能是 annotated tags。可以加 –tags 来描述无注释的 tags。</p>
+<h2 id="创建-archive"><a href="#创建-archive" class="headerlink" title="创建 archive"></a>创建 archive</h2><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">git archive master --prefix=<span class="string">&#x27;project/&#x27;</span> --format=zip &gt; `git describe master`.zip</span><br></pre></td></tr></table></figure>
+
+<p>如果没有 <code>--format</code> 选项，则会采用 tar.gz。</p>
+<h2 id="Shortlog"><a href="#Shortlog" class="headerlink" title="Shortlog"></a>Shortlog</h2><p><code>git shortlog</code> 能够展示选定范围内的所有改动，而且是按<strong>作者</strong>分组的，概览起来比较方便。主要用途是阅读一段时间内不同人员对仓库做出的贡献。</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">$ git shortlog --no-merges master --not v1.0.1</span><br><span class="line">Chris Wanstrath (6):</span><br><span class="line">    Add support <span class="keyword">for</span> annotated tags to Grit::Tag</span><br><span class="line">    Add packed-refs annotated tag support.</span><br><span class="line">    Add Grit::Commit<span class="comment">#to_patch</span></span><br><span class="line">    Update version and History.txt</span><br><span class="line">    Remove stray `puts`</span><br><span class="line">    Make ls_tree ignore nils</span><br><span class="line">Tom Preston-Werner (4):</span><br><span class="line">    fix dates <span class="keyword">in</span> <span class="built_in">history</span></span><br><span class="line">    dynamic version method</span><br><span class="line">    Version bump to 1.0.2</span><br><span class="line">    Regenerated gemspec <span class="keyword">for</span> version 1.0.2</span><br></pre></td></tr></table></figure>
+
+<h1 id="Github"><a href="#Github" class="headerlink" title="Github"></a>Github</h1><p>这一章基本可以跳过，但是还是有一些新的知识点。</p>
+<p><code>git diff --word-diff</code> 可以用来按照词显示差异。</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">$ git diff --word-diff</span><br><span class="line">diff --git a/blink.ino b/blink.ino</span><br><span class="line">index 15b9911..a6cc5a5 100644</span><br><span class="line">--- a/blink.ino</span><br><span class="line">+++ b/blink.ino</span><br><span class="line">@@ -18,7 +18,7 @@ void <span class="function"><span class="title">setup</span></span>() &#123;</span><br><span class="line">// the loop routine runs over and over again forever:</span><br><span class="line">void <span class="function"><span class="title">loop</span></span>() &#123;</span><br><span class="line">digitalWrite(led, HIGH); // turn the LED on (HIGH is the voltage level)</span><br><span class="line">[-delay(1000);-]&#123;+delay(3000);+&#125; // <span class="built_in">wait</span> <span class="keyword">for</span> a second</span><br><span class="line">digitalWrite(led, LOW); // turn the LED off by making the voltage LOW</span><br><span class="line">[-delay(1000);-]&#123;+delay(3000);+&#125; // <span class="built_in">wait</span> <span class="keyword">for</span> a second</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>这是 Gitlab-flavored markdown 支持的。Github 可能也支持？</p>
+<blockquote>
+<p>The other interesting URLs are the .diff and .patch URLs, which as you may guess, provide unified<br>diff and patch versions of the Pull Request. You could technically merge in the Pull Request work<br>with something like this:</p>
+</blockquote>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ curl https://github.com/tonychacon/fade/pull/1.patch | git am</span><br></pre></td></tr></table></figure>
+
+<p>这样能够直接从 gitlab 的 url 上面下载新的东西 patch 并应用。gitlab 也支持。</p>
+<p>在 merge-request 或者 pull 页面加上后缀：</p>
+<ul>
+<li><code>.diff</code> 后缀：相当于运行 git diff，改动按照文件分类。</li>
+<li><code>.patch</code> 后缀：相当于运行 git format-patch，改动先按照 commit 分类再按照文件分类。</li>
+</ul>
+<p>另一方面，在原来使用主机的地方，可以直接使用 url，主要是用于临时下载（不想要保存主机再删除的情况）。</p>
+<h1 id="Git-Tools"><a href="#Git-Tools" class="headerlink" title="Git Tools"></a>Git Tools</h1><h2 id="git-reflog"><a href="#git-reflog" class="headerlink" title="git reflog"></a>git reflog</h2><p>git reflog 能够显示过去一段时间对 HEAD 的操作信息，记录了当前的分支是怎么改动的。比如什么时候发生了 reset 或者 checkout。<strong>reflog 信息是完全本地的</strong>。</p>
+<blockquote>
+<p>Think of the reflog as Git’s version of shell history.</p>
+</blockquote>
+<p><img src="../../../../assets/5ebfa85039debd727416a3c7fb920a56.jpeg"></p>
+<p>这些信息对于最终的代码没用，但是对于工作可能很有帮助。比如先查到 <code>git reflog</code> 信息之后可以这样指代一个 commit：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">git show HEAD@&#123;5&#125;</span><br><span class="line"><span class="comment"># or</span></span><br><span class="line">git show master@&#123;yesterday&#125;</span><br><span class="line"><span class="comment"># or</span></span><br><span class="line">git show HEAD@&#123;2.months.ago&#125;</span><br></pre></td></tr></table></figure>
+
+<p>使用 <code>git log -g</code> 可以在 log 中显示 reflog 信息。</p>
+<h3 id="Escaping-braces-in-PowerShell"><a href="#Escaping-braces-in-PowerShell" class="headerlink" title="Escaping braces in PowerShell"></a>Escaping braces in PowerShell</h3><p>When using PowerShell, braces like { and } are special characters and must be escaped. You can escape them with a backtick <kbd>`</kbd> or put the commit reference in quotes:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">$ git show HEAD@&#123;0&#125;   <span class="comment"># will NOT work</span></span><br><span class="line">$ git show HEAD@`&#123;0`&#125; <span class="comment"># OK</span></span><br><span class="line">$ git show <span class="string">&quot;HEAD@&#123;0&#125;&quot;</span> <span class="comment"># OK</span></span><br></pre></td></tr></table></figure>
+
+<p>这也是为什么我不喜欢 PowerShell。</p>
+<h2 id="commit"><a href="#commit" class="headerlink" title="{commit}^"></a>{commit}^</h2><p>^ 表示 parent。注意 Windows 的 cmd 上要用 ^^，因为 cmd 对 ^ 有转义。</p>
+<p>见 <a href="../../../systems/windows/windows-cmd-转义.html">Windows cmd 转义</a>。</p>
+<h2 id="Commit-表示法"><a href="#Commit-表示法" class="headerlink" title="Commit 表示法"></a>Commit 表示法</h2><blockquote>
+<p>You can get the same results as in the previous example by typing <code>git log origin/master..</code> — Git substitutes HEAD if one side is missing.</p>
+</blockquote>
+<p>如果 range 的一端被省略，则 git 会用 HEAD 代替。</p>
+<p>也可以多点表示。以下三种写法含义相同：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">$ git <span class="built_in">log</span> refA..refB</span><br><span class="line">$ git <span class="built_in">log</span> ^refA refB</span><br><span class="line">$ git <span class="built_in">log</span> refB --not refA</span><br></pre></td></tr></table></figure>
+
+<p>其中 <code>^refA</code> 就表示 <code>--not refA</code>。这种写法比起 两点和三点表示法 可以支持更多的分支。比如：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">$ git <span class="built_in">log</span> refA refB ^refC</span><br><span class="line">$ git <span class="built_in">log</span> refA refB --not refC</span><br></pre></td></tr></table></figure>
+
+<p><strong>注意！这不适用于 git diff！git diff 仅能比较两个提交</strong>，而且有历史性的、不满足 commit 表示法的实现需要兼容。</p>
+<ol>
+<li>如果包含 <code>--not</code> 或 <code>^</code>，先转换成两点表示法，再进行下一步。</li>
+<li>如果是两点表示法，去掉 <code>..</code> 相当于直接比较两个端点（endpoint）。</li>
+<li>如果是三点表示法，则先找到两个端点的 merge-base，再比较 merge-base 和第二个端点。</li>
+</ol>
+<blockquote>
+<p><code>git diff [&lt;options&gt;] &lt;commit&gt;..&lt;commit&gt; [--] [&lt;path&gt;…​]</code><br>This is synonymous to the earlier form (without the <code>..</code>) for viewing the changes between two arbitrary <code>&lt;commit&gt;</code>. If <code>&lt;commit&gt;</code> on one side is omitted, it will have the same effect as using HEAD instead.</p>
+<p><code>git diff [&lt;options&gt;] &lt;commit&gt;...&lt;commit&gt; [--] [&lt;path&gt;…​]</code><br>This form is to view the changes on the branch containing and up to the second <code>&lt;commit&gt;</code>, starting at a common ancestor of both <code>&lt;commit&gt;</code>. <code>git diff A...B</code> is equivalent to <code>git diff $(git merge-base A B) B</code>. You can omit any one of <code>&lt;commit&gt;</code>, which has the same effect as using HEAD instead.</p>
+</blockquote>
+<p><strong>因为历史遗留问题，看上去 git diff 的两点表示法和三点表示法和其他命令是相反的！</strong></p>
+<p><code>git log</code> 使用三点表示法（被给定的某一个分支包含，却不是同时包含的那些 commits）的时候还可以加上 <strong>–left-right</strong> 参数：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">$ git <span class="built_in">log</span> --left-right master...experiment</span><br><span class="line">&lt; F</span><br><span class="line">&lt; E</span><br><span class="line">&gt; D</span><br><span class="line">&gt; C</span><br></pre></td></tr></table></figure>
+
+<p>这样能看到 commit 是来自左边还是右边。</p>
+<h2 id="git-add-i"><a href="#git-add-i" class="headerlink" title="git add -i"></a>git add -i</h2><p><img src="../../../../assets/4fdd0766f10c7df60530856e566bd4fe.jpeg"><br>一些命令：</p>
+<ul>
+<li>revert 可以撤掉对一个文件的更新，相当于 <code>git restore --staged -- &#123;file&#125;</code>。</li>
+<li>update 可以整体添加文件。</li>
+<li>patch 可以添加文件的一个部分。在 patch 模式中使用 e 选项可以编辑 chunk，但只是会修改要暂存的内容（index），这里编辑的内容并不会影响工作区。从 <code>git add -p</code> 也可以直接进入这一步。</li>
+</ul>
+<p>其他说明：</p>
+<ul>
+<li><code>git reset</code>、<code>git stash save</code> 和 <code>git checkout</code> 也都能加 <code>-p</code> 选项！</li>
+<li>git stash save（deprecated）现在被 git stash push 替代。</li>
+<li>VS Code 也有按照选区添加内容的方式。</li>
+</ul>
+<h2 id="git-stash"><a href="#git-stash" class="headerlink" title="git stash"></a>git stash</h2><p>git stash list 之后选择要应用的 stash：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">git stash apply stash@&#123;2&#125;</span><br></pre></td></tr></table></figure>
+
+<p>这个格式是不是很熟悉？这是 reflog 的格式，这也同样表明 git stash 的内容是完全本地，不会被提交到远程仓库的！git stash 内容如果丢失将无法恢复。</p>
+<p>在 stash 的时候忽略 index 区：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">$ git stash --keep-index</span><br><span class="line">Saved working directory and index state WIP on master: 1b65b17 added the index file</span><br><span class="line">HEAD is now at 1b65b17 added the index file</span><br></pre></td></tr></table></figure>
+
+<p>Stash 未追踪的内容可以用 <code>--include-untracked</code> or <code>-u</code>，但是这不会 stash 写在 .gitignore 中的内容。使用 <code>--all</code> 或者 <code>-a</code> 能将 .gitignore 中的内容也 stash。</p>
+<p><code>git stash --patch</code>：将部分文件内容加入 stash。</p>
+<p><code>git stash branch &lt;new branchname&gt;</code>：创建 stash，<code>checkout -b</code> 到新分支，再 apply stash。在工作区产生了别的改动内容时有用。</p>
+<h2 id="git-clean"><a href="#git-clean" class="headerlink" title="git clean"></a>git clean</h2><p><code>git clean</code> 用来移除 untracked 文件。（<strong>作为对比，<code>git reset</code> 是重置 tracked 文件</strong>。）</p>
+<p>如果不放心，可以先 <code>--dry-run</code> 或者 <code>-n</code> 一下。</p>
+<p>一些选项：-f 强制删除，-ff 在强制删除不可行的时候强调强制删除。-i 交互式删除，-d 删除文件夹（否则会忽略文件夹），-x 忽略 .gitignore 文件。</p>
+<p><code>git clean</code> 相对来说不是很安全，也可以考虑 git stash -a 作为替代。</p>
+<h2 id="gpg-签名"><a href="#gpg-签名" class="headerlink" title="gpg 签名"></a>gpg 签名</h2><p>可以用 gpg 签名一个 tag 或者 commit，这样其他人就能验证提交者的身份。在 git 配置文件中设置 <code>commit.gpgsign</code> 为 true 会默认启用签名。</p>
+<p>_其他的包括创建密钥、导出、验证、在 tag 或 commit 的时候签名的内容就此省略_。</p>
+<h2 id="git-grep"><a href="#git-grep" class="headerlink" title="git grep"></a>git grep</h2><p><code>git grep</code> 只会搜 git 知道的文件，所以速度比 grep 更快（前提是你要找的内容就在 git 中）！</p>
+<p>默认搜索范围是整个工作区。</p>
+<p><code>-n</code> 或者 <code>--line-number</code> 可以让输出结果附加行号（默认的输出只有文件名和内容行）。</p>
+<p><em>感觉和可视化界面相比不是很好用。</em></p>
+<p><code>git log -S</code> 搜索字符串变化情况。</p>
+<p>**<code>git log -L</code> 可以搜索行历史。-L argument 可以是 ‘start,end:file’ or ‘:funcname:file’**。搜索 funcname 可能搜索不到，比如 python 文件中类的成员函数。也可以用正则表达式指定函数的开始和结束，比如：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">git <span class="built_in">log</span> -L <span class="string">&#x27;/unsigned long git_deflate_bound/&#x27;</span>,/^&#125;/:zlib.c</span><br></pre></td></tr></table></figure>
+
+<p>这样就能搜到：</p>
+<figure class="highlight txt"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">@@ -81,0 +85,5 @@</span><br><span class="line">+unsigned long git_deflate_bound(z_streamp strm, unsigned long size)</span><br><span class="line">+&#123;</span><br><span class="line">+ return deflateBound(strm, size);</span><br><span class="line">+&#125;</span><br><span class="line">+</span><br></pre></td></tr></table></figure>
+
+<h2 id="git-commit-–amend"><a href="#git-commit-–amend" class="headerlink" title="git commit –amend"></a>git commit –amend</h2><p>如果不需要为 <code>git commit --amend</code> 提供信息，可以用 <code>git commit --amend --no-edit</code>。</p>
+<h2 id="git-rebase-i"><a href="#git-rebase-i" class="headerlink" title="git rebase -i"></a>git rebase -i</h2><p>可以 squash commits、修改 commits 的提交信息、交换 commits 的顺序、将一个 commit 分裂成多个。</p>
+<h3 id="git-rebase-i-的-edit-选项"><a href="#git-rebase-i-的-edit-选项" class="headerlink" title="git rebase -i 的 edit 选项"></a>git rebase -i 的 edit 选项</h3><p>其中 edit 选项能够编辑过去的一个 commit（可以 reword、选择提交的文件、分多次提交等等）。怎么做呢？</p>
+<p>给某个 commit 选择 edit，git-rebase 就会在这个地方停下来。我们可以按照自己的意愿进行提交，然后使用 <code>git rebase --continue</code> 让 git 继续 rebase。后续的 commits 就像用 cherrypick 选出来的一样（正如 cherrypick，被编辑的 commit 之后的所有 commit 的 hash 都会变）。</p>
+<p>如果这个时候直接使用 <code>git rebase --continue</code>，那就相当于没有编辑这个 commit。如果想要编辑则需要先 reset：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">$ git reset HEAD^</span><br><span class="line">$ git add README</span><br><span class="line">$ git commit -m <span class="string">&#x27;Update README formatting&#x27;</span></span><br><span class="line">$ git add lib/simplegit.rb</span><br><span class="line">$ git commit -m <span class="string">&#x27;Add blame&#x27;</span></span><br><span class="line">$ git rebase --<span class="built_in">continue</span></span><br></pre></td></tr></table></figure>
+
+<p>这样这条 commit 就变成了两条。在使用 <code>git rebase --continue</code> 之后，后面的命令会接上来。</p>
+<p><strong>用 git rebase –abort 可以取消之前的 rebase</strong>。</p>
+<p>fixup 功能: 当你发现了之前 commit 的一个小错误，想要将小错误修补回去时，可以先将这个小错误的修复提交，然后用 rebase -i 来重组提交。将该修复移动到之前提交的下方，然后选择 fixup。</p>
+<p>也有更方便的方式（主要是难记）：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">$ git add &#123;filename...&#125;                 <span class="comment"># Stage a fix</span></span><br><span class="line">$ git commit --fixup=a0b1c2d3           <span class="comment"># Perform the commit to fix broken a0b1c2d3</span></span><br><span class="line">$ git rebase -i --autosquash a0b1c2d3~1 <span class="comment"># Now merge fixup commit into broken commit</span></span><br></pre></td></tr></table></figure>
+
+<p>fixup 和 squash 很像，但是不会弹出编辑器要求你提供 commit message。</p>
+<p><code>git commit --fixup</code> 的作用是让这次的提交信息变成 “fixup! “ 加上要 fixup 的那条 commit 的日志，这样使用 <code>git rebase -i --autosquash</code> 的时候工具就能把它放在一个正确的位置，理论上比手动编辑 commit 更方便。然而，你需要知道要 fixup 的 commit，也就是说要粘贴两次（commit 一次，rebase 一次），而且 <code>--autosquash</code> 这个选项还挺长的。感觉还是 vim dd + p 比较方便。</p>
+<h3 id="git-rebase-发生冲突怎么办"><a href="#git-rebase-发生冲突怎么办" class="headerlink" title="git rebase 发生冲突怎么办"></a>git rebase 发生冲突怎么办</h3><blockquote>
+<p>The first is how you complete the conflict resolution. Rather than <code>git commit</code> like you’ll use when addressing conflicts that arise from <code>git merge</code>, the appropriate command for rebasing is <code>git rebase --continue</code>.</p>
+</blockquote>
+<p>同样会在文件中留下 markers，解决冲突之后要用 git rebase –continue 而不是 git merge。</p>
+<blockquote>
+<p>If you want to take a look at the diff of the commit that Git failed to replay, and which resulted in a merge conflict, you can use <code>git rebase --show-current-patch</code>, or its equivalent <code>git show REBASE_HEAD</code>.</p>
+</blockquote>
+<blockquote>
+<p>Finally, it’s worth noting that when using <code>git checkout --ours</code> or <code>--theirs</code> to quickly resolve conflicted paths by checking out a specific version from the index, the meaning of those options is reversed compared to a regular <code>git merge</code> merge conflict: during rebase, <code>--theirs</code> refers to the changes from the branch being rebased (<code>REBASE_HEAD</code>), and <code>--ours</code> refers to the changes from the branch onto which we are rebasing (<code>HEAD</code>). <a target="_blank" rel="noopener" href="https://git-rebase.io/#note-6">https://git-rebase.io/#note-6</a></p>
+</blockquote>
+<h2 id="git-reset"><a href="#git-reset" class="headerlink" title="git reset"></a>git reset</h2><blockquote>
+<p>The reset command overwrites these three trees in a specific order, stopping when you tell it to:</p>
+<ol>
+<li>Move the branch HEAD points to (stop here if <code>--soft</code>).</li>
+<li>Make the index look like HEAD (stop here unless <code>--hard</code>).</li>
+<li>Make the working directory look like the index.</li>
+</ol>
+</blockquote>
+<h3 id="只-reset-部分文件"><a href="#只-reset-部分文件" class="headerlink" title="只 reset 部分文件"></a>只 reset 部分文件</h3><p><code>git reset file.txt</code> 相当于 <code>git reset --mixed HEAD file.txt</code>。由于 HEAD 只是一个指针，不能同时指向不同的地方，git reset 文件的时候是不会移动 HEAD 的。那这一步的效果就是从 HEAD 中取出文件快照还原到 index 区，相当于 <code>git restore --staged file.txt</code>。</p>
+<p>只 reset 部分文件的时候，好像只能是 –mixed 模式。</p>
+<h3 id="用-reset-来做-squashing"><a href="#用-reset-来做-squashing" class="headerlink" title="用 reset 来做 squashing"></a>用 reset 来做 squashing</h3><p>首先是 git reset –soft {commit} 定位到之前的位置，然后直接 git commit。因为 git reset –soft {commit} 不会改动 index 和工作区！</p>
+<h2 id="git-checkout"><a href="#git-checkout" class="headerlink" title="git checkout"></a>git checkout</h2><p><code>git checkout &#123;commit&#125;</code> 表面上有点像 <code>git reset --hard &#123;commit&#125;</code>，但是：</p>
+<ol>
+<li>git checkout 在修改文件之前会做检查，只会将未修改过的文件更新。</li>
+<li><strong>git checkout 只会简单修改 HEAD，因而能在不同的分支之间跳转。git reset –hard 会把当前分支的 HEAD 改成给定的 commit 并移动过去！</strong></li>
+</ol>
+<p><code>git checkout -- &#123;files...&#125;</code> 相当于 <code>git reset -- &#123;files...&#125;</code>（只修改 index）之后又将相关文件在 index 的内容复制到工作区。</p>
+<p>要找只修改工作区文件而不修改 index 的单个命令就只有 <code>git restore</code> 能做到。</p>
+<h2 id="git-merge"><a href="#git-merge" class="headerlink" title="git merge"></a>git merge</h2><p>git merge 可以使用 <code>-Xignore-all-space</code> 或者 <code>-Xignore-space-change</code> 参数。后者将多个空白字符视作一个，但是将有空白字符和无空白字符视作差异。</p>
+
+    </div>
+
+    
+    
+    
+
+      <footer class="post-footer">
+          <div class="post-tags">
+              <a href="../../../tags/git/" rel="tag"># git</a>
+              <a href="../../../tags/pro-git-the-book/" rel="tag"># pro-git-the-book</a>
+          </div>
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="../../../programming/cpp/cpplang/c-%E8%AF%AD%E8%A8%80%E7%AE%97%E6%9C%AF%E8%BF%90%E7%AE%97%E7%9A%84%E7%B1%BB%E5%9E%8B%E6%8F%90%E5%8D%87.html" rel="prev" title="C 语言算术运算的类型提升">
+      <i class="fa fa-chevron-left"></i> C 语言算术运算的类型提升
+    </a></div>
+      <div class="post-nav-item">
+    <a href="../../../systems/linux/editor-pager-browser.html" rel="next" title="EDITOR, PAGER, BROWSER">
+      EDITOR, PAGER, BROWSER <i class="fa fa-chevron-right"></i>
+    </a></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+
+
+          </div>
+          
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#git-%E5%9F%BA%E7%A1%80"><span class="nav-text">git 基础</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#git-add"><span class="nav-text">git add</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#git-status"><span class="nav-text">git status</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#git-rm"><span class="nav-text">git rm</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#git-log"><span class="nav-text">git log</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#git-tag"><span class="nav-text">git tag</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#git-checkout-branch"><span class="nav-text">git checkout&#x2F;branch</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E4%B8%89%E7%A7%8D-track-%E8%BF%9C%E7%A8%8B%E5%88%86%E6%94%AF%E7%9A%84%E6%96%B9%E5%BC%8F"><span class="nav-text">三种 track 远程分支的方式</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#git-rebase"><span class="nav-text">git rebase</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#git-on-the-server"><span class="nav-text">git on the server</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%9B%9B%E7%A7%8D%E4%BC%A0%E8%BE%93%E5%8D%8F%E8%AE%AE"><span class="nav-text">四种传输协议</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Bare-Repository"><span class="nav-text">Bare Repository</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#ssh-%E5%92%8C-git-shell"><span class="nav-text">ssh 和 git-shell</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%85%B6%E4%BB%96%E6%90%AD%E5%BB%BA%E6%96%B9%E5%BC%8F"><span class="nav-text">其他搭建方式</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Distributed-Git"><span class="nav-text">Distributed Git</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#Workflow"><span class="nav-text">Workflow</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%A3%80%E6%9F%A5%E6%94%B9%E5%8A%A8%E6%98%AF%E5%90%A6%E6%9C%89%E6%A0%BC%E5%BC%8F%E9%97%AE%E9%A2%98"><span class="nav-text">检查改动是否有格式问题</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#50-72-%E8%A7%84%E5%88%99"><span class="nav-text">50&#x2F;72 规则</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Workflow-private-small-team"><span class="nav-text">Workflow: private small team</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Workflow-private-managed-team"><span class="nav-text">Workflow: private managed team</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%BD%BF%E7%94%A8%E9%82%AE%E4%BB%B6%E5%B7%A5%E4%BD%9C%EF%BC%9Adiff-%E5%92%8C-patch"><span class="nav-text">使用邮件工作：diff 和 patch</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%B8%A4%E7%82%B9%E5%BC%8F%E5%92%8C%E4%B8%89%E7%82%B9%E5%BC%8F%E7%9A%84-commit-range"><span class="nav-text">两点式和三点式的 commit range</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%9C%A8-git-%E4%B8%AD%E5%8C%85%E5%90%AB%E5%AF%86%E9%92%A5"><span class="nav-text">在 git 中包含密钥</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%B8%BA-commit-%E5%88%9B%E5%BB%BA%E5%8F%AF%E8%AF%BB%E7%9A%84%E5%90%8D%E7%A7%B0"><span class="nav-text">为 commit 创建可读的名称</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%88%9B%E5%BB%BA-archive"><span class="nav-text">创建 archive</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Shortlog"><span class="nav-text">Shortlog</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Github"><span class="nav-text">Github</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Git-Tools"><span class="nav-text">Git Tools</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#git-reflog"><span class="nav-text">git reflog</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#Escaping-braces-in-PowerShell"><span class="nav-text">Escaping braces in PowerShell</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#commit"><span class="nav-text">{commit}^</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Commit-%E8%A1%A8%E7%A4%BA%E6%B3%95"><span class="nav-text">Commit 表示法</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#git-add-i"><span class="nav-text">git add -i</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#git-stash"><span class="nav-text">git stash</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#git-clean"><span class="nav-text">git clean</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#gpg-%E7%AD%BE%E5%90%8D"><span class="nav-text">gpg 签名</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#git-grep"><span class="nav-text">git grep</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#git-commit-%E2%80%93amend"><span class="nav-text">git commit –amend</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#git-rebase-i"><span class="nav-text">git rebase -i</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#git-rebase-i-%E7%9A%84-edit-%E9%80%89%E9%A1%B9"><span class="nav-text">git rebase -i 的 edit 选项</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#git-rebase-%E5%8F%91%E7%94%9F%E5%86%B2%E7%AA%81%E6%80%8E%E4%B9%88%E5%8A%9E"><span class="nav-text">git rebase 发生冲突怎么办</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#git-reset"><span class="nav-text">git reset</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%8F%AA-reset-%E9%83%A8%E5%88%86%E6%96%87%E4%BB%B6"><span class="nav-text">只 reset 部分文件</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%94%A8-reset-%E6%9D%A5%E5%81%9A-squashing"><span class="nav-text">用 reset 来做 squashing</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#git-checkout"><span class="nav-text">git checkout</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#git-merge"><span class="nav-text">git merge</span></a></li></ol></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+  <p class="site-author-name" itemprop="name">(╹ڡ╹ )</p>
+  <div class="site-description" itemprop="description"></div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="../../../archives/">
+        
+          <span class="site-state-item-count">223</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+            <a href="../../../categories/">
+          
+        <span class="site-state-item-count">6</span>
+        <span class="site-state-item-name">分类</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+            <a href="../../../tags/">
+          
+        <span class="site-state-item-count">49</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author motion-element">
+      <span class="links-of-author-item">
+        <a href="https://github.com/hxhue" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;hxhue" rel="noopener" target="_blank"><i class="fab fa-github fa-fw"></i></a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="https://stackoverflow.com/users/13785815" title="StackOverflow → https:&#x2F;&#x2F;stackoverflow.com&#x2F;users&#x2F;13785815" rel="noopener" target="_blank"><i class="fab fa-stack-overflow fa-fw"></i></a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="../../../mailto:simooncake@gmail.com" title="Email → mailto:simooncake@gmail.com" rel="noopener" target="_blank"><i class="fa fa-envelope fa-fw"></i></a>
+      </span>
+  </div>
+
+
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+
+<div class="copyright">
+  
+  &copy; 
+  <span itemprop="copyrightYear">2024</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">(╹ڡ╹ )</span>
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item-icon">
+      <i class="fa fa-chart-area"></i>
+    </span>
+      <span class="post-meta-item-text">站点总字数：</span>
+    <span title="站点总字数">132k</span>
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item-icon">
+      <i class="fa fa-coffee"></i>
+    </span>
+      <span class="post-meta-item-text">站点阅读时长 &asymp;</span>
+    <span title="站点阅读时长">8:01</span>
+</div>
+  <div class="powered-by">由 <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Gemini</a> 强力驱动
+  </div><script color="0,0,255" opacity="0.5" zIndex="-1" count="99" src="https://cdn.jsdelivr.net/npm/canvas-nest.js@1/dist/canvas-nest.js"></script>
+
+        
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="../../../lib/anime.min.js"></script>
+  <script src="//cdn.jsdelivr.net/npm/pangu@4/dist/browser/pangu.min.js"></script>
+  <script src="../../../lib/velocity/velocity.min.js"></script>
+  <script src="../../../lib/velocity/velocity.ui.min.js"></script>
+
+<script src="../../../js/utils.js"></script>
+
+<script src="../../../js/motion.js"></script>
+
+
+<script src="../../../js/schemes/pisces.js"></script>
+
+
+<script src="../../../js/next-boot.js"></script>
+
+
+
+
+  
+
+
+
+
+  
+<script src="../../../js/local-search.js"></script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+</body>
+</html>
