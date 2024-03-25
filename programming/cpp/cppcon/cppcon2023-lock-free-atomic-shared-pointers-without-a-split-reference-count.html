@@ -27,12 +27,12 @@
 <meta property="og:type" content="article">
 <meta property="og:title" content="(CppCon 2023) Lock-free Atomic Shared Pointers Without a Split Reference Count">
 <meta property="og:url" content="https://hxhue.github.io/programming/cpp/cppcon/cppcon2023-lock-free-atomic-shared-pointers-without-a-split-reference-count.html">
-<meta property="og:site_name" content="没想好标题">
+<meta property="og:site_name" content="Bluegill">
 <meta property="og:description" content="https:&#x2F;&#x2F;youtu.be&#x2F;lNPZV9Iqo3U?si&#x3D;lS1hf2ND4SS-6ELB by Daniel Anderson std::shared_ptr 的原子引用计数是线程安全的，但是：  对它指向的对象的访问不是线程安全的 对它本身的读写不是线程安全的  这个 lecture 主要考虑第 2 点。在有一个全局或者类似全局的共享指针时，需要注意这个。 首先不能使用 std::ato">
 <meta property="og:locale" content="zh_CN">
 <meta property="article:published_time" content="2024-03-05T12:21:00.000Z">
 <meta property="article:modified_time" content="2024-03-15T08:41:11.533Z">
-<meta property="article:author" content="(╹ڡ╹ )">
+<meta property="article:author" content="😋">
 <meta property="article:tag" content="cpp">
 <meta property="article:tag" content="cppcon">
 <meta name="twitter:card" content="summary">
@@ -50,7 +50,7 @@
   };
 </script>
 
-  <title>(CppCon 2023) Lock-free Atomic Shared Pointers Without a Split Reference Count | 没想好标题</title>
+  <title>(CppCon 2023) Lock-free Atomic Shared Pointers Without a Split Reference Count | Bluegill</title>
   
 
 
@@ -82,10 +82,38 @@
 </noscript>
 
 <!-- hexo injector head_end start -->
+<script type="text/javascript">
+(function() {
+  const urls = [
+    'https://images.unsplash.com/photo-1561174356-638d86f24f04',    // Ferris Wheel
+    'https://images.unsplash.com/photo-1561435194-d8f04c16a766',    // Leaves
+    'https://images.unsplash.com/photo-1553395572-0ef353a212bf',    // Tomato
+    'https://images.unsplash.com/photo-1553358961-37aa918d326a',    // Sandwich
+    'https://images.unsplash.com/photo-1559525839-b184a4d698c7',    // Coffee Bean
+    'https://images.unsplash.com/photo-1559181567-c3190ca9959b',    // Cherry
+    'https://images.unsplash.com/photo-1585752379769-801711aaf836', // Coffee
+  ]
+  const setBackground = () => {
+    const url = urls[new Date().getUTCDay()];
+    const main = document.querySelector('main');
+    main.style['background']            = "url('" + url + "')";
+    main.style['background-repeat']     = 'no-repeat';
+    main.style['background-size']       = 'cover';
+    main.style['background-attachment'] = 'fixed';
+    main.style['background-position']   = 'center';
+    // Add credit
+    const poweredBy = document.querySelector('body > div > footer > div > div.powered-by');
+    const credit = document.createElement('div');
+    credit.innerHTML = '✨The background is from https://unsplash.com/@picoftasty.';
+    poweredBy.parentElement.insertBefore(credit, poweredBy);
+  };
+  setTimeout(setBackground, 0);
+})();
+</script>
     <style>
       a, code { word-break: break-all; }
     </style>
-    <!-- hexo injector head_end end --><link rel="alternate" href="atom.xml" title="没想好标题" type="application/atom+xml">
+    <!-- hexo injector head_end end --><link rel="alternate" href="atom.xml" title="Bluegill" type="application/atom+xml">
 </head>
 
 <body itemscope itemtype="http://schema.org/WebPage">
@@ -106,7 +134,7 @@
 
     <a href="/" class="brand" rel="start">
       <span class="logo-line-before"><i></i></span>
-      <h1 class="site-title">没想好标题</h1>
+      <h1 class="site-title">Bluegill</h1>
       <span class="logo-line-after"><i></i></span>
     </a>
   </div>
@@ -217,12 +245,12 @@
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="image" content="../../../images/avatar.gif">
-      <meta itemprop="name" content="(╹ڡ╹ )">
+      <meta itemprop="name" content="😋">
       <meta itemprop="description" content="">
     </span>
 
     <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="没想好标题">
+      <meta itemprop="name" content="Bluegill">
     </span>
       <header class="post-header">
         <h1 class="post-title" itemprop="name headline">
@@ -380,7 +408,7 @@
 
       <div class="site-overview-wrap sidebar-panel">
         <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
-  <p class="site-author-name" itemprop="name">(╹ڡ╹ )</p>
+  <p class="site-author-name" itemprop="name">😋</p>
   <div class="site-description" itemprop="description"></div>
 </div>
 <div class="site-state-wrap motion-element">
@@ -388,7 +416,7 @@
       <div class="site-state-item site-state-posts">
           <a href="../../../archives/">
         
-          <span class="site-state-item-count">223</span>
+          <span class="site-state-item-count">224</span>
           <span class="site-state-item-name">日志</span>
         </a>
       </div>
@@ -443,22 +471,22 @@
   <span class="with-love">
     <i class="fa fa-heart"></i>
   </span>
-  <span class="author" itemprop="copyrightHolder">(╹ڡ╹ )</span>
+  <span class="author" itemprop="copyrightHolder">😋</span>
     <span class="post-meta-divider">|</span>
     <span class="post-meta-item-icon">
       <i class="fa fa-chart-area"></i>
     </span>
       <span class="post-meta-item-text">站点总字数：</span>
-    <span title="站点总字数">132k</span>
+    <span title="站点总字数">133k</span>
     <span class="post-meta-divider">|</span>
     <span class="post-meta-item-icon">
       <i class="fa fa-coffee"></i>
     </span>
       <span class="post-meta-item-text">站点阅读时长 &asymp;</span>
-    <span title="站点阅读时长">8:01</span>
+    <span title="站点阅读时长">8:04</span>
 </div>
   <div class="powered-by">由 <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Gemini</a> 强力驱动
-  </div><script color="0,0,255" opacity="0.5" zIndex="-1" count="99" src="https://cdn.jsdelivr.net/npm/canvas-nest.js@1/dist/canvas-nest.js"></script>
+  </div>
 
         
 

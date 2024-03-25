@@ -5,38 +5,38 @@
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
 <meta name="theme-color" content="#222">
 <meta name="generator" content="Hexo 7.1.1">
-  <link rel="apple-touch-icon" sizes="180x180" href="../../images/apple-touch-icon-next.png">
-  <link rel="icon" type="image/png" sizes="32x32" href="../../images/favicon-32x32-next.png">
-  <link rel="icon" type="image/png" sizes="16x16" href="../../images/favicon-16x16-next.png">
-  <link rel="mask-icon" href="../../images/logo.svg" color="#222">
+  <link rel="apple-touch-icon" sizes="180x180" href="../../../images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="../../../images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="../../../images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="../../../images/logo.svg" color="#222">
   <meta name="google-site-verification" content="hwfud_ndcnJHe2Jz7ClToP1nuUA3k7FqZv-0VpFAHjg">
 
-<link rel="stylesheet" href="../../css/main.css">
+<link rel="stylesheet" href="../../../css/main.css">
 
 
-<link rel="stylesheet" href="../../lib/font-awesome/css/all.min.css">
-  <link rel="stylesheet" href="../../lib/pace/pace-theme-minimal.min.css">
-  <script src="../../lib/pace/pace.min.js"></script>
+<link rel="stylesheet" href="../../../lib/font-awesome/css/all.min.css">
+  <link rel="stylesheet" href="../../../lib/pace/pace-theme-minimal.min.css">
+  <script src="../../../lib/pace/pace.min.js"></script>
 
 <script id="hexo-configurations">
     var NexT = window.NexT || {};
     var CONFIG = {"hostname":"hxhue.github.io","root":"/","scheme":"Gemini","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"always","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":true,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":true,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},"path":"search.xml"};
   </script>
 
-  <meta name="description" content="sys 可以访问解释器（运行时功能）和系统特定功能（系统有关功能）。os 提供了操作系统上的统一抽象（系统无关功能）。  解释器功能：比如 sys.argv 访问命令行参数，sys.exit() 退出程序，sys.path 是 python 包的查询路径，sys.stdin&#x2F;sys.stdout&#x2F;sys.stderr 分别表示三个系统管道。 系统有关功能：比如 sys.getwindowsvers">
+  <meta name="description" content="https:&#x2F;&#x2F;en.cppreference.com&#x2F;w&#x2F;cpp&#x2F;language&#x2F;rule_of_three Rule of 3析构函数、拷贝构造、拷贝赋值三者要是定义了其一，最好把其他两个都补上，因为编译生成的很可能不是我们想要的。此外，定义三者之一会导致移动构造、移动赋值被删除。  💡 Tip 复制&#x2F;移动赋值操作符可以用复制&#x2F;移动构造函数 + std::swap 实现">
 <meta property="og:type" content="article">
-<meta property="og:title" content="Python sys vs os">
-<meta property="og:url" content="https://hxhue.github.io/programming/python/python-sys-vs-os.html">
+<meta property="og:title" content="C++: Rule of 3&#x2F;5&#x2F;0">
+<meta property="og:url" content="https://hxhue.github.io/programming/cpp/cpplang/c-rule-of-3-5-0.html">
 <meta property="og:site_name" content="Bluegill">
-<meta property="og:description" content="sys 可以访问解释器（运行时功能）和系统特定功能（系统有关功能）。os 提供了操作系统上的统一抽象（系统无关功能）。  解释器功能：比如 sys.argv 访问命令行参数，sys.exit() 退出程序，sys.path 是 python 包的查询路径，sys.stdin&#x2F;sys.stdout&#x2F;sys.stderr 分别表示三个系统管道。 系统有关功能：比如 sys.getwindowsvers">
+<meta property="og:description" content="https:&#x2F;&#x2F;en.cppreference.com&#x2F;w&#x2F;cpp&#x2F;language&#x2F;rule_of_three Rule of 3析构函数、拷贝构造、拷贝赋值三者要是定义了其一，最好把其他两个都补上，因为编译生成的很可能不是我们想要的。此外，定义三者之一会导致移动构造、移动赋值被删除。  💡 Tip 复制&#x2F;移动赋值操作符可以用复制&#x2F;移动构造函数 + std::swap 实现">
 <meta property="og:locale" content="zh_CN">
-<meta property="article:published_time" content="2023-08-12T07:17:00.000Z">
-<meta property="article:modified_time" content="2024-03-15T08:31:51.104Z">
+<meta property="article:published_time" content="2024-03-24T14:42:00.000Z">
+<meta property="article:modified_time" content="2024-03-25T02:42:03.926Z">
 <meta property="article:author" content="😋">
-<meta property="article:tag" content="python">
+<meta property="article:tag" content="cpp">
 <meta name="twitter:card" content="summary">
 
-<link rel="canonical" href="https://hxhue.github.io/programming/python/python-sys-vs-os.html">
+<link rel="canonical" href="https://hxhue.github.io/programming/cpp/cpplang/c-rule-of-3-5-0.html">
 
 
 <script id="page-configurations">
@@ -49,7 +49,7 @@
   };
 </script>
 
-  <title>Python sys vs os | Bluegill</title>
+  <title>C++: Rule of 3/5/0 | Bluegill</title>
   
 
 
@@ -152,37 +152,37 @@
   <ul id="menu" class="main-menu menu">
         <li class="menu-item menu-item-home">
 
-    <a href="../../index.html" rel="section"><i class="fa fa-home fa-fw"></i>首页</a>
+    <a href="../../../index.html" rel="section"><i class="fa fa-home fa-fw"></i>首页</a>
 
   </li>
         <li class="menu-item menu-item-archives">
 
-    <a href="../../archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档</a>
+    <a href="../../../archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档</a>
 
   </li>
         <li class="menu-item menu-item-about">
 
-    <a href="../../about/" rel="section"><i class="fa fa-user fa-fw"></i>关于</a>
+    <a href="../../../about/" rel="section"><i class="fa fa-user fa-fw"></i>关于</a>
 
   </li>
         <li class="menu-item menu-item-tags">
 
-    <a href="../../tags/" rel="section"><i class="fa fa-tags fa-fw"></i>标签</a>
+    <a href="../../../tags/" rel="section"><i class="fa fa-tags fa-fw"></i>标签</a>
 
   </li>
         <li class="menu-item menu-item-categories">
 
-    <a href="../../categories/" rel="section"><i class="fa fa-th fa-fw"></i>分类</a>
+    <a href="../../../categories/" rel="section"><i class="fa fa-th fa-fw"></i>分类</a>
 
   </li>
         <li class="menu-item menu-item-友情链接">
 
-    <a href="../../friends/" rel="section"><i class="fa fa-heart fa-fw"></i>友情链接</a>
+    <a href="../../../friends/" rel="section"><i class="fa fa-heart fa-fw"></i>友情链接</a>
 
   </li>
         <li class="menu-item menu-item-sitemap">
 
-    <a href="../../sitemap.xml" rel="section"><i class="fa fa-sitemap fa-fw"></i>站点地图</a>
+    <a href="../../../sitemap.xml" rel="section"><i class="fa fa-sitemap fa-fw"></i>站点地图</a>
 
   </li>
       <li class="menu-item menu-item-search">
@@ -240,10 +240,10 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="https://hxhue.github.io/programming/python/python-sys-vs-os.html">
+    <link itemprop="mainEntityOfPage" href="https://hxhue.github.io/programming/cpp/cpplang/c-rule-of-3-5-0.html">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="../../images/avatar.gif">
+      <meta itemprop="image" content="../../../images/avatar.gif">
       <meta itemprop="name" content="😋">
       <meta itemprop="description" content="">
     </span>
@@ -253,7 +253,7 @@
     </span>
       <header class="post-header">
         <h1 class="post-title" itemprop="name headline">
-          Python sys vs os
+          C++: Rule of 3/5/0
         </h1>
 
         <div class="post-meta">
@@ -263,14 +263,14 @@
               </span>
               <span class="post-meta-item-text">发表于</span>
 
-              <time title="创建时间：2023-08-12 15:17:00" itemprop="dateCreated datePublished" datetime="2023-08-12T15:17:00+08:00">2023-08-12</time>
+              <time title="创建时间：2024-03-24 22:42:00" itemprop="dateCreated datePublished" datetime="2024-03-24T22:42:00+08:00">2024-03-24</time>
             </span>
               <span class="post-meta-item">
                 <span class="post-meta-item-icon">
                   <i class="far fa-calendar-check"></i>
                 </span>
                 <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2024-03-15 16:31:51" itemprop="dateModified" datetime="2024-03-15T16:31:51+08:00">2024-03-15</time>
+                <time title="修改时间：2024-03-25 10:42:03" itemprop="dateModified" datetime="2024-03-25T10:42:03+08:00">2024-03-25</time>
               </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
@@ -278,7 +278,7 @@
               </span>
               <span class="post-meta-item-text">分类于</span>
                 <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="../../categories/programming/" itemprop="url" rel="index"><span itemprop="name">programming</span></a>
+                  <a href="../../../categories/programming/" itemprop="url" rel="index"><span itemprop="name">programming</span></a>
                 </span>
             </span>
 
@@ -288,14 +288,14 @@
                 <i class="far fa-file-word"></i>
               </span>
                 <span class="post-meta-item-text">本文字数：</span>
-              <span>147</span>
+              <span>446</span>
             </span>
             <span class="post-meta-item" title="阅读时长">
               <span class="post-meta-item-icon">
                 <i class="far fa-clock"></i>
               </span>
                 <span class="post-meta-item-text">阅读时长 &asymp;</span>
-              <span>1 分钟</span>
+              <span>2 分钟</span>
             </span>
 
         </div>
@@ -307,12 +307,30 @@
     <div class="post-body" itemprop="articleBody">
 
       
-        <p>sys 可以访问解释器（运行时功能）和系统特定功能（系统有关功能）。os 提供了操作系统上的统一抽象（系统无关功能）。</p>
-<ul>
-<li>解释器功能：比如 <code>sys.argv</code> 访问命令行参数，<code>sys.exit()</code> 退出程序，<code>sys.path</code> 是 python 包的查询路径，<code>sys.stdin/sys.stdout/sys.stderr</code> 分别表示三个系统管道。</li>
-<li>系统有关功能：比如 <code>sys.getwindowsversion</code> 可以得到 windows 的大小版本号。<code>sys.platform</code> 可以获得操作系统平台。<code>sys.version</code> 是 python 安装信息。</li>
-<li>系统无关功能：操作文件系统，path 分隔符，环境变量等。</li>
-</ul>
+        <p><a target="_blank" rel="noopener" href="https://en.cppreference.com/w/cpp/language/rule_of_three">https://en.cppreference.com/w/cpp/language/rule_of_three</a></p>
+<h1 id="Rule-of-3"><a href="#Rule-of-3" class="headerlink" title="Rule of 3"></a>Rule of 3</h1><p>析构函数、拷贝构造、拷贝赋值三者要是定义了其一，最好把其他两个都补上，因为编译生成的很可能不是我们想要的。此外，<strong>定义三者之一会导致移动构造、移动赋值被删除</strong>。</p>
+<blockquote>
+<p style="margin-bottom: 0px"><font size="+1">💡<strong> Tip</strong></font></p>
+<p>复制&#x2F;移动赋值操作符可以用复制&#x2F;移动构造函数 + <code>std::swap</code> 实现。</p>
+</blockquote>
+<h1 id="Rule-of-5"><a href="#Rule-of-5" class="headerlink" title="Rule of 5"></a>Rule of 5</h1><p>还要加上移动构造和移动赋值（如果这个类不需要移动，或者移动和拷贝的过程完全一样，那就算了）。<a target="_blank" rel="noopener" href="https://isocpp.github.io/CppCoreGuidelines/CppCoreGuidelines#c21-if-you-define-or-delete-any-copy-move-or-destructor-function-define-or-delete-them-all">C++ Core Guidelines C.21</a> 中建议在碰了其中一个时，将它们全部删除或者全部定义。</p>
+<blockquote>
+<p>Unlike Rule of Three, failing to provide move constructor and move assignment is usually not an error, but a missed optimization opportunity.</p>
+</blockquote>
+<h1 id="Rule-of-0"><a href="#Rule-of-0" class="headerlink" title="Rule of 0"></a>Rule of 0</h1><p>析构函数、拷贝&#x2F;移动构造、拷贝&#x2F;移动赋值都不碰。如果要实现上允许，请尽可能这样做。</p>
+<h1 id="特殊成员函数的生成规则"><a href="#特殊成员函数的生成规则" class="headerlink" title="特殊成员函数的生成规则"></a>特殊成员函数的生成规则</h1><p>见 <a target="_blank" rel="noopener" href="https://en.wikipedia.org/wiki/Special_member_functions">Special_member_functions</a>：</p>
+<ol>
+<li>提供任何构造函数会禁止编译器生成默认构造函数。</li>
+<li>提供移动构造函数&#x2F;赋值操作符禁用拷贝构造函数、拷贝赋值操作符。</li>
+<li>提供 Rule of 5 中相关的任何一个会禁用编译器生成的移动构造函数、移动赋值操作符。</li>
+<li>提供析构函数会导致拷贝构造函数、拷贝赋值操作符被标记为过时。（就算用了也是不符合 Rule of 3 的。）</li>
+</ol>
+<p>简记：</p>
+<ol>
+<li><strong>任何构造</strong>函数都会禁用<strong>默认构造</strong>函数（的自动生成）。</li>
+<li>提供<strong>移动</strong>系列会禁用<strong>拷贝</strong>系列（的自动生成）。</li>
+<li>提供 <strong>Rule of 5 中任何一个</strong> 都会禁用<strong>移动</strong>系列（的自动生成）。</li>
+</ol>
 
     </div>
 
@@ -322,7 +340,7 @@
 
       <footer class="post-footer">
           <div class="post-tags">
-              <a href="../../tags/python/" rel="tag"># python</a>
+              <a href="../../../tags/cpp/" rel="tag"># cpp</a>
           </div>
 
         
@@ -331,13 +349,10 @@
         
     <div class="post-nav">
       <div class="post-nav-item">
-    <a href="python-%E8%BD%AC%E7%BD%AE%E7%9F%A9%E9%98%B5.html" rel="prev" title="Python 转置矩阵">
-      <i class="fa fa-chevron-left"></i> Python 转置矩阵
+    <a href="../cppcon/cppcon-2023-c-memory-model-from-c-11-to-c-23-alex-dathskovsky.html" rel="prev" title="CppCon 2023 C++ Memory Model - from C++11 to C++23 - Alex Dathskovsky">
+      <i class="fa fa-chevron-left"></i> CppCon 2023 C++ Memory Model - from C++11 to C++23 - Alex Dathskovsky
     </a></div>
-      <div class="post-nav-item">
-    <a href="python-slots.html" rel="next" title="Python __slots__">
-      Python __slots__ <i class="fa fa-chevron-right"></i>
-    </a></div>
+      <div class="post-nav-item"></div>
     </div>
       </footer>
     
@@ -396,6 +411,7 @@
 
       <!--noindex-->
       <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#Rule-of-3"><span class="nav-text">Rule of 3</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Rule-of-5"><span class="nav-text">Rule of 5</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Rule-of-0"><span class="nav-text">Rule of 0</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E7%89%B9%E6%AE%8A%E6%88%90%E5%91%98%E5%87%BD%E6%95%B0%E7%9A%84%E7%94%9F%E6%88%90%E8%A7%84%E5%88%99"><span class="nav-text">特殊成员函数的生成规则</span></a></li></ol></div>
       </div>
       <!--/noindex-->
 
@@ -407,20 +423,20 @@
 <div class="site-state-wrap motion-element">
   <nav class="site-state">
       <div class="site-state-item site-state-posts">
-          <a href="../../archives/">
+          <a href="../../../archives/">
         
           <span class="site-state-item-count">224</span>
           <span class="site-state-item-name">日志</span>
         </a>
       </div>
       <div class="site-state-item site-state-categories">
-            <a href="../../categories/">
+            <a href="../../../categories/">
           
         <span class="site-state-item-count">6</span>
         <span class="site-state-item-name">分类</span></a>
       </div>
       <div class="site-state-item site-state-tags">
-            <a href="../../tags/">
+            <a href="../../../tags/">
           
         <span class="site-state-item-count">49</span>
         <span class="site-state-item-name">标签</span></a>
@@ -435,7 +451,7 @@
         <a href="https://stackoverflow.com/users/13785815" title="StackOverflow → https:&#x2F;&#x2F;stackoverflow.com&#x2F;users&#x2F;13785815" rel="noopener" target="_blank"><i class="fab fa-stack-overflow fa-fw"></i></a>
       </span>
       <span class="links-of-author-item">
-        <a href="../../mailto:simooncake@gmail.com" title="Email → mailto:simooncake@gmail.com" rel="noopener" target="_blank"><i class="fa fa-envelope fa-fw"></i></a>
+        <a href="../../../mailto:simooncake@gmail.com" title="Email → mailto:simooncake@gmail.com" rel="noopener" target="_blank"><i class="fa fa-envelope fa-fw"></i></a>
       </span>
   </div>
 
@@ -495,31 +511,31 @@
   </div>
 
   
-  <script src="../../lib/anime.min.js"></script>
+  <script src="../../../lib/anime.min.js"></script>
   <script src="//cdn.jsdelivr.net/npm/pangu@4/dist/browser/pangu.min.js"></script>
-  <script src="../../lib/velocity/velocity.min.js"></script>
-  <script src="../../lib/velocity/velocity.ui.min.js"></script>
+  <script src="../../../lib/velocity/velocity.min.js"></script>
+  <script src="../../../lib/velocity/velocity.ui.min.js"></script>
 
-<script src="../../js/utils.js"></script>
+<script src="../../../js/utils.js"></script>
 
-<script src="../../js/motion.js"></script>
-
-
-<script src="../../js/schemes/pisces.js"></script>
+<script src="../../../js/motion.js"></script>
 
 
-<script src="../../js/next-boot.js"></script>
+<script src="../../../js/schemes/pisces.js"></script>
 
 
-
-
-  
+<script src="../../../js/next-boot.js"></script>
 
 
 
 
   
-<script src="../../js/local-search.js"></script>
+
+
+
+
+  
+<script src="../../../js/local-search.js"></script>
 
 
 

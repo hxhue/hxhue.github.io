@@ -23,20 +23,20 @@
     var CONFIG = {"hostname":"hxhue.github.io","root":"/","scheme":"Gemini","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"always","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":true,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":true,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},"path":"search.xml"};
   </script>
 
-  <meta name="description" content="演化C++11虽然有了 auto 关键字，但是用起来还是需要 trailing return type 声明。 C++14可以省略尾部声明： 12auto f()         &#123; return 42; &#125; &#x2F;&#x2F; #1auto f() -&gt; auto &#123; return 42; &#125; &#x2F;&#x2F; #2  #1 相当于 #2。这在 lambda 中是被默认启用的">
+  <meta name="description" content="C++11虽然有了 auto 关键字，但是用起来还是需要 trailing return type 声明。 C++14可以省略尾部声明： 12auto f()         &#123; return 42; &#125; &#x2F;&#x2F; #1auto f() -&gt; auto &#123; return 42; &#125; &#x2F;&#x2F; #2  #1 相当于 #2。这在 lambda 中是被默认启用的（即">
 <meta property="og:type" content="article">
-<meta property="og:title" content="lambda">
-<meta property="og:url" content="https://hxhue.github.io/programming/cpp/cpplang/lambda.html">
-<meta property="og:site_name" content="没想好标题">
-<meta property="og:description" content="演化C++11虽然有了 auto 关键字，但是用起来还是需要 trailing return type 声明。 C++14可以省略尾部声明： 12auto f()         &#123; return 42; &#125; &#x2F;&#x2F; #1auto f() -&gt; auto &#123; return 42; &#125; &#x2F;&#x2F; #2  #1 相当于 #2。这在 lambda 中是被默认启用的">
+<meta property="og:title" content="Lambda 在各 C++ 版本的演进">
+<meta property="og:url" content="https://hxhue.github.io/programming/cpp/cpplang/lambda-%E5%9C%A8%E5%90%84-c-%E7%89%88%E6%9C%AC%E7%9A%84%E6%BC%94%E8%BF%9B.html">
+<meta property="og:site_name" content="Bluegill">
+<meta property="og:description" content="C++11虽然有了 auto 关键字，但是用起来还是需要 trailing return type 声明。 C++14可以省略尾部声明： 12auto f()         &#123; return 42; &#125; &#x2F;&#x2F; #1auto f() -&gt; auto &#123; return 42; &#125; &#x2F;&#x2F; #2  #1 相当于 #2。这在 lambda 中是被默认启用的（即">
 <meta property="og:locale" content="zh_CN">
 <meta property="article:published_time" content="2023-08-12T07:17:00.000Z">
-<meta property="article:modified_time" content="2024-03-15T11:24:17.050Z">
-<meta property="article:author" content="(╹ڡ╹ )">
+<meta property="article:modified_time" content="2024-03-24T07:11:17.995Z">
+<meta property="article:author" content="😋">
 <meta property="article:tag" content="cpp">
 <meta name="twitter:card" content="summary">
 
-<link rel="canonical" href="https://hxhue.github.io/programming/cpp/cpplang/lambda.html">
+<link rel="canonical" href="https://hxhue.github.io/programming/cpp/cpplang/lambda-%E5%9C%A8%E5%90%84-c-%E7%89%88%E6%9C%AC%E7%9A%84%E6%BC%94%E8%BF%9B.html">
 
 
 <script id="page-configurations">
@@ -49,7 +49,7 @@
   };
 </script>
 
-  <title>lambda | 没想好标题</title>
+  <title>Lambda 在各 C++ 版本的演进 | Bluegill</title>
   
 
 
@@ -81,10 +81,38 @@
 </noscript>
 
 <!-- hexo injector head_end start -->
+<script type="text/javascript">
+(function() {
+  const urls = [
+    'https://images.unsplash.com/photo-1561174356-638d86f24f04',    // Ferris Wheel
+    'https://images.unsplash.com/photo-1561435194-d8f04c16a766',    // Leaves
+    'https://images.unsplash.com/photo-1553395572-0ef353a212bf',    // Tomato
+    'https://images.unsplash.com/photo-1553358961-37aa918d326a',    // Sandwich
+    'https://images.unsplash.com/photo-1559525839-b184a4d698c7',    // Coffee Bean
+    'https://images.unsplash.com/photo-1559181567-c3190ca9959b',    // Cherry
+    'https://images.unsplash.com/photo-1585752379769-801711aaf836', // Coffee
+  ]
+  const setBackground = () => {
+    const url = urls[new Date().getUTCDay()];
+    const main = document.querySelector('main');
+    main.style['background']            = "url('" + url + "')";
+    main.style['background-repeat']     = 'no-repeat';
+    main.style['background-size']       = 'cover';
+    main.style['background-attachment'] = 'fixed';
+    main.style['background-position']   = 'center';
+    // Add credit
+    const poweredBy = document.querySelector('body > div > footer > div > div.powered-by');
+    const credit = document.createElement('div');
+    credit.innerHTML = '✨The background is from https://unsplash.com/@picoftasty.';
+    poweredBy.parentElement.insertBefore(credit, poweredBy);
+  };
+  setTimeout(setBackground, 0);
+})();
+</script>
     <style>
       a, code { word-break: break-all; }
     </style>
-    <!-- hexo injector head_end end --><link rel="alternate" href="atom.xml" title="没想好标题" type="application/atom+xml">
+    <!-- hexo injector head_end end --><link rel="alternate" href="atom.xml" title="Bluegill" type="application/atom+xml">
 </head>
 
 <body itemscope itemtype="http://schema.org/WebPage">
@@ -105,7 +133,7 @@
 
     <a href="/" class="brand" rel="start">
       <span class="logo-line-before"><i></i></span>
-      <h1 class="site-title">没想好标题</h1>
+      <h1 class="site-title">Bluegill</h1>
       <span class="logo-line-after"><i></i></span>
     </a>
   </div>
@@ -212,20 +240,20 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="https://hxhue.github.io/programming/cpp/cpplang/lambda.html">
+    <link itemprop="mainEntityOfPage" href="https://hxhue.github.io/programming/cpp/cpplang/lambda-%E5%9C%A8%E5%90%84-c-%E7%89%88%E6%9C%AC%E7%9A%84%E6%BC%94%E8%BF%9B.html">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="image" content="../../../images/avatar.gif">
-      <meta itemprop="name" content="(╹ڡ╹ )">
+      <meta itemprop="name" content="😋">
       <meta itemprop="description" content="">
     </span>
 
     <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="没想好标题">
+      <meta itemprop="name" content="Bluegill">
     </span>
       <header class="post-header">
         <h1 class="post-title" itemprop="name headline">
-          lambda
+          Lambda 在各 C++ 版本的演进
         </h1>
 
         <div class="post-meta">
@@ -242,7 +270,7 @@
                   <i class="far fa-calendar-check"></i>
                 </span>
                 <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2024-03-15 19:24:17" itemprop="dateModified" datetime="2024-03-15T19:24:17+08:00">2024-03-15</time>
+                <time title="修改时间：2024-03-24 15:11:17" itemprop="dateModified" datetime="2024-03-24T15:11:17+08:00">2024-03-24</time>
               </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
@@ -260,14 +288,14 @@
                 <i class="far fa-file-word"></i>
               </span>
                 <span class="post-meta-item-text">本文字数：</span>
-              <span>738</span>
+              <span>1.1k</span>
             </span>
             <span class="post-meta-item" title="阅读时长">
               <span class="post-meta-item-icon">
                 <i class="far fa-clock"></i>
               </span>
                 <span class="post-meta-item-text">阅读时长 &asymp;</span>
-              <span>3 分钟</span>
+              <span>4 分钟</span>
             </span>
 
         </div>
@@ -279,19 +307,26 @@
     <div class="post-body" itemprop="articleBody">
 
       
-        <h1 id="演化"><a href="#演化" class="headerlink" title="演化"></a>演化</h1><h2 id="C-11"><a href="#C-11" class="headerlink" title="C++11"></a>C++11</h2><p>虽然有了 auto 关键字，但是用起来还是需要 trailing return type 声明。</p>
-<h2 id="C-14"><a href="#C-14" class="headerlink" title="C++14"></a>C++14</h2><p>可以省略尾部声明：</p>
+        <h1 id="C-11"><a href="#C-11" class="headerlink" title="C++11"></a>C++11</h1><p>虽然有了 auto 关键字，但是用起来还是需要 trailing return type 声明。</p>
+<h1 id="C-14"><a href="#C-14" class="headerlink" title="C++14"></a>C++14</h1><p>可以省略尾部声明：</p>
 <figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">auto</span> <span class="title">f</span><span class="params">()</span>         </span>&#123; <span class="keyword">return</span> <span class="number">42</span>; &#125; <span class="comment">// #1</span></span><br><span class="line"><span class="function"><span class="keyword">auto</span> <span class="title">f</span><span class="params">()</span> -&gt; <span class="keyword">auto</span> </span>&#123; <span class="keyword">return</span> <span class="number">42</span>; &#125; <span class="comment">// #2</span></span><br></pre></td></tr></table></figure>
 
 <p><code>#1</code> 相当于 <code>#2</code>。这在 lambda 中是被默认启用的（即便是 C++11 也支持），因而我们写 lambda 经常不必提供返回值类型。例外：但是在构造递归 lambda 时需要显式声明返回值类型，或者先用 <code>function</code> 模板类存储起来，类型也就能从 <code>function</code> 中推导。</p>
-<h2 id="C-20"><a href="#C-20" class="headerlink" title="C++20"></a>C++20</h2><p><strong>支持给 lambda 声明模板参数</strong>。比如：<code>auto f = []&lt;typename T&gt;( T t ) &#123;&#125;;</code></p>
+<p>同时 C++14 还支持 generic lambda，即使用 auto 作为函数参数的类型。</p>
+<h1 id="C-20"><a href="#C-20" class="headerlink" title="C++20"></a>C++20</h1><h2 id="支持给-lambda-声明模板参数"><a href="#支持给-lambda-声明模板参数" class="headerlink" title="支持给 lambda 声明模板参数"></a>支持给 lambda 声明模板参数</h2><p>比如：<code>auto f = []&lt;typename T&gt;( T t ) &#123;&#125;;</code>。</p>
 <p>这样 <code>f</code> 对象内部就有一个调用操作符模板。可以使用 <code>f.template operator()&lt;T&gt;(t)</code> 访问，当 <code>T</code> 能被推导时模板参数列表可以省略。与之前的 auto 类型参数相比，这项改动使得我们可以添加一些不能从函数参数中推导出来的模板参数（想一想 <code>std::make_shared</code> 函数模板也无法得知将要创建的对象类型，因而需要手动指定）。</p>
-<p>可以用 <code>...args=</code> <strong>初始化语法</strong>指定表达式（这样使用移动或者转发），以前版本捕获 <code>args...</code> 参数时只能通过复制。</p>
-<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">template</span> &lt;<span class="keyword">class</span>... Args&gt;</span><br><span class="line"><span class="function"><span class="keyword">auto</span> <span class="title">delay_invoke_foo</span><span class="params">(Args... args)</span> </span>&#123;</span><br><span class="line">    <span class="keyword">return</span> [...args=std::<span class="built_in">move</span>(args)](args)) -&gt; <span class="keyword">decltype</span>(<span class="keyword">auto</span>) &#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="built_in">foo</span>(args...);</span><br><span class="line">    &#125;;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>有了这个功能，现在就可以用 <code>decltype</code> + lambda 去干以前类模板偏特化才能做到的匹配工作（本来用函数模板也可以，但是为了做一次匹配就要给函数模板取一个名字，比较麻烦）：</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;cstddef&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;utility&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;variant&gt;</span></span></span><br><span class="line"></span><br><span class="line"><span class="keyword">template</span> &lt;<span class="type">size_t</span> N&gt; <span class="keyword">struct</span> <span class="title class_">A</span> &#123;&#125;;</span><br><span class="line"></span><br><span class="line"><span class="keyword">template</span> &lt;<span class="type">size_t</span> N&gt;</span><br><span class="line"><span class="keyword">using</span> VariantOfEmptyClasses =</span><br><span class="line">    <span class="keyword">decltype</span>([]&lt;<span class="type">size_t</span>... Ns&gt;(std::index_sequence&lt;Ns...&gt;) &#123;</span><br><span class="line">      <span class="keyword">return</span> std::variant&lt;A&lt;Ns&gt;...&gt;&#123;&#125;;</span><br><span class="line">    &#125;(std::<span class="built_in">make_index_sequence</span>&lt;N&gt;()));</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="type">int</span> <span class="title">main</span><span class="params">()</span> </span>&#123;</span><br><span class="line">  <span class="built_in">static_assert</span>(<span class="built_in">sizeof</span>(A&lt;<span class="number">0</span>&gt;) == <span class="number">1</span>);</span><br><span class="line">  <span class="built_in">static_assert</span>(<span class="built_in">sizeof</span>(VariantOfEmptyClasses&lt;<span class="number">1</span>&gt;) == <span class="number">2</span>);</span><br><span class="line">  <span class="built_in">static_assert</span>(<span class="built_in">sizeof</span>(VariantOfEmptyClasses&lt;<span class="number">255</span>&gt;) == <span class="number">2</span>);</span><br><span class="line">  <span class="built_in">static_assert</span>(<span class="built_in">sizeof</span>(VariantOfEmptyClasses&lt;<span class="number">256</span>&gt;) == <span class="number">4</span>);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 
-<h2 id="C-23"><a href="#C-23" class="headerlink" title="C++23"></a>C++23</h2><p>有了 explicit object parameter（毕竟 lambda 也是匿名对象）。</p>
-<h1 id="语法"><a href="#语法" class="headerlink" title="语法"></a>语法</h1><p>现在 lambda 已经可以复杂成这样了：</p>
-<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;cstdio&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;type_traits&gt;</span></span></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="type">int</span> <span class="title">main</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    <span class="comment">// 在这个例子上没什么用，但是可以写这么长</span></span><br><span class="line">    <span class="keyword">auto</span> f = [] &lt;<span class="keyword">typename</span> T&gt; </span><br><span class="line">        <span class="built_in">requires</span>(std::is_standard_layout_v&lt;T&gt; &amp;&amp; std::is_trivial_v&lt;T&gt;) </span><br><span class="line">        [[nodiscard]] <span class="built_in">alignas</span>(<span class="number">8</span>) </span><br><span class="line">        (T i) -&gt; T &#123; <span class="keyword">return</span> i; &#125;;</span><br><span class="line">    </span><br><span class="line">    <span class="built_in">printf</span>(<span class="string">&quot;%f\n&quot;</span>, <span class="built_in">f</span>(<span class="number">4.0</span>));</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h2 id="args"><a href="#args" class="headerlink" title="...args"></a><code>...args</code></h2><p>还可以用 <code>...args=</code> <strong>初始化语法</strong>指定表达式，这样就可以自己选用移动或者转发，而以前版本捕获 <code>args...</code> 参数时只能通过复制（除非将他们包装在一个新的结构，比如 <code>std::tuple</code> 中）。</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">template</span> &lt;<span class="keyword">class</span> <span class="title class_">F</span>, <span class="keyword">class</span>... Args&gt; <span class="function"><span class="keyword">auto</span> <span class="title">bind_all</span><span class="params">(F f, Args... args)</span> </span>&#123;</span><br><span class="line">  <span class="keyword">return</span> [f = std::<span class="built_in">move</span>(f), ... args = std::<span class="built_in">move</span>(args)]() -&gt; <span class="keyword">decltype</span>(<span class="keyword">auto</span>) &#123;</span><br><span class="line">    <span class="keyword">return</span> <span class="built_in">f</span>(args...);</span><br><span class="line">  &#125;;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>以前需要这样做：</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">template</span> &lt;<span class="keyword">class</span> <span class="title class_">F</span>, <span class="keyword">class</span>... Args&gt; <span class="function"><span class="keyword">auto</span> <span class="title">bind_all</span><span class="params">(F f, Args... args)</span> </span>&#123;</span><br><span class="line">  <span class="keyword">return</span> [f = std::<span class="built_in">move</span>(f),</span><br><span class="line">          t = std::tuple&#123;std::<span class="built_in">move</span>(args)...&#125;]() -&gt; <span class="keyword">decltype</span>(<span class="keyword">auto</span>) &#123;</span><br><span class="line">    std::<span class="built_in">apply</span>(f, t);</span><br><span class="line">  &#125;;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h1 id="C-23"><a href="#C-23" class="headerlink" title="C++23"></a>C++23</h1><p>有了 explicit object parameter（毕竟 lambda 也是匿名对象）。</p>
+<h1 id="总体来看"><a href="#总体来看" class="headerlink" title="总体来看"></a>总体来看</h1><p>现在 lambda 已经可以复杂成这样了：</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;cstdio&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;type_traits&gt;</span></span></span><br><span class="line"></span><br><span class="line"><span class="keyword">template</span> &lt;<span class="keyword">typename</span> T&gt;</span><br><span class="line"><span class="keyword">concept</span> POD = std::is_standard_layout_v&lt;T&gt; &amp;&amp; std::is_trivial_v&lt;T&gt;;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="type">int</span> <span class="title">main</span><span class="params">()</span> </span>&#123;</span><br><span class="line">  <span class="keyword">auto</span> add_pod = []&lt;POD T&gt;</span><br><span class="line">    <span class="built_in">requires</span>(POD&lt;T&gt;)</span><br><span class="line">            [[nodiscard]] (T i, POD <span class="keyword">auto</span> j) <span class="keyword">noexcept</span> -&gt; <span class="keyword">auto</span></span><br><span class="line">              <span class="built_in">requires</span>(POD&lt;T&gt;)</span><br><span class="line">  &#123; <span class="keyword">return</span> i + j; &#125;;</span><br><span class="line"></span><br><span class="line">  <span class="built_in">printf</span>(<span class="string">&quot;%f\n&quot;</span>, <span class="built_in">add_pod</span>(<span class="number">4.0</span>, <span class="number">2</span>));</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 
 <h1 id="实现递归"><a href="#实现递归" class="headerlink" title="实现递归"></a>实现递归</h1><h2 id="方案-1：Deducing-This"><a href="#方案-1：Deducing-This" class="headerlink" title="方案 1：Deducing This"></a>方案 1：Deducing This</h2><p>C++23 有了 explicit object parameter，不再需要捕获自己。现在可以这样实现：</p>
 <figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 在 MSVC 上编译成功（2023年5月24日）</span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;iostream&gt;</span></span></span><br><span class="line"><span class="function"><span class="type">int</span> <span class="title">main</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    <span class="comment">// 由于没有捕获任何变量，所以内部的f和外面的f重名也没有关系！</span></span><br><span class="line">    <span class="keyword">auto</span> f = [](<span class="keyword">this</span> <span class="keyword">auto</span> <span class="type">const</span> &amp;f, <span class="type">int</span> a) -&gt; <span class="type">int</span> &#123;</span><br><span class="line">        <span class="keyword">return</span> a &gt; <span class="number">0</span> ? a + <span class="built_in">f</span>(a - <span class="number">1</span>) : <span class="number">0</span>;</span><br><span class="line">    &#125;;</span><br><span class="line">    std::cout &lt;&lt; <span class="built_in">f</span>(<span class="number">10</span>) &lt;&lt; <span class="string">&#x27;\n&#x27;</span>; <span class="comment">// prints 55</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
@@ -299,10 +334,14 @@
 <h2 id="方案-2：-std-function-类模板"><a href="#方案-2：-std-function-类模板" class="headerlink" title="方案 2： std::function 类模板"></a>方案 2： <code>std::function</code> 类模板</h2><p>在 lambda 表达式外创建一个对象，这样就能把自己捕获进来。</p>
 <figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">std::function&lt;<span class="type">int</span>(<span class="type">int</span>)&gt; fibonacci = [&amp;](<span class="type">int</span> i) &#123;</span><br><span class="line">    <span class="keyword">return</span> i &lt; <span class="number">2</span> ? i : <span class="built_in">fibonacci</span>(i<span class="number">-1</span>) + <span class="built_in">fibonacci</span>(i<span class="number">-2</span>);</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
 
-<p>由于能够从 <code>std::function</code> 模板参数中推导 lambda 的返回值类型，所以 lambda 的 trailing return type 可以省略不写。事实上，只有 <code>fibonacci</code> 的类型已经确定了，lambda 中才能调用它，所以即便是写上 lambda 的尾返回值，<code>std::function</code> 的模板参数也不能被推导出来。</p>
-<h2 id="方案-3：显式传入函数"><a href="#方案-3：显式传入函数" class="headerlink" title="方案 3：显式传入函数"></a>方案 3：显式传入函数</h2><figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">auto</span> fibonacci = [&amp;] (<span class="keyword">auto</span> <span class="type">const</span> &amp;f, <span class="type">int</span> i) -&gt; <span class="type">int</span> &#123;</span><br><span class="line">    <span class="keyword">return</span> i &lt; <span class="number">2</span> ? i : <span class="built_in">f</span>(f, i<span class="number">-1</span>) + <span class="built_in">f</span>(f, i<span class="number">-2</span>);</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+<p>由于能够从 <code>std::function</code> 模板参数中得知 <code>fibonacci</code> 的返回类型，从而 lambda 的返回类型可知，trailing return type（也就是 <code>-&gt;</code>）可以省略不写。</p>
+<p>另外一方面，只有 <code>fibonacci</code> 的类型已经确定了，才能在 lambda 中调用它，所以即便是写上 lambda 的尾返回值，<code>std::function</code> 的模板参数也不能被推导出来，所以 <code>std::function</code> 的模板参数是不可以省略的。（<code>std::function f = main;</code> 就可以省略模板参数。）</p>
+<p>缺点：函数的参数类型重复了两次，含有冗余信息。</p>
+<h2 id="方案-3：显式传入函数对象"><a href="#方案-3：显式传入函数对象" class="headerlink" title="方案 3：显式传入函数对象"></a>方案 3：显式传入函数对象</h2><figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">auto</span> fibonacci = [&amp;] (<span class="keyword">auto</span> <span class="type">const</span> &amp;f, <span class="type">int</span> i) -&gt; <span class="type">int</span> &#123;</span><br><span class="line">    <span class="keyword">return</span> i &lt; <span class="number">2</span> ? i : <span class="built_in">f</span>(f, i<span class="number">-1</span>) + <span class="built_in">f</span>(f, i<span class="number">-2</span>);</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
 
-<p>调用的时候就要多传一个 <code>fibonacci</code> 函数对象本身作为参数了。为什么这里不像方案 2 一样需要提前知道函数的类型呢？因为 auto 推导让这个函数模板中的代码生成延后到了第二阶段。</p>
+<p>调用的时候就要多传一个 <code>fibonacci</code> 函数对象本身作为参数了。为什么这里不像方案 2 一样需要提前知道函数的类型呢？因为 auto 推导（generic lambda）的代码生成过程是模板二阶段编译中的第二阶段。</p>
+<p>这里的返回值类型也是必须要加的（不能是 <code>-&gt; auto</code>），因为使用 <code>f</code> 时必须知道 <code>f</code> 的返回类型，不给全信息是不行的。</p>
+<p>缺点：写法不够直观，得到的函数对象在调用时需要额外将自己作为第一个参数传递。</p>
 
     </div>
 
@@ -321,12 +360,12 @@
         
     <div class="post-nav">
       <div class="post-nav-item">
-    <a href="noexcept-throw.html" rel="prev" title="noexcept + throw">
-      <i class="fa fa-chevron-left"></i> noexcept + throw
+    <a href="../cpp-templates-the-complete-guide/0-d-standard-type-utilities.html" rel="prev" title="CTTCG 附录 D Standard Type Utilities">
+      <i class="fa fa-chevron-left"></i> CTTCG 附录 D Standard Type Utilities
     </a></div>
       <div class="post-nav-item">
-    <a href="enum-class.html" rel="next" title="enum class">
-      enum class <i class="fa fa-chevron-right"></i>
+    <a href="../inside-the-cpp-object-model/%E9%9D%9E%E8%87%AA%E5%8A%A8%E5%8F%98%E9%87%8F%E5%88%9D%E5%A7%8B%E5%8C%96.html" rel="next" title="非自动变量初始化">
+      非自动变量初始化 <i class="fa fa-chevron-right"></i>
     </a></div>
     </div>
       </footer>
@@ -386,13 +425,13 @@
 
       <!--noindex-->
       <div class="post-toc-wrap sidebar-panel">
-          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#%E6%BC%94%E5%8C%96"><span class="nav-text">演化</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#C-11"><span class="nav-text">C++11</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#C-14"><span class="nav-text">C++14</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#C-20"><span class="nav-text">C++20</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#C-23"><span class="nav-text">C++23</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E8%AF%AD%E6%B3%95"><span class="nav-text">语法</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%AE%9E%E7%8E%B0%E9%80%92%E5%BD%92"><span class="nav-text">实现递归</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%96%B9%E6%A1%88-1%EF%BC%9ADeducing-This"><span class="nav-text">方案 1：Deducing This</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%96%B9%E6%A1%88-2%EF%BC%9A-std-function-%E7%B1%BB%E6%A8%A1%E6%9D%BF"><span class="nav-text">方案 2： std::function 类模板</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%96%B9%E6%A1%88-3%EF%BC%9A%E6%98%BE%E5%BC%8F%E4%BC%A0%E5%85%A5%E5%87%BD%E6%95%B0"><span class="nav-text">方案 3：显式传入函数</span></a></li></ol></li></ol></div>
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#C-11"><span class="nav-text">C++11</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#C-14"><span class="nav-text">C++14</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#C-20"><span class="nav-text">C++20</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%94%AF%E6%8C%81%E7%BB%99-lambda-%E5%A3%B0%E6%98%8E%E6%A8%A1%E6%9D%BF%E5%8F%82%E6%95%B0"><span class="nav-text">支持给 lambda 声明模板参数</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#args"><span class="nav-text">...args</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#C-23"><span class="nav-text">C++23</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E6%80%BB%E4%BD%93%E6%9D%A5%E7%9C%8B"><span class="nav-text">总体来看</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%AE%9E%E7%8E%B0%E9%80%92%E5%BD%92"><span class="nav-text">实现递归</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%96%B9%E6%A1%88-1%EF%BC%9ADeducing-This"><span class="nav-text">方案 1：Deducing This</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%96%B9%E6%A1%88-2%EF%BC%9A-std-function-%E7%B1%BB%E6%A8%A1%E6%9D%BF"><span class="nav-text">方案 2： std::function 类模板</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%96%B9%E6%A1%88-3%EF%BC%9A%E6%98%BE%E5%BC%8F%E4%BC%A0%E5%85%A5%E5%87%BD%E6%95%B0%E5%AF%B9%E8%B1%A1"><span class="nav-text">方案 3：显式传入函数对象</span></a></li></ol></li></ol></div>
       </div>
       <!--/noindex-->
 
       <div class="site-overview-wrap sidebar-panel">
         <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
-  <p class="site-author-name" itemprop="name">(╹ڡ╹ )</p>
+  <p class="site-author-name" itemprop="name">😋</p>
   <div class="site-description" itemprop="description"></div>
 </div>
 <div class="site-state-wrap motion-element">
@@ -400,7 +439,7 @@
       <div class="site-state-item site-state-posts">
           <a href="../../../archives/">
         
-          <span class="site-state-item-count">223</span>
+          <span class="site-state-item-count">224</span>
           <span class="site-state-item-name">日志</span>
         </a>
       </div>
@@ -455,22 +494,22 @@
   <span class="with-love">
     <i class="fa fa-heart"></i>
   </span>
-  <span class="author" itemprop="copyrightHolder">(╹ڡ╹ )</span>
+  <span class="author" itemprop="copyrightHolder">😋</span>
     <span class="post-meta-divider">|</span>
     <span class="post-meta-item-icon">
       <i class="fa fa-chart-area"></i>
     </span>
       <span class="post-meta-item-text">站点总字数：</span>
-    <span title="站点总字数">132k</span>
+    <span title="站点总字数">133k</span>
     <span class="post-meta-divider">|</span>
     <span class="post-meta-item-icon">
       <i class="fa fa-coffee"></i>
     </span>
       <span class="post-meta-item-text">站点阅读时长 &asymp;</span>
-    <span title="站点阅读时长">8:01</span>
+    <span title="站点阅读时长">8:04</span>
 </div>
   <div class="powered-by">由 <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Gemini</a> 强力驱动
-  </div><script color="0,0,255" opacity="0.5" zIndex="-1" count="99" src="https://cdn.jsdelivr.net/npm/canvas-nest.js@1/dist/canvas-nest.js"></script>
+  </div>
 
         
 

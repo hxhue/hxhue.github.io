@@ -6820,41 +6820,6 @@ cmake --preset=&lt;preset&gt;
       </tags>
   </entry>
   <entry>
-    <title>lambda</title>
-    <url>/programming/cpp/cpplang/lambda.html</url>
-    <content><![CDATA[<h1 id="演化"><a href="#演化" class="headerlink" title="演化"></a>演化</h1><h2 id="C-11"><a href="#C-11" class="headerlink" title="C++11"></a>C++11</h2><p>虽然有了 auto 关键字，但是用起来还是需要 trailing return type 声明。</p>
-<h2 id="C-14"><a href="#C-14" class="headerlink" title="C++14"></a>C++14</h2><p>可以省略尾部声明：</p>
-<figure class="highlight cpp"><table><tr><td class="code"><pre><span class="line"><span class="function"><span class="keyword">auto</span> <span class="title">f</span><span class="params">()</span>         </span>&#123; <span class="keyword">return</span> <span class="number">42</span>; &#125; <span class="comment">// #1</span></span><br><span class="line"><span class="function"><span class="keyword">auto</span> <span class="title">f</span><span class="params">()</span> -&gt; <span class="keyword">auto</span> </span>&#123; <span class="keyword">return</span> <span class="number">42</span>; &#125; <span class="comment">// #2</span></span><br></pre></td></tr></table></figure>
-
-<p><code>#1</code> 相当于 <code>#2</code>。这在 lambda 中是被默认启用的（即便是 C++11 也支持），因而我们写 lambda 经常不必提供返回值类型。例外：但是在构造递归 lambda 时需要显式声明返回值类型，或者先用 <code>function</code> 模板类存储起来，类型也就能从 <code>function</code> 中推导。</p>
-<h2 id="C-20"><a href="#C-20" class="headerlink" title="C++20"></a>C++20</h2><p><strong>支持给 lambda 声明模板参数</strong>。比如：<code>auto f = []&lt;typename T&gt;( T t ) &#123;&#125;;</code></p>
-<p>这样 <code>f</code> 对象内部就有一个调用操作符模板。可以使用 <code>f.template operator()&lt;T&gt;(t)</code> 访问，当 <code>T</code> 能被推导时模板参数列表可以省略。与之前的 auto 类型参数相比，这项改动使得我们可以添加一些不能从函数参数中推导出来的模板参数（想一想 <code>std::make_shared</code> 函数模板也无法得知将要创建的对象类型，因而需要手动指定）。</p>
-<p>可以用 <code>...args=</code> <strong>初始化语法</strong>指定表达式（这样使用移动或者转发），以前版本捕获 <code>args...</code> 参数时只能通过复制。</p>
-<figure class="highlight cpp"><table><tr><td class="code"><pre><span class="line"><span class="keyword">template</span> &lt;<span class="keyword">class</span>... Args&gt;</span><br><span class="line"><span class="function"><span class="keyword">auto</span> <span class="title">delay_invoke_foo</span><span class="params">(Args... args)</span> </span>&#123;</span><br><span class="line">    <span class="keyword">return</span> [...args=std::<span class="built_in">move</span>(args)](args)) -&gt; <span class="keyword">decltype</span>(<span class="keyword">auto</span>) &#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="built_in">foo</span>(args...);</span><br><span class="line">    &#125;;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<h2 id="C-23"><a href="#C-23" class="headerlink" title="C++23"></a>C++23</h2><p>有了 explicit object parameter（毕竟 lambda 也是匿名对象）。</p>
-<h1 id="语法"><a href="#语法" class="headerlink" title="语法"></a>语法</h1><p>现在 lambda 已经可以复杂成这样了：</p>
-<figure class="highlight cpp"><table><tr><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;cstdio&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;type_traits&gt;</span></span></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="type">int</span> <span class="title">main</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    <span class="comment">// 在这个例子上没什么用，但是可以写这么长</span></span><br><span class="line">    <span class="keyword">auto</span> f = [] &lt;<span class="keyword">typename</span> T&gt; </span><br><span class="line">        <span class="built_in">requires</span>(std::is_standard_layout_v&lt;T&gt; &amp;&amp; std::is_trivial_v&lt;T&gt;) </span><br><span class="line">        [[nodiscard]] <span class="built_in">alignas</span>(<span class="number">8</span>) </span><br><span class="line">        (T i) -&gt; T &#123; <span class="keyword">return</span> i; &#125;;</span><br><span class="line">    </span><br><span class="line">    <span class="built_in">printf</span>(<span class="string">&quot;%f\n&quot;</span>, <span class="built_in">f</span>(<span class="number">4.0</span>));</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<h1 id="实现递归"><a href="#实现递归" class="headerlink" title="实现递归"></a>实现递归</h1><h2 id="方案-1：Deducing-This"><a href="#方案-1：Deducing-This" class="headerlink" title="方案 1：Deducing This"></a>方案 1：Deducing This</h2><p>C++23 有了 explicit object parameter，不再需要捕获自己。现在可以这样实现：</p>
-<figure class="highlight cpp"><table><tr><td class="code"><pre><span class="line"><span class="comment">// 在 MSVC 上编译成功（2023年5月24日）</span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;iostream&gt;</span></span></span><br><span class="line"><span class="function"><span class="type">int</span> <span class="title">main</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    <span class="comment">// 由于没有捕获任何变量，所以内部的f和外面的f重名也没有关系！</span></span><br><span class="line">    <span class="keyword">auto</span> f = [](<span class="keyword">this</span> <span class="keyword">auto</span> <span class="type">const</span> &amp;f, <span class="type">int</span> a) -&gt; <span class="type">int</span> &#123;</span><br><span class="line">        <span class="keyword">return</span> a &gt; <span class="number">0</span> ? a + <span class="built_in">f</span>(a - <span class="number">1</span>) : <span class="number">0</span>;</span><br><span class="line">    &#125;;</span><br><span class="line">    std::cout &lt;&lt; <span class="built_in">f</span>(<span class="number">10</span>) &lt;&lt; <span class="string">&#x27;\n&#x27;</span>; <span class="comment">// prints 55</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<h2 id="方案-2：-std-function-类模板"><a href="#方案-2：-std-function-类模板" class="headerlink" title="方案 2： std::function 类模板"></a>方案 2： <code>std::function</code> 类模板</h2><p>在 lambda 表达式外创建一个对象，这样就能把自己捕获进来。</p>
-<figure class="highlight cpp"><table><tr><td class="code"><pre><span class="line">std::function&lt;<span class="type">int</span>(<span class="type">int</span>)&gt; fibonacci = [&amp;](<span class="type">int</span> i) &#123;</span><br><span class="line">    <span class="keyword">return</span> i &lt; <span class="number">2</span> ? i : <span class="built_in">fibonacci</span>(i<span class="number">-1</span>) + <span class="built_in">fibonacci</span>(i<span class="number">-2</span>);</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
-
-<p>由于能够从 <code>std::function</code> 模板参数中推导 lambda 的返回值类型，所以 lambda 的 trailing return type 可以省略不写。事实上，只有 <code>fibonacci</code> 的类型已经确定了，lambda 中才能调用它，所以即便是写上 lambda 的尾返回值，<code>std::function</code> 的模板参数也不能被推导出来。</p>
-<h2 id="方案-3：显式传入函数"><a href="#方案-3：显式传入函数" class="headerlink" title="方案 3：显式传入函数"></a>方案 3：显式传入函数</h2><figure class="highlight cpp"><table><tr><td class="code"><pre><span class="line"><span class="keyword">auto</span> fibonacci = [&amp;] (<span class="keyword">auto</span> <span class="type">const</span> &amp;f, <span class="type">int</span> i) -&gt; <span class="type">int</span> &#123;</span><br><span class="line">    <span class="keyword">return</span> i &lt; <span class="number">2</span> ? i : <span class="built_in">f</span>(f, i<span class="number">-1</span>) + <span class="built_in">f</span>(f, i<span class="number">-2</span>);</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
-
-<p>调用的时候就要多传一个 <code>fibonacci</code> 函数对象本身作为参数了。为什么这里不像方案 2 一样需要提前知道函数的类型呢？因为 auto 推导让这个函数模板中的代码生成延后到了第二阶段。</p>
-]]></content>
-      <categories>
-        <category>programming</category>
-      </categories>
-      <tags>
-        <tag>cpp</tag>
-      </tags>
-  </entry>
-  <entry>
     <title>noexcept + throw</title>
     <url>/programming/cpp/cpplang/noexcept-throw.html</url>
     <content><![CDATA[<p>noexcept 有几个用法：</p>
@@ -8224,6 +8189,87 @@ cmake --preset=&lt;preset&gt;
       </categories>
       <tags>
         <tag>gitlab-jh</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>Lambda 在各 C++ 版本的演进</title>
+    <url>/programming/cpp/cpplang/lambda-%E5%9C%A8%E5%90%84-c-%E7%89%88%E6%9C%AC%E7%9A%84%E6%BC%94%E8%BF%9B.html</url>
+    <content><![CDATA[<h1 id="C-11"><a href="#C-11" class="headerlink" title="C++11"></a>C++11</h1><p>虽然有了 auto 关键字，但是用起来还是需要 trailing return type 声明。</p>
+<h1 id="C-14"><a href="#C-14" class="headerlink" title="C++14"></a>C++14</h1><p>可以省略尾部声明：</p>
+<figure class="highlight cpp"><table><tr><td class="code"><pre><span class="line"><span class="function"><span class="keyword">auto</span> <span class="title">f</span><span class="params">()</span>         </span>&#123; <span class="keyword">return</span> <span class="number">42</span>; &#125; <span class="comment">// #1</span></span><br><span class="line"><span class="function"><span class="keyword">auto</span> <span class="title">f</span><span class="params">()</span> -&gt; <span class="keyword">auto</span> </span>&#123; <span class="keyword">return</span> <span class="number">42</span>; &#125; <span class="comment">// #2</span></span><br></pre></td></tr></table></figure>
+
+<p><code>#1</code> 相当于 <code>#2</code>。这在 lambda 中是被默认启用的（即便是 C++11 也支持），因而我们写 lambda 经常不必提供返回值类型。例外：但是在构造递归 lambda 时需要显式声明返回值类型，或者先用 <code>function</code> 模板类存储起来，类型也就能从 <code>function</code> 中推导。</p>
+<p>同时 C++14 还支持 generic lambda，即使用 auto 作为函数参数的类型。</p>
+<h1 id="C-20"><a href="#C-20" class="headerlink" title="C++20"></a>C++20</h1><h2 id="支持给-lambda-声明模板参数"><a href="#支持给-lambda-声明模板参数" class="headerlink" title="支持给 lambda 声明模板参数"></a>支持给 lambda 声明模板参数</h2><p>比如：<code>auto f = []&lt;typename T&gt;( T t ) &#123;&#125;;</code>。</p>
+<p>这样 <code>f</code> 对象内部就有一个调用操作符模板。可以使用 <code>f.template operator()&lt;T&gt;(t)</code> 访问，当 <code>T</code> 能被推导时模板参数列表可以省略。与之前的 auto 类型参数相比，这项改动使得我们可以添加一些不能从函数参数中推导出来的模板参数（想一想 <code>std::make_shared</code> 函数模板也无法得知将要创建的对象类型，因而需要手动指定）。</p>
+<p>有了这个功能，现在就可以用 <code>decltype</code> + lambda 去干以前类模板偏特化才能做到的匹配工作（本来用函数模板也可以，但是为了做一次匹配就要给函数模板取一个名字，比较麻烦）：</p>
+<figure class="highlight cpp"><table><tr><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;cstddef&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;utility&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;variant&gt;</span></span></span><br><span class="line"></span><br><span class="line"><span class="keyword">template</span> &lt;<span class="type">size_t</span> N&gt; <span class="keyword">struct</span> <span class="title class_">A</span> &#123;&#125;;</span><br><span class="line"></span><br><span class="line"><span class="keyword">template</span> &lt;<span class="type">size_t</span> N&gt;</span><br><span class="line"><span class="keyword">using</span> VariantOfEmptyClasses =</span><br><span class="line">    <span class="keyword">decltype</span>([]&lt;<span class="type">size_t</span>... Ns&gt;(std::index_sequence&lt;Ns...&gt;) &#123;</span><br><span class="line">      <span class="keyword">return</span> std::variant&lt;A&lt;Ns&gt;...&gt;&#123;&#125;;</span><br><span class="line">    &#125;(std::<span class="built_in">make_index_sequence</span>&lt;N&gt;()));</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="type">int</span> <span class="title">main</span><span class="params">()</span> </span>&#123;</span><br><span class="line">  <span class="built_in">static_assert</span>(<span class="built_in">sizeof</span>(A&lt;<span class="number">0</span>&gt;) == <span class="number">1</span>);</span><br><span class="line">  <span class="built_in">static_assert</span>(<span class="built_in">sizeof</span>(VariantOfEmptyClasses&lt;<span class="number">1</span>&gt;) == <span class="number">2</span>);</span><br><span class="line">  <span class="built_in">static_assert</span>(<span class="built_in">sizeof</span>(VariantOfEmptyClasses&lt;<span class="number">255</span>&gt;) == <span class="number">2</span>);</span><br><span class="line">  <span class="built_in">static_assert</span>(<span class="built_in">sizeof</span>(VariantOfEmptyClasses&lt;<span class="number">256</span>&gt;) == <span class="number">4</span>);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h2 id="args"><a href="#args" class="headerlink" title="...args"></a><code>...args</code></h2><p>还可以用 <code>...args=</code> <strong>初始化语法</strong>指定表达式，这样就可以自己选用移动或者转发，而以前版本捕获 <code>args...</code> 参数时只能通过复制（除非将他们包装在一个新的结构，比如 <code>std::tuple</code> 中）。</p>
+<figure class="highlight cpp"><table><tr><td class="code"><pre><span class="line"><span class="keyword">template</span> &lt;<span class="keyword">class</span> <span class="title class_">F</span>, <span class="keyword">class</span>... Args&gt; <span class="function"><span class="keyword">auto</span> <span class="title">bind_all</span><span class="params">(F f, Args... args)</span> </span>&#123;</span><br><span class="line">  <span class="keyword">return</span> [f = std::<span class="built_in">move</span>(f), ... args = std::<span class="built_in">move</span>(args)]() -&gt; <span class="keyword">decltype</span>(<span class="keyword">auto</span>) &#123;</span><br><span class="line">    <span class="keyword">return</span> <span class="built_in">f</span>(args...);</span><br><span class="line">  &#125;;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>以前需要这样做：</p>
+<figure class="highlight cpp"><table><tr><td class="code"><pre><span class="line"><span class="keyword">template</span> &lt;<span class="keyword">class</span> <span class="title class_">F</span>, <span class="keyword">class</span>... Args&gt; <span class="function"><span class="keyword">auto</span> <span class="title">bind_all</span><span class="params">(F f, Args... args)</span> </span>&#123;</span><br><span class="line">  <span class="keyword">return</span> [f = std::<span class="built_in">move</span>(f),</span><br><span class="line">          t = std::tuple&#123;std::<span class="built_in">move</span>(args)...&#125;]() -&gt; <span class="keyword">decltype</span>(<span class="keyword">auto</span>) &#123;</span><br><span class="line">    std::<span class="built_in">apply</span>(f, t);</span><br><span class="line">  &#125;;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h1 id="C-23"><a href="#C-23" class="headerlink" title="C++23"></a>C++23</h1><p>有了 explicit object parameter（毕竟 lambda 也是匿名对象）。</p>
+<h1 id="总体来看"><a href="#总体来看" class="headerlink" title="总体来看"></a>总体来看</h1><p>现在 lambda 已经可以复杂成这样了：</p>
+<figure class="highlight cpp"><table><tr><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;cstdio&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;type_traits&gt;</span></span></span><br><span class="line"></span><br><span class="line"><span class="keyword">template</span> &lt;<span class="keyword">typename</span> T&gt;</span><br><span class="line"><span class="keyword">concept</span> POD = std::is_standard_layout_v&lt;T&gt; &amp;&amp; std::is_trivial_v&lt;T&gt;;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="type">int</span> <span class="title">main</span><span class="params">()</span> </span>&#123;</span><br><span class="line">  <span class="keyword">auto</span> add_pod = []&lt;POD T&gt;</span><br><span class="line">    <span class="built_in">requires</span>(POD&lt;T&gt;)</span><br><span class="line">            [[nodiscard]] (T i, POD <span class="keyword">auto</span> j) <span class="keyword">noexcept</span> -&gt; <span class="keyword">auto</span></span><br><span class="line">              <span class="built_in">requires</span>(POD&lt;T&gt;)</span><br><span class="line">  &#123; <span class="keyword">return</span> i + j; &#125;;</span><br><span class="line"></span><br><span class="line">  <span class="built_in">printf</span>(<span class="string">&quot;%f\n&quot;</span>, <span class="built_in">add_pod</span>(<span class="number">4.0</span>, <span class="number">2</span>));</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h1 id="实现递归"><a href="#实现递归" class="headerlink" title="实现递归"></a>实现递归</h1><h2 id="方案-1：Deducing-This"><a href="#方案-1：Deducing-This" class="headerlink" title="方案 1：Deducing This"></a>方案 1：Deducing This</h2><p>C++23 有了 explicit object parameter，不再需要捕获自己。现在可以这样实现：</p>
+<figure class="highlight cpp"><table><tr><td class="code"><pre><span class="line"><span class="comment">// 在 MSVC 上编译成功（2023年5月24日）</span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;iostream&gt;</span></span></span><br><span class="line"><span class="function"><span class="type">int</span> <span class="title">main</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    <span class="comment">// 由于没有捕获任何变量，所以内部的f和外面的f重名也没有关系！</span></span><br><span class="line">    <span class="keyword">auto</span> f = [](<span class="keyword">this</span> <span class="keyword">auto</span> <span class="type">const</span> &amp;f, <span class="type">int</span> a) -&gt; <span class="type">int</span> &#123;</span><br><span class="line">        <span class="keyword">return</span> a &gt; <span class="number">0</span> ? a + <span class="built_in">f</span>(a - <span class="number">1</span>) : <span class="number">0</span>;</span><br><span class="line">    &#125;;</span><br><span class="line">    std::cout &lt;&lt; <span class="built_in">f</span>(<span class="number">10</span>) &lt;&lt; <span class="string">&#x27;\n&#x27;</span>; <span class="comment">// prints 55</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h2 id="方案-2：-std-function-类模板"><a href="#方案-2：-std-function-类模板" class="headerlink" title="方案 2： std::function 类模板"></a>方案 2： <code>std::function</code> 类模板</h2><p>在 lambda 表达式外创建一个对象，这样就能把自己捕获进来。</p>
+<figure class="highlight cpp"><table><tr><td class="code"><pre><span class="line">std::function&lt;<span class="type">int</span>(<span class="type">int</span>)&gt; fibonacci = [&amp;](<span class="type">int</span> i) &#123;</span><br><span class="line">    <span class="keyword">return</span> i &lt; <span class="number">2</span> ? i : <span class="built_in">fibonacci</span>(i<span class="number">-1</span>) + <span class="built_in">fibonacci</span>(i<span class="number">-2</span>);</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+
+<p>由于能够从 <code>std::function</code> 模板参数中得知 <code>fibonacci</code> 的返回类型，从而 lambda 的返回类型可知，trailing return type（也就是 <code>-&gt;</code>）可以省略不写。</p>
+<p>另外一方面，只有 <code>fibonacci</code> 的类型已经确定了，才能在 lambda 中调用它，所以即便是写上 lambda 的尾返回值，<code>std::function</code> 的模板参数也不能被推导出来，所以 <code>std::function</code> 的模板参数是不可以省略的。（<code>std::function f = main;</code> 就可以省略模板参数。）</p>
+<p>缺点：函数的参数类型重复了两次，含有冗余信息。</p>
+<h2 id="方案-3：显式传入函数对象"><a href="#方案-3：显式传入函数对象" class="headerlink" title="方案 3：显式传入函数对象"></a>方案 3：显式传入函数对象</h2><figure class="highlight cpp"><table><tr><td class="code"><pre><span class="line"><span class="keyword">auto</span> fibonacci = [&amp;] (<span class="keyword">auto</span> <span class="type">const</span> &amp;f, <span class="type">int</span> i) -&gt; <span class="type">int</span> &#123;</span><br><span class="line">    <span class="keyword">return</span> i &lt; <span class="number">2</span> ? i : <span class="built_in">f</span>(f, i<span class="number">-1</span>) + <span class="built_in">f</span>(f, i<span class="number">-2</span>);</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+
+<p>调用的时候就要多传一个 <code>fibonacci</code> 函数对象本身作为参数了。为什么这里不像方案 2 一样需要提前知道函数的类型呢？因为 auto 推导（generic lambda）的代码生成过程是模板二阶段编译中的第二阶段。</p>
+<p>这里的返回值类型也是必须要加的（不能是 <code>-&gt; auto</code>），因为使用 <code>f</code> 时必须知道 <code>f</code> 的返回类型，不给全信息是不行的。</p>
+<p>缺点：写法不够直观，得到的函数对象在调用时需要额外将自己作为第一个参数传递。</p>
+]]></content>
+      <categories>
+        <category>programming</category>
+      </categories>
+      <tags>
+        <tag>cpp</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>C++: Rule of 3/5/0</title>
+    <url>/programming/cpp/cpplang/c-rule-of-3-5-0.html</url>
+    <content><![CDATA[<p><a href="https://en.cppreference.com/w/cpp/language/rule_of_three">https://en.cppreference.com/w/cpp/language/rule_of_three</a></p>
+<h1 id="Rule-of-3"><a href="#Rule-of-3" class="headerlink" title="Rule of 3"></a>Rule of 3</h1><p>析构函数、拷贝构造、拷贝赋值三者要是定义了其一，最好把其他两个都补上，因为编译生成的很可能不是我们想要的。此外，<strong>定义三者之一会导致移动构造、移动赋值被删除</strong>。</p>
+<blockquote>
+<p style="margin-bottom: 0px"><font size="+1">💡<strong> Tip</strong></font></p>
+<p>复制&#x2F;移动赋值操作符可以用复制&#x2F;移动构造函数 + <code>std::swap</code> 实现。</p>
+</blockquote>
+<h1 id="Rule-of-5"><a href="#Rule-of-5" class="headerlink" title="Rule of 5"></a>Rule of 5</h1><p>还要加上移动构造和移动赋值（如果这个类不需要移动，或者移动和拷贝的过程完全一样，那就算了）。<a href="https://isocpp.github.io/CppCoreGuidelines/CppCoreGuidelines#c21-if-you-define-or-delete-any-copy-move-or-destructor-function-define-or-delete-them-all">C++ Core Guidelines C.21</a> 中建议在碰了其中一个时，将它们全部删除或者全部定义。</p>
+<blockquote>
+<p>Unlike Rule of Three, failing to provide move constructor and move assignment is usually not an error, but a missed optimization opportunity.</p>
+</blockquote>
+<h1 id="Rule-of-0"><a href="#Rule-of-0" class="headerlink" title="Rule of 0"></a>Rule of 0</h1><p>析构函数、拷贝&#x2F;移动构造、拷贝&#x2F;移动赋值都不碰。如果要实现上允许，请尽可能这样做。</p>
+<h1 id="特殊成员函数的生成规则"><a href="#特殊成员函数的生成规则" class="headerlink" title="特殊成员函数的生成规则"></a>特殊成员函数的生成规则</h1><p>见 <a href="https://en.wikipedia.org/wiki/Special_member_functions">Special_member_functions</a>：</p>
+<ol>
+<li>提供任何构造函数会禁止编译器生成默认构造函数。</li>
+<li>提供移动构造函数&#x2F;赋值操作符禁用拷贝构造函数、拷贝赋值操作符。</li>
+<li>提供 Rule of 5 中相关的任何一个会禁用编译器生成的移动构造函数、移动赋值操作符。</li>
+<li>提供析构函数会导致拷贝构造函数、拷贝赋值操作符被标记为过时。（就算用了也是不符合 Rule of 3 的。）</li>
+</ol>
+<p>简记：</p>
+<ol>
+<li><strong>任何构造</strong>函数都会禁用<strong>默认构造</strong>函数（的自动生成）。</li>
+<li>提供<strong>移动</strong>系列会禁用<strong>拷贝</strong>系列（的自动生成）。</li>
+<li>提供 <strong>Rule of 5 中任何一个</strong> 都会禁用<strong>移动</strong>系列（的自动生成）。</li>
+</ol>
+]]></content>
+      <categories>
+        <category>programming</category>
+      </categories>
+      <tags>
+        <tag>cpp</tag>
       </tags>
   </entry>
 </search>
