@@ -13,14 +13,12 @@
 
 <link rel="stylesheet" href="../../css/main.css">
 
-
+<link rel="stylesheet" href="//fonts.googleapis.com/css?family=Open Sans:300,300italic,400,400italic,700,700italic|JetBrains Mono:300,300italic,400,400italic,700,700italic&display=swap&subset=latin,latin-ext">
 <link rel="stylesheet" href="../../lib/font-awesome/css/all.min.css">
-  <link rel="stylesheet" href="../../lib/pace/pace-theme-minimal.min.css">
-  <script src="../../lib/pace/pace.min.js"></script>
 
 <script id="hexo-configurations">
     var NexT = window.NexT || {};
-    var CONFIG = {"hostname":"hxhue.github.io","root":"/","scheme":"Gemini","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"always","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":true,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":true,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},"path":"search.xml"};
+    var CONFIG = {"hostname":"hxhue.github.io","root":"/","scheme":"Gemini","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":true,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":true,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},"path":"search.xml"};
   </script>
 
   <meta name="description" content="源码可以参考 https:&#x2F;&#x2F;github.com&#x2F;yottaawesome&#x2F;cuda-by-example&#x2F; ，官网的源码链接挂了。 书中的代码有些需要用 opengl 来跑。安装了 freeglut3-dev 和 mesa-utils。（不确定 libgl1-mesa-dev 是否是必要的。）然后 cmake 规则中要 link 对应的库： 12345678cmake_minimum_requ">
@@ -84,38 +82,52 @@
 </noscript>
 
 <!-- hexo injector head_end start -->
-<script type="text/javascript">
-(function() {
-  const urls = [
-    'https://images.unsplash.com/photo-1561174356-638d86f24f04',    // Ferris Wheel
-    'https://images.unsplash.com/photo-1561435194-d8f04c16a766',    // Leaves
-    'https://images.unsplash.com/photo-1553395572-0ef353a212bf',    // Tomato
-    'https://images.unsplash.com/photo-1553358961-37aa918d326a',    // Sandwich
-    'https://images.unsplash.com/photo-1559525839-b184a4d698c7',    // Coffee Bean
-    'https://images.unsplash.com/photo-1559181567-c3190ca9959b',    // Cherry
-    'https://images.unsplash.com/photo-1585752379769-801711aaf836', // Coffee
-  ]
-  const setBackground = () => {
-    const url = urls[new Date().getUTCDay()];
-    const main = document.querySelector('main');
-    main.style['background']            = "url('" + url + "')";
-    main.style['background-repeat']     = 'no-repeat';
-    main.style['background-size']       = 'cover';
-    main.style['background-attachment'] = 'fixed';
-    main.style['background-position']   = 'center';
-    // Add credit
-    const poweredBy = document.querySelector('body > div > footer > div > div.powered-by');
-    const credit = document.createElement('div');
-    credit.innerHTML = '✨The background is from https://unsplash.com/@picoftasty.';
-    poweredBy.parentElement.insertBefore(credit, poweredBy);
+<script> 
+  function f() {
+  const map = {
+    TIP: {
+      classes: ["note", "success"],
+    },
+    CAUTION: {
+      classes: ["note", "danger"],
+    },
+    IMPORTANT: {
+      classes: ["note", "primary"],
+    },
+    NOTE: {
+      classes: ["note", "info"],
+    },
+    WARNING: {
+      classes: ["note", "warning"],
+    },
   };
-  setTimeout(setBackground, 0);
-})();
+  // const htmlElement = (html) => {
+  //   const div = document.createElement("div");
+  //   div.innerHTML = html.trim();
+  //   return div.firstChild;
+  // };
+  Array.from(document.querySelectorAll("p")).forEach((p) => {
+    if (p.parentElement.tagName !== "BLOCKQUOTE") {
+      return;
+    }
+    const s = p.textContent;
+    if (s && s.startsWith("[!") && s.endsWith("]")) {
+      const callout = s.slice(2, s.length - 1).toUpperCase();
+      const setting = map[callout];
+      if (setting) {
+        p.parentElement.classList.add(...setting.classes);
+        p.parentElement.removeChild(p);
+      }
+    }
+  });
+}
+  setTimeout(f, 0);
 </script>
-    <style>
-      a, code { word-break: break-all; }
-    </style>
-    <!-- hexo injector head_end end --><link rel="alternate" href="atom.xml" title="Bluegill" type="application/atom+xml">
+
+<style> 
+  a, code { word-break: break-all; }
+</style>
+<!-- hexo injector head_end end --><link rel="alternate" href="atom.xml" title="Bluegill" type="application/atom+xml">
 </head>
 
 <body itemscope itemtype="http://schema.org/WebPage">
@@ -326,15 +338,15 @@
 <p>If you were writing host code to be compiled with the host compiler which includes API calls, you would include either <code>cuda.h</code> or <code>cuda_runtime_api.h</code>. If you needed other CUDA language built-ins, like types, and were using the runtime API and compiling with the host compiler, you would include <code>cuda_runtime.h</code>. If you are writing code which will be compiled using nvcc, it is all irrelevant, because nvcc takes care of inclusion of all the required headers automatically without programmer intervention.</p>
 </blockquote>
 <blockquote>
-<p style="margin-bottom: 0px"><font size="+1">⚠<strong> Warning</strong></font></p>
+<p>[!WARNING]</p>
 <p>书中没讲如何编译，需要预备知识。至少要会像 gcc 一样用 nvcc。</p>
 </blockquote>
 <blockquote>
-<p style="margin-bottom: 0px"><font size="+1">✏️<strong> Note</strong></font></p>
+<p>[!NOTE]</p>
 <p>没有 compile_commands.json 时 clangd 反而能够为 cu 文件提供诊断？好像是生成的 compile_commands.json 有太多 clang 无法理解的选项，但是 clang 没有忽略它们，导致了诊断问题。</p>
 </blockquote>
 <blockquote>
-<p style="margin-bottom: 0px"><font size="+1">✏️<strong> Note</strong></font></p>
+<p>[!NOTE]</p>
 <p>遇到了 wsl 中无法在 cmake 中使用 debug（可以直接 run）的情况，原来是没有安装 C&#x2F;C++ intellisense。同时也只有安装了这个才能在 <code>.cu</code> 文件中打断点。</p>
 <p>不过怎么会没有安装呢？可能是上次 compact 虚拟磁盘之后出现的后遗症。</p>
 </blockquote>
@@ -367,7 +379,7 @@
 <p>比较经典。</p>
 <p>例子：dot 操作的错误优化。<mark>略</mark></p>
 <blockquote>
-<p style="margin-bottom: 0px"><font size="+1">✏️<strong> Note</strong></font></p>
+<p>[!NOTE]</p>
 <p>也有 <code>__syncwarp</code> 函数。</p>
 <p>为什么需要 sync warp，warp 中的线程不是按照一个步调执行的吗？这个特性在 CUDA 9 出现，它对于 divergent warps 有用，并且 Volta 架构已经支持了 warp 内的乱序执行。</p>
 </blockquote>

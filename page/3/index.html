@@ -13,14 +13,12 @@
 
 <link rel="stylesheet" href="../../css/main.css">
 
-
+<link rel="stylesheet" href="//fonts.googleapis.com/css?family=Open Sans:300,300italic,400,400italic,700,700italic|JetBrains Mono:300,300italic,400,400italic,700,700italic&display=swap&subset=latin,latin-ext">
 <link rel="stylesheet" href="../../lib/font-awesome/css/all.min.css">
-  <link rel="stylesheet" href="../../lib/pace/pace-theme-minimal.min.css">
-  <script src="../../lib/pace/pace.min.js"></script>
 
 <script id="hexo-configurations">
     var NexT = window.NexT || {};
-    var CONFIG = {"hostname":"hxhue.github.io","root":"/","scheme":"Gemini","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"always","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":true,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":true,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},"path":"search.xml"};
+    var CONFIG = {"hostname":"hxhue.github.io","root":"/","scheme":"Gemini","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":true,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":true,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},"path":"search.xml"};
   </script>
 
   <meta property="og:type" content="website">
@@ -76,38 +74,52 @@
 </noscript>
 
 <!-- hexo injector head_end start -->
-<script type="text/javascript">
-(function() {
-  const urls = [
-    'https://images.unsplash.com/photo-1561174356-638d86f24f04',    // Ferris Wheel
-    'https://images.unsplash.com/photo-1561435194-d8f04c16a766',    // Leaves
-    'https://images.unsplash.com/photo-1553395572-0ef353a212bf',    // Tomato
-    'https://images.unsplash.com/photo-1553358961-37aa918d326a',    // Sandwich
-    'https://images.unsplash.com/photo-1559525839-b184a4d698c7',    // Coffee Bean
-    'https://images.unsplash.com/photo-1559181567-c3190ca9959b',    // Cherry
-    'https://images.unsplash.com/photo-1585752379769-801711aaf836', // Coffee
-  ]
-  const setBackground = () => {
-    const url = urls[new Date().getUTCDay()];
-    const main = document.querySelector('main');
-    main.style['background']            = "url('" + url + "')";
-    main.style['background-repeat']     = 'no-repeat';
-    main.style['background-size']       = 'cover';
-    main.style['background-attachment'] = 'fixed';
-    main.style['background-position']   = 'center';
-    // Add credit
-    const poweredBy = document.querySelector('body > div > footer > div > div.powered-by');
-    const credit = document.createElement('div');
-    credit.innerHTML = '✨The background is from https://unsplash.com/@picoftasty.';
-    poweredBy.parentElement.insertBefore(credit, poweredBy);
+<script> 
+  function f() {
+  const map = {
+    TIP: {
+      classes: ["note", "success"],
+    },
+    CAUTION: {
+      classes: ["note", "danger"],
+    },
+    IMPORTANT: {
+      classes: ["note", "primary"],
+    },
+    NOTE: {
+      classes: ["note", "info"],
+    },
+    WARNING: {
+      classes: ["note", "warning"],
+    },
   };
-  setTimeout(setBackground, 0);
-})();
+  // const htmlElement = (html) => {
+  //   const div = document.createElement("div");
+  //   div.innerHTML = html.trim();
+  //   return div.firstChild;
+  // };
+  Array.from(document.querySelectorAll("p")).forEach((p) => {
+    if (p.parentElement.tagName !== "BLOCKQUOTE") {
+      return;
+    }
+    const s = p.textContent;
+    if (s && s.startsWith("[!") && s.endsWith("]")) {
+      const callout = s.slice(2, s.length - 1).toUpperCase();
+      const setting = map[callout];
+      if (setting) {
+        p.parentElement.classList.add(...setting.classes);
+        p.parentElement.removeChild(p);
+      }
+    }
+  });
+}
+  setTimeout(f, 0);
 </script>
-    <style>
-      a, code { word-break: break-all; }
-    </style>
-    <!-- hexo injector head_end end --><link rel="alternate" href="atom.xml" title="Bluegill" type="application/atom+xml">
+
+<style> 
+  a, code { word-break: break-all; }
+</style>
+<!-- hexo injector head_end end --><link rel="alternate" href="atom.xml" title="Bluegill" type="application/atom+xml">
 </head>
 
 <body itemscope itemtype="http://schema.org/WebPage">
@@ -420,7 +432,7 @@
 <p>If you were writing host code to be compiled with the host compiler which includes API calls, you would include either <code>cuda.h</code> or <code>cuda_runtime_api.h</code>. If you needed other CUDA language built-ins, like types, and were using the runtime API and compiling with the host compiler, you would include <code>cuda_runtime.h</code>. If you are writing code which will be compiled using nvcc, it is all irrelevant, because nvcc takes care of inclusion of all the required headers automatically without programmer intervention.</p>
 </blockquote>
 <blockquote>
-<p style="margin-bottom: 0px"><font size="+1">⚠<strong> Warning</strong></font></p>
+<p>[!WARNING]</p>
 <p>书中没讲如何编译，需要预备知识。至少要会像 gcc 一样用 nvcc。</p>
 </blockquote>
           <!--noindex-->
@@ -1029,6 +1041,109 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://hxhue.github.io/cli/cmake/modern-cmake-for-cpp/chapter01-basic.html">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="../../images/avatar.gif">
+      <meta itemprop="name" content="😋">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Bluegill">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="../../cli/cmake/modern-cmake-for-cpp/chapter01-basic.html" class="post-title-link" itemprop="url">chapter01 - basic</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2024-02-01 23:01:00" itemprop="dateCreated datePublished" datetime="2024-02-01T23:01:00+08:00">2024-02-01</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2024-03-21 16:27:13" itemprop="dateModified" datetime="2024-03-21T16:27:13+08:00">2024-03-21</time>
+              </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="../../categories/cli/" itemprop="url" rel="index"><span itemprop="name">cli</span></a>
+                </span>
+            </span>
+
+          <br>
+            <span class="post-meta-item" title="本文字数">
+              <span class="post-meta-item-icon">
+                <i class="far fa-file-word"></i>
+              </span>
+                <span class="post-meta-item-text">本文字数：</span>
+              <span>1.1k</span>
+            </span>
+            <span class="post-meta-item" title="阅读时长">
+              <span class="post-meta-item-icon">
+                <i class="far fa-clock"></i>
+              </span>
+                <span class="post-meta-item-text">阅读时长 &asymp;</span>
+              <span>4 分钟</span>
+            </span>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <p>三个 stages：配置、生成、构建。</p>
+<p>配置会生成 CMakeCache。生成是用它去生成 build tree 的其他内容。</p>
+<h1 id="Generating-a-Build-System"><a href="#Generating-a-Build-System" class="headerlink" title="Generating a Build System"></a>Generating a Build System</h1><p><strong>生成 build tree</strong>：</p>
+<pre><code>cmake -B build/ -S source/
+</code></pre>
+<p>最好不要使用无参数的 cmake。</p>
+<p><strong>选择生成器</strong>：</p>
+<pre><code>cmake -G &lt;generator&gt;
+</code></pre>
+          <!--noindex-->
+            <div class="post-button">
+              <a class="btn" href="../../cli/cmake/modern-cmake-for-cpp/chapter01-basic.html#more" rel="contents">
+                阅读全文 &raquo;
+              </a>
+            </div>
+          <!--/noindex-->
+        
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
     <link itemprop="mainEntityOfPage" href="https://hxhue.github.io/cli/cmake/modern-cmake-for-cpp/chapter02-cmake-language.html">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -1110,109 +1225,6 @@
           <!--noindex-->
             <div class="post-button">
               <a class="btn" href="../../cli/cmake/modern-cmake-for-cpp/chapter02-cmake-language.html#more" rel="contents">
-                阅读全文 &raquo;
-              </a>
-            </div>
-          <!--/noindex-->
-        
-      
-    </div>
-
-    
-    
-    
-      <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  
-  
-  
-
-      
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="https://hxhue.github.io/cli/cmake/modern-cmake-for-cpp/chapter01-basic.html">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="../../images/avatar.gif">
-      <meta itemprop="name" content="😋">
-      <meta itemprop="description" content="">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Bluegill">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          
-            <a href="../../cli/cmake/modern-cmake-for-cpp/chapter01-basic.html" class="post-title-link" itemprop="url">chapter01 - basic</a>
-        </h2>
-
-        <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-calendar"></i>
-              </span>
-              <span class="post-meta-item-text">发表于</span>
-
-              <time title="创建时间：2024-02-01 23:01:00" itemprop="dateCreated datePublished" datetime="2024-02-01T23:01:00+08:00">2024-02-01</time>
-            </span>
-              <span class="post-meta-item">
-                <span class="post-meta-item-icon">
-                  <i class="far fa-calendar-check"></i>
-                </span>
-                <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2024-03-21 16:27:13" itemprop="dateModified" datetime="2024-03-21T16:27:13+08:00">2024-03-21</time>
-              </span>
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-folder"></i>
-              </span>
-              <span class="post-meta-item-text">分类于</span>
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="../../categories/cli/" itemprop="url" rel="index"><span itemprop="name">cli</span></a>
-                </span>
-            </span>
-
-          <br>
-            <span class="post-meta-item" title="本文字数">
-              <span class="post-meta-item-icon">
-                <i class="far fa-file-word"></i>
-              </span>
-                <span class="post-meta-item-text">本文字数：</span>
-              <span>1.1k</span>
-            </span>
-            <span class="post-meta-item" title="阅读时长">
-              <span class="post-meta-item-icon">
-                <i class="far fa-clock"></i>
-              </span>
-                <span class="post-meta-item-text">阅读时长 &asymp;</span>
-              <span>4 分钟</span>
-            </span>
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          <p>三个 stages：配置、生成、构建。</p>
-<p>配置会生成 CMakeCache。生成是用它去生成 build tree 的其他内容。</p>
-<h1 id="Generating-a-Build-System"><a href="#Generating-a-Build-System" class="headerlink" title="Generating a Build System"></a>Generating a Build System</h1><p><strong>生成 build tree</strong>：</p>
-<pre><code>cmake -B build/ -S source/
-</code></pre>
-<p>最好不要使用无参数的 cmake。</p>
-<p><strong>选择生成器</strong>：</p>
-<pre><code>cmake -G &lt;generator&gt;
-</code></pre>
-          <!--noindex-->
-            <div class="post-button">
-              <a class="btn" href="../../cli/cmake/modern-cmake-for-cpp/chapter01-basic.html#more" rel="contents">
                 阅读全文 &raquo;
               </a>
             </div>

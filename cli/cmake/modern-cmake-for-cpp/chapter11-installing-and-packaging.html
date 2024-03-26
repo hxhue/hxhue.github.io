@@ -13,14 +13,12 @@
 
 <link rel="stylesheet" href="../../../css/main.css">
 
-
+<link rel="stylesheet" href="//fonts.googleapis.com/css?family=Open Sans:300,300italic,400,400italic,700,700italic|JetBrains Mono:300,300italic,400,400italic,700,700italic&display=swap&subset=latin,latin-ext">
 <link rel="stylesheet" href="../../../lib/font-awesome/css/all.min.css">
-  <link rel="stylesheet" href="../../../lib/pace/pace-theme-minimal.min.css">
-  <script src="../../../lib/pace/pace.min.js"></script>
 
 <script id="hexo-configurations">
     var NexT = window.NexT || {};
-    var CONFIG = {"hostname":"hxhue.github.io","root":"/","scheme":"Gemini","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"always","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":true,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":true,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},"path":"search.xml"};
+    var CONFIG = {"hostname":"hxhue.github.io","root":"/","scheme":"Gemini","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":true,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":true,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},"path":"search.xml"};
   </script>
 
   <meta name="description" content="Exporting without installation使用 export 命令可以创建导出文件，然后其他工程只要 include 这个导出文件就能使用当前这个包中的 target，而不需要先将这个包用 install 安装在系统里。 123export(TARGETS [target1 [target2 [...]]]      [NAMESPACE &lt;namespace&gt;] [">
@@ -88,38 +86,52 @@
 </noscript>
 
 <!-- hexo injector head_end start -->
-<script type="text/javascript">
-(function() {
-  const urls = [
-    'https://images.unsplash.com/photo-1561174356-638d86f24f04',    // Ferris Wheel
-    'https://images.unsplash.com/photo-1561435194-d8f04c16a766',    // Leaves
-    'https://images.unsplash.com/photo-1553395572-0ef353a212bf',    // Tomato
-    'https://images.unsplash.com/photo-1553358961-37aa918d326a',    // Sandwich
-    'https://images.unsplash.com/photo-1559525839-b184a4d698c7',    // Coffee Bean
-    'https://images.unsplash.com/photo-1559181567-c3190ca9959b',    // Cherry
-    'https://images.unsplash.com/photo-1585752379769-801711aaf836', // Coffee
-  ]
-  const setBackground = () => {
-    const url = urls[new Date().getUTCDay()];
-    const main = document.querySelector('main');
-    main.style['background']            = "url('" + url + "')";
-    main.style['background-repeat']     = 'no-repeat';
-    main.style['background-size']       = 'cover';
-    main.style['background-attachment'] = 'fixed';
-    main.style['background-position']   = 'center';
-    // Add credit
-    const poweredBy = document.querySelector('body > div > footer > div > div.powered-by');
-    const credit = document.createElement('div');
-    credit.innerHTML = '✨The background is from https://unsplash.com/@picoftasty.';
-    poweredBy.parentElement.insertBefore(credit, poweredBy);
+<script> 
+  function f() {
+  const map = {
+    TIP: {
+      classes: ["note", "success"],
+    },
+    CAUTION: {
+      classes: ["note", "danger"],
+    },
+    IMPORTANT: {
+      classes: ["note", "primary"],
+    },
+    NOTE: {
+      classes: ["note", "info"],
+    },
+    WARNING: {
+      classes: ["note", "warning"],
+    },
   };
-  setTimeout(setBackground, 0);
-})();
+  // const htmlElement = (html) => {
+  //   const div = document.createElement("div");
+  //   div.innerHTML = html.trim();
+  //   return div.firstChild;
+  // };
+  Array.from(document.querySelectorAll("p")).forEach((p) => {
+    if (p.parentElement.tagName !== "BLOCKQUOTE") {
+      return;
+    }
+    const s = p.textContent;
+    if (s && s.startsWith("[!") && s.endsWith("]")) {
+      const callout = s.slice(2, s.length - 1).toUpperCase();
+      const setting = map[callout];
+      if (setting) {
+        p.parentElement.classList.add(...setting.classes);
+        p.parentElement.removeChild(p);
+      }
+    }
+  });
+}
+  setTimeout(f, 0);
 </script>
-    <style>
-      a, code { word-break: break-all; }
-    </style>
-    <!-- hexo injector head_end end --><link rel="alternate" href="atom.xml" title="Bluegill" type="application/atom+xml">
+
+<style> 
+  a, code { word-break: break-all; }
+</style>
+<!-- hexo injector head_end end --><link rel="alternate" href="atom.xml" title="Bluegill" type="application/atom+xml">
 </head>
 
 <body itemscope itemtype="http://schema.org/WebPage">
@@ -348,7 +360,7 @@
 </ul>
 <p><code>install</code> 命令可以指定 <code>DESTINATION</code>&#x2F;<code>PERMISSIONS</code>&#x2F;<code>CONFIGURATIONS</code>&#x2F;<code>OPTIONAL</code> 等参数。在 <code>COMPONENT</code> 模式下，还可以指定 <code>EXCLUDE_FROM_ALL</code>。如果给定的安装位置是相对路径，那么实际上的安装位置是 <code>$&#123;CMAKE_INSTALL_PREFIX&#125; + $&#123;DESTINATION&#125;</code>。</p>
 <h1 id="install-TARGETS"><a href="#install-TARGETS" class="headerlink" title="install(TARGETS)"></a><code>install(TARGETS)</code></h1><blockquote>
-<p style="margin-bottom: 0px"><font size="+1">✏️<strong> Note</strong></font></p>
+<p>[!NOTE]</p>
 <p><code>OPTIONAL</code> 指的是如果找不到要安装的文件也不报错。<code>CONFIGURATIONS</code> 指的是这个安装对哪些配置（Debug, Release）有效，处在无效配置时这条 <code>install</code> 命令被忽略。</p>
 </blockquote>
 <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">install(TARGETS &lt;target&gt;... [EXPORT &lt;export-name&gt;]</span><br><span class="line">        [&lt;output-artifact-configuration&gt; ...]</span><br><span class="line">        [INCLUDES DESTINATION [&lt;dir&gt; ...]]</span><br><span class="line">        )</span><br></pre></td></tr></table></figure>
@@ -384,7 +396,7 @@
 <figure class="highlight cmake"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">cmake_minimum_required</span>(VERSION <span class="number">3.20</span>.<span class="number">0</span>)</span><br><span class="line"><span class="keyword">project</span>(InstallTargets CXX)</span><br><span class="line"><span class="keyword">add_subdirectory</span>(src bin)</span><br><span class="line"><span class="keyword">include</span>(GNUInstallDirs)</span><br><span class="line"><span class="keyword">install</span>(TARGETS calc</span><br><span class="line">  ARCHIVE</span><br><span class="line">  PUBLIC_HEADER</span><br><span class="line">  DESTINATION <span class="variable">$&#123;CMAKE_INSTALL_INCLUDEDIR&#125;</span>/calc</span><br><span class="line">)</span><br></pre></td></tr></table></figure>
 
 <blockquote>
-<p style="margin-bottom: 0px"><font size="+1">✏️<strong> Note</strong></font></p>
+<p>[!NOTE]</p>
 <p>在 Debian 12 上测试，<code>CMAKE_INSTALL_INCLUDEDIR</code> 都是 include。拼接上默认的前缀路径就是 usr&#x2F;local&#x2F;include。</p>
 </blockquote>
 <p>这个变量似乎在所有平台上其实都是一样的，但是也有一些变量在不同平台上表现不同，比如：</p>
@@ -397,7 +409,7 @@
 <p>由于版本比较新，而且没有指定静态库成品的安装方式，所以按照默认方式安装了。</p>
 <p>这种基于 target 的安装感觉比基于其他方式的安装更加灵活和方便，毕竟是把很多成品都捆绑在一起了。但是也有缺点，比如必须要给出所有的头文件，手动列举容易形成超长的列表。而且所有头文件都被安装在了同一个目录，丢失了层级关系：</p>
 <blockquote>
-<p style="margin-bottom: 0px"><font size="+1">⚠<strong> Warning</strong></font></p>
+<p>[!WARNING]</p>
 <p>This works well for this basic case, but there’s a slight drawback: files specified in this way don’t retain their directory structure. They will all be installed in the same destination, even if they’re nested in different base directories.</p>
 </blockquote>
 <p>在 CMake 3.23.0 之后，<code>target_sources</code> 有新选项 <code>FILE_SET</code> 可以更好解决这个问题。</p>
@@ -431,7 +443,7 @@
 <p>It’s a combination of “plain” <code>export(EXPORT)</code> and other <code>install()</code> commands.</p>
 </blockquote>
 <blockquote>
-<p style="margin-bottom: 0px"><font size="+1">✏️<strong> Note</strong></font></p>
+<p>[!NOTE]</p>
 <p>好像能使用的 <code>EXPORT</code> 参数的 <code>install()</code> 命令除了 <code>install(EXPORT)</code> 本身也就只有 <code>install(TARGETS)</code> 了。</p>
 </blockquote>
 <p>这个命令是用来安装 export 文件的。用 <code>export</code> 或者 <code>install(TARGETS ... EXPORT)</code> 可以生成 export 文件。这个命令不会在构建时在 binary tree 里产生文件哦！</p>
@@ -514,13 +526,13 @@
 
 <p>因为 cpack 还会生成临时的目录 <code>_CPack_Packages</code>，所以最好显式提供 -B 参数，不要生成在当前路径。就算是在 build 里面，将多个包分组在同一个文件夹里面也是更好的做法。</p>
 <blockquote>
-<p style="margin-bottom: 0px"><font size="+1">☢️<strong> Caution</strong></font></p>
+<p>[!CAUTION]</p>
 <p>cpack 要在 build tree 里面跑，这个和 ctest 一样。</p>
 <p>为什么要在 build tree 里跑呢？因为 build tree 中有生成的 CPackConfig.cmake。如果在别处跑，就不会自动加载这个文件，从而报错：<code>CPack Error: CPack project name not specified</code>。这样的报错很隐晦，因为 cpack 程序并不要求存在 CPackConfig.cmake 才能运行，而我们也使用了 <code>include(CPack)</code> 的写法，没有手动提供必需的变量。</p>
 <p>如果直接在 source tree 里跑，能够通过 <code>--config</code> 选项传入 build tree 中的 CPackConfig.cmake 路径，也是可以成功的。</p>
 </blockquote>
 <blockquote>
-<p style="margin-bottom: 0px"><font size="+1">✏️<strong> Note</strong></font></p>
+<p>[!NOTE]</p>
 <p>cpack 在 multi-config generator（至少 Ninja Multi-Config 是这样）的 build tree 中默认寻找的是 Release 版本。使用 <code>-C Debug</code> 来允许 Debug 版本的安装。</p>
 </blockquote>
 <p>感觉 CPack 很好用，在写好 install 命令的基础上几乎不必花时间去适配 CPack。主要还是 install 比较复杂。</p>
@@ -544,8 +556,8 @@
         
     <div class="post-nav">
       <div class="post-nav-item">
-    <a href="chapter11.html" rel="prev" title="chapter11.a - 对比 export 和 install 命令">
-      <i class="fa fa-chevron-left"></i> chapter11.a - 对比 export 和 install 命令
+    <a href="chapter10-documents.html" rel="prev" title="chapter10 - documents">
+      <i class="fa fa-chevron-left"></i> chapter10 - documents
     </a></div>
       <div class="post-nav-item">
     <a href="chapter09-program-analysis-tools.html" rel="next" title="chapter09 - program analysis tools">

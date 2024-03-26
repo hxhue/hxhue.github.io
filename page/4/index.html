@@ -13,14 +13,12 @@
 
 <link rel="stylesheet" href="../../css/main.css">
 
-
+<link rel="stylesheet" href="//fonts.googleapis.com/css?family=Open Sans:300,300italic,400,400italic,700,700italic|JetBrains Mono:300,300italic,400,400italic,700,700italic&display=swap&subset=latin,latin-ext">
 <link rel="stylesheet" href="../../lib/font-awesome/css/all.min.css">
-  <link rel="stylesheet" href="../../lib/pace/pace-theme-minimal.min.css">
-  <script src="../../lib/pace/pace.min.js"></script>
 
 <script id="hexo-configurations">
     var NexT = window.NexT || {};
-    var CONFIG = {"hostname":"hxhue.github.io","root":"/","scheme":"Gemini","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"always","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":true,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":true,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},"path":"search.xml"};
+    var CONFIG = {"hostname":"hxhue.github.io","root":"/","scheme":"Gemini","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":true,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":true,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},"path":"search.xml"};
   </script>
 
   <meta property="og:type" content="website">
@@ -76,38 +74,52 @@
 </noscript>
 
 <!-- hexo injector head_end start -->
-<script type="text/javascript">
-(function() {
-  const urls = [
-    'https://images.unsplash.com/photo-1561174356-638d86f24f04',    // Ferris Wheel
-    'https://images.unsplash.com/photo-1561435194-d8f04c16a766',    // Leaves
-    'https://images.unsplash.com/photo-1553395572-0ef353a212bf',    // Tomato
-    'https://images.unsplash.com/photo-1553358961-37aa918d326a',    // Sandwich
-    'https://images.unsplash.com/photo-1559525839-b184a4d698c7',    // Coffee Bean
-    'https://images.unsplash.com/photo-1559181567-c3190ca9959b',    // Cherry
-    'https://images.unsplash.com/photo-1585752379769-801711aaf836', // Coffee
-  ]
-  const setBackground = () => {
-    const url = urls[new Date().getUTCDay()];
-    const main = document.querySelector('main');
-    main.style['background']            = "url('" + url + "')";
-    main.style['background-repeat']     = 'no-repeat';
-    main.style['background-size']       = 'cover';
-    main.style['background-attachment'] = 'fixed';
-    main.style['background-position']   = 'center';
-    // Add credit
-    const poweredBy = document.querySelector('body > div > footer > div > div.powered-by');
-    const credit = document.createElement('div');
-    credit.innerHTML = '✨The background is from https://unsplash.com/@picoftasty.';
-    poweredBy.parentElement.insertBefore(credit, poweredBy);
+<script> 
+  function f() {
+  const map = {
+    TIP: {
+      classes: ["note", "success"],
+    },
+    CAUTION: {
+      classes: ["note", "danger"],
+    },
+    IMPORTANT: {
+      classes: ["note", "primary"],
+    },
+    NOTE: {
+      classes: ["note", "info"],
+    },
+    WARNING: {
+      classes: ["note", "warning"],
+    },
   };
-  setTimeout(setBackground, 0);
-})();
+  // const htmlElement = (html) => {
+  //   const div = document.createElement("div");
+  //   div.innerHTML = html.trim();
+  //   return div.firstChild;
+  // };
+  Array.from(document.querySelectorAll("p")).forEach((p) => {
+    if (p.parentElement.tagName !== "BLOCKQUOTE") {
+      return;
+    }
+    const s = p.textContent;
+    if (s && s.startsWith("[!") && s.endsWith("]")) {
+      const callout = s.slice(2, s.length - 1).toUpperCase();
+      const setting = map[callout];
+      if (setting) {
+        p.parentElement.classList.add(...setting.classes);
+        p.parentElement.removeChild(p);
+      }
+    }
+  });
+}
+  setTimeout(f, 0);
 </script>
-    <style>
-      a, code { word-break: break-all; }
-    </style>
-    <!-- hexo injector head_end end --><link rel="alternate" href="atom.xml" title="Bluegill" type="application/atom+xml">
+
+<style> 
+  a, code { word-break: break-all; }
+</style>
+<!-- hexo injector head_end end --><link rel="alternate" href="atom.xml" title="Bluegill" type="application/atom+xml">
 </head>
 
 <body itemscope itemtype="http://schema.org/WebPage">
@@ -234,7 +246,7 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="https://hxhue.github.io/cli/cmake/modern-cmake-for-cpp/chapter04-targets.html">
+    <link itemprop="mainEntityOfPage" href="https://hxhue.github.io/cli/cmake/modern-cmake-for-cpp/chapter02.html">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="image" content="../../images/avatar.gif">
@@ -248,7 +260,7 @@
       <header class="post-header">
         <h2 class="post-title" itemprop="name headline">
           
-            <a href="../../cli/cmake/modern-cmake-for-cpp/chapter04-targets.html" class="post-title-link" itemprop="url">chapter04 - targets</a>
+            <a href="../../cli/cmake/modern-cmake-for-cpp/chapter02.html" class="post-title-link" itemprop="url">chapter02.a - 总结常用的 CMake 变量</a>
         </h2>
 
         <div class="post-meta">
@@ -265,7 +277,7 @@
                   <i class="far fa-calendar-check"></i>
                 </span>
                 <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2024-03-21 16:39:32" itemprop="dateModified" datetime="2024-03-21T16:39:32+08:00">2024-03-21</time>
+                <time title="修改时间：2024-03-21 16:27:13" itemprop="dateModified" datetime="2024-03-21T16:27:13+08:00">2024-03-21</time>
               </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
@@ -283,14 +295,14 @@
                 <i class="far fa-file-word"></i>
               </span>
                 <span class="post-meta-item-text">本文字数：</span>
-              <span>2.7k</span>
+              <span>144</span>
             </span>
             <span class="post-meta-item" title="阅读时长">
               <span class="post-meta-item-icon">
                 <i class="far fa-clock"></i>
               </span>
                 <span class="post-meta-item-text">阅读时长 &asymp;</span>
-              <span>10 分钟</span>
+              <span>1 分钟</span>
             </span>
 
         </div>
@@ -302,25 +314,21 @@
     <div class="post-body" itemprop="articleBody">
 
       
-          <h1 id="创建-target"><a href="#创建-target" class="headerlink" title="创建 target"></a>创建 target</h1><p>三种方式：</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">add_executable     # 默认在 ALL 中</span><br><span class="line">add_library        # 默认在 ALL 中</span><br><span class="line">add_custom_target  # 默认不在 ALL 中</span><br><span class="line"># add_custom_command 是创建文件的方式，但是不是创建 target</span><br></pre></td></tr></table></figure>
+          <h1 id="PROJECT"><a href="#PROJECT" class="headerlink" title="PROJECT_*"></a><code>PROJECT_*</code></h1><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">PROJECT_SOURCE_DIR</span><br><span class="line">PROJECT_BINARY_DIR</span><br></pre></td></tr></table></figure>
 
-<p><code>add_library</code>: <a target="_blank" rel="noopener" href="https://cmake.org/cmake/help/latest/command/add_library.html#object-libraries">https://cmake.org/cmake/help/latest/command/add_library.html#object-libraries</a></p>
-<ul>
-<li>Normal library: 如果不指定 <code>STATIC</code>&#x2F;<code>SHARED</code>&#x2F;<code>MODULE</code>，<code>add_library</code> 会根据 <code>BUILD_SHARED_LIBS</code> 变量去决定是否使用 <code>SHARED</code> 还是 <code>STATIC</code>。</li>
-<li>Object library: 生成目标文件。</li>
-<li>Interface library：不生成文件。用来打包传播属性。</li>
-<li>Imported library：<code>IMPORTED</code> 属性和 <code>STATIC</code> 等是可以叠加的。<code>IMPORTED</code> 库是<strong>已经被编译好的库</strong>，不需要另外编译，但是需要用 <code>set_target_property</code> 来设置其位置。</li>
-<li>Alias library</li>
-</ul>
-<p><code>add_custom_target</code> 可以有多条命令，而且不一定有产物。<code>add_custom_target</code> 创建的 target 是默认不 ALL 的！和 <code>add_custom_command</code> 的对比看后文。</p>
-<p>可以手动用 <code>add_dependencies</code> 创建新的依赖关系。主要是用来维护编译顺序的（比如检查 checksum 的自定义任务必须得在目标已经生成之后）。</p>
 <blockquote>
-<p>target 的依赖声明可以不按照顺序，cmake 会扫描整个文件再去构建依赖。</p>
+<p>不存在 <code>PROJECT_LIST_DIR</code>。</p>
 </blockquote>
+<p><code>PROJECT_*</code> 变量会随着 <code>project</code> 命令的出现而变更。</p>
+<h1 id="CMAKE"><a href="#CMAKE" class="headerlink" title="CMAKE_*"></a><code>CMAKE_*</code></h1><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">CMAKE_SOURCE_DIR</span><br><span class="line">CMAKE_BINARY_DIR</span><br></pre></td></tr></table></figure>
+
+<blockquote>
+<p>也不存在 <code>CMAKE_LIST_DIR</code>。</p>
+</blockquote>
+<p>和本次 cmake 命令有关。</p>
           <!--noindex-->
             <div class="post-button">
-              <a class="btn" href="../../cli/cmake/modern-cmake-for-cpp/chapter04-targets.html#more" rel="contents">
+              <a class="btn" href="../../cli/cmake/modern-cmake-for-cpp/chapter02.html#more" rel="contents">
                 阅读全文 &raquo;
               </a>
             </div>
@@ -414,7 +422,7 @@
       
           <h1 id="cmake-minimal-required"><a href="#cmake-minimal-required" class="headerlink" title="cmake_minimal_required"></a>cmake_minimal_required</h1><p><code>cmake_minimal_required(VERSION xxx)</code> 是项目都应该有的说明。因为它指定了最小的版本，而且还会隐式去调用 <code>cmake_policy</code>，这样即便 cmake 版本更新了，policy 没变，旧项目仍然可以正常构建。</p>
 <blockquote>
-<p style="margin-bottom: 0px"><font size="+1">✏️<strong> Note</strong></font></p>
+<p>[!NOTE]</p>
 <p>cmake policy 是每次 cmake 有不向后兼容的改动时增加的标志。</p>
 </blockquote>
 <p>VERSION 可以是一个范围 <code>a...b</code>，如果只有一个值则是最小版本要求。</p>
@@ -424,112 +432,6 @@
           <!--noindex-->
             <div class="post-button">
               <a class="btn" href="../../cli/cmake/modern-cmake-for-cpp/chapter03-first-cmake-project.html#more" rel="contents">
-                阅读全文 &raquo;
-              </a>
-            </div>
-          <!--/noindex-->
-        
-      
-    </div>
-
-    
-    
-    
-      <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  
-  
-  
-
-      
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="https://hxhue.github.io/cli/cmake/modern-cmake-for-cpp/chapter02.html">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="../../images/avatar.gif">
-      <meta itemprop="name" content="😋">
-      <meta itemprop="description" content="">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Bluegill">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          
-            <a href="../../cli/cmake/modern-cmake-for-cpp/chapter02.html" class="post-title-link" itemprop="url">chapter02.a - 总结常用的 CMake 变量</a>
-        </h2>
-
-        <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-calendar"></i>
-              </span>
-              <span class="post-meta-item-text">发表于</span>
-
-              <time title="创建时间：2024-02-01 23:01:00" itemprop="dateCreated datePublished" datetime="2024-02-01T23:01:00+08:00">2024-02-01</time>
-            </span>
-              <span class="post-meta-item">
-                <span class="post-meta-item-icon">
-                  <i class="far fa-calendar-check"></i>
-                </span>
-                <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2024-03-21 16:27:13" itemprop="dateModified" datetime="2024-03-21T16:27:13+08:00">2024-03-21</time>
-              </span>
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-folder"></i>
-              </span>
-              <span class="post-meta-item-text">分类于</span>
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="../../categories/cli/" itemprop="url" rel="index"><span itemprop="name">cli</span></a>
-                </span>
-            </span>
-
-          <br>
-            <span class="post-meta-item" title="本文字数">
-              <span class="post-meta-item-icon">
-                <i class="far fa-file-word"></i>
-              </span>
-                <span class="post-meta-item-text">本文字数：</span>
-              <span>144</span>
-            </span>
-            <span class="post-meta-item" title="阅读时长">
-              <span class="post-meta-item-icon">
-                <i class="far fa-clock"></i>
-              </span>
-                <span class="post-meta-item-text">阅读时长 &asymp;</span>
-              <span>1 分钟</span>
-            </span>
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          <h1 id="PROJECT"><a href="#PROJECT" class="headerlink" title="PROJECT_*"></a><code>PROJECT_*</code></h1><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">PROJECT_SOURCE_DIR</span><br><span class="line">PROJECT_BINARY_DIR</span><br></pre></td></tr></table></figure>
-
-<blockquote>
-<p>不存在 <code>PROJECT_LIST_DIR</code>。</p>
-</blockquote>
-<p><code>PROJECT_*</code> 变量会随着 <code>project</code> 命令的出现而变更。</p>
-<h1 id="CMAKE"><a href="#CMAKE" class="headerlink" title="CMAKE_*"></a><code>CMAKE_*</code></h1><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">CMAKE_SOURCE_DIR</span><br><span class="line">CMAKE_BINARY_DIR</span><br></pre></td></tr></table></figure>
-
-<blockquote>
-<p>也不存在 <code>CMAKE_LIST_DIR</code>。</p>
-</blockquote>
-<p>和本次 cmake 命令有关。</p>
-          <!--noindex-->
-            <div class="post-button">
-              <a class="btn" href="../../cli/cmake/modern-cmake-for-cpp/chapter02.html#more" rel="contents">
                 阅读全文 &raquo;
               </a>
             </div>
@@ -656,6 +558,116 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://hxhue.github.io/cli/cmake/modern-cmake-for-cpp/chapter04-targets.html">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="../../images/avatar.gif">
+      <meta itemprop="name" content="😋">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Bluegill">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="../../cli/cmake/modern-cmake-for-cpp/chapter04-targets.html" class="post-title-link" itemprop="url">chapter04 - targets</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2024-02-01 23:01:00" itemprop="dateCreated datePublished" datetime="2024-02-01T23:01:00+08:00">2024-02-01</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2024-03-21 16:39:32" itemprop="dateModified" datetime="2024-03-21T16:39:32+08:00">2024-03-21</time>
+              </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="../../categories/cli/" itemprop="url" rel="index"><span itemprop="name">cli</span></a>
+                </span>
+            </span>
+
+          <br>
+            <span class="post-meta-item" title="本文字数">
+              <span class="post-meta-item-icon">
+                <i class="far fa-file-word"></i>
+              </span>
+                <span class="post-meta-item-text">本文字数：</span>
+              <span>2.7k</span>
+            </span>
+            <span class="post-meta-item" title="阅读时长">
+              <span class="post-meta-item-icon">
+                <i class="far fa-clock"></i>
+              </span>
+                <span class="post-meta-item-text">阅读时长 &asymp;</span>
+              <span>10 分钟</span>
+            </span>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <h1 id="创建-target"><a href="#创建-target" class="headerlink" title="创建 target"></a>创建 target</h1><p>三种方式：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">add_executable     # 默认在 ALL 中</span><br><span class="line">add_library        # 默认在 ALL 中</span><br><span class="line">add_custom_target  # 默认不在 ALL 中</span><br><span class="line"># add_custom_command 是创建文件的方式，但是不是创建 target</span><br></pre></td></tr></table></figure>
+
+<p><code>add_library</code>: <a target="_blank" rel="noopener" href="https://cmake.org/cmake/help/latest/command/add_library.html#object-libraries">https://cmake.org/cmake/help/latest/command/add_library.html#object-libraries</a></p>
+<ul>
+<li>Normal library: 如果不指定 <code>STATIC</code>&#x2F;<code>SHARED</code>&#x2F;<code>MODULE</code>，<code>add_library</code> 会根据 <code>BUILD_SHARED_LIBS</code> 变量去决定是否使用 <code>SHARED</code> 还是 <code>STATIC</code>。</li>
+<li>Object library: 生成目标文件。</li>
+<li>Interface library：不生成文件。用来打包传播属性。</li>
+<li>Imported library：<code>IMPORTED</code> 属性和 <code>STATIC</code> 等是可以叠加的。<code>IMPORTED</code> 库是<strong>已经被编译好的库</strong>，不需要另外编译，但是需要用 <code>set_target_property</code> 来设置其位置。</li>
+<li>Alias library</li>
+</ul>
+<p><code>add_custom_target</code> 可以有多条命令，而且不一定有产物。<code>add_custom_target</code> 创建的 target 是默认不 ALL 的！和 <code>add_custom_command</code> 的对比看后文。</p>
+<p>可以手动用 <code>add_dependencies</code> 创建新的依赖关系。主要是用来维护编译顺序的（比如检查 checksum 的自定义任务必须得在目标已经生成之后）。</p>
+<blockquote>
+<p>target 的依赖声明可以不按照顺序，cmake 会扫描整个文件再去构建依赖。</p>
+</blockquote>
+          <!--noindex-->
+            <div class="post-button">
+              <a class="btn" href="../../cli/cmake/modern-cmake-for-cpp/chapter04-targets.html#more" rel="contents">
+                阅读全文 &raquo;
+              </a>
+            </div>
+          <!--/noindex-->
+        
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
     <link itemprop="mainEntityOfPage" href="https://hxhue.github.io/cli/cmake/modern-cmake-for-cpp/chapter05-compiling-c-sources.html">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -737,6 +749,108 @@
           <!--noindex-->
             <div class="post-button">
               <a class="btn" href="../../cli/cmake/modern-cmake-for-cpp/chapter05-compiling-c-sources.html#more" rel="contents">
+                阅读全文 &raquo;
+              </a>
+            </div>
+          <!--/noindex-->
+        
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://hxhue.github.io/cli/cmake/modern-cmake-for-cpp/chapter07-managing-dependencies.html">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="../../images/avatar.gif">
+      <meta itemprop="name" content="😋">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Bluegill">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="../../cli/cmake/modern-cmake-for-cpp/chapter07-managing-dependencies.html" class="post-title-link" itemprop="url">chapter07 - managing dependencies</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2024-02-01 23:01:00" itemprop="dateCreated datePublished" datetime="2024-02-01T23:01:00+08:00">2024-02-01</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2024-03-21 16:27:13" itemprop="dateModified" datetime="2024-03-21T16:27:13+08:00">2024-03-21</time>
+              </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="../../categories/cli/" itemprop="url" rel="index"><span itemprop="name">cli</span></a>
+                </span>
+            </span>
+
+          <br>
+            <span class="post-meta-item" title="本文字数">
+              <span class="post-meta-item-icon">
+                <i class="far fa-file-word"></i>
+              </span>
+                <span class="post-meta-item-text">本文字数：</span>
+              <span>1.8k</span>
+            </span>
+            <span class="post-meta-item" title="阅读时长">
+              <span class="post-meta-item-icon">
+                <i class="far fa-clock"></i>
+              </span>
+                <span class="post-meta-item-text">阅读时长 &asymp;</span>
+              <span>7 分钟</span>
+            </span>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <h1 id="Best-option-find-package"><a href="#Best-option-find-package" class="headerlink" title="Best option: find_package"></a>Best option: <code>find_package</code></h1><p><a target="_blank" rel="noopener" href="https://cmake.org/cmake/help/latest/command/find_package.html">https://cmake.org/cmake/help/latest/command/find_package.html</a></p>
+<p>有三种工作模式。</p>
+<h2 id="Module-mode"><a href="#Module-mode" class="headerlink" title="Module mode"></a>Module mode</h2><p><code>Find&lt;PackageName&gt;.cmake</code></p>
+<p>主要是包外提供，比如 CMake、操作系统、或者写当前工程的人提供的试探性地去搜索库的方式。先找 <code>CMAKE_MODULE_PATH</code>，然后就是 cmake 的安装目录。</p>
+<blockquote>
+<p>NexusNet 的不少路径都是硬编码的，写 Find Module 会更合适。</p>
+</blockquote>
+<h2 id="Config-mode"><a href="#Config-mode" class="headerlink" title="Config mode"></a>Config mode</h2>
+          <!--noindex-->
+            <div class="post-button">
+              <a class="btn" href="../../cli/cmake/modern-cmake-for-cpp/chapter07-managing-dependencies.html#more" rel="contents">
                 阅读全文 &raquo;
               </a>
             </div>
@@ -873,108 +987,6 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="https://hxhue.github.io/cli/cmake/modern-cmake-for-cpp/chapter07-managing-dependencies.html">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="../../images/avatar.gif">
-      <meta itemprop="name" content="😋">
-      <meta itemprop="description" content="">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Bluegill">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          
-            <a href="../../cli/cmake/modern-cmake-for-cpp/chapter07-managing-dependencies.html" class="post-title-link" itemprop="url">chapter07 - managing dependencies</a>
-        </h2>
-
-        <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-calendar"></i>
-              </span>
-              <span class="post-meta-item-text">发表于</span>
-
-              <time title="创建时间：2024-02-01 23:01:00" itemprop="dateCreated datePublished" datetime="2024-02-01T23:01:00+08:00">2024-02-01</time>
-            </span>
-              <span class="post-meta-item">
-                <span class="post-meta-item-icon">
-                  <i class="far fa-calendar-check"></i>
-                </span>
-                <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2024-03-21 16:27:13" itemprop="dateModified" datetime="2024-03-21T16:27:13+08:00">2024-03-21</time>
-              </span>
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-folder"></i>
-              </span>
-              <span class="post-meta-item-text">分类于</span>
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="../../categories/cli/" itemprop="url" rel="index"><span itemprop="name">cli</span></a>
-                </span>
-            </span>
-
-          <br>
-            <span class="post-meta-item" title="本文字数">
-              <span class="post-meta-item-icon">
-                <i class="far fa-file-word"></i>
-              </span>
-                <span class="post-meta-item-text">本文字数：</span>
-              <span>1.8k</span>
-            </span>
-            <span class="post-meta-item" title="阅读时长">
-              <span class="post-meta-item-icon">
-                <i class="far fa-clock"></i>
-              </span>
-                <span class="post-meta-item-text">阅读时长 &asymp;</span>
-              <span>7 分钟</span>
-            </span>
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          <h1 id="Best-option-find-package"><a href="#Best-option-find-package" class="headerlink" title="Best option: find_package"></a>Best option: <code>find_package</code></h1><p><a target="_blank" rel="noopener" href="https://cmake.org/cmake/help/latest/command/find_package.html">https://cmake.org/cmake/help/latest/command/find_package.html</a></p>
-<p>有三种工作模式。</p>
-<h2 id="Module-mode"><a href="#Module-mode" class="headerlink" title="Module mode"></a>Module mode</h2><p><code>Find&lt;PackageName&gt;.cmake</code></p>
-<p>主要是包外提供，比如 CMake、操作系统、或者写当前工程的人提供的试探性地去搜索库的方式。先找 <code>CMAKE_MODULE_PATH</code>，然后就是 cmake 的安装目录。</p>
-<blockquote>
-<p>NexusNet 的不少路径都是硬编码的，写 Find Module 会更合适。</p>
-</blockquote>
-<h2 id="Config-mode"><a href="#Config-mode" class="headerlink" title="Config mode"></a>Config mode</h2>
-          <!--noindex-->
-            <div class="post-button">
-              <a class="btn" href="../../cli/cmake/modern-cmake-for-cpp/chapter07-managing-dependencies.html#more" rel="contents">
-                阅读全文 &raquo;
-              </a>
-            </div>
-          <!--/noindex-->
-        
-      
-    </div>
-
-    
-    
-    
-      <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  
-  
-  
-
-      
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
     <link itemprop="mainEntityOfPage" href="https://hxhue.github.io/cli/cmake/modern-cmake-for-cpp/chapter08-testing.html">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -1059,103 +1071,6 @@
             </div>
           <!--/noindex-->
         
-      
-    </div>
-
-    
-    
-    
-      <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  
-  
-  
-
-      
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="https://hxhue.github.io/cli/cmake/modern-cmake-for-cpp/chapter10-documents.html">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="../../images/avatar.gif">
-      <meta itemprop="name" content="😋">
-      <meta itemprop="description" content="">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Bluegill">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          
-            <a href="../../cli/cmake/modern-cmake-for-cpp/chapter10-documents.html" class="post-title-link" itemprop="url">chapter10 - documents</a>
-        </h2>
-
-        <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-calendar"></i>
-              </span>
-              <span class="post-meta-item-text">发表于</span>
-
-              <time title="创建时间：2024-02-01 23:01:00" itemprop="dateCreated datePublished" datetime="2024-02-01T23:01:00+08:00">2024-02-01</time>
-            </span>
-              <span class="post-meta-item">
-                <span class="post-meta-item-icon">
-                  <i class="far fa-calendar-check"></i>
-                </span>
-                <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2024-03-15 23:34:53" itemprop="dateModified" datetime="2024-03-15T23:34:53+08:00">2024-03-15</time>
-              </span>
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-folder"></i>
-              </span>
-              <span class="post-meta-item-text">分类于</span>
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="../../categories/cli/" itemprop="url" rel="index"><span itemprop="name">cli</span></a>
-                </span>
-            </span>
-
-          <br>
-            <span class="post-meta-item" title="本文字数">
-              <span class="post-meta-item-icon">
-                <i class="far fa-file-word"></i>
-              </span>
-                <span class="post-meta-item-text">本文字数：</span>
-              <span>120</span>
-            </span>
-            <span class="post-meta-item" title="阅读时长">
-              <span class="post-meta-item-icon">
-                <i class="far fa-clock"></i>
-              </span>
-                <span class="post-meta-item-text">阅读时长 &asymp;</span>
-              <span>1 分钟</span>
-            </span>
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          <h1 id="Adding-Doxygen-to-your-project"><a href="#Adding-Doxygen-to-your-project" class="headerlink" title="Adding Doxygen to your project"></a>Adding Doxygen to your project</h1><p>安装必要软件包：</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">apt-get install doxygen graphviz</span><br></pre></td></tr></table></figure>
-
-<p>然后就能在 CMake 中引入 Doxygen 包并使用 <code>doxygen_add_docs</code>。</p>
-<blockquote>
-<p>Since CMake 3.9, we can use the <code>doxygen_add_docs()</code> function from <code>FindDoxygen</code> find-module, which sets the documentation target up.</p>
-<p>注意 FindDoxygen module 推荐使用方式是 find_package，虽然可以 include 但是不推荐。</p>
-</blockquote>
-<p>doxygen 用的是 Javadoc 的格式。</p>
-<p>通过设置 <code>DOXYGEN_HTML_EXTRA_STYLESHEET</code> 选项可以修改输出文档的样式。比如 <a target="_blank" rel="noopener" href="https://github.com/jothepro/doxygen-awesome-css">https://github.com/jothepro/doxygen-awesome-css</a> 就是一个比较现代化的样式。</p>
-
       
     </div>
 
@@ -1265,6 +1180,113 @@
           <!--noindex-->
             <div class="post-button">
               <a class="btn" href="../../cli/cmake/modern-cmake-for-cpp/chapter09-program-analysis-tools.html#more" rel="contents">
+                阅读全文 &raquo;
+              </a>
+            </div>
+          <!--/noindex-->
+        
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://hxhue.github.io/cli/cmake/modern-cmake-for-cpp/chapter11-installing-and-packaging.html">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="../../images/avatar.gif">
+      <meta itemprop="name" content="😋">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Bluegill">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="../../cli/cmake/modern-cmake-for-cpp/chapter11-installing-and-packaging.html" class="post-title-link" itemprop="url">chapter11 - installing and packaging</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2024-02-01 23:01:00" itemprop="dateCreated datePublished" datetime="2024-02-01T23:01:00+08:00">2024-02-01</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2024-03-23 11:30:55" itemprop="dateModified" datetime="2024-03-23T11:30:55+08:00">2024-03-23</time>
+              </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="../../categories/cli/" itemprop="url" rel="index"><span itemprop="name">cli</span></a>
+                </span>
+            </span>
+
+          <br>
+            <span class="post-meta-item" title="本文字数">
+              <span class="post-meta-item-icon">
+                <i class="far fa-file-word"></i>
+              </span>
+                <span class="post-meta-item-text">本文字数：</span>
+              <span>4.4k</span>
+            </span>
+            <span class="post-meta-item" title="阅读时长">
+              <span class="post-meta-item-icon">
+                <i class="far fa-clock"></i>
+              </span>
+                <span class="post-meta-item-text">阅读时长 &asymp;</span>
+              <span>16 分钟</span>
+            </span>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <h1 id="Exporting-without-installation"><a href="#Exporting-without-installation" class="headerlink" title="Exporting without installation"></a>Exporting without installation</h1><p>使用 <code>export</code> 命令可以创建导出文件，然后其他工程只要 include 这个导出文件就能使用当前这个包中的 target，而不需要先将这个包用 <code>install</code> 安装在系统里。</p>
+<figure class="highlight cmake"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">export</span>(TARGETS [target1 [target2 [...]]]</span><br><span class="line">      [NAMESPACE &lt;namespace&gt;] [APPEND] <span class="keyword">FILE</span> &lt;path&gt;</span><br><span class="line">      [EXPORT_LINK_INTERFACE_LIBRARIES]</span><br></pre></td></tr></table></figure>
+
+<blockquote>
+<p><code>NAMESPACE</code> is recommended as a hint, stating that the target has been imported from other projects.</p>
+<p><code>APPEND</code> tells CMake that it shouldn’t erase the contents of the file before writing. 也就是说本身会按照 <code>FILE</code> 来覆写文件，但是 <code>APPEND</code> 使得写入方式变成追加。</p>
+<p><code>EXPORT_LINK_INTERFACE_LIBRARIES</code> will export target link dependencies (including imported and config-specific variants).</p>
+</blockquote>
+<p>例子：</p>
+<figure class="highlight cmake"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">cmake_minimum_required</span>(VERSION <span class="number">3.20</span>.<span class="number">0</span>)</span><br><span class="line"><span class="keyword">project</span>(ExportCalcCXX)</span><br><span class="line"><span class="keyword">add_subdirectory</span>(src bin)</span><br><span class="line"><span class="keyword">set</span>(EXPORT_DIR <span class="string">&quot;$&#123;CMAKE_CURRENT_BINARY_DIR&#125;/cmake&quot;</span>)</span><br><span class="line"><span class="keyword">export</span>(TARGETS calc</span><br><span class="line">  <span class="keyword">FILE</span> <span class="string">&quot;$&#123;EXPORT_DIR&#125;/CalcTargets.cmake&quot;</span></span><br><span class="line">  NAMESPACE Calc::</span><br><span class="line">)</span><br><span class="line">...</span><br></pre></td></tr></table></figure>
+
+<p><strong>这段代码将导出文件生成在了 binary tree 里面</strong>，这样的文件不会污染系统，但是可以被其他工程包含进去。还要注意 CMake 在 build tree 中导出的 target export file 里用的是绝对路径，所以不能轻易移动。上面代码还用到了一个名字空间 <code>Calc::</code>，因而创建的 target export file 中声明的 target 是 <code>Calc::calc</code>。</p>
+<p>export 命令还有一个形式：<code>export(EXPORT &lt;export&gt; [NAMESPACE &lt;namespace&gt;] [FILE &lt;path&gt;])</code>。这个形式不需要 targets，但是需要一个之前创建的 export 的名字。</p>
+          <!--noindex-->
+            <div class="post-button">
+              <a class="btn" href="../../cli/cmake/modern-cmake-for-cpp/chapter11-installing-and-packaging.html#more" rel="contents">
                 阅读全文 &raquo;
               </a>
             </div>

@@ -13,14 +13,12 @@
 
 <link rel="stylesheet" href="../../css/main.css">
 
-
+<link rel="stylesheet" href="//fonts.googleapis.com/css?family=Open Sans:300,300italic,400,400italic,700,700italic|JetBrains Mono:300,300italic,400,400italic,700,700italic&display=swap&subset=latin,latin-ext">
 <link rel="stylesheet" href="../../lib/font-awesome/css/all.min.css">
-  <link rel="stylesheet" href="../../lib/pace/pace-theme-minimal.min.css">
-  <script src="../../lib/pace/pace.min.js"></script>
 
 <script id="hexo-configurations">
     var NexT = window.NexT || {};
-    var CONFIG = {"hostname":"hxhue.github.io","root":"/","scheme":"Gemini","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"always","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":true,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":true,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},"path":"search.xml"};
+    var CONFIG = {"hostname":"hxhue.github.io","root":"/","scheme":"Gemini","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":true,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":true,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},"path":"search.xml"};
   </script>
 
   <meta property="og:type" content="website">
@@ -76,38 +74,52 @@
 </noscript>
 
 <!-- hexo injector head_end start -->
-<script type="text/javascript">
-(function() {
-  const urls = [
-    'https://images.unsplash.com/photo-1561174356-638d86f24f04',    // Ferris Wheel
-    'https://images.unsplash.com/photo-1561435194-d8f04c16a766',    // Leaves
-    'https://images.unsplash.com/photo-1553395572-0ef353a212bf',    // Tomato
-    'https://images.unsplash.com/photo-1553358961-37aa918d326a',    // Sandwich
-    'https://images.unsplash.com/photo-1559525839-b184a4d698c7',    // Coffee Bean
-    'https://images.unsplash.com/photo-1559181567-c3190ca9959b',    // Cherry
-    'https://images.unsplash.com/photo-1585752379769-801711aaf836', // Coffee
-  ]
-  const setBackground = () => {
-    const url = urls[new Date().getUTCDay()];
-    const main = document.querySelector('main');
-    main.style['background']            = "url('" + url + "')";
-    main.style['background-repeat']     = 'no-repeat';
-    main.style['background-size']       = 'cover';
-    main.style['background-attachment'] = 'fixed';
-    main.style['background-position']   = 'center';
-    // Add credit
-    const poweredBy = document.querySelector('body > div > footer > div > div.powered-by');
-    const credit = document.createElement('div');
-    credit.innerHTML = '✨The background is from https://unsplash.com/@picoftasty.';
-    poweredBy.parentElement.insertBefore(credit, poweredBy);
+<script> 
+  function f() {
+  const map = {
+    TIP: {
+      classes: ["note", "success"],
+    },
+    CAUTION: {
+      classes: ["note", "danger"],
+    },
+    IMPORTANT: {
+      classes: ["note", "primary"],
+    },
+    NOTE: {
+      classes: ["note", "info"],
+    },
+    WARNING: {
+      classes: ["note", "warning"],
+    },
   };
-  setTimeout(setBackground, 0);
-})();
+  // const htmlElement = (html) => {
+  //   const div = document.createElement("div");
+  //   div.innerHTML = html.trim();
+  //   return div.firstChild;
+  // };
+  Array.from(document.querySelectorAll("p")).forEach((p) => {
+    if (p.parentElement.tagName !== "BLOCKQUOTE") {
+      return;
+    }
+    const s = p.textContent;
+    if (s && s.startsWith("[!") && s.endsWith("]")) {
+      const callout = s.slice(2, s.length - 1).toUpperCase();
+      const setting = map[callout];
+      if (setting) {
+        p.parentElement.classList.add(...setting.classes);
+        p.parentElement.removeChild(p);
+      }
+    }
+  });
+}
+  setTimeout(f, 0);
 </script>
-    <style>
-      a, code { word-break: break-all; }
-    </style>
-    <!-- hexo injector head_end end --><link rel="alternate" href="atom.xml" title="Bluegill" type="application/atom+xml">
+
+<style> 
+  a, code { word-break: break-all; }
+</style>
+<!-- hexo injector head_end end --><link rel="alternate" href="atom.xml" title="Bluegill" type="application/atom+xml">
 </head>
 
 <body itemscope itemtype="http://schema.org/WebPage">
@@ -234,111 +246,6 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="https://hxhue.github.io/programming/cpp/cppcon/cppcon2023-lock-free-atomic-shared-pointers-without-a-split-reference-count.html">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="../../images/avatar.gif">
-      <meta itemprop="name" content="😋">
-      <meta itemprop="description" content="">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Bluegill">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          
-            <a href="../../programming/cpp/cppcon/cppcon2023-lock-free-atomic-shared-pointers-without-a-split-reference-count.html" class="post-title-link" itemprop="url">(CppCon 2023) Lock-free Atomic Shared Pointers Without a Split Reference Count</a>
-        </h2>
-
-        <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-calendar"></i>
-              </span>
-              <span class="post-meta-item-text">发表于</span>
-
-              <time title="创建时间：2024-03-05 20:21:00" itemprop="dateCreated datePublished" datetime="2024-03-05T20:21:00+08:00">2024-03-05</time>
-            </span>
-              <span class="post-meta-item">
-                <span class="post-meta-item-icon">
-                  <i class="far fa-calendar-check"></i>
-                </span>
-                <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2024-03-15 16:41:11" itemprop="dateModified" datetime="2024-03-15T16:41:11+08:00">2024-03-15</time>
-              </span>
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-folder"></i>
-              </span>
-              <span class="post-meta-item-text">分类于</span>
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="../../categories/programming/" itemprop="url" rel="index"><span itemprop="name">programming</span></a>
-                </span>
-            </span>
-
-          <br>
-            <span class="post-meta-item" title="本文字数">
-              <span class="post-meta-item-icon">
-                <i class="far fa-file-word"></i>
-              </span>
-                <span class="post-meta-item-text">本文字数：</span>
-              <span>410</span>
-            </span>
-            <span class="post-meta-item" title="阅读时长">
-              <span class="post-meta-item-icon">
-                <i class="far fa-clock"></i>
-              </span>
-                <span class="post-meta-item-text">阅读时长 &asymp;</span>
-              <span>1 分钟</span>
-            </span>
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          <p><a target="_blank" rel="noopener" href="https://youtu.be/lNPZV9Iqo3U?si=lS1hf2ND4SS-6ELB">https://youtu.be/lNPZV9Iqo3U?si=lS1hf2ND4SS-6ELB</a> by Daniel Anderson</p>
-<p><code>std::shared_ptr</code> 的原子引用计数是线程安全的，但是：</p>
-<ol>
-<li>对它指向的对象的访问不是线程安全的</li>
-<li>对它本身的读写不是线程安全的</li>
-</ol>
-<p>这个 lecture 主要考虑第 2 点。在有一个全局或者类似全局的共享指针时，需要注意这个。</p>
-<p>首先不能使用 <code>std::atomic&lt;std::shared_ptr&gt;</code>，因为这个类型不是无锁的，有造成阻塞的可能。</p>
-<p>然后可以考虑用一个单独的原子变量来计数（这样就会同时有一个 <code>std::atomic&lt;int&gt;</code> 和一个 <code>std::shared_ptr</code>），确保 store 操作和 load 操作的安全性（不会 load 到一个引用计数已经归零然后被删掉的 <code>std::shared_ptr</code> 或者说控制块；一旦控制块被 delete，其他线程在控制块上的查询操作即对引用计数的原子读就会出现非法内存访问。）</p>
-<p>有些库甚至更进一步地实现了 split reference counted shared pointer，也就是把上一段的机制集成在了 <code>std::shared_ptr</code> 的内部，这比在外围做并发保护效率会高一些。</p>
-<p>然后 lecture 的重点是介绍 hazard pointer。使用 hazard pointer 保护对象时，控制块引用计数归零可以删掉对象，但不是马上 delete 掉这个控制块，而是使用 <code>retire</code> 方法，使得其他线程能够继续查询控制块。在没有线程查询控制块时再删除 retired control blocks，同样是把复杂度从用户移向了库的实现者。C++26 有可能会加入这个头文件。</p>
-          <!--noindex-->
-            <div class="post-button">
-              <a class="btn" href="../../programming/cpp/cppcon/cppcon2023-lock-free-atomic-shared-pointers-without-a-split-reference-count.html#more" rel="contents">
-                阅读全文 &raquo;
-              </a>
-            </div>
-          <!--/noindex-->
-        
-      
-    </div>
-
-    
-    
-    
-      <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  
-  
-  
-
-      
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
     <link itemprop="mainEntityOfPage" href="https://hxhue.github.io/programming/cpp/cppcon/cppcon2018-105-stl-algorithms-in-less-than-an-hour.html">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -448,6 +355,111 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://hxhue.github.io/programming/cpp/cppcon/cppcon2023-lock-free-atomic-shared-pointers-without-a-split-reference-count.html">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="../../images/avatar.gif">
+      <meta itemprop="name" content="😋">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Bluegill">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="../../programming/cpp/cppcon/cppcon2023-lock-free-atomic-shared-pointers-without-a-split-reference-count.html" class="post-title-link" itemprop="url">(CppCon 2023) Lock-free Atomic Shared Pointers Without a Split Reference Count</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2024-03-05 20:21:00" itemprop="dateCreated datePublished" datetime="2024-03-05T20:21:00+08:00">2024-03-05</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2024-03-15 16:41:11" itemprop="dateModified" datetime="2024-03-15T16:41:11+08:00">2024-03-15</time>
+              </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="../../categories/programming/" itemprop="url" rel="index"><span itemprop="name">programming</span></a>
+                </span>
+            </span>
+
+          <br>
+            <span class="post-meta-item" title="本文字数">
+              <span class="post-meta-item-icon">
+                <i class="far fa-file-word"></i>
+              </span>
+                <span class="post-meta-item-text">本文字数：</span>
+              <span>410</span>
+            </span>
+            <span class="post-meta-item" title="阅读时长">
+              <span class="post-meta-item-icon">
+                <i class="far fa-clock"></i>
+              </span>
+                <span class="post-meta-item-text">阅读时长 &asymp;</span>
+              <span>1 分钟</span>
+            </span>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <p><a target="_blank" rel="noopener" href="https://youtu.be/lNPZV9Iqo3U?si=lS1hf2ND4SS-6ELB">https://youtu.be/lNPZV9Iqo3U?si=lS1hf2ND4SS-6ELB</a> by Daniel Anderson</p>
+<p><code>std::shared_ptr</code> 的原子引用计数是线程安全的，但是：</p>
+<ol>
+<li>对它指向的对象的访问不是线程安全的</li>
+<li>对它本身的读写不是线程安全的</li>
+</ol>
+<p>这个 lecture 主要考虑第 2 点。在有一个全局或者类似全局的共享指针时，需要注意这个。</p>
+<p>首先不能使用 <code>std::atomic&lt;std::shared_ptr&gt;</code>，因为这个类型不是无锁的，有造成阻塞的可能。</p>
+<p>然后可以考虑用一个单独的原子变量来计数（这样就会同时有一个 <code>std::atomic&lt;int&gt;</code> 和一个 <code>std::shared_ptr</code>），确保 store 操作和 load 操作的安全性（不会 load 到一个引用计数已经归零然后被删掉的 <code>std::shared_ptr</code> 或者说控制块；一旦控制块被 delete，其他线程在控制块上的查询操作即对引用计数的原子读就会出现非法内存访问。）</p>
+<p>有些库甚至更进一步地实现了 split reference counted shared pointer，也就是把上一段的机制集成在了 <code>std::shared_ptr</code> 的内部，这比在外围做并发保护效率会高一些。</p>
+<p>然后 lecture 的重点是介绍 hazard pointer。使用 hazard pointer 保护对象时，控制块引用计数归零可以删掉对象，但不是马上 delete 掉这个控制块，而是使用 <code>retire</code> 方法，使得其他线程能够继续查询控制块。在没有线程查询控制块时再删除 retired control blocks，同样是把复杂度从用户移向了库的实现者。C++26 有可能会加入这个头文件。</p>
+          <!--noindex-->
+            <div class="post-button">
+              <a class="btn" href="../../programming/cpp/cppcon/cppcon2023-lock-free-atomic-shared-pointers-without-a-split-reference-count.html#more" rel="contents">
+                阅读全文 &raquo;
+              </a>
+            </div>
+          <!--/noindex-->
+        
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
     <link itemprop="mainEntityOfPage" href="https://hxhue.github.io/programming/cuda/cuda-%E7%A8%8B%E5%BA%8F%E7%AC%AC%E4%B8%80%E6%AC%A1%E8%BF%90%E8%A1%8C%E5%BE%88%E6%85%A2.html">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -527,7 +539,7 @@
 <p>nvcc embeds a compiled code image in the resulting executable for each specified <code>&lt;code&gt;</code> architecture, which is a true binary load image for each ‘real’ architecture (such as <code>sm_50</code>), and PTX code for the ‘virtual’ architecture (such as <code>compute_50</code>). During runtime, such embedded PTX code is dynamically compiled by the CUDA runtime system if no binary load image is found for the ‘current’ GPU.</p>
 </blockquote>
 <blockquote>
-<p style="margin-bottom: 0px"><font size="+1">✏️<strong> Note</strong></font></p>
+<p>[!NOTE]</p>
 <p><code>-arch</code> 选项生成二进制代码，而 <code>-code</code> 选项生成虚拟的 PTX 代码。</p>
 </blockquote>
           <!--noindex-->
@@ -1204,7 +1216,7 @@
 <figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// mutex 的类型是 int *，而且是分配在 GPU 上的</span></span><br><span class="line">__device__ <span class="type">void</span> <span class="title function_">lock</span><span class="params">( <span class="type">void</span> )</span> &#123;</span><br><span class="line">  <span class="keyword">while</span>( atomicCAS( mutex, <span class="number">0</span>, <span class="number">1</span> ) != <span class="number">0</span> );</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">__device__ <span class="type">void</span> <span class="title function_">unlock</span><span class="params">( <span class="type">void</span> )</span> &#123;</span><br><span class="line">  atomicExch( mutex, <span class="number">1</span> );</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 
 <blockquote>
-<p style="margin-bottom: 0px"><font size="+1">✏️<strong> Note</strong></font></p>
+<p>[!NOTE]</p>
 <p>这里的 <code>unlock</code> 方法并不是直接对 <code>*mutex</code> 赋值为 1，因为 CUDA 中原子操作和普通的内存访问经过的路径不同，所以应该在 <code>unlock</code> 的时候也统一使用原子操作。</p>
 </blockquote>
 <p>最后的 dot 核函数：</p>

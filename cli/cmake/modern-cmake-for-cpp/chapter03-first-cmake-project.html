@@ -13,22 +13,20 @@
 
 <link rel="stylesheet" href="../../../css/main.css">
 
-
+<link rel="stylesheet" href="//fonts.googleapis.com/css?family=Open Sans:300,300italic,400,400italic,700,700italic|JetBrains Mono:300,300italic,400,400italic,700,700italic&display=swap&subset=latin,latin-ext">
 <link rel="stylesheet" href="../../../lib/font-awesome/css/all.min.css">
-  <link rel="stylesheet" href="../../../lib/pace/pace-theme-minimal.min.css">
-  <script src="../../../lib/pace/pace.min.js"></script>
 
 <script id="hexo-configurations">
     var NexT = window.NexT || {};
-    var CONFIG = {"hostname":"hxhue.github.io","root":"/","scheme":"Gemini","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"always","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":true,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":true,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},"path":"search.xml"};
+    var CONFIG = {"hostname":"hxhue.github.io","root":"/","scheme":"Gemini","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":true,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":true,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},"path":"search.xml"};
   </script>
 
-  <meta name="description" content="cmake_minimal_requiredcmake_minimal_required(VERSION xxx) 是项目都应该有的说明。因为它指定了最小的版本，而且还会隐式去调用 cmake_policy，这样即便 cmake 版本更新了，policy 没变，旧项目仍然可以正常构建。  ✏️ Note cmake policy 是每次 cmake 有不向后兼容的改动时增加的标志。  VERSIO">
+  <meta name="description" content="cmake_minimal_requiredcmake_minimal_required(VERSION xxx) 是项目都应该有的说明。因为它指定了最小的版本，而且还会隐式去调用 cmake_policy，这样即便 cmake 版本更新了，policy 没变，旧项目仍然可以正常构建。  [!NOTE] cmake policy 是每次 cmake 有不向后兼容的改动时增加的标志。  VERSIO">
 <meta property="og:type" content="article">
 <meta property="og:title" content="chapter03 - first cmake project">
 <meta property="og:url" content="https://hxhue.github.io/cli/cmake/modern-cmake-for-cpp/chapter03-first-cmake-project.html">
 <meta property="og:site_name" content="Bluegill">
-<meta property="og:description" content="cmake_minimal_requiredcmake_minimal_required(VERSION xxx) 是项目都应该有的说明。因为它指定了最小的版本，而且还会隐式去调用 cmake_policy，这样即便 cmake 版本更新了，policy 没变，旧项目仍然可以正常构建。  ✏️ Note cmake policy 是每次 cmake 有不向后兼容的改动时增加的标志。  VERSIO">
+<meta property="og:description" content="cmake_minimal_requiredcmake_minimal_required(VERSION xxx) 是项目都应该有的说明。因为它指定了最小的版本，而且还会隐式去调用 cmake_policy，这样即便 cmake 版本更新了，policy 没变，旧项目仍然可以正常构建。  [!NOTE] cmake policy 是每次 cmake 有不向后兼容的改动时增加的标志。  VERSIO">
 <meta property="og:locale" content="zh_CN">
 <meta property="og:image" content="https://hxhue.github.io/assets/20ddfe76203d6c6d79c90737d5b92ad0.webp">
 <meta property="og:image" content="https://hxhue.github.io/assets/acca4488edb7d2a86cfc225abb5ed144.webp">
@@ -90,38 +88,52 @@
 </noscript>
 
 <!-- hexo injector head_end start -->
-<script type="text/javascript">
-(function() {
-  const urls = [
-    'https://images.unsplash.com/photo-1561174356-638d86f24f04',    // Ferris Wheel
-    'https://images.unsplash.com/photo-1561435194-d8f04c16a766',    // Leaves
-    'https://images.unsplash.com/photo-1553395572-0ef353a212bf',    // Tomato
-    'https://images.unsplash.com/photo-1553358961-37aa918d326a',    // Sandwich
-    'https://images.unsplash.com/photo-1559525839-b184a4d698c7',    // Coffee Bean
-    'https://images.unsplash.com/photo-1559181567-c3190ca9959b',    // Cherry
-    'https://images.unsplash.com/photo-1585752379769-801711aaf836', // Coffee
-  ]
-  const setBackground = () => {
-    const url = urls[new Date().getUTCDay()];
-    const main = document.querySelector('main');
-    main.style['background']            = "url('" + url + "')";
-    main.style['background-repeat']     = 'no-repeat';
-    main.style['background-size']       = 'cover';
-    main.style['background-attachment'] = 'fixed';
-    main.style['background-position']   = 'center';
-    // Add credit
-    const poweredBy = document.querySelector('body > div > footer > div > div.powered-by');
-    const credit = document.createElement('div');
-    credit.innerHTML = '✨The background is from https://unsplash.com/@picoftasty.';
-    poweredBy.parentElement.insertBefore(credit, poweredBy);
+<script> 
+  function f() {
+  const map = {
+    TIP: {
+      classes: ["note", "success"],
+    },
+    CAUTION: {
+      classes: ["note", "danger"],
+    },
+    IMPORTANT: {
+      classes: ["note", "primary"],
+    },
+    NOTE: {
+      classes: ["note", "info"],
+    },
+    WARNING: {
+      classes: ["note", "warning"],
+    },
   };
-  setTimeout(setBackground, 0);
-})();
+  // const htmlElement = (html) => {
+  //   const div = document.createElement("div");
+  //   div.innerHTML = html.trim();
+  //   return div.firstChild;
+  // };
+  Array.from(document.querySelectorAll("p")).forEach((p) => {
+    if (p.parentElement.tagName !== "BLOCKQUOTE") {
+      return;
+    }
+    const s = p.textContent;
+    if (s && s.startsWith("[!") && s.endsWith("]")) {
+      const callout = s.slice(2, s.length - 1).toUpperCase();
+      const setting = map[callout];
+      if (setting) {
+        p.parentElement.classList.add(...setting.classes);
+        p.parentElement.removeChild(p);
+      }
+    }
+  });
+}
+  setTimeout(f, 0);
 </script>
-    <style>
-      a, code { word-break: break-all; }
-    </style>
-    <!-- hexo injector head_end end --><link rel="alternate" href="atom.xml" title="Bluegill" type="application/atom+xml">
+
+<style> 
+  a, code { word-break: break-all; }
+</style>
+<!-- hexo injector head_end end --><link rel="alternate" href="atom.xml" title="Bluegill" type="application/atom+xml">
 </head>
 
 <body itemscope itemtype="http://schema.org/WebPage">
@@ -318,7 +330,7 @@
       
         <h1 id="cmake-minimal-required"><a href="#cmake-minimal-required" class="headerlink" title="cmake_minimal_required"></a>cmake_minimal_required</h1><p><code>cmake_minimal_required(VERSION xxx)</code> 是项目都应该有的说明。因为它指定了最小的版本，而且还会隐式去调用 <code>cmake_policy</code>，这样即便 cmake 版本更新了，policy 没变，旧项目仍然可以正常构建。</p>
 <blockquote>
-<p style="margin-bottom: 0px"><font size="+1">✏️<strong> Note</strong></font></p>
+<p>[!NOTE]</p>
 <p>cmake policy 是每次 cmake 有不向后兼容的改动时增加的标志。</p>
 </blockquote>
 <p>VERSION 可以是一个范围 <code>a...b</code>，如果只有一个值则是最小版本要求。</p>
@@ -419,12 +431,12 @@
         
     <div class="post-nav">
       <div class="post-nav-item">
-    <a href="chapter02.html" rel="prev" title="chapter02.a - 总结常用的 CMake 变量">
-      <i class="fa fa-chevron-left"></i> chapter02.a - 总结常用的 CMake 变量
+    <a href="chapter04.html" rel="prev" title="chapter04.a - 梳理依赖是如何创建的">
+      <i class="fa fa-chevron-left"></i> chapter04.a - 梳理依赖是如何创建的
     </a></div>
       <div class="post-nav-item">
-    <a href="chapter04-targets.html" rel="next" title="chapter04 - targets">
-      chapter04 - targets <i class="fa fa-chevron-right"></i>
+    <a href="chapter02.html" rel="next" title="chapter02.a - 总结常用的 CMake 变量">
+      chapter02.a - 总结常用的 CMake 变量 <i class="fa fa-chevron-right"></i>
     </a></div>
     </div>
       </footer>

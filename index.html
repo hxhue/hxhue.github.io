@@ -13,14 +13,12 @@
 
 <link rel="stylesheet" href="css/main.css">
 
-
+<link rel="stylesheet" href="//fonts.googleapis.com/css?family=Open Sans:300,300italic,400,400italic,700,700italic|JetBrains Mono:300,300italic,400,400italic,700,700italic&display=swap&subset=latin,latin-ext">
 <link rel="stylesheet" href="lib/font-awesome/css/all.min.css">
-  <link rel="stylesheet" href="lib/pace/pace-theme-minimal.min.css">
-  <script src="lib/pace/pace.min.js"></script>
 
 <script id="hexo-configurations">
     var NexT = window.NexT || {};
-    var CONFIG = {"hostname":"hxhue.github.io","root":"/","scheme":"Gemini","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"always","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":true,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":true,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},"path":"search.xml"};
+    var CONFIG = {"hostname":"hxhue.github.io","root":"/","scheme":"Gemini","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":true,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":true,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},"path":"search.xml"};
   </script>
 
   <meta property="og:type" content="website">
@@ -76,38 +74,52 @@
 </noscript>
 
 <!-- hexo injector head_end start -->
-<script type="text/javascript">
-(function() {
-  const urls = [
-    'https://images.unsplash.com/photo-1561174356-638d86f24f04',    // Ferris Wheel
-    'https://images.unsplash.com/photo-1561435194-d8f04c16a766',    // Leaves
-    'https://images.unsplash.com/photo-1553395572-0ef353a212bf',    // Tomato
-    'https://images.unsplash.com/photo-1553358961-37aa918d326a',    // Sandwich
-    'https://images.unsplash.com/photo-1559525839-b184a4d698c7',    // Coffee Bean
-    'https://images.unsplash.com/photo-1559181567-c3190ca9959b',    // Cherry
-    'https://images.unsplash.com/photo-1585752379769-801711aaf836', // Coffee
-  ]
-  const setBackground = () => {
-    const url = urls[new Date().getUTCDay()];
-    const main = document.querySelector('main');
-    main.style['background']            = "url('" + url + "')";
-    main.style['background-repeat']     = 'no-repeat';
-    main.style['background-size']       = 'cover';
-    main.style['background-attachment'] = 'fixed';
-    main.style['background-position']   = 'center';
-    // Add credit
-    const poweredBy = document.querySelector('body > div > footer > div > div.powered-by');
-    const credit = document.createElement('div');
-    credit.innerHTML = '✨The background is from https://unsplash.com/@picoftasty.';
-    poweredBy.parentElement.insertBefore(credit, poweredBy);
+<script> 
+  function f() {
+  const map = {
+    TIP: {
+      classes: ["note", "success"],
+    },
+    CAUTION: {
+      classes: ["note", "danger"],
+    },
+    IMPORTANT: {
+      classes: ["note", "primary"],
+    },
+    NOTE: {
+      classes: ["note", "info"],
+    },
+    WARNING: {
+      classes: ["note", "warning"],
+    },
   };
-  setTimeout(setBackground, 0);
-})();
+  // const htmlElement = (html) => {
+  //   const div = document.createElement("div");
+  //   div.innerHTML = html.trim();
+  //   return div.firstChild;
+  // };
+  Array.from(document.querySelectorAll("p")).forEach((p) => {
+    if (p.parentElement.tagName !== "BLOCKQUOTE") {
+      return;
+    }
+    const s = p.textContent;
+    if (s && s.startsWith("[!") && s.endsWith("]")) {
+      const callout = s.slice(2, s.length - 1).toUpperCase();
+      const setting = map[callout];
+      if (setting) {
+        p.parentElement.classList.add(...setting.classes);
+        p.parentElement.removeChild(p);
+      }
+    }
+  });
+}
+  setTimeout(f, 0);
 </script>
-    <style>
-      a, code { word-break: break-all; }
-    </style>
-    <!-- hexo injector head_end end --><link rel="alternate" href="atom.xml" title="Bluegill" type="application/atom+xml">
+
+<style> 
+  a, code { word-break: break-all; }
+</style>
+<!-- hexo injector head_end end --><link rel="alternate" href="atom.xml" title="Bluegill" type="application/atom+xml">
 </head>
 
 <body itemscope itemtype="http://schema.org/WebPage">
@@ -265,7 +277,7 @@
                   <i class="far fa-calendar-check"></i>
                 </span>
                 <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2024-03-25 10:42:03" itemprop="dateModified" datetime="2024-03-25T10:42:03+08:00">2024-03-25</time>
+                <time title="修改时间：2024-03-26 16:50:16" itemprop="dateModified" datetime="2024-03-26T16:50:16+08:00">2024-03-26</time>
               </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
@@ -305,7 +317,7 @@
           <p><a target="_blank" rel="noopener" href="https://en.cppreference.com/w/cpp/language/rule_of_three">https://en.cppreference.com/w/cpp/language/rule_of_three</a></p>
 <h1 id="Rule-of-3"><a href="#Rule-of-3" class="headerlink" title="Rule of 3"></a>Rule of 3</h1><p>析构函数、拷贝构造、拷贝赋值三者要是定义了其一，最好把其他两个都补上，因为编译生成的很可能不是我们想要的。此外，<strong>定义三者之一会导致移动构造、移动赋值被删除</strong>。</p>
 <blockquote>
-<p style="margin-bottom: 0px"><font size="+1">💡<strong> Tip</strong></font></p>
+<p>[!TIP]</p>
 <p>复制&#x2F;移动赋值操作符可以用复制&#x2F;移动构造函数 + <code>std::swap</code> 实现。</p>
 </blockquote>
 <h1 id="Rule-of-5"><a href="#Rule-of-5" class="headerlink" title="Rule of 5"></a>Rule of 5</h1><p>还要加上移动构造和移动赋值（如果这个类不需要移动，或者移动和拷贝的过程完全一样，那就算了）。<a target="_blank" rel="noopener" href="https://isocpp.github.io/CppCoreGuidelines/CppCoreGuidelines#c21-if-you-define-or-delete-any-copy-move-or-destructor-function-define-or-delete-them-all">C++ Core Guidelines C.21</a> 中建议在碰了其中一个时，将它们全部删除或者全部定义。</p>
@@ -370,7 +382,7 @@
                   <i class="far fa-calendar-check"></i>
                 </span>
                 <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2024-03-23 22:52:48" itemprop="dateModified" datetime="2024-03-23T22:52:48+08:00">2024-03-23</time>
+                <time title="修改时间：2024-03-26 11:10:49" itemprop="dateModified" datetime="2024-03-26T11:10:49+08:00">2024-03-26</time>
               </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
@@ -409,7 +421,7 @@
       
           <p>视频链接 <a target="_blank" rel="noopener" href="https://www.youtube.com/watch?v=SVEYNEWZLo4">https://www.youtube.com/watch?v=SVEYNEWZLo4</a></p>
 <h1 id="不要用-Volatile-来同步"><a href="#不要用-Volatile-来同步" class="headerlink" title="不要用 Volatile 来同步"></a>不要用 Volatile 来同步</h1><blockquote>
-<p style="margin-bottom: 0px"><font size="+1">✏️<strong> Note</strong></font></p>
+<p>[!NOTE]</p>
 <p>顺带一提：C++20 中，有不少和 volatile 相关的操作都已经被标记为过时。详见 <a target="_blank" rel="noopener" href="https://en.cppreference.com/w/cpp/language/cv">https://en.cppreference.com/w/cpp/language/cv</a></p>
 </blockquote>
 <figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;tuple&gt;</span></span></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="type">int</span> <span class="title">main</span><span class="params">()</span> </span>&#123;</span><br><span class="line">  <span class="keyword">volatile</span> <span class="type">int</span> x = <span class="number">0</span>;</span><br><span class="line">  <span class="comment">// C++20</span></span><br><span class="line">  <span class="comment">// 1.1 函数参数不能用 volatile 类型 ❌</span></span><br><span class="line">  <span class="keyword">auto</span> f1 = [](<span class="keyword">volatile</span> <span class="type">int</span>) &#123;&#125;;</span><br><span class="line">  <span class="comment">// 1.2 函数返回值不能 volatile 类型 ❌</span></span><br><span class="line">  <span class="keyword">auto</span> f2 = []() -&gt; <span class="keyword">volatile</span> <span class="type">int</span> &#123; <span class="keyword">return</span> <span class="number">0</span>; &#125;;</span><br><span class="line">  <span class="type">int</span> y = (x = <span class="number">6</span>);</span><br><span class="line">  <span class="comment">// 2 自增、自减运算符不能在 volatile 变量上操作 ❌</span></span><br><span class="line">  x++;</span><br><span class="line">  <span class="comment">// 3. 结构化绑定不能用 volatile ❌</span></span><br><span class="line">  <span class="keyword">auto</span> <span class="keyword">volatile</span> [a, b] = std::tuple&#123;<span class="number">1</span>, <span class="number">3</span>&#125;;</span><br><span class="line">  <span class="comment">// 4. 不能基于 volatile 变量连续赋值，除非是在不评估的环境中</span></span><br><span class="line">  <span class="comment">// 错误 ❌</span></span><br><span class="line">  <span class="type">int</span> z = (x = <span class="number">5</span>);</span><br><span class="line">  <span class="comment">// 会有 -Wunevaluated-expression 警告，正确但是不推荐</span></span><br><span class="line">  <span class="keyword">using</span> T = <span class="keyword">decltype</span>((x = <span class="number">5</span>));</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
@@ -603,7 +615,7 @@
       
           <p>Docker 不能用 <kbd>CTRL</kbd> + <kbd>p</kbd>，<kbd>CTRL</kbd> + <kbd>q</kbd>  退出的解决方案：登录后先用 <code>tty</code> 看自己的终端。然后用另外一个连接 <code>ps -af</code> 看想要终止的 <code>docker</code> 命令的 pid 是多少，然后用 <code>kill -9</code> 强杀。因为杀的是客户端而不是守护进程，所以不需要担心其他正在运行的容器受到影响。</p>
 <blockquote>
-<p style="margin-bottom: 0px"><font size="+1">⚠<strong> Warning</strong></font></p>
+<p>[!WARNING]</p>
 <p>不能用 <code>kill</code>（不带参数），因为 <code>kill</code> 会让 docker 连接优雅退出，所以容器也会被关闭！</p>
 </blockquote>
 <p>这样能更快找到 docker 命令：</p>
