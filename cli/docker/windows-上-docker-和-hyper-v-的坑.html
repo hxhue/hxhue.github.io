@@ -79,30 +79,25 @@
 
 <!-- hexo injector head_end start -->
 <script> 
-  function f() {
+function f() {
   const map = {
     TIP: {
-      classes: ["note", "success"],
+      classList: ["note", "success"],
     },
     CAUTION: {
-      classes: ["note", "danger"],
+      classList: ["note", "danger"],
     },
     IMPORTANT: {
-      classes: ["note", "primary"],
+      classList: ["note", "primary"],
     },
     NOTE: {
-      classes: ["note", "info"],
+      classList: ["note", "info"],
     },
     WARNING: {
-      classes: ["note", "warning"],
+      classList: ["note", "warning"],
     },
   };
-  // const htmlElement = (html) => {
-  //   const div = document.createElement("div");
-  //   div.innerHTML = html.trim();
-  //   return div.firstChild;
-  // };
-  Array.from(document.querySelectorAll("p")).forEach((p) => {
+  const makeCallout = (p) => {
     if (p.parentElement.tagName !== "BLOCKQUOTE") {
       return;
     }
@@ -111,13 +106,24 @@
       const callout = s.slice(2, s.length - 1).toUpperCase();
       const setting = map[callout];
       if (setting) {
-        p.parentElement.classList.add(...setting.classes);
+        p.parentElement.classList.add(...setting.classList);
         p.parentElement.removeChild(p);
       }
     }
+  };
+  const observer = new MutationObserver((mutationsList, observer) => {
+    for (let mutation of mutationsList) {
+      if (mutation.type === "childList") {
+        mutation.addedNodes
+          .filter((p) => p.tagName === "P")
+          .forEach(makeCallout);
+      }
+    }
   });
+  observer.observe(document.body, { childList: true });
+  Array.from(document.querySelectorAll("p")).forEach(makeCallout);
 }
-  setTimeout(f, 0);
+setTimeout(f, 0);
 </script>
 
 <style> 
