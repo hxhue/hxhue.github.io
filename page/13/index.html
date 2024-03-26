@@ -547,7 +547,7 @@ setTimeout(f, 0);
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="https://hxhue.github.io/systems/windows/wsl-%E5%90%88%E9%9B%86.html">
+    <link itemprop="mainEntityOfPage" href="https://hxhue.github.io/programming/python/python-slots.html">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="image" content="../../images/avatar.gif">
@@ -561,7 +561,7 @@ setTimeout(f, 0);
       <header class="post-header">
         <h2 class="post-title" itemprop="name headline">
           
-            <a href="../../systems/windows/wsl-%E5%90%88%E9%9B%86.html" class="post-title-link" itemprop="url">WSL 合集</a>
+            <a href="../../programming/python/python-slots.html" class="post-title-link" itemprop="url">Python __slots__</a>
         </h2>
 
         <div class="post-meta">
@@ -578,7 +578,7 @@ setTimeout(f, 0);
                   <i class="far fa-calendar-check"></i>
                 </span>
                 <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2024-03-19 12:19:03" itemprop="dateModified" datetime="2024-03-19T12:19:03+08:00">2024-03-19</time>
+                <time title="修改时间：2024-03-15 16:31:51" itemprop="dateModified" datetime="2024-03-15T16:31:51+08:00">2024-03-15</time>
               </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
@@ -586,7 +586,7 @@ setTimeout(f, 0);
               </span>
               <span class="post-meta-item-text">分类于</span>
                 <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="../../categories/systems/" itemprop="url" rel="index"><span itemprop="name">systems</span></a>
+                  <a href="../../categories/programming/" itemprop="url" rel="index"><span itemprop="name">programming</span></a>
                 </span>
             </span>
 
@@ -596,14 +596,14 @@ setTimeout(f, 0);
                 <i class="far fa-file-word"></i>
               </span>
                 <span class="post-meta-item-text">本文字数：</span>
-              <span>638</span>
+              <span>225</span>
             </span>
             <span class="post-meta-item" title="阅读时长">
               <span class="post-meta-item-icon">
                 <i class="far fa-clock"></i>
               </span>
                 <span class="post-meta-item-text">阅读时长 &asymp;</span>
-              <span>2 分钟</span>
+              <span>1 分钟</span>
             </span>
 
         </div>
@@ -615,19 +615,113 @@ setTimeout(f, 0);
     <div class="post-body" itemprop="articleBody">
 
       
-          <h1 id="常见问题"><a href="#常见问题" class="headerlink" title="常见问题"></a>常见问题</h1><p><strong>设置 apt 代理</strong>。编辑 &#x2F;etc&#x2F;apt&#x2F;apt.conf，格式如下（ip 会变）：</p>
-<figure class="highlight txt"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">// 很奇怪，注释竟然是//开头，而不是#</span><br><span class="line">Acquire::http::Proxy &quot;http://192.168.1.56:12366/&quot;;</span><br><span class="line">Acquire::https::Proxy &quot;http://192.168.1.56:12366/&quot;;</span><br></pre></td></tr></table></figure>
+          <p>定义了 <code>__slots__</code> 静态属性的类没有 <code>__dict__</code> 属性。而且只能添加存在于槽中的属性（可以少加，不能多加）。</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">class</span> <span class="title class_">Point</span>:</span><br><span class="line">    __slots__ = [<span class="string">&#x27;x&#x27;</span>, <span class="string">&#x27;y&#x27;</span>]</span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">__init__</span>(<span class="params">self, x, y</span>):</span><br><span class="line">        self.x = x</span><br><span class="line">        self.y = y</span><br><span class="line"></span><br><span class="line">p = Point(<span class="number">1</span>, <span class="number">2</span>)</span><br><span class="line"><span class="built_in">print</span>(p.__dict__)  <span class="comment"># 输出: AttributeError: &#x27;Point&#x27; object has no attribute &#x27;__dict__&#x27;</span></span><br></pre></td></tr></table></figure>
 
+<p>槽最大的意义在于节省空间：共享 <code>__slots__</code>，每个对象没有自己的 <code>__dict__</code>。节省了字典的空间。对于属性较多的对象，使用槽访问速度可能会下降。</p>
+<figure class="highlight txt"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line">&gt;&gt;&gt; import sys</span><br><span class="line">&gt;&gt;&gt; class Foo:</span><br><span class="line">...    def __init__(self, x): self.x = x</span><br><span class="line">...</span><br><span class="line">&gt;&gt;&gt; sys.getsizeof(Foo(1))</span><br><span class="line">56</span><br><span class="line">&gt;&gt;&gt; sys.getsizeof(Foo(1)) + sys.getsizeof(Foo(1).__dict__)</span><br><span class="line">336</span><br><span class="line">&gt;&gt;&gt; class Bar:</span><br><span class="line">...    __slots__ = &#x27;x&#x27;, # 这里表示的是一个元组</span><br><span class="line">...    def __init__(self, x): self.x = x</span><br><span class="line">...</span><br><span class="line">&gt;&gt;&gt; sys.getsizeof(Bar(1))</span><br><span class="line">40</span><br></pre></td></tr></table></figure>
+
+<p>有些属性可能既不存在于 <code>__slots__</code> 中，又不存在于 <code>__dict__</code> 中。这些属性是方法，能从 <code>dir(obj)</code> 中看到。而且标注了 <code>@property</code> 的方法能够直接像其他属性一样访问。</p>
+
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://hxhue.github.io/programming/python/python-pycache.html">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="../../images/avatar.gif">
+      <meta itemprop="name" content="😋">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Bluegill">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="../../programming/python/python-pycache.html" class="post-title-link" itemprop="url">Python __pycache__</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2023-08-12 15:17:00" itemprop="dateCreated datePublished" datetime="2023-08-12T15:17:00+08:00">2023-08-12</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2024-03-21 16:27:13" itemprop="dateModified" datetime="2024-03-21T16:27:13+08:00">2024-03-21</time>
+              </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="../../categories/programming/" itemprop="url" rel="index"><span itemprop="name">programming</span></a>
+                </span>
+            </span>
+
+          <br>
+            <span class="post-meta-item" title="本文字数">
+              <span class="post-meta-item-icon">
+                <i class="far fa-file-word"></i>
+              </span>
+                <span class="post-meta-item-text">本文字数：</span>
+              <span>360</span>
+            </span>
+            <span class="post-meta-item" title="阅读时长">
+              <span class="post-meta-item-icon">
+                <i class="far fa-clock"></i>
+              </span>
+                <span class="post-meta-item-text">阅读时长 &asymp;</span>
+              <span>1 分钟</span>
+            </span>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <h1 id="工作原理"><a href="#工作原理" class="headerlink" title="工作原理"></a>工作原理</h1><p><a target="_blank" rel="noopener" href="https://peps.python.org/pep-3147/#python-behavior">https://peps.python.org/pep-3147/#python-behavior</a></p>
+<p><img src="../../../assets/dbdbce0fb3f79132732f34d71c5fee8f.jpeg"></p>
+<p>每次 import 的时候，解释器检查当前目录下的 <code>__pycache__</code> 文件夹，读取和 Python 版本对应的 cache，然后读取 cache 中库的修改时间（cache 文件中记录着源码的修改时间，并不是 cache 文件本身的修改时间）。将这个时间和源码的时间比较，如果这个时间不存在，或者比源码的时间新，就加载 <code>.pyc</code> 而不必加载源码。</p>
+<p>问题：在 Windows 和 WSL 上测试，解释器总是能够发现最新的源码，好像没有读取字节码一样。原因是除了时间之外，pycache 还存储了源文件的长度（验证后发现确实是这样，修改代码时既不改变文件时间又不改变长度，就能复用 cache）。</p>
 <blockquote>
-<p>sudo 没有 <code>$http_proxy</code> 代理的原因是默认不传递环境变量，使用 <code>-E</code> 选项传递环境变量就可以不设置上面的代理。</p>
+<p><a target="_blank" rel="noopener" href="https://docs.python.org/3/reference/import.html###%205.4.7.%20Cached%20bytecode%20invalidation%5D(https://docs.python.org/3/reference/import.html###%205.4.7.%20Cached%20bytecode%20invalidation%5D(https://docs.python.org/3/reference/import.html#cached-bytecode-invalidation%20%22Permalink%20to%20this%20headline%22">link</a></p>
+<p>Before Python loads cached bytecode from a <code>.pyc</code> file, it checks whether the cache is up-to-date with the source <code>.py</code> file. <strong>By default, Python does this by storing the source’s last-modified timestamp and size in the cache file when writing it.</strong> At runtime, the import system then validates the cache file by checking the stored metadata in the cache file against the source’s metadata.</p>
+<p>Python 3.2 引入了 <code>__pycache__</code>，之前是在文件旁边直接生成对应的 <code>.pyc</code> 文件（加了 <code>c</code> 后缀），而不组织在文件夹中。</p>
 </blockquote>
-<p>清华大学开源软件镜像站 <a target="_blank" rel="noopener" href="https://mirrors.tuna.tsinghua.edu.cn/help/debian/">https://mirrors.tuna.tsinghua.edu.cn/help/debian/</a></p>
-<p>先用自己电脑给 apt 开代理，然后改镜像，安装一些 https 源需要的东西，然后 apt update。之后安装 build-essential mlocate 等等。</p>
-<p>mlocate 安装之后：<code>/etc/updatedb.conf</code> 里面排除 <code>/mnt</code> 和 <code>/usr/lib/wsl</code> 以防止扫描 C 盘和 WSL 的驱动文件（体量很大）。然后 <code>sudo updatedb</code></p>
-<p>neovim 的配置：~&#x2F;.config&#x2F;nvim&#x2F;init.vim</p>
+<h1 id="作用"><a href="#作用" class="headerlink" title="作用"></a>作用</h1><p>加速了后续进程的 import。（同一个进程中是有模块缓存的，第二次 import 不会真正去读文件，除非缓存记录被 <code>del</code>。）</p>
           <!--noindex-->
             <div class="post-button">
-              <a class="btn" href="../../systems/windows/wsl-%E5%90%88%E9%9B%86.html#more" rel="contents">
+              <a class="btn" href="../../programming/python/python-pycache.html#more" rel="contents">
                 阅读全文 &raquo;
               </a>
             </div>
@@ -651,7 +745,7 @@ setTimeout(f, 0);
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="https://hxhue.github.io/systems/windows/windows-11-%E7%A6%81%E7%94%A8%E7%AC%94%E8%AE%B0%E6%9C%AC%E9%94%AE%E7%9B%98.html">
+    <link itemprop="mainEntityOfPage" href="https://hxhue.github.io/programming/python/python-sys-vs-os.html">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="image" content="../../images/avatar.gif">
@@ -665,7 +759,7 @@ setTimeout(f, 0);
       <header class="post-header">
         <h2 class="post-title" itemprop="name headline">
           
-            <a href="../../systems/windows/windows-11-%E7%A6%81%E7%94%A8%E7%AC%94%E8%AE%B0%E6%9C%AC%E9%94%AE%E7%9B%98.html" class="post-title-link" itemprop="url">Windows 11 禁用笔记本键盘</a>
+            <a href="../../programming/python/python-sys-vs-os.html" class="post-title-link" itemprop="url">Python sys vs os</a>
         </h2>
 
         <div class="post-meta">
@@ -682,7 +776,7 @@ setTimeout(f, 0);
                   <i class="far fa-calendar-check"></i>
                 </span>
                 <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2024-03-19 11:06:40" itemprop="dateModified" datetime="2024-03-19T11:06:40+08:00">2024-03-19</time>
+                <time title="修改时间：2024-03-15 16:31:51" itemprop="dateModified" datetime="2024-03-15T16:31:51+08:00">2024-03-15</time>
               </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
@@ -690,7 +784,7 @@ setTimeout(f, 0);
               </span>
               <span class="post-meta-item-text">分类于</span>
                 <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="../../categories/systems/" itemprop="url" rel="index"><span itemprop="name">systems</span></a>
+                  <a href="../../categories/programming/" itemprop="url" rel="index"><span itemprop="name">programming</span></a>
                 </span>
             </span>
 
@@ -700,7 +794,7 @@ setTimeout(f, 0);
                 <i class="far fa-file-word"></i>
               </span>
                 <span class="post-meta-item-text">本文字数：</span>
-              <span>18</span>
+              <span>147</span>
             </span>
             <span class="post-meta-item" title="阅读时长">
               <span class="post-meta-item-icon">
@@ -719,9 +813,12 @@ setTimeout(f, 0);
     <div class="post-body" itemprop="articleBody">
 
       
-          <p><strong>禁用</strong>：<code>sc.exe config i8042prt start= disabled</code></p>
-<p><strong>启用</strong>：<code>sc.exe config i8042prt start= auto</code></p>
-<p>需要重启。</p>
+          <p>sys 可以访问解释器（运行时功能）和系统特定功能（系统有关功能）。os 提供了操作系统上的统一抽象（系统无关功能）。</p>
+<ul>
+<li>解释器功能：比如 <code>sys.argv</code> 访问命令行参数，<code>sys.exit()</code> 退出程序，<code>sys.path</code> 是 python 包的查询路径，<code>sys.stdin/sys.stdout/sys.stderr</code> 分别表示三个系统管道。</li>
+<li>系统有关功能：比如 <code>sys.getwindowsversion</code> 可以得到 windows 的大小版本号。<code>sys.platform</code> 可以获得操作系统平台。<code>sys.version</code> 是 python 安装信息。</li>
+<li>系统无关功能：操作文件系统，path 分隔符，环境变量等。</li>
+</ul>
 
       
     </div>
@@ -741,7 +838,7 @@ setTimeout(f, 0);
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="https://hxhue.github.io/systems/windows/windows-%E5%90%88%E9%9B%86.html">
+    <link itemprop="mainEntityOfPage" href="https://hxhue.github.io/programming/python/python-%E8%BD%AC%E7%BD%AE%E7%9F%A9%E9%98%B5.html">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="image" content="../../images/avatar.gif">
@@ -755,7 +852,7 @@ setTimeout(f, 0);
       <header class="post-header">
         <h2 class="post-title" itemprop="name headline">
           
-            <a href="../../systems/windows/windows-%E5%90%88%E9%9B%86.html" class="post-title-link" itemprop="url">Windows 合集</a>
+            <a href="../../programming/python/python-%E8%BD%AC%E7%BD%AE%E7%9F%A9%E9%98%B5.html" class="post-title-link" itemprop="url">Python 转置矩阵</a>
         </h2>
 
         <div class="post-meta">
@@ -772,7 +869,7 @@ setTimeout(f, 0);
                   <i class="far fa-calendar-check"></i>
                 </span>
                 <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2024-03-21 16:27:14" itemprop="dateModified" datetime="2024-03-21T16:27:14+08:00">2024-03-21</time>
+                <time title="修改时间：2024-03-15 16:31:51" itemprop="dateModified" datetime="2024-03-15T16:31:51+08:00">2024-03-15</time>
               </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
@@ -780,7 +877,7 @@ setTimeout(f, 0);
               </span>
               <span class="post-meta-item-text">分类于</span>
                 <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="../../categories/systems/" itemprop="url" rel="index"><span itemprop="name">systems</span></a>
+                  <a href="../../categories/programming/" itemprop="url" rel="index"><span itemprop="name">programming</span></a>
                 </span>
             </span>
 
@@ -790,14 +887,14 @@ setTimeout(f, 0);
                 <i class="far fa-file-word"></i>
               </span>
                 <span class="post-meta-item-text">本文字数：</span>
-              <span>1.5k</span>
+              <span>12</span>
             </span>
             <span class="post-meta-item" title="阅读时长">
               <span class="post-meta-item-icon">
                 <i class="far fa-clock"></i>
               </span>
                 <span class="post-meta-item-text">阅读时长 &asymp;</span>
-              <span>5 分钟</span>
+              <span>1 分钟</span>
             </span>
 
         </div>
@@ -809,19 +906,114 @@ setTimeout(f, 0);
     <div class="post-body" itemprop="articleBody">
 
       
-          <h1 id="组策略和注册表的关联"><a href="#组策略和注册表的关联" class="headerlink" title="组策略和注册表的关联"></a>组策略和注册表的关联</h1><p>组策略和注册表的内容是分别存储的，修改组策略并不会直接修改注册表。仅仅是在组策略刷新时，策略文件中的内容会被同步到注册表中。而且，组策略只维持自己的缓存，从不读取注册表中的值！</p>
-<p>当注册表不经过组策略编辑器被改动时，如果想要使用组策略管理相关项，可能需要先显式设置组策略中的项目为另外一个值，然后再改过来。</p>
+          <figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">transpose = <span class="keyword">lambda</span> listA: <span class="built_in">list</span>(<span class="built_in">list</span>(t) <span class="keyword">for</span> t <span class="keyword">in</span> <span class="built_in">zip</span>(*listA))</span><br></pre></td></tr></table></figure>
+
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://hxhue.github.io/programming/rust/rust-%E7%A8%8B%E5%BA%8F%E8%AE%BE%E8%AE%A1%E8%AF%AD%E8%A8%80-%E7%AC%AC%E4%B8%80%E5%8D%B0%E8%B1%A1.html">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="../../images/avatar.gif">
+      <meta itemprop="name" content="😋">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Bluegill">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="../../programming/rust/rust-%E7%A8%8B%E5%BA%8F%E8%AE%BE%E8%AE%A1%E8%AF%AD%E8%A8%80-%E7%AC%AC%E4%B8%80%E5%8D%B0%E8%B1%A1.html" class="post-title-link" itemprop="url">Rust 程序设计语言 第一印象</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2023-08-12 15:17:00" itemprop="dateCreated datePublished" datetime="2023-08-12T15:17:00+08:00">2023-08-12</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2024-03-21 16:27:13" itemprop="dateModified" datetime="2024-03-21T16:27:13+08:00">2024-03-21</time>
+              </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="../../categories/programming/" itemprop="url" rel="index"><span itemprop="name">programming</span></a>
+                </span>
+            </span>
+
+          <br>
+            <span class="post-meta-item" title="本文字数">
+              <span class="post-meta-item-icon">
+                <i class="far fa-file-word"></i>
+              </span>
+                <span class="post-meta-item-text">本文字数：</span>
+              <span>971</span>
+            </span>
+            <span class="post-meta-item" title="阅读时长">
+              <span class="post-meta-item-icon">
+                <i class="far fa-clock"></i>
+              </span>
+                <span class="post-meta-item-text">阅读时长 &asymp;</span>
+              <span>4 分钟</span>
+            </span>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <p>首先看这个：</p>
+<p><img src="../../../assets/fee648949a294fc8593f0a4dbbef67b1.png"></p>
+<p>C++中在 C++14 之后可以使用 <code>&#39;</code> 来分隔数字字面量。而 Java 和 Rust 在设计阶段很早的时候就支持了用 <code>_</code> 来分隔数字。</p>
+<p>个人感受：</p>
+<ul>
+<li>处处充斥强制移动语义。相关的是 Drop Trait，而基本类型还实现了 Copy Trait。（所有权和 C++ RAII 想要解决的问题相似）</li>
+<li>默认定义是常量，包括引用默认是常引用。（和 C++ 相反）</li>
+<li>允许同一个作用域内 shadow，试图把变量名当成真正的标签来用（类似 Python）。</li>
+<li>错误处理用 expect，比 try-catch 简洁。</li>
+<li>内置元组和 range、if 条件不需要加括号。</li>
+<li>很多实用包都得用 crate，在标准库中没提供……</li>
+</ul>
+<h1 id="认识所有权"><a href="#认识所有权" class="headerlink" title="认识所有权"></a>认识所有权</h1><p>同一生存期，对对象 A 的可变引用将排斥任何对对象 A 的其他引用。当且仅当所有引用都是常量引用时编译才能够通过。一个引用的作用域从声明的地方开始一直持续到最后一次使用为止。编译器能够把这一点检查出来。如果最后一次使用结束了，就不参与和其他引用的排斥行为了。</p>
 <blockquote>
-<p><a target="_blank" rel="noopener" href="https://superuser.com/a/1192458">https://superuser.com/a/1192458</a></p>
-<p><em>Local</em> group policy settings (which is what I believe you are referring to in your post) are stored in <code>registry.pol</code> files located in <code>C:\Windows\system32\GroupPolicy</code>. These files overwrite the corresponding keys in the registry every time the system performs a group policy refresh. The editor never actually reads the registry to see what settings it contains.</p>
-<p>其中 <code>C:\Windows\system32\GroupPolicy</code> 是一个隐藏文件夹。</p>
+<p>[!NOTE]</p>
+<p><code>str</code> 类型好像见不到，只能见到 <code>str&amp;</code> 类型。由于是引用，它自己没有所有权。</p>
 </blockquote>
-<h2 id="家庭版下强行开启组策略编辑器，操作不生效？"><a href="#家庭版下强行开启组策略编辑器，操作不生效？" class="headerlink" title="家庭版下强行开启组策略编辑器，操作不生效？"></a>家庭版下强行开启组策略编辑器，操作不生效？</h2><p>编辑组策略后观察 <code>registry.pol</code> 文件，发现数据的确被写入了。比如启用“Windows 更新不包括驱动程序”，对应的文件如下：</p>
-<p><img src="../../../assets/03904667cc69b9f4289b47e335e109de.jpeg"></p>
-<p>其中 <code>01 00 00 00</code> 表示“已启用”。这里看上去是一个字符按照两个字节存储，而整数又是 4 字节小端存储。</p>
           <!--noindex-->
             <div class="post-button">
-              <a class="btn" href="../../systems/windows/windows-%E5%90%88%E9%9B%86.html#more" rel="contents">
+              <a class="btn" href="../../programming/rust/rust-%E7%A8%8B%E5%BA%8F%E8%AE%BE%E8%AE%A1%E8%AF%AD%E8%A8%80-%E7%AC%AC%E4%B8%80%E5%8D%B0%E8%B1%A1.html#more" rel="contents">
                 阅读全文 &raquo;
               </a>
             </div>
@@ -845,7 +1037,7 @@ setTimeout(f, 0);
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="https://hxhue.github.io/systems/windows/windows-%E5%9B%9E%E9%80%80%E9%A9%B1%E5%8A%A8%E6%88%96%E7%BB%99%E5%B7%B2%E7%BB%8F%E5%88%A0%E9%99%A4%E7%9A%84%E8%AE%BE%E5%A4%87%E6%B7%BB%E5%8A%A0%E9%A9%B1%E5%8A%A8.html">
+    <link itemprop="mainEntityOfPage" href="https://hxhue.github.io/programming/java/concurrenthashmap.html">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="image" content="../../images/avatar.gif">
@@ -859,7 +1051,7 @@ setTimeout(f, 0);
       <header class="post-header">
         <h2 class="post-title" itemprop="name headline">
           
-            <a href="../../systems/windows/windows-%E5%9B%9E%E9%80%80%E9%A9%B1%E5%8A%A8%E6%88%96%E7%BB%99%E5%B7%B2%E7%BB%8F%E5%88%A0%E9%99%A4%E7%9A%84%E8%AE%BE%E5%A4%87%E6%B7%BB%E5%8A%A0%E9%A9%B1%E5%8A%A8.html" class="post-title-link" itemprop="url">Windows 回退驱动或给已经删除的设备添加驱动</a>
+            <a href="../../programming/java/concurrenthashmap.html" class="post-title-link" itemprop="url">OpenJDK: ConcurrentHashMap</a>
         </h2>
 
         <div class="post-meta">
@@ -876,7 +1068,7 @@ setTimeout(f, 0);
                   <i class="far fa-calendar-check"></i>
                 </span>
                 <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2024-03-21 16:27:14" itemprop="dateModified" datetime="2024-03-21T16:27:14+08:00">2024-03-21</time>
+                <time title="修改时间：2024-03-15 16:45:01" itemprop="dateModified" datetime="2024-03-15T16:45:01+08:00">2024-03-15</time>
               </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
@@ -884,7 +1076,7 @@ setTimeout(f, 0);
               </span>
               <span class="post-meta-item-text">分类于</span>
                 <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="../../categories/systems/" itemprop="url" rel="index"><span itemprop="name">systems</span></a>
+                  <a href="../../categories/programming/" itemprop="url" rel="index"><span itemprop="name">programming</span></a>
                 </span>
             </span>
 
@@ -894,14 +1086,14 @@ setTimeout(f, 0);
                 <i class="far fa-file-word"></i>
               </span>
                 <span class="post-meta-item-text">本文字数：</span>
-              <span>107</span>
+              <span>701</span>
             </span>
             <span class="post-meta-item" title="阅读时长">
               <span class="post-meta-item-icon">
                 <i class="far fa-clock"></i>
               </span>
                 <span class="post-meta-item-text">阅读时长 &asymp;</span>
-              <span>1 分钟</span>
+              <span>3 分钟</span>
             </span>
 
         </div>
@@ -913,17 +1105,21 @@ setTimeout(f, 0);
     <div class="post-body" itemprop="articleBody">
 
       
-          <p><strong>如果想要恢复到曾经安装过的驱动</strong>。可以按照下面步骤操作：</p>
-<p>首先在设备管理器中选择添加过时硬件。</p>
-<p><img src="../../../assets/1b40b74499ab2e5aa844b2f760b83e97.png"></p>
-<p>看到首页之后点下一页。然后选中手动安装，再点一次下一页。</p>
-<p><img src="../../../assets/b39de0e9b20b6a51f01e8be31cfc3e94.png"></p>
-<p>找到 <strong>显示适配器</strong>，再点下一页。</p>
-<p><img src="../../../assets/d57892a054bb0271fd86881725098f75.png"></p>
-<p>选择要安装的驱动，这里能找到和我的显卡匹配的两个版本的驱动。</p>
+          <p>现在已经没有 Segment 概念，并发系数不生效。能支持高效的并发：</p>
+<ol>
+<li>支持懒初始化，第一次写的时候发生，可能需要自旋但不需要加锁。</li>
+<li>读的时候可能需要自旋，不需要加锁。</li>
+<li>写的时候如果遇到正在扩容，则加入一起扩容；如果写时槽位为空，则只需要原子操作；写时操作非空，且不处在特殊状态，则需要加对象锁。因而读写互不阻塞、不同槽位的写不会阻塞、扩容不会阻塞（因为扩容时其他竞争线程也会被分配任务）、仅有单个槽位的多写需要阻塞。</li>
+</ol>
+<p>为了节省空间，在 <code>Node[]</code> 中用 hash 为负的头结点来表示该拉链处于特殊状态：树结点、转移中、预留等。</p>
+<p>转移的时候会以槽为单位进行，如果看到槽位正在转移中，则当前线程不会去抢夺工作，除非两个线程刚好看到了同一个槽位需要转移，这时会加对象锁处理。在遍历时会按照 (<code>hash_of_key:</code> ph &amp; <code>capacity_of_old_table:</code> n) 计算出给定位，以此来分组（理想的情况会对半分），然后用头插法生成两条新链表转移到 nextTable。</p>
+<p>💡 这当中有个优化过程：计算 lastRun，称链表尾部一连串对应 bit 相同的结点的起始位置为 lastRun，这系列结点将会被转移到 nextTable 的相同位置，因此会直接被转移，而不会对每个结点重新用头插法插入。头插法不仅需要遍历这一系列结点，还要对每个结点申请空间。</p>
+<p>如果线程 A 正在转移 <code>table</code> 到 <code>nextTable</code>，线程 B 读写链上的结点都会直接反映在被转移到的 <code>nextTable</code> 中。但如果线程 B 新创建了一个链（<code>table[i]</code> 从 <code>null</code> 变成有效），线程 A 如何看到？转移是从大下标开始，向小下标转移。转移后会在上面 CAS 放置 <code>ForwardingNode</code>，这样后来者可以直接写到其中，前来者写的结果会被转移。</p>
+<p>添加或者删除的时候怎么办？</p>
+<h2 id="为什么不允许键值为空？"><a href="#为什么不允许键值为空？" class="headerlink" title="为什么不允许键值为空？"></a>为什么不允许键值为空？</h2>
           <!--noindex-->
             <div class="post-button">
-              <a class="btn" href="../../systems/windows/windows-%E5%9B%9E%E9%80%80%E9%A9%B1%E5%8A%A8%E6%88%96%E7%BB%99%E5%B7%B2%E7%BB%8F%E5%88%A0%E9%99%A4%E7%9A%84%E8%AE%BE%E5%A4%87%E6%B7%BB%E5%8A%A0%E9%A9%B1%E5%8A%A8.html#more" rel="contents">
+              <a class="btn" href="../../programming/java/concurrenthashmap.html#more" rel="contents">
                 阅读全文 &raquo;
               </a>
             </div>
@@ -947,7 +1143,7 @@ setTimeout(f, 0);
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="https://hxhue.github.io/systems/windows/windows-%E6%8F%90%E7%A4%BA%E8%A2%AB%E7%AE%A1%E7%90%86%E5%91%98%E7%A6%81%E6%AD%A2%E5%AE%89%E8%A3%85%E6%A0%B8%E6%98%BE%E9%A9%B1%E5%8A%A8%E3%80%81wsl-%E4%B9%9F%E6%97%A0%E6%B3%95%E5%90%AF%E5%8A%A8.html">
+    <link itemprop="mainEntityOfPage" href="https://hxhue.github.io/programming/java/juc-locks.html">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="image" content="../../images/avatar.gif">
@@ -961,7 +1157,7 @@ setTimeout(f, 0);
       <header class="post-header">
         <h2 class="post-title" itemprop="name headline">
           
-            <a href="../../systems/windows/windows-%E6%8F%90%E7%A4%BA%E8%A2%AB%E7%AE%A1%E7%90%86%E5%91%98%E7%A6%81%E6%AD%A2%E5%AE%89%E8%A3%85%E6%A0%B8%E6%98%BE%E9%A9%B1%E5%8A%A8%E3%80%81wsl-%E4%B9%9F%E6%97%A0%E6%B3%95%E5%90%AF%E5%8A%A8.html" class="post-title-link" itemprop="url">Windows 提示被管理员禁止安装核显驱动、WSL 也无法启动</a>
+            <a href="../../programming/java/juc-locks.html" class="post-title-link" itemprop="url">OpenJDK: JUC locks</a>
         </h2>
 
         <div class="post-meta">
@@ -978,7 +1174,7 @@ setTimeout(f, 0);
                   <i class="far fa-calendar-check"></i>
                 </span>
                 <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2024-03-23 11:37:54" itemprop="dateModified" datetime="2024-03-23T11:37:54+08:00">2024-03-23</time>
+                <time title="修改时间：2024-03-21 16:27:13" itemprop="dateModified" datetime="2024-03-21T16:27:13+08:00">2024-03-21</time>
               </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
@@ -986,7 +1182,7 @@ setTimeout(f, 0);
               </span>
               <span class="post-meta-item-text">分类于</span>
                 <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="../../categories/systems/" itemprop="url" rel="index"><span itemprop="name">systems</span></a>
+                  <a href="../../categories/programming/" itemprop="url" rel="index"><span itemprop="name">programming</span></a>
                 </span>
             </span>
 
@@ -996,7 +1192,7 @@ setTimeout(f, 0);
                 <i class="far fa-file-word"></i>
               </span>
                 <span class="post-meta-item-text">本文字数：</span>
-              <span>114</span>
+              <span>370</span>
             </span>
             <span class="post-meta-item" title="阅读时长">
               <span class="post-meta-item-icon">
@@ -1015,189 +1211,20 @@ setTimeout(f, 0);
     <div class="post-body" itemprop="articleBody">
 
       
-          <p>原因是很早之前按照知乎的说法启用了这个设置，本想禁用系统更新时自动安装旧版本的核显驱动，但也使得我的电脑核显驱动坏掉且不能自行安装。</p>
-<p><img src="../../../assets/df665a70a2b095157646fb53c02e2313.png"></p>
-<p>恢复核显驱动首先应该关闭这项，然后去下载对应驱动安装，或者回退到旧的驱动。</p>
-<p><strong>这项配置启用时，我的 WSL 也无法正常进入！</strong></p>
-
-      
-    </div>
-
-    
-    
-    
-      <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  
-  
-  
-
-      
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="https://hxhue.github.io/systems/windows/windows-%E6%9F%A5%E6%89%BE%E5%B7%B2%E7%BB%8F%E4%BF%AE%E6%94%B9%E8%BF%87%E7%9A%84%E7%BB%84%E7%AD%96%E7%95%A5.html">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="../../images/avatar.gif">
-      <meta itemprop="name" content="😋">
-      <meta itemprop="description" content="">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Bluegill">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          
-            <a href="../../systems/windows/windows-%E6%9F%A5%E6%89%BE%E5%B7%B2%E7%BB%8F%E4%BF%AE%E6%94%B9%E8%BF%87%E7%9A%84%E7%BB%84%E7%AD%96%E7%95%A5.html" class="post-title-link" itemprop="url">Windows 查找已经修改过的组策略</a>
-        </h2>
-
-        <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-calendar"></i>
-              </span>
-              <span class="post-meta-item-text">发表于</span>
-
-              <time title="创建时间：2023-08-12 15:17:00" itemprop="dateCreated datePublished" datetime="2023-08-12T15:17:00+08:00">2023-08-12</time>
-            </span>
-              <span class="post-meta-item">
-                <span class="post-meta-item-icon">
-                  <i class="far fa-calendar-check"></i>
-                </span>
-                <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2024-03-21 16:27:14" itemprop="dateModified" datetime="2024-03-21T16:27:14+08:00">2024-03-21</time>
-              </span>
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-folder"></i>
-              </span>
-              <span class="post-meta-item-text">分类于</span>
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="../../categories/systems/" itemprop="url" rel="index"><span itemprop="name">systems</span></a>
-                </span>
-            </span>
-
-          <br>
-            <span class="post-meta-item" title="本文字数">
-              <span class="post-meta-item-icon">
-                <i class="far fa-file-word"></i>
-              </span>
-                <span class="post-meta-item-text">本文字数：</span>
-              <span>9</span>
-            </span>
-            <span class="post-meta-item" title="阅读时长">
-              <span class="post-meta-item-icon">
-                <i class="far fa-clock"></i>
-              </span>
-                <span class="post-meta-item-text">阅读时长 &asymp;</span>
-              <span>1 分钟</span>
-            </span>
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          <p>在所有设置中点排序。</p>
-<p><img src="../../../assets/1a5bb26a09cd937ee65801bf61378ad9.png"></p>
-
-      
-    </div>
-
-    
-    
-    
-      <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  
-  
-  
-
-      
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="https://hxhue.github.io/systems/windows/windows-%E7%AA%97%E5%8F%A3%E6%A0%8F%E5%9C%A8%E5%B1%8F%E5%B9%95%E5%A4%96%E4%B8%8D%E8%83%BD%E7%A7%BB%E5%8A%A8.html">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="../../images/avatar.gif">
-      <meta itemprop="name" content="😋">
-      <meta itemprop="description" content="">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Bluegill">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          
-            <a href="../../systems/windows/windows-%E7%AA%97%E5%8F%A3%E6%A0%8F%E5%9C%A8%E5%B1%8F%E5%B9%95%E5%A4%96%E4%B8%8D%E8%83%BD%E7%A7%BB%E5%8A%A8.html" class="post-title-link" itemprop="url">Windows 窗口栏在屏幕外不能移动</a>
-        </h2>
-
-        <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-calendar"></i>
-              </span>
-              <span class="post-meta-item-text">发表于</span>
-
-              <time title="创建时间：2023-08-12 15:17:00" itemprop="dateCreated datePublished" datetime="2023-08-12T15:17:00+08:00">2023-08-12</time>
-            </span>
-              <span class="post-meta-item">
-                <span class="post-meta-item-icon">
-                  <i class="far fa-calendar-check"></i>
-                </span>
-                <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2024-03-19 11:06:51" itemprop="dateModified" datetime="2024-03-19T11:06:51+08:00">2024-03-19</time>
-              </span>
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-folder"></i>
-              </span>
-              <span class="post-meta-item-text">分类于</span>
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="../../categories/systems/" itemprop="url" rel="index"><span itemprop="name">systems</span></a>
-                </span>
-            </span>
-
-          <br>
-            <span class="post-meta-item" title="本文字数">
-              <span class="post-meta-item-icon">
-                <i class="far fa-file-word"></i>
-              </span>
-                <span class="post-meta-item-text">本文字数：</span>
-              <span>86</span>
-            </span>
-            <span class="post-meta-item" title="阅读时长">
-              <span class="post-meta-item-icon">
-                <i class="far fa-clock"></i>
-              </span>
-                <span class="post-meta-item-text">阅读时长 &asymp;</span>
-              <span>1 分钟</span>
-            </span>
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          <p>先把窗口激活（放到最前面）然后按 <strong><code>Alt</code></strong> + **<code>Space</code>**，就能出现菜单选择 <strong>最大化&#x2F;最小化&#x2F;移动</strong>。</p>
-<p>如果不行，也可以把任何一个其他的窗口拖动到左屏，右侧选择位置不正确的窗口组成双栏分屏，然后将其拖出来恢复成正常窗口。</p>
-
+          <h1 id="ReentrantLock-公平锁和非公平锁的实现"><a href="#ReentrantLock-公平锁和非公平锁的实现" class="headerlink" title="ReentrantLock 公平锁和非公平锁的实现"></a>ReentrantLock 公平锁和非公平锁的实现</h1><p><img src="../../../assets/d6745452123368b4ec805513d2ac0e8a.svg"></p>
+<p>如果需要长时间等待，AQS 总是会将等待线程加入到队列尾部，唤醒时总是唤醒队首线程。这样做能够保证已经被睡眠的线程必定按照顺序唤醒。这样做难道不是永远都是公平锁？</p>
+<p>不是！NonfairSync 在 tryAcquire() 时不会检查是否为队首。这意味着如果有队列之外的线程尝试获取锁（发生在刚刚调用 ReentrantLock.lock() 的阶段），可能会先于队首线程获得锁。虽然这种情况的发生非常需要巧合，但也是不公平的； FairSync 对这一巧合下的公平性做出了更高的要求。</p>
+<p>公平和不公平的主要区别在于等待队列外的线程和等待队列上的线程之间的公平性。</p>
+<h1 id="CountDownLatch"><a href="#CountDownLatch" class="headerlink" title="CountDownLatch"></a>CountDownLatch</h1><p>只有 countDown() 被调用给定的次数后，await() 才能被唤醒。</p>
+<h1 id="synchronize-关键字"><a href="#synchronize-关键字" class="headerlink" title="synchronize 关键字"></a>synchronize 关键字</h1>
+          <!--noindex-->
+            <div class="post-button">
+              <a class="btn" href="../../programming/java/juc-locks.html#more" rel="contents">
+                阅读全文 &raquo;
+              </a>
+            </div>
+          <!--/noindex-->
+        
       
     </div>
 
