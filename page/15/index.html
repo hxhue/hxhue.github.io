@@ -74,35 +74,137 @@
 </noscript>
 
 <!-- hexo injector head_end start -->
-<script> 
+<link
+  rel="stylesheet"
+  href="https://cdn.jsdelivr.net/npm/github-markdown-css@5.3.0/github-markdown-dark.css"
+/>
+<style>
+.markdown-body {
+  background: #22272e;
+  color: #adbac7;
+}
+
+#content {
+  margin: 0 auto;
+  padding: 1rem;
+  max-width: 928px;
+}
+
+.markdown-alert {
+  padding: 0 1em;
+  margin-bottom: 16px;
+  color: inherit;
+  border-left: 0.25em solid #444c56;
+}
+
+.markdown-alert-title {
+  display: inline-flex;
+  align-items: center;
+  font-weight: 500;
+  margin-bottom: 8px; /* default is 20px, why? */
+}
+
+.markdown-alert-note {
+  border-left-color: #539bf5;
+}
+
+.markdown-alert-tip {
+  border-left-color: #57ab5a;
+}
+
+.markdown-alert-important {
+  border-left-color: #986ee2;
+}
+
+.markdown-alert-warning {
+  border-left-color: #c69026;
+}
+
+.markdown-alert-caution {
+  border-left-color: #e5534b;
+}
+
+.markdown-alert-note > .markdown-alert-title {
+  color: #539bf5;
+  fill: #539bf5;
+}
+
+.markdown-alert-tip > .markdown-alert-title {
+  color: #57ab5a;
+  fill: #57ab5a;
+}
+
+.markdown-alert-important > .markdown-alert-title {
+  color: #986ee2;
+  fill: #986ee2;
+}
+
+.markdown-alert-warning > .markdown-alert-title {
+  color: #c69026;
+  fill: #c69026;
+}
+
+.markdown-alert-caution > .markdown-alert-title {
+  color: #e5534b;
+  fill: #e5534b;
+}
+
+.mr-2 {
+  margin-right: 0.5rem;
+}
+</style>
+<script>
 function f() {
   const map = {
     TIP: {
-      classList: ["note", "success"],
+      classList: ["markdown-alert", "markdown-alert-tip"],
+      icon: `<svg class="octicon octicon-light-bulb mr-2" viewBox="0 0 16 16" width="16" height="16" aria-hidden="true"><path d="M8 1.5c-2.363 0-4 1.69-4 3.75 0 .984.424 1.625.984 2.304l.214.253c.223.264.47.556.673.848.284.411.537.896.621 1.49a.75.75 0 0 1-1.484.211c-.04-.282-.163-.547-.37-.847a8.456 8.456 0 0 0-.542-.68c-.084-.1-.173-.205-.268-.32C3.201 7.75 2.5 6.766 2.5 5.25 2.5 2.31 4.863 0 8 0s5.5 2.31 5.5 5.25c0 1.516-.701 2.5-1.328 3.259-.095.115-.184.22-.268.319-.207.245-.383.453-.541.681-.208.3-.33.565-.37.847a.751.751 0 0 1-1.485-.212c.084-.593.337-1.078.621-1.489.203-.292.45-.584.673-.848.075-.088.147-.173.213-.253.561-.679.985-1.32.985-2.304 0-2.06-1.637-3.75-4-3.75ZM5.75 12h4.5a.75.75 0 0 1 0 1.5h-4.5a.75.75 0 0 1 0-1.5ZM6 15.25a.75.75 0 0 1 .75-.75h2.5a.75.75 0 0 1 0 1.5h-2.5a.75.75 0 0 1-.75-.75Z"></path></svg>`,
     },
     CAUTION: {
-      classList: ["note", "danger"],
+      classList: ["markdown-alert", "markdown-alert-caution"],
+      icon: `<svg class="octicon octicon-stop mr-2" viewBox="0 0 16 16" width="16" height="16" aria-hidden="true"><path d="M4.47.22A.749.749 0 0 1 5 0h6c.199 0 .389.079.53.22l4.25 4.25c.141.14.22.331.22.53v6a.749.749 0 0 1-.22.53l-4.25 4.25A.749.749 0 0 1 11 16H5a.749.749 0 0 1-.53-.22L.22 11.53A.749.749 0 0 1 0 11V5c0-.199.079-.389.22-.53Zm.84 1.28L1.5 5.31v5.38l3.81 3.81h5.38l3.81-3.81V5.31L10.69 1.5ZM8 4a.75.75 0 0 1 .75.75v3.5a.75.75 0 0 1-1.5 0v-3.5A.75.75 0 0 1 8 4Zm0 8a1 1 0 1 1 0-2 1 1 0 0 1 0 2Z"></path></svg>`,
     },
     IMPORTANT: {
-      classList: ["note", "primary"],
+      classList: ["markdown-alert", "markdown-alert-important"],
+      icon: `<svg class="octicon octicon-report mr-2" viewBox="0 0 16 16" width="16" height="16" aria-hidden="true"><path d="M0 1.75C0 .784.784 0 1.75 0h12.5C15.216 0 16 .784 16 1.75v9.5A1.75 1.75 0 0 1 14.25 13H8.06l-2.573 2.573A1.458 1.458 0 0 1 3 14.543V13H1.75A1.75 1.75 0 0 1 0 11.25Zm1.75-.25a.25.25 0 0 0-.25.25v9.5c0 .138.112.25.25.25h2a.75.75 0 0 1 .75.75v2.19l2.72-2.72a.749.749 0 0 1 .53-.22h6.5a.25.25 0 0 0 .25-.25v-9.5a.25.25 0 0 0-.25-.25Zm7 2.25v2.5a.75.75 0 0 1-1.5 0v-2.5a.75.75 0 0 1 1.5 0ZM9 9a1 1 0 1 1-2 0 1 1 0 0 1 2 0Z"></path></svg>`,
     },
     NOTE: {
-      classList: ["note", "info"],
+      classList: ["markdown-alert", "markdown-alert-note"],
+      icon: `<svg class="octicon octicon-info mr-2" viewBox="0 0 16 16" width="16" height="16" aria-hidden="true"><path d="M0 8a8 8 0 1 1 16 0A8 8 0 0 1 0 8Zm8-6.5a6.5 6.5 0 1 0 0 13 6.5 6.5 0 0 0 0-13ZM6.5 7.75A.75.75 0 0 1 7.25 7h1a.75.75 0 0 1 .75.75v2.75h.25a.75.75 0 0 1 0 1.5h-2a.75.75 0 0 1 0-1.5h.25v-2h-.25a.75.75 0 0 1-.75-.75ZM8 6a1 1 0 1 1 0-2 1 1 0 0 1 0 2Z"></path></svg>`,
     },
     WARNING: {
-      classList: ["note", "warning"],
+      classList: ["markdown-alert", "markdown-alert-warning"],
+      icon: `<svg class="octicon octicon-alert mr-2" viewBox="0 0 16 16" width="16" height="16" aria-hidden="true"><path d="M6.457 1.047c.659-1.234 2.427-1.234 3.086 0l6.082 11.378A1.75 1.75 0 0 1 14.082 15H1.918a1.75 1.75 0 0 1-1.543-2.575Zm1.763.707a.25.25 0 0 0-.44 0L1.698 13.132a.25.25 0 0 0 .22.368h12.164a.25.25 0 0 0 .22-.368Zm.53 3.996v2.5a.75.75 0 0 1-1.5 0v-2.5a.75.75 0 0 1 1.5 0ZM9 11a1 1 0 1 1-2 0 1 1 0 0 1 2 0Z"></path></svg>`,
     },
   };
-  const makeCallout = (p) => {
+  const makeNode = (html) => {
+    const div = document.createElement("div");
+    div.innerHTML = html;
+    return div.firstChild;
+  };
+  const makeAlert = (p) => {
+    // Not inside blockquote
     if (p.parentElement.tagName !== "BLOCKQUOTE") {
+      return;
+    }
+    // Not the first child
+    if (p !== p.parentElement.firstElementChild) {
       return;
     }
     const s = p.textContent;
     if (s && s.startsWith("[!") && s.endsWith("]")) {
-      const callout = s.slice(2, s.length - 1).toUpperCase();
-      const setting = map[callout];
+      const alert = s.slice(2, s.length - 1).toUpperCase();
+      const setting = map[alert];
       if (setting) {
         p.parentElement.classList.add(...setting.classList);
+        const title = document.createElement("p");
+        title.classList.add("markdown-alert-title");
+        const icon = makeNode(setting.icon);
+        title.appendChild(icon);
+        title.appendChild(
+          document.createTextNode(alert[0] + alert.slice(1).toLowerCase())
+        );
+        p.insertAdjacentElement("beforebegin", title);
         p.parentElement.removeChild(p);
       }
     }
@@ -112,12 +214,12 @@ function f() {
       if (mutation.type === "childList") {
         Array.from(mutation.addedNodes)
           .filter((p) => p.tagName === "P")
-          .forEach(makeCallout);
+          .forEach(makeAlert);
       }
     }
   });
   observer.observe(document.body, { childList: true, subtree: true });
-  Array.from(document.querySelectorAll("p")).forEach(makeCallout);
+  Array.from(document.querySelectorAll("p")).forEach(makeAlert);
 }
 setTimeout(f, 0);
 </script>
@@ -252,7 +354,7 @@ setTimeout(f, 0);
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="https://hxhue.github.io/systems/windows/windows-%E6%9F%A5%E6%89%BE%E5%B7%B2%E7%BB%8F%E4%BF%AE%E6%94%B9%E8%BF%87%E7%9A%84%E7%BB%84%E7%AD%96%E7%95%A5.html">
+    <link itemprop="mainEntityOfPage" href="https://hxhue.github.io/cli/common/tmux.html">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="image" content="../../images/avatar.gif">
@@ -266,7 +368,7 @@ setTimeout(f, 0);
       <header class="post-header">
         <h2 class="post-title" itemprop="name headline">
           
-            <a href="../../systems/windows/windows-%E6%9F%A5%E6%89%BE%E5%B7%B2%E7%BB%8F%E4%BF%AE%E6%94%B9%E8%BF%87%E7%9A%84%E7%BB%84%E7%AD%96%E7%95%A5.html" class="post-title-link" itemprop="url">Windows 查找已经修改过的组策略</a>
+            <a href="../../cli/common/tmux.html" class="post-title-link" itemprop="url">tmux</a>
         </h2>
 
         <div class="post-meta">
@@ -283,7 +385,7 @@ setTimeout(f, 0);
                   <i class="far fa-calendar-check"></i>
                 </span>
                 <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2024-03-21 16:27:14" itemprop="dateModified" datetime="2024-03-21T16:27:14+08:00">2024-03-21</time>
+                <time title="修改时间：2024-03-15 23:20:22" itemprop="dateModified" datetime="2024-03-15T23:20:22+08:00">2024-03-15</time>
               </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
@@ -291,7 +393,7 @@ setTimeout(f, 0);
               </span>
               <span class="post-meta-item-text">分类于</span>
                 <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="../../categories/systems/" itemprop="url" rel="index"><span itemprop="name">systems</span></a>
+                  <a href="../../categories/cli/" itemprop="url" rel="index"><span itemprop="name">cli</span></a>
                 </span>
             </span>
 
@@ -301,7 +403,7 @@ setTimeout(f, 0);
                 <i class="far fa-file-word"></i>
               </span>
                 <span class="post-meta-item-text">本文字数：</span>
-              <span>9</span>
+              <span>159</span>
             </span>
             <span class="post-meta-item" title="阅读时长">
               <span class="post-meta-item-icon">
@@ -320,8 +422,20 @@ setTimeout(f, 0);
     <div class="post-body" itemprop="articleBody">
 
       
-          <p>在所有设置中点排序。</p>
-<p><img src="../../../assets/1a5bb26a09cd937ee65801bf61378ad9.png"></p>
+          <p>配置文件在 <code>~/.tmux.conf</code>。</p>
+<p>开启鼠标（可能是最正常的操作逻辑了）：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">set</span> -g mouse on</span><br></pre></td></tr></table></figure>
+
+<p>打开之后能够支持切换 window、panel，调整 panel 之间的相对大小。右键还有一些便捷操作。比如 mark 提供复制功能。</p>
+<ul>
+<li><code>ctrl</code> + <code>b</code> 是默认的 prefix 按键，先按这个 prefix 键然后按其他按键可以使用特殊功能</li>
+<li><code>d</code> 是 detach</li>
+<li><code>%</code> 是左右分屏（产生新的 panel）</li>
+<li><code>&quot;</code> 是上下分屏（产生新的 panel）</li>
+<li><code>z</code> 是暂时最大化</li>
+<li><code>c</code> 是创建新的窗口（window）</li>
+</ul>
+<p>对正在运行的 tmux 重载配置： <a target="_blank" rel="noopener" href="https://unix.stackexchange.com/questions/516800/how-do-i-enable-tmux-mouse-support">https://unix.stackexchange.com/questions/516800/how-do-i-enable-tmux-mouse-support</a></p>
 
       
     </div>
@@ -341,7 +455,7 @@ setTimeout(f, 0);
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="https://hxhue.github.io/systems/windows/windows-%E7%AA%97%E5%8F%A3%E6%A0%8F%E5%9C%A8%E5%B1%8F%E5%B9%95%E5%A4%96%E4%B8%8D%E8%83%BD%E7%A7%BB%E5%8A%A8.html">
+    <link itemprop="mainEntityOfPage" href="https://hxhue.github.io/cli/common/vim.html">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="image" content="../../images/avatar.gif">
@@ -355,7 +469,7 @@ setTimeout(f, 0);
       <header class="post-header">
         <h2 class="post-title" itemprop="name headline">
           
-            <a href="../../systems/windows/windows-%E7%AA%97%E5%8F%A3%E6%A0%8F%E5%9C%A8%E5%B1%8F%E5%B9%95%E5%A4%96%E4%B8%8D%E8%83%BD%E7%A7%BB%E5%8A%A8.html" class="post-title-link" itemprop="url">Windows 窗口栏在屏幕外不能移动</a>
+            <a href="../../cli/common/vim.html" class="post-title-link" itemprop="url">vim</a>
         </h2>
 
         <div class="post-meta">
@@ -372,7 +486,7 @@ setTimeout(f, 0);
                   <i class="far fa-calendar-check"></i>
                 </span>
                 <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2024-03-19 11:06:51" itemprop="dateModified" datetime="2024-03-19T11:06:51+08:00">2024-03-19</time>
+                <time title="修改时间：2024-03-18 21:55:49" itemprop="dateModified" datetime="2024-03-18T21:55:49+08:00">2024-03-18</time>
               </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
@@ -380,7 +494,7 @@ setTimeout(f, 0);
               </span>
               <span class="post-meta-item-text">分类于</span>
                 <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="../../categories/systems/" itemprop="url" rel="index"><span itemprop="name">systems</span></a>
+                  <a href="../../categories/cli/" itemprop="url" rel="index"><span itemprop="name">cli</span></a>
                 </span>
             </span>
 
@@ -390,14 +504,14 @@ setTimeout(f, 0);
                 <i class="far fa-file-word"></i>
               </span>
                 <span class="post-meta-item-text">本文字数：</span>
-              <span>86</span>
+              <span>461</span>
             </span>
             <span class="post-meta-item" title="阅读时长">
               <span class="post-meta-item-icon">
                 <i class="far fa-clock"></i>
               </span>
                 <span class="post-meta-item-text">阅读时长 &asymp;</span>
-              <span>1 分钟</span>
+              <span>2 分钟</span>
             </span>
 
         </div>
@@ -409,106 +523,15 @@ setTimeout(f, 0);
     <div class="post-body" itemprop="articleBody">
 
       
-          <p>先把窗口激活（放到最前面）然后按 <strong><code>Alt</code></strong> + **<code>Space</code>**，就能出现菜单选择 <strong>最大化&#x2F;最小化&#x2F;移动</strong>。</p>
-<p>如果不行，也可以把任何一个其他的窗口拖动到左屏，右侧选择位置不正确的窗口组成双栏分屏，然后将其拖出来恢复成正常窗口。</p>
+          <h1 id="vim-配置文件位置"><a href="#vim-配置文件位置" class="headerlink" title="vim 配置文件位置"></a>vim 配置文件位置</h1><p>使用 <code>:scriptnames</code> 查看。</p>
+<p>neovim + Windows 的配置文件：<code>%userprofile%\AppData\Local\nvim\init.vim</code></p>
+<p>macOS 和 Linux：<code>~/.config/nvim/init.vim</code></p>
+<h1 id="自用基础配置"><a href="#自用基础配置" class="headerlink" title="自用基础配置"></a>自用基础配置</h1><figure class="highlight vim"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">set</span> <span class="keyword">number</span></span><br><span class="line"><span class="keyword">set</span> relativenumber</span><br><span class="line"><span class="keyword">set</span> expandtab</span><br><span class="line"><span class="keyword">set</span> ss=<span class="number">4</span></span><br><span class="line"><span class="keyword">set</span> tabstop=<span class="number">4</span></span><br><span class="line"><span class="keyword">set</span> <span class="built_in">shiftwidth</span>=<span class="number">4</span></span><br></pre></td></tr></table></figure>
 
-      
-    </div>
-
-    
-    
-    
-      <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  
-  
-  
-
-      
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="https://hxhue.github.io/programming/cpp/cpplang/libstdc-std-function.html">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="../../images/avatar.gif">
-      <meta itemprop="name" content="😋">
-      <meta itemprop="description" content="">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Bluegill">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          
-            <a href="../../programming/cpp/cpplang/libstdc-std-function.html" class="post-title-link" itemprop="url">(libstdc++) std::function</a>
-        </h2>
-
-        <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-calendar"></i>
-              </span>
-              <span class="post-meta-item-text">发表于</span>
-
-              <time title="创建时间：2023-08-12 15:17:00" itemprop="dateCreated datePublished" datetime="2023-08-12T15:17:00+08:00">2023-08-12</time>
-            </span>
-              <span class="post-meta-item">
-                <span class="post-meta-item-icon">
-                  <i class="far fa-calendar-check"></i>
-                </span>
-                <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2024-03-23 11:18:07" itemprop="dateModified" datetime="2024-03-23T11:18:07+08:00">2024-03-23</time>
-              </span>
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-folder"></i>
-              </span>
-              <span class="post-meta-item-text">分类于</span>
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="../../categories/programming/" itemprop="url" rel="index"><span itemprop="name">programming</span></a>
-                </span>
-            </span>
-
-          <br>
-            <span class="post-meta-item" title="本文字数">
-              <span class="post-meta-item-icon">
-                <i class="far fa-file-word"></i>
-              </span>
-                <span class="post-meta-item-text">本文字数：</span>
-              <span>1.2k</span>
-            </span>
-            <span class="post-meta-item" title="阅读时长">
-              <span class="post-meta-item-icon">
-                <i class="far fa-clock"></i>
-              </span>
-                <span class="post-meta-item-text">阅读时长 &asymp;</span>
-              <span>4 分钟</span>
-            </span>
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          <p>涉及的 libstdc++ 源码文件：<code>bits/std_function.h</code>。</p>
-<p>印象： <code>std::function</code> 做了小对象优化，同时在避免使用虚函数（尽管它可以用继承和虚函数来实现）。</p>
-<p>关于成员指针，见 <a href="pointer-to-member.html">Pointer to Member</a>。</p>
-<h1 id="存储结构"><a href="#存储结构" class="headerlink" title="存储结构"></a>存储结构</h1><p>首先看 <code>std::function</code> 的成员组成：</p>
-<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="type">void</span> <span class="title">swap</span><span class="params">(function&amp; __x)</span> <span class="keyword">noexcept</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    std::<span class="built_in">swap</span>(_M_functor, __x._M_functor);</span><br><span class="line">    std::<span class="built_in">swap</span>(_M_manager, __x._M_manager);</span><br><span class="line">    std::<span class="built_in">swap</span>(_M_invoker, __x._M_invoker);</span><br><span class="line">&#125; <span class="comment">// 模板太长了，成员定义很分散，抄起来很累；这个 swap 函数写的刚刚好</span></span><br></pre></td></tr></table></figure>
-
-<p><code>_M_functor</code> 是一个 union 的 union（最外层的 union 是为了和 <code>char</code> 数组拼在一起方便取首地址，里面的 union 可以用来表示四种不同类型的指针）：</p>
-<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">union</span> <span class="title class_">_Nocopy_types</span></span><br><span class="line">&#123;</span><br><span class="line">    <span class="type">void</span>*       _M_object;</span><br><span class="line">    <span class="type">const</span> <span class="type">void</span>* _M_const_object;</span><br><span class="line">    <span class="built_in">void</span> (*_M_function_pointer)();</span><br><span class="line">    <span class="built_in">void</span> (_Undefined_class::*_M_member_pointer)(); <span class="comment">// 这个在 64 位环境的 gcc 里面是 16 个字节</span></span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+<h1 id="在打开文件之前执行命令"><a href="#在打开文件之前执行命令" class="headerlink" title="在打开文件之前执行命令"></a>在打开文件之前执行命令</h1><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">vim <span class="string">&quot;+set ff=unix&quot;</span> <span class="string">&quot;+wq&quot;</span> 文件名</span><br></pre></td></tr></table></figure>
           <!--noindex-->
             <div class="post-button">
-              <a class="btn" href="../../programming/cpp/cpplang/libstdc-std-function.html#more" rel="contents">
+              <a class="btn" href="../../cli/common/vim.html#more" rel="contents">
                 阅读全文 &raquo;
               </a>
             </div>
@@ -721,7 +744,7 @@ setTimeout(f, 0);
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="https://hxhue.github.io/programming/cpp/cpplang/libstdc-std-set.html">
+    <link itemprop="mainEntityOfPage" href="https://hxhue.github.io/programming/cpp/cpplang/libstdc-std-function.html">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="image" content="../../images/avatar.gif">
@@ -735,7 +758,7 @@ setTimeout(f, 0);
       <header class="post-header">
         <h2 class="post-title" itemprop="name headline">
           
-            <a href="../../programming/cpp/cpplang/libstdc-std-set.html" class="post-title-link" itemprop="url">(libstdc++) std::set</a>
+            <a href="../../programming/cpp/cpplang/libstdc-std-function.html" class="post-title-link" itemprop="url">(libstdc++) std::function</a>
         </h2>
 
         <div class="post-meta">
@@ -752,7 +775,7 @@ setTimeout(f, 0);
                   <i class="far fa-calendar-check"></i>
                 </span>
                 <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2024-03-21 16:27:14" itemprop="dateModified" datetime="2024-03-21T16:27:14+08:00">2024-03-21</time>
+                <time title="修改时间：2024-03-23 11:18:07" itemprop="dateModified" datetime="2024-03-23T11:18:07+08:00">2024-03-23</time>
               </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
@@ -770,14 +793,14 @@ setTimeout(f, 0);
                 <i class="far fa-file-word"></i>
               </span>
                 <span class="post-meta-item-text">本文字数：</span>
-              <span>533</span>
+              <span>1.2k</span>
             </span>
             <span class="post-meta-item" title="阅读时长">
               <span class="post-meta-item-icon">
                 <i class="far fa-clock"></i>
               </span>
                 <span class="post-meta-item-text">阅读时长 &asymp;</span>
-              <span>2 分钟</span>
+              <span>4 分钟</span>
             </span>
 
         </div>
@@ -789,26 +812,17 @@ setTimeout(f, 0);
     <div class="post-body" itemprop="articleBody">
 
       
-          <p>相关文件：</p>
-<ul>
-<li><code>include/set</code> 头文件按顺序引入了 <code>include/bits/stl_tree.h</code> 和 <code>include/bits/stl_set.h</code>。</li>
-<li><code>include/bits/stl_set.h</code> 定义了 <code>std::set</code>，依赖了 <code>include/bits/stl_tree.h</code> 却没有明确包含它。</li>
-<li><code>include/bits/stl_tree.h</code> 定义了诸多类型，<em>如未明确指出则默认下面提到的类型都是来自于这个头文件</em>。</li>
-<li><code>src/c++98/tree.cc</code> 实现了红黑树用到的非模板算法。这个文件只有 400 多行。</li>
-</ul>
-<p><code>std::set</code> 将实现转发给 <code>_Rb_tree</code> 处理，而它又将实现转发给了 <code>_Rb_tree_impl</code> 处理。</p>
-<p><code>_Rb_tree_impl</code> 继承于：</p>
-<ul>
-<li><code>_Node_allocator</code>：是一个 typedef，实际类型是一个模板类，模板参数和 <code>_Rb_tree</code> 的参数有关。</li>
-<li><code>_Rb_tree_key_compare</code>：是一个模板类，模板参数和 <code>_Rb_tree</code> 有关。</li>
-<li><code>_Rb_tree_header</code>：<strong>非模板类</strong>。包含了 <code>_Rb_tree_node_base</code> 结构和 <code>_Rb_tree_node_count</code>。前者是表示红黑树结点的聚合类，包含了 parent&#x2F;left&#x2F;right&#x2F;color 四个重要成员；后者是结点计数。初始化时，parent&#x2F;left&#x2F;right 都被设置为 header 本身的地址，而 color 被设置为红色，可见这个 header 就是标准库红黑树中的 nil 哨兵。另外，left 和 right 还有最小结点和最大结点的含义。</li>
-</ul>
-<p><img src="../../../../assets/51559a6e75cb84af8da5643275d1f118.png"></p>
-<p>以插入算法举例，由于比较算子在模板中，所以需要用模板方法找到应该插入的位置，这些都在头文件 <code>include/bits/stl_tree.h</code> 中实现。接着调用插入并平衡的函数，该函数只操作指针，不关心结点中包含的值，所以这个部分可以在源文件 <code>src/c++98/tree.cc</code> 中实现，从而减少了代码膨胀。</p>
-<p>按照上面的分析，可以解释以下未定义行为（但是不建议这么写）：</p>
+          <p>涉及的 libstdc++ 源码文件：<code>bits/std_function.h</code>。</p>
+<p>印象： <code>std::function</code> 做了小对象优化，同时在避免使用虚函数（尽管它可以用继承和虚函数来实现）。</p>
+<p>关于成员指针，见 <a href="pointer-to-member.html">Pointer to Member</a>。</p>
+<h1 id="存储结构"><a href="#存储结构" class="headerlink" title="存储结构"></a>存储结构</h1><p>首先看 <code>std::function</code> 的成员组成：</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="type">void</span> <span class="title">swap</span><span class="params">(function&amp; __x)</span> <span class="keyword">noexcept</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    std::<span class="built_in">swap</span>(_M_functor, __x._M_functor);</span><br><span class="line">    std::<span class="built_in">swap</span>(_M_manager, __x._M_manager);</span><br><span class="line">    std::<span class="built_in">swap</span>(_M_invoker, __x._M_invoker);</span><br><span class="line">&#125; <span class="comment">// 模板太长了，成员定义很分散，抄起来很累；这个 swap 函数写的刚刚好</span></span><br></pre></td></tr></table></figure>
+
+<p><code>_M_functor</code> 是一个 union 的 union（最外层的 union 是为了和 <code>char</code> 数组拼在一起方便取首地址，里面的 union 可以用来表示四种不同类型的指针）：</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">union</span> <span class="title class_">_Nocopy_types</span></span><br><span class="line">&#123;</span><br><span class="line">    <span class="type">void</span>*       _M_object;</span><br><span class="line">    <span class="type">const</span> <span class="type">void</span>* _M_const_object;</span><br><span class="line">    <span class="built_in">void</span> (*_M_function_pointer)();</span><br><span class="line">    <span class="built_in">void</span> (_Undefined_class::*_M_member_pointer)(); <span class="comment">// 这个在 64 位环境的 gcc 里面是 16 个字节</span></span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
           <!--noindex-->
             <div class="post-button">
-              <a class="btn" href="../../programming/cpp/cpplang/libstdc-std-set.html#more" rel="contents">
+              <a class="btn" href="../../programming/cpp/cpplang/libstdc-std-function.html#more" rel="contents">
                 阅读全文 &raquo;
               </a>
             </div>
@@ -907,6 +921,117 @@ setTimeout(f, 0);
 <figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">&#123;</span><br><span class="line">    <span class="keyword">using</span> std::swap;</span><br><span class="line">    <span class="built_in">swap</span>(A, B); <span class="comment">// 假设 A 和 B 是已经定义的同类型变量</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 
 
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://hxhue.github.io/programming/cpp/cpplang/libstdc-std-set.html">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="../../images/avatar.gif">
+      <meta itemprop="name" content="😋">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Bluegill">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="../../programming/cpp/cpplang/libstdc-std-set.html" class="post-title-link" itemprop="url">(libstdc++) std::set</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2023-08-12 15:17:00" itemprop="dateCreated datePublished" datetime="2023-08-12T15:17:00+08:00">2023-08-12</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2024-03-21 16:27:14" itemprop="dateModified" datetime="2024-03-21T16:27:14+08:00">2024-03-21</time>
+              </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="../../categories/programming/" itemprop="url" rel="index"><span itemprop="name">programming</span></a>
+                </span>
+            </span>
+
+          <br>
+            <span class="post-meta-item" title="本文字数">
+              <span class="post-meta-item-icon">
+                <i class="far fa-file-word"></i>
+              </span>
+                <span class="post-meta-item-text">本文字数：</span>
+              <span>533</span>
+            </span>
+            <span class="post-meta-item" title="阅读时长">
+              <span class="post-meta-item-icon">
+                <i class="far fa-clock"></i>
+              </span>
+                <span class="post-meta-item-text">阅读时长 &asymp;</span>
+              <span>2 分钟</span>
+            </span>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <p>相关文件：</p>
+<ul>
+<li><code>include/set</code> 头文件按顺序引入了 <code>include/bits/stl_tree.h</code> 和 <code>include/bits/stl_set.h</code>。</li>
+<li><code>include/bits/stl_set.h</code> 定义了 <code>std::set</code>，依赖了 <code>include/bits/stl_tree.h</code> 却没有明确包含它。</li>
+<li><code>include/bits/stl_tree.h</code> 定义了诸多类型，<em>如未明确指出则默认下面提到的类型都是来自于这个头文件</em>。</li>
+<li><code>src/c++98/tree.cc</code> 实现了红黑树用到的非模板算法。这个文件只有 400 多行。</li>
+</ul>
+<p><code>std::set</code> 将实现转发给 <code>_Rb_tree</code> 处理，而它又将实现转发给了 <code>_Rb_tree_impl</code> 处理。</p>
+<p><code>_Rb_tree_impl</code> 继承于：</p>
+<ul>
+<li><code>_Node_allocator</code>：是一个 typedef，实际类型是一个模板类，模板参数和 <code>_Rb_tree</code> 的参数有关。</li>
+<li><code>_Rb_tree_key_compare</code>：是一个模板类，模板参数和 <code>_Rb_tree</code> 有关。</li>
+<li><code>_Rb_tree_header</code>：<strong>非模板类</strong>。包含了 <code>_Rb_tree_node_base</code> 结构和 <code>_Rb_tree_node_count</code>。前者是表示红黑树结点的聚合类，包含了 parent&#x2F;left&#x2F;right&#x2F;color 四个重要成员；后者是结点计数。初始化时，parent&#x2F;left&#x2F;right 都被设置为 header 本身的地址，而 color 被设置为红色，可见这个 header 就是标准库红黑树中的 nil 哨兵。另外，left 和 right 还有最小结点和最大结点的含义。</li>
+</ul>
+<p><img src="../../../../assets/51559a6e75cb84af8da5643275d1f118.png"></p>
+<p>以插入算法举例，由于比较算子在模板中，所以需要用模板方法找到应该插入的位置，这些都在头文件 <code>include/bits/stl_tree.h</code> 中实现。接着调用插入并平衡的函数，该函数只操作指针，不关心结点中包含的值，所以这个部分可以在源文件 <code>src/c++98/tree.cc</code> 中实现，从而减少了代码膨胀。</p>
+<p>按照上面的分析，可以解释以下未定义行为（但是不建议这么写）：</p>
+          <!--noindex-->
+            <div class="post-button">
+              <a class="btn" href="../../programming/cpp/cpplang/libstdc-std-set.html#more" rel="contents">
+                阅读全文 &raquo;
+              </a>
+            </div>
+          <!--/noindex-->
+        
       
     </div>
 
@@ -1121,7 +1246,7 @@ setTimeout(f, 0);
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="https://hxhue.github.io/programming/cpp/cpplang/c-%E5%92%8C-c-%E5%85%A8%E5%B1%80%E5%AE%9A%E4%B9%89%E5%BA%94%E8%AF%A5%E6%94%BE%E5%9C%A8.html">
+    <link itemprop="mainEntityOfPage" href="https://hxhue.github.io/programming/cpp/cpplang/c-%E5%87%A0%E7%A7%8D%E6%96%B0%E5%A2%9E%E7%B1%BB%E5%9E%8B%E8%BD%AC%E6%8D%A2%E7%9A%84%E5%8C%BA%E5%88%AB-%E6%A0%87%E5%87%86%E5%BA%93%E6%A8%A1%E6%9D%BF%E5%87%BD%E6%95%B0.html">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="image" content="../../images/avatar.gif">
@@ -1135,7 +1260,7 @@ setTimeout(f, 0);
       <header class="post-header">
         <h2 class="post-title" itemprop="name headline">
           
-            <a href="../../programming/cpp/cpplang/c-%E5%92%8C-c-%E5%85%A8%E5%B1%80%E5%AE%9A%E4%B9%89%E5%BA%94%E8%AF%A5%E6%94%BE%E5%9C%A8.html" class="post-title-link" itemprop="url">C/C++ 全局定义应该放在 .bss 还是 .data</a>
+            <a href="../../programming/cpp/cpplang/c-%E5%87%A0%E7%A7%8D%E6%96%B0%E5%A2%9E%E7%B1%BB%E5%9E%8B%E8%BD%AC%E6%8D%A2%E7%9A%84%E5%8C%BA%E5%88%AB-%E6%A0%87%E5%87%86%E5%BA%93%E6%A8%A1%E6%9D%BF%E5%87%BD%E6%95%B0.html" class="post-title-link" itemprop="url">C++ 几种新增类型转换的区别 + 标准库模板函数</a>
         </h2>
 
         <div class="post-meta">
@@ -1170,7 +1295,7 @@ setTimeout(f, 0);
                 <i class="far fa-file-word"></i>
               </span>
                 <span class="post-meta-item-text">本文字数：</span>
-              <span>312</span>
+              <span>250</span>
             </span>
             <span class="post-meta-item" title="阅读时长">
               <span class="post-meta-item-icon">
@@ -1189,18 +1314,24 @@ setTimeout(f, 0);
     <div class="post-body" itemprop="articleBody">
 
       
-          <h1 id="C-C-中全局定义-声明的区别"><a href="#C-C-中全局定义-声明的区别" class="headerlink" title="C&#x2F;C++ 中全局定义&#x2F;声明的区别"></a>C&#x2F;C++ 中全局定义&#x2F;声明的区别</h1><p>无论在 C 还是 C++，想要仅声明而不在翻译单元中定义全局变量，都需要 extern。</p>
-<p><strong>C语言</strong>：（强弱是方便我叙述引出的概念）</p>
-<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="type">int</span> global = <span class="number">1</span>; <span class="comment">// 强定义，和其他强定义互斥</span></span><br><span class="line"><span class="type">int</span> global;     <span class="comment">// 弱定义，可以和同文件其他定义兼容（最终只保留一份定义）</span></span><br><span class="line"><span class="type">int</span> global;</span><br></pre></td></tr></table></figure>
-
-<p>能编译！但是上面的代码和其他目标文件一起链接时，若出现多次定义同样会引发重复定义的错误。</p>
-<p>**C++**：（单个文件）</p>
-<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="type">int</span> global;    <span class="comment">// 强定义</span></span><br><span class="line"><span class="type">int</span> global;</span><br></pre></td></tr></table></figure>
-
-<figure class="highlight txt"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">**&lt;source&gt;:2:5: error:** redefinition of &#x27;**int global**&#x27;</span><br><span class="line">2 | int **global**;</span><br><span class="line">|     **^~~~~~**</span><br><span class="line">**&lt;source&gt;:1:5: note:** &#x27;**int global**&#x27; previously declared here</span><br><span class="line">1 | int **global**;</span><br><span class="line">|     **^~~~~~**</span><br><span class="line">Compiler returned: 1</span><br></pre></td></tr></table></figure>
+          <h1 id="四大关键字"><a href="#四大关键字" class="headerlink" title="四大关键字"></a>四大关键字</h1><ul>
+<li><code>static_cast</code> 大多数转换，包括左右值转换、<strong>父子类指针&#x2F;引用之间的转换</strong>（不进行安全检查，但会修正指针偏移）。</li>
+<li><code>const_cast</code> 也能进行 volatile 属性的修改！！</li>
+<li><code>dynamic_cast</code> 父子类指针&#x2F;引用之间的转换。其中子类转向基类相当于使用 <code>static_cast</code> ，没有运行时安全检查。而基类转向子类则有运行时安全检查，而且要求基类是多态类，否则无法编译。</li>
+<li><code>reinterpret_cast</code></li>
+</ul>
+<h1 id="标准库的共享指针转换模板"><a href="#标准库的共享指针转换模板" class="headerlink" title="标准库的共享指针转换模板"></a>标准库的共享指针转换模板</h1><p>标准库中还有针对于 <code>std::shared_ptr</code> 的类型转换模板。转换后返回一个共享指针，但其包裹的类型被转换成了对应的类型：</p>
+<ul>
+<li><code>std::static_pointer_cast</code></li>
+<li><code>std::const_pointer_cast</code></li>
+<li><code>std::dynamic_pointer_cast</code></li>
+</ul>
+<p>注意：这种转换算作指针的复制，所以共享指针对应的控制块引用计数加一（如果指针非空）。</p>
+<p>举例：</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">struct</span> <span class="title class_">A</span>    &#123;&#125;;</span><br><span class="line"><span class="keyword">struct</span> <span class="title class_">B</span>: A &#123;&#125;;</span><br><span class="line"><span class="keyword">auto</span> sp = std::<span class="built_in">make_shared</span>&lt;B&gt;();</span><br><span class="line"><span class="keyword">if</span> (<span class="keyword">auto</span> sp2 = std::<span class="built_in">dynamic_pointer_cast</span>&lt;A&gt;(sp)) &#123;</span><br><span class="line">    std::cout &lt;&lt; <span class="string">&quot;success\n&quot;</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
           <!--noindex-->
             <div class="post-button">
-              <a class="btn" href="../../programming/cpp/cpplang/c-%E5%92%8C-c-%E5%85%A8%E5%B1%80%E5%AE%9A%E4%B9%89%E5%BA%94%E8%AF%A5%E6%94%BE%E5%9C%A8.html#more" rel="contents">
+              <a class="btn" href="../../programming/cpp/cpplang/c-%E5%87%A0%E7%A7%8D%E6%96%B0%E5%A2%9E%E7%B1%BB%E5%9E%8B%E8%BD%AC%E6%8D%A2%E7%9A%84%E5%8C%BA%E5%88%AB-%E6%A0%87%E5%87%86%E5%BA%93%E6%A8%A1%E6%9D%BF%E5%87%BD%E6%95%B0.html#more" rel="contents">
                 阅读全文 &raquo;
               </a>
             </div>

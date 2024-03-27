@@ -74,35 +74,137 @@
 </noscript>
 
 <!-- hexo injector head_end start -->
-<script> 
+<link
+  rel="stylesheet"
+  href="https://cdn.jsdelivr.net/npm/github-markdown-css@5.3.0/github-markdown-dark.css"
+/>
+<style>
+.markdown-body {
+  background: #22272e;
+  color: #adbac7;
+}
+
+#content {
+  margin: 0 auto;
+  padding: 1rem;
+  max-width: 928px;
+}
+
+.markdown-alert {
+  padding: 0 1em;
+  margin-bottom: 16px;
+  color: inherit;
+  border-left: 0.25em solid #444c56;
+}
+
+.markdown-alert-title {
+  display: inline-flex;
+  align-items: center;
+  font-weight: 500;
+  margin-bottom: 8px; /* default is 20px, why? */
+}
+
+.markdown-alert-note {
+  border-left-color: #539bf5;
+}
+
+.markdown-alert-tip {
+  border-left-color: #57ab5a;
+}
+
+.markdown-alert-important {
+  border-left-color: #986ee2;
+}
+
+.markdown-alert-warning {
+  border-left-color: #c69026;
+}
+
+.markdown-alert-caution {
+  border-left-color: #e5534b;
+}
+
+.markdown-alert-note > .markdown-alert-title {
+  color: #539bf5;
+  fill: #539bf5;
+}
+
+.markdown-alert-tip > .markdown-alert-title {
+  color: #57ab5a;
+  fill: #57ab5a;
+}
+
+.markdown-alert-important > .markdown-alert-title {
+  color: #986ee2;
+  fill: #986ee2;
+}
+
+.markdown-alert-warning > .markdown-alert-title {
+  color: #c69026;
+  fill: #c69026;
+}
+
+.markdown-alert-caution > .markdown-alert-title {
+  color: #e5534b;
+  fill: #e5534b;
+}
+
+.mr-2 {
+  margin-right: 0.5rem;
+}
+</style>
+<script>
 function f() {
   const map = {
     TIP: {
-      classList: ["note", "success"],
+      classList: ["markdown-alert", "markdown-alert-tip"],
+      icon: `<svg class="octicon octicon-light-bulb mr-2" viewBox="0 0 16 16" width="16" height="16" aria-hidden="true"><path d="M8 1.5c-2.363 0-4 1.69-4 3.75 0 .984.424 1.625.984 2.304l.214.253c.223.264.47.556.673.848.284.411.537.896.621 1.49a.75.75 0 0 1-1.484.211c-.04-.282-.163-.547-.37-.847a8.456 8.456 0 0 0-.542-.68c-.084-.1-.173-.205-.268-.32C3.201 7.75 2.5 6.766 2.5 5.25 2.5 2.31 4.863 0 8 0s5.5 2.31 5.5 5.25c0 1.516-.701 2.5-1.328 3.259-.095.115-.184.22-.268.319-.207.245-.383.453-.541.681-.208.3-.33.565-.37.847a.751.751 0 0 1-1.485-.212c.084-.593.337-1.078.621-1.489.203-.292.45-.584.673-.848.075-.088.147-.173.213-.253.561-.679.985-1.32.985-2.304 0-2.06-1.637-3.75-4-3.75ZM5.75 12h4.5a.75.75 0 0 1 0 1.5h-4.5a.75.75 0 0 1 0-1.5ZM6 15.25a.75.75 0 0 1 .75-.75h2.5a.75.75 0 0 1 0 1.5h-2.5a.75.75 0 0 1-.75-.75Z"></path></svg>`,
     },
     CAUTION: {
-      classList: ["note", "danger"],
+      classList: ["markdown-alert", "markdown-alert-caution"],
+      icon: `<svg class="octicon octicon-stop mr-2" viewBox="0 0 16 16" width="16" height="16" aria-hidden="true"><path d="M4.47.22A.749.749 0 0 1 5 0h6c.199 0 .389.079.53.22l4.25 4.25c.141.14.22.331.22.53v6a.749.749 0 0 1-.22.53l-4.25 4.25A.749.749 0 0 1 11 16H5a.749.749 0 0 1-.53-.22L.22 11.53A.749.749 0 0 1 0 11V5c0-.199.079-.389.22-.53Zm.84 1.28L1.5 5.31v5.38l3.81 3.81h5.38l3.81-3.81V5.31L10.69 1.5ZM8 4a.75.75 0 0 1 .75.75v3.5a.75.75 0 0 1-1.5 0v-3.5A.75.75 0 0 1 8 4Zm0 8a1 1 0 1 1 0-2 1 1 0 0 1 0 2Z"></path></svg>`,
     },
     IMPORTANT: {
-      classList: ["note", "primary"],
+      classList: ["markdown-alert", "markdown-alert-important"],
+      icon: `<svg class="octicon octicon-report mr-2" viewBox="0 0 16 16" width="16" height="16" aria-hidden="true"><path d="M0 1.75C0 .784.784 0 1.75 0h12.5C15.216 0 16 .784 16 1.75v9.5A1.75 1.75 0 0 1 14.25 13H8.06l-2.573 2.573A1.458 1.458 0 0 1 3 14.543V13H1.75A1.75 1.75 0 0 1 0 11.25Zm1.75-.25a.25.25 0 0 0-.25.25v9.5c0 .138.112.25.25.25h2a.75.75 0 0 1 .75.75v2.19l2.72-2.72a.749.749 0 0 1 .53-.22h6.5a.25.25 0 0 0 .25-.25v-9.5a.25.25 0 0 0-.25-.25Zm7 2.25v2.5a.75.75 0 0 1-1.5 0v-2.5a.75.75 0 0 1 1.5 0ZM9 9a1 1 0 1 1-2 0 1 1 0 0 1 2 0Z"></path></svg>`,
     },
     NOTE: {
-      classList: ["note", "info"],
+      classList: ["markdown-alert", "markdown-alert-note"],
+      icon: `<svg class="octicon octicon-info mr-2" viewBox="0 0 16 16" width="16" height="16" aria-hidden="true"><path d="M0 8a8 8 0 1 1 16 0A8 8 0 0 1 0 8Zm8-6.5a6.5 6.5 0 1 0 0 13 6.5 6.5 0 0 0 0-13ZM6.5 7.75A.75.75 0 0 1 7.25 7h1a.75.75 0 0 1 .75.75v2.75h.25a.75.75 0 0 1 0 1.5h-2a.75.75 0 0 1 0-1.5h.25v-2h-.25a.75.75 0 0 1-.75-.75ZM8 6a1 1 0 1 1 0-2 1 1 0 0 1 0 2Z"></path></svg>`,
     },
     WARNING: {
-      classList: ["note", "warning"],
+      classList: ["markdown-alert", "markdown-alert-warning"],
+      icon: `<svg class="octicon octicon-alert mr-2" viewBox="0 0 16 16" width="16" height="16" aria-hidden="true"><path d="M6.457 1.047c.659-1.234 2.427-1.234 3.086 0l6.082 11.378A1.75 1.75 0 0 1 14.082 15H1.918a1.75 1.75 0 0 1-1.543-2.575Zm1.763.707a.25.25 0 0 0-.44 0L1.698 13.132a.25.25 0 0 0 .22.368h12.164a.25.25 0 0 0 .22-.368Zm.53 3.996v2.5a.75.75 0 0 1-1.5 0v-2.5a.75.75 0 0 1 1.5 0ZM9 11a1 1 0 1 1-2 0 1 1 0 0 1 2 0Z"></path></svg>`,
     },
   };
-  const makeCallout = (p) => {
+  const makeNode = (html) => {
+    const div = document.createElement("div");
+    div.innerHTML = html;
+    return div.firstChild;
+  };
+  const makeAlert = (p) => {
+    // Not inside blockquote
     if (p.parentElement.tagName !== "BLOCKQUOTE") {
+      return;
+    }
+    // Not the first child
+    if (p !== p.parentElement.firstElementChild) {
       return;
     }
     const s = p.textContent;
     if (s && s.startsWith("[!") && s.endsWith("]")) {
-      const callout = s.slice(2, s.length - 1).toUpperCase();
-      const setting = map[callout];
+      const alert = s.slice(2, s.length - 1).toUpperCase();
+      const setting = map[alert];
       if (setting) {
         p.parentElement.classList.add(...setting.classList);
+        const title = document.createElement("p");
+        title.classList.add("markdown-alert-title");
+        const icon = makeNode(setting.icon);
+        title.appendChild(icon);
+        title.appendChild(
+          document.createTextNode(alert[0] + alert.slice(1).toLowerCase())
+        );
+        p.insertAdjacentElement("beforebegin", title);
         p.parentElement.removeChild(p);
       }
     }
@@ -112,12 +214,12 @@ function f() {
       if (mutation.type === "childList") {
         Array.from(mutation.addedNodes)
           .filter((p) => p.tagName === "P")
-          .forEach(makeCallout);
+          .forEach(makeAlert);
       }
     }
   });
   observer.observe(document.body, { childList: true, subtree: true });
-  Array.from(document.querySelectorAll("p")).forEach(makeCallout);
+  Array.from(document.querySelectorAll("p")).forEach(makeAlert);
 }
 setTimeout(f, 0);
 </script>
@@ -252,7 +354,7 @@ setTimeout(f, 0);
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="https://hxhue.github.io/programming/java/copyonwritearraylist.html">
+    <link itemprop="mainEntityOfPage" href="https://hxhue.github.io/programming/python/python-sys-vs-os.html">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="image" content="../../images/avatar.gif">
@@ -266,404 +368,7 @@ setTimeout(f, 0);
       <header class="post-header">
         <h2 class="post-title" itemprop="name headline">
           
-            <a href="../../programming/java/copyonwritearraylist.html" class="post-title-link" itemprop="url">OpenJDK: CopyOnWriteArrayList</a>
-        </h2>
-
-        <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-calendar"></i>
-              </span>
-              <span class="post-meta-item-text">发表于</span>
-
-              <time title="创建时间：2023-08-12 15:17:00" itemprop="dateCreated datePublished" datetime="2023-08-12T15:17:00+08:00">2023-08-12</time>
-            </span>
-              <span class="post-meta-item">
-                <span class="post-meta-item-icon">
-                  <i class="far fa-calendar-check"></i>
-                </span>
-                <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2024-03-15 16:45:04" itemprop="dateModified" datetime="2024-03-15T16:45:04+08:00">2024-03-15</time>
-              </span>
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-folder"></i>
-              </span>
-              <span class="post-meta-item-text">分类于</span>
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="../../categories/programming/" itemprop="url" rel="index"><span itemprop="name">programming</span></a>
-                </span>
-            </span>
-
-          <br>
-            <span class="post-meta-item" title="本文字数">
-              <span class="post-meta-item-icon">
-                <i class="far fa-file-word"></i>
-              </span>
-                <span class="post-meta-item-text">本文字数：</span>
-              <span>51</span>
-            </span>
-            <span class="post-meta-item" title="阅读时长">
-              <span class="post-meta-item-icon">
-                <i class="far fa-clock"></i>
-              </span>
-                <span class="post-meta-item-text">阅读时长 &asymp;</span>
-              <span>1 分钟</span>
-            </span>
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          <p>写的时候加锁（因为要替换 array 数组的引用，而且复制的过程比较耗时，不宜自旋），读的时候不用加锁。替换的安全性由 Java volatile 保证。</p>
-
-      
-    </div>
-
-    
-    
-    
-      <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  
-  
-  
-
-      
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="https://hxhue.github.io/programming/java/project-loom.html">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="../../images/avatar.gif">
-      <meta itemprop="name" content="😋">
-      <meta itemprop="description" content="">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Bluegill">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          
-            <a href="../../programming/java/project-loom.html" class="post-title-link" itemprop="url">OpenJDK: Project Loom</a>
-        </h2>
-
-        <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-calendar"></i>
-              </span>
-              <span class="post-meta-item-text">发表于</span>
-
-              <time title="创建时间：2023-08-12 15:17:00" itemprop="dateCreated datePublished" datetime="2023-08-12T15:17:00+08:00">2023-08-12</time>
-            </span>
-              <span class="post-meta-item">
-                <span class="post-meta-item-icon">
-                  <i class="far fa-calendar-check"></i>
-                </span>
-                <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2024-03-21 16:27:13" itemprop="dateModified" datetime="2024-03-21T16:27:13+08:00">2024-03-21</time>
-              </span>
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-folder"></i>
-              </span>
-              <span class="post-meta-item-text">分类于</span>
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="../../categories/programming/" itemprop="url" rel="index"><span itemprop="name">programming</span></a>
-                </span>
-            </span>
-
-          <br>
-            <span class="post-meta-item" title="本文字数">
-              <span class="post-meta-item-icon">
-                <i class="far fa-file-word"></i>
-              </span>
-                <span class="post-meta-item-text">本文字数：</span>
-              <span>377</span>
-            </span>
-            <span class="post-meta-item" title="阅读时长">
-              <span class="post-meta-item-icon">
-                <i class="far fa-clock"></i>
-              </span>
-                <span class="post-meta-item-text">阅读时长 &asymp;</span>
-              <span>1 分钟</span>
-            </span>
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          <h1 id="互斥：锁"><a href="#互斥：锁" class="headerlink" title="互斥：锁"></a>互斥：锁</h1><p>现在对象锁不尊重虚拟线程，但是 JUC 下的锁是尊重虚拟线程的。</p>
-<h1 id="共享：ScopedValue"><a href="#共享：ScopedValue" class="headerlink" title="共享：ScopedValue"></a>共享：ScopedValue</h1><p>ThreadLocal 和虚拟线程配合的不是很好，尽管功能上 ThreadLocal 是支持虚拟线程的，但是由于虚拟线程数量众多、生命周期短，使用 ThreadLocal 时虽然保证了线程安全，却创建了大量对象——这个问题在平台线程上就不明显。JEP 429 ScopedValues (Java 20) 是为了解决这个问题的。</p>
-<p>💡 ThreadLocal 和线程池配合的也不是很好，因此短期任务结束后，将线程放回池中之前要及时清理数据。</p>
-<p><img src="../../../assets/4511b39ce04195c20d424e568b78a4ba.png"></p>
-<p>ScopedValue 用 where 绑定共享变量，用 call 来启动虚拟线程，这样虚拟线程及子虚拟线程能够在调用环境中通过之前捕获的键（图中为 KEY）来获取值，这里使用方式也类似于之前的 ThreadLocal 查表。于是，一些本可以共享的变量实现了共享。</p>
-<p>另外，ScopedValue 没有 remove() 方法，因为 .call() 返回后 KEY 就随着虚拟线程结束而解绑了。如果直接获取而对应值不存在，则会抛出异常；有必要时用 isBound() 来检查。</p>
-          <!--noindex-->
-            <div class="post-button">
-              <a class="btn" href="../../programming/java/project-loom.html#more" rel="contents">
-                阅读全文 &raquo;
-              </a>
-            </div>
-          <!--/noindex-->
-        
-      
-    </div>
-
-    
-    
-    
-      <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  
-  
-  
-
-      
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="https://hxhue.github.io/programming/java/java-memory-order.html">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="../../images/avatar.gif">
-      <meta itemprop="name" content="😋">
-      <meta itemprop="description" content="">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Bluegill">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          
-            <a href="../../programming/java/java-memory-order.html" class="post-title-link" itemprop="url">OpenJDK: Java Memory Order</a>
-        </h2>
-
-        <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-calendar"></i>
-              </span>
-              <span class="post-meta-item-text">发表于</span>
-
-              <time title="创建时间：2023-08-12 15:17:00" itemprop="dateCreated datePublished" datetime="2023-08-12T15:17:00+08:00">2023-08-12</time>
-            </span>
-              <span class="post-meta-item">
-                <span class="post-meta-item-icon">
-                  <i class="far fa-calendar-check"></i>
-                </span>
-                <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2024-03-23 17:49:16" itemprop="dateModified" datetime="2024-03-23T17:49:16+08:00">2024-03-23</time>
-              </span>
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-folder"></i>
-              </span>
-              <span class="post-meta-item-text">分类于</span>
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="../../categories/programming/" itemprop="url" rel="index"><span itemprop="name">programming</span></a>
-                </span>
-            </span>
-
-          <br>
-            <span class="post-meta-item" title="本文字数">
-              <span class="post-meta-item-icon">
-                <i class="far fa-file-word"></i>
-              </span>
-                <span class="post-meta-item-text">本文字数：</span>
-              <span>1.1k</span>
-            </span>
-            <span class="post-meta-item" title="阅读时长">
-              <span class="post-meta-item-icon">
-                <i class="far fa-clock"></i>
-              </span>
-                <span class="post-meta-item-text">阅读时长 &asymp;</span>
-              <span>4 分钟</span>
-            </span>
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          <p>CPU 内存屏障：<a target="_blank" rel="noopener" href="https://sf-zhou.github.io/programming/memory_barrier.html">https://sf-zhou.github.io/programming/memory_barrier.html</a></p>
-<p>volatile 与内存屏障总结： <a target="_blank" rel="noopener" href="https://zhuanlan.zhihu.com/p/43526907">https://zhuanlan.zhihu.com/p/43526907</a></p>
-<blockquote>
-<p>X86-64 下仅支持一种指令重排：Store-Load ，即读操作可能会重排到写操作前面，同时不同线程的写操作并没有保证全局可见，例子见《Intel® 64 and IA-32 Architectures Software Developer’s Manual》手册 8.6.1、8.2.3.7 节。要注意的是这个问题只能用 mfence 解决，不能靠组合 sfence 和 lfence 解决。（用 sfence+lfence 组合仅可以解决重排问题，但不能解决全局可见性问题，简单理解不如视为 <code>sfence</code> 和 <code>lfence</code> 本身也能乱序重排）</p>
-</blockquote>
-<blockquote>
-<p>X86-64 一般情况根本不会需要使用 <code>lfence</code> 与 <code>sfence</code> 这两个指令，除非操作 Write-Through 内存或使用 non-temporal 指令（NT 指令，属于 SSE 指令集），比如 <code>movntdq</code>, <code>movnti</code>, <code>maskmovq</code>，这些指令也使用 Write-Through 内存策略，通常使用在图形学或视频处理，Linux 编程里就需要使用 GNC 提供的专门的函数（例子见参考资料 13：Memory part 5: What programmers can do）。</p>
-</blockquote>
-<p>下面是 GNU 中的三种内存屏障定义方法，结合了编译器屏障和三种 CPU 屏障指令</p>
-<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">define</span> lfence() __asm__ __volatile__(<span class="string">&quot;lfence&quot;</span>: : :<span class="string">&quot;memory&quot;</span>)</span></span><br><span class="line"><span class="meta">#<span class="keyword">define</span> sfence() __asm__ __volatile__(<span class="string">&quot;sfence&quot;</span>: : :<span class="string">&quot;memory&quot;</span>)</span></span><br><span class="line"><span class="meta">#<span class="keyword">define</span> mfence() __asm__ __volatile__(<span class="string">&quot;mfence&quot;</span>: : :<span class="string">&quot;memory&quot;</span>)</span></span><br></pre></td></tr></table></figure>
-
-<p>代码中仍然使用 <code>lfence()</code> 与 <code>sfence()</code> 这两个内存屏障应该也是一种长远的考虑。按照 Interface 写代码是最保险的，万一 Intel 以后出一个采用弱一致模型的 CPU，遗留代码出问题就不好了。目前在 X86 下面视为编译器屏障即可。</p>
-<h1 id="sun-misc-Unsafe"><a href="#sun-misc-Unsafe" class="headerlink" title="sun.misc.Unsafe"></a>sun.misc.Unsafe</h1>
-          <!--noindex-->
-            <div class="post-button">
-              <a class="btn" href="../../programming/java/java-memory-order.html#more" rel="contents">
-                阅读全文 &raquo;
-              </a>
-            </div>
-          <!--/noindex-->
-        
-      
-    </div>
-
-    
-    
-    
-      <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  
-  
-  
-
-      
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="https://hxhue.github.io/programming/java/%E8%AF%BB-on-java-8.html">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="../../images/avatar.gif">
-      <meta itemprop="name" content="😋">
-      <meta itemprop="description" content="">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Bluegill">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          
-            <a href="../../programming/java/%E8%AF%BB-on-java-8.html" class="post-title-link" itemprop="url">读 On Java 8</a>
-        </h2>
-
-        <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-calendar"></i>
-              </span>
-              <span class="post-meta-item-text">发表于</span>
-
-              <time title="创建时间：2023-08-12 15:17:00" itemprop="dateCreated datePublished" datetime="2023-08-12T15:17:00+08:00">2023-08-12</time>
-            </span>
-              <span class="post-meta-item">
-                <span class="post-meta-item-icon">
-                  <i class="far fa-calendar-check"></i>
-                </span>
-                <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2024-03-21 16:27:13" itemprop="dateModified" datetime="2024-03-21T16:27:13+08:00">2024-03-21</time>
-              </span>
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-folder"></i>
-              </span>
-              <span class="post-meta-item-text">分类于</span>
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="../../categories/programming/" itemprop="url" rel="index"><span itemprop="name">programming</span></a>
-                </span>
-            </span>
-
-          <br>
-            <span class="post-meta-item" title="本文字数">
-              <span class="post-meta-item-icon">
-                <i class="far fa-file-word"></i>
-              </span>
-                <span class="post-meta-item-text">本文字数：</span>
-              <span>6.5k</span>
-            </span>
-            <span class="post-meta-item" title="阅读时长">
-              <span class="post-meta-item-icon">
-                <i class="far fa-clock"></i>
-              </span>
-                <span class="post-meta-item-text">阅读时长 &asymp;</span>
-              <span>24 分钟</span>
-            </span>
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          <h1 id="Chapter-00-11"><a href="#Chapter-00-11" class="headerlink" title="Chapter 00-11"></a>Chapter 00-11</h1><p>Java 对象构造顺序：1、基类 2、所有域 3、初始化块 4、自身的构造函数</p>
-<figure class="highlight jsx"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">jshell&gt; a = <span class="keyword">new</span> <span class="title class_">Foo</span>()</span><br><span class="line"><span class="title class_">Value</span> initialization</span><br><span class="line"><span class="title class_">Initialization</span> block</span><br><span class="line"><span class="title class_">Constructor</span></span><br></pre></td></tr></table></figure>
-
-<p>为接口提供默认实现：</p>
-<p><img src="../../../assets/630546bf2b71cdf127d9f96b76c05aa1.png"></p>
-<p>逆变、协变、不变的关系：</p>
-<p><img src="../../../assets/3e7c37a37ad6d2386c55e8ac2a421164.png"></p>
-<p>在 Java 的子类中 override 了父类的方法，返回一个协变类型也是可以的。比如基类规定的是返回 Object，重写的方法里面是可以写返回任意对象的。</p>
-          <!--noindex-->
-            <div class="post-button">
-              <a class="btn" href="../../programming/java/%E8%AF%BB-on-java-8.html#more" rel="contents">
-                阅读全文 &raquo;
-              </a>
-            </div>
-          <!--/noindex-->
-        
-      
-    </div>
-
-    
-    
-    
-      <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  
-  
-  
-
-      
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="https://hxhue.github.io/programming/www/javascript-%E4%BB%8E-domnodeinserted-%E5%88%B0-mutationobserver.html">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="../../images/avatar.gif">
-      <meta itemprop="name" content="😋">
-      <meta itemprop="description" content="">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Bluegill">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          
-            <a href="../../programming/www/javascript-%E4%BB%8E-domnodeinserted-%E5%88%B0-mutationobserver.html" class="post-title-link" itemprop="url">Javascript 从 DOMNodeInserted 到 MutationObserver</a>
+            <a href="../../programming/python/python-sys-vs-os.html" class="post-title-link" itemprop="url">Python sys vs os</a>
         </h2>
 
         <div class="post-meta">
@@ -698,7 +403,7 @@ setTimeout(f, 0);
                 <i class="far fa-file-word"></i>
               </span>
                 <span class="post-meta-item-text">本文字数：</span>
-              <span>91</span>
+              <span>147</span>
             </span>
             <span class="post-meta-item" title="阅读时长">
               <span class="post-meta-item-icon">
@@ -717,16 +422,100 @@ setTimeout(f, 0);
     <div class="post-body" itemprop="articleBody">
 
       
-          <p>这段代码是在 Tamper Monkey 的 content.js 中发现的。被浏览器警告应该替换掉这种写法。</p>
-<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">bn.<span class="title function_">addEventListener</span>(<span class="string">&quot;DOMNodeInserted&quot;</span>, o, s)</span><br></pre></td></tr></table></figure>
+          <p>sys 可以访问解释器（运行时功能）和系统特定功能（系统有关功能）。os 提供了操作系统上的统一抽象（系统无关功能）。</p>
+<ul>
+<li>解释器功能：比如 <code>sys.argv</code> 访问命令行参数，<code>sys.exit()</code> 退出程序，<code>sys.path</code> 是 python 包的查询路径，<code>sys.stdin/sys.stdout/sys.stderr</code> 分别表示三个系统管道。</li>
+<li>系统有关功能：比如 <code>sys.getwindowsversion</code> 可以得到 windows 的大小版本号。<code>sys.platform</code> 可以获得操作系统平台。<code>sys.version</code> 是 python 安装信息。</li>
+<li>系统无关功能：操作文件系统，path 分隔符，环境变量等。</li>
+</ul>
 
-<p>替换成</p>
-<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> [adder, remover] = (<span class="function">(<span class="params">bn, o, s</span>) =&gt;</span> &#123;</span><br><span class="line">    <span class="keyword">var</span> helper = &#123; remove : <span class="function">() =&gt;</span> &#123;&#125;, add : <span class="function">() =&gt;</span> &#123;&#125; &#125;</span><br><span class="line">    <span class="keyword">var</span> observer = <span class="keyword">new</span> <span class="title class_">MutationObserver</span>(<span class="keyword">function</span>(<span class="params">mutations</span>) &#123;</span><br><span class="line">      mutations.<span class="title function_">forEach</span>(<span class="keyword">function</span>(<span class="params">mutation</span>) &#123;</span><br><span class="line">        <span class="keyword">var</span> nodes = <span class="title class_">Array</span>.<span class="property"><span class="keyword">prototype</span></span>.<span class="property">slice</span>.<span class="title function_">call</span>(mutation.<span class="property">addedNodes</span>);</span><br><span class="line">        nodes.<span class="title function_">forEach</span>(<span class="function">(<span class="params">node_</span>) =&gt;</span> &#123; <span class="title function_">o</span>(); helper.<span class="title function_">remove</span>() &#125;);</span><br><span class="line">      &#125;);</span><br><span class="line">    &#125;);</span><br><span class="line">    helper.<span class="property">remove</span> = <span class="function">() =&gt;</span> observer.<span class="title function_">disconnect</span>();</span><br><span class="line">    helper.<span class="property">add</span> = <span class="function">() =&gt;</span> observer.<span class="title function_">observe</span>(bn, &#123; <span class="attr">childList</span>: <span class="literal">true</span>, <span class="attr">subtree</span>: <span class="literal">true</span>, &#125;;</span><br><span class="line">    <span class="keyword">return</span> [helper.<span class="property">add</span>, helper.<span class="property">remove</span>];</span><br><span class="line">&#125;)(bn, o, s);</span><br><span class="line"><span class="title function_">adder</span>()</span><br></pre></td></tr></table></figure>
+      
+    </div>
 
-<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">bn.<span class="title function_">removeEventListener</span>(<span class="string">&quot;DOMNodeInserted&quot;</span>, o, s)</span><br></pre></td></tr></table></figure>
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
 
-<p>替换成</p>
-<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="title function_">remover</span>()</span><br></pre></td></tr></table></figure>
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://hxhue.github.io/programming/python/python-%E8%BD%AC%E7%BD%AE%E7%9F%A9%E9%98%B5.html">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="../../images/avatar.gif">
+      <meta itemprop="name" content="😋">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Bluegill">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="../../programming/python/python-%E8%BD%AC%E7%BD%AE%E7%9F%A9%E9%98%B5.html" class="post-title-link" itemprop="url">Python 转置矩阵</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2023-08-12 15:17:00" itemprop="dateCreated datePublished" datetime="2023-08-12T15:17:00+08:00">2023-08-12</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2024-03-15 16:31:51" itemprop="dateModified" datetime="2024-03-15T16:31:51+08:00">2024-03-15</time>
+              </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="../../categories/programming/" itemprop="url" rel="index"><span itemprop="name">programming</span></a>
+                </span>
+            </span>
+
+          <br>
+            <span class="post-meta-item" title="本文字数">
+              <span class="post-meta-item-icon">
+                <i class="far fa-file-word"></i>
+              </span>
+                <span class="post-meta-item-text">本文字数：</span>
+              <span>12</span>
+            </span>
+            <span class="post-meta-item" title="阅读时长">
+              <span class="post-meta-item-icon">
+                <i class="far fa-clock"></i>
+              </span>
+                <span class="post-meta-item-text">阅读时长 &asymp;</span>
+              <span>1 分钟</span>
+            </span>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">transpose = <span class="keyword">lambda</span> listA: <span class="built_in">list</span>(<span class="built_in">list</span>(t) <span class="keyword">for</span> t <span class="keyword">in</span> <span class="built_in">zip</span>(*listA))</span><br></pre></td></tr></table></figure>
 
       
     </div>
@@ -940,6 +729,108 @@ setTimeout(f, 0);
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://hxhue.github.io/systems/windows/windows-%E5%9B%9E%E9%80%80%E9%A9%B1%E5%8A%A8%E6%88%96%E7%BB%99%E5%B7%B2%E7%BB%8F%E5%88%A0%E9%99%A4%E7%9A%84%E8%AE%BE%E5%A4%87%E6%B7%BB%E5%8A%A0%E9%A9%B1%E5%8A%A8.html">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="../../images/avatar.gif">
+      <meta itemprop="name" content="😋">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Bluegill">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="../../systems/windows/windows-%E5%9B%9E%E9%80%80%E9%A9%B1%E5%8A%A8%E6%88%96%E7%BB%99%E5%B7%B2%E7%BB%8F%E5%88%A0%E9%99%A4%E7%9A%84%E8%AE%BE%E5%A4%87%E6%B7%BB%E5%8A%A0%E9%A9%B1%E5%8A%A8.html" class="post-title-link" itemprop="url">Windows 回退驱动或给已经删除的设备添加驱动</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2023-08-12 15:17:00" itemprop="dateCreated datePublished" datetime="2023-08-12T15:17:00+08:00">2023-08-12</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2024-03-21 16:27:14" itemprop="dateModified" datetime="2024-03-21T16:27:14+08:00">2024-03-21</time>
+              </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="../../categories/systems/" itemprop="url" rel="index"><span itemprop="name">systems</span></a>
+                </span>
+            </span>
+
+          <br>
+            <span class="post-meta-item" title="本文字数">
+              <span class="post-meta-item-icon">
+                <i class="far fa-file-word"></i>
+              </span>
+                <span class="post-meta-item-text">本文字数：</span>
+              <span>107</span>
+            </span>
+            <span class="post-meta-item" title="阅读时长">
+              <span class="post-meta-item-icon">
+                <i class="far fa-clock"></i>
+              </span>
+                <span class="post-meta-item-text">阅读时长 &asymp;</span>
+              <span>1 分钟</span>
+            </span>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <p><strong>如果想要恢复到曾经安装过的驱动</strong>。可以按照下面步骤操作：</p>
+<p>首先在设备管理器中选择添加过时硬件。</p>
+<p><img src="../../../assets/1b40b74499ab2e5aa844b2f760b83e97.png"></p>
+<p>看到首页之后点下一页。然后选中手动安装，再点一次下一页。</p>
+<p><img src="../../../assets/b39de0e9b20b6a51f01e8be31cfc3e94.png"></p>
+<p>找到 <strong>显示适配器</strong>，再点下一页。</p>
+<p><img src="../../../assets/d57892a054bb0271fd86881725098f75.png"></p>
+<p>选择要安装的驱动，这里能找到和我的显卡匹配的两个版本的驱动。</p>
+          <!--noindex-->
+            <div class="post-button">
+              <a class="btn" href="../../systems/windows/windows-%E5%9B%9E%E9%80%80%E9%A9%B1%E5%8A%A8%E6%88%96%E7%BB%99%E5%B7%B2%E7%BB%8F%E5%88%A0%E9%99%A4%E7%9A%84%E8%AE%BE%E5%A4%87%E6%B7%BB%E5%8A%A0%E9%A9%B1%E5%8A%A8.html#more" rel="contents">
+                阅读全文 &raquo;
+              </a>
+            </div>
+          <!--/noindex-->
+        
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
     <link itemprop="mainEntityOfPage" href="https://hxhue.github.io/systems/windows/windows-%E5%90%88%E9%9B%86.html">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -1135,7 +1026,7 @@ setTimeout(f, 0);
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="https://hxhue.github.io/systems/windows/windows-%E5%9B%9E%E9%80%80%E9%A9%B1%E5%8A%A8%E6%88%96%E7%BB%99%E5%B7%B2%E7%BB%8F%E5%88%A0%E9%99%A4%E7%9A%84%E8%AE%BE%E5%A4%87%E6%B7%BB%E5%8A%A0%E9%A9%B1%E5%8A%A8.html">
+    <link itemprop="mainEntityOfPage" href="https://hxhue.github.io/systems/windows/windows-%E7%AA%97%E5%8F%A3%E6%A0%8F%E5%9C%A8%E5%B1%8F%E5%B9%95%E5%A4%96%E4%B8%8D%E8%83%BD%E7%A7%BB%E5%8A%A8.html">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="image" content="../../images/avatar.gif">
@@ -1149,7 +1040,96 @@ setTimeout(f, 0);
       <header class="post-header">
         <h2 class="post-title" itemprop="name headline">
           
-            <a href="../../systems/windows/windows-%E5%9B%9E%E9%80%80%E9%A9%B1%E5%8A%A8%E6%88%96%E7%BB%99%E5%B7%B2%E7%BB%8F%E5%88%A0%E9%99%A4%E7%9A%84%E8%AE%BE%E5%A4%87%E6%B7%BB%E5%8A%A0%E9%A9%B1%E5%8A%A8.html" class="post-title-link" itemprop="url">Windows 回退驱动或给已经删除的设备添加驱动</a>
+            <a href="../../systems/windows/windows-%E7%AA%97%E5%8F%A3%E6%A0%8F%E5%9C%A8%E5%B1%8F%E5%B9%95%E5%A4%96%E4%B8%8D%E8%83%BD%E7%A7%BB%E5%8A%A8.html" class="post-title-link" itemprop="url">Windows 窗口栏在屏幕外不能移动</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2023-08-12 15:17:00" itemprop="dateCreated datePublished" datetime="2023-08-12T15:17:00+08:00">2023-08-12</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2024-03-19 11:06:51" itemprop="dateModified" datetime="2024-03-19T11:06:51+08:00">2024-03-19</time>
+              </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="../../categories/systems/" itemprop="url" rel="index"><span itemprop="name">systems</span></a>
+                </span>
+            </span>
+
+          <br>
+            <span class="post-meta-item" title="本文字数">
+              <span class="post-meta-item-icon">
+                <i class="far fa-file-word"></i>
+              </span>
+                <span class="post-meta-item-text">本文字数：</span>
+              <span>86</span>
+            </span>
+            <span class="post-meta-item" title="阅读时长">
+              <span class="post-meta-item-icon">
+                <i class="far fa-clock"></i>
+              </span>
+                <span class="post-meta-item-text">阅读时长 &asymp;</span>
+              <span>1 分钟</span>
+            </span>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <p>先把窗口激活（放到最前面）然后按 <strong><code>Alt</code></strong> + **<code>Space</code>**，就能出现菜单选择 <strong>最大化&#x2F;最小化&#x2F;移动</strong>。</p>
+<p>如果不行，也可以把任何一个其他的窗口拖动到左屏，右侧选择位置不正确的窗口组成双栏分屏，然后将其拖出来恢复成正常窗口。</p>
+
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://hxhue.github.io/systems/windows/windows-%E6%9F%A5%E6%89%BE%E5%B7%B2%E7%BB%8F%E4%BF%AE%E6%94%B9%E8%BF%87%E7%9A%84%E7%BB%84%E7%AD%96%E7%95%A5.html">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="../../images/avatar.gif">
+      <meta itemprop="name" content="😋">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Bluegill">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="../../systems/windows/windows-%E6%9F%A5%E6%89%BE%E5%B7%B2%E7%BB%8F%E4%BF%AE%E6%94%B9%E8%BF%87%E7%9A%84%E7%BB%84%E7%AD%96%E7%95%A5.html" class="post-title-link" itemprop="url">Windows 查找已经修改过的组策略</a>
         </h2>
 
         <div class="post-meta">
@@ -1184,7 +1164,7 @@ setTimeout(f, 0);
                 <i class="far fa-file-word"></i>
               </span>
                 <span class="post-meta-item-text">本文字数：</span>
-              <span>107</span>
+              <span>9</span>
             </span>
             <span class="post-meta-item" title="阅读时长">
               <span class="post-meta-item-icon">
@@ -1203,22 +1183,103 @@ setTimeout(f, 0);
     <div class="post-body" itemprop="articleBody">
 
       
-          <p><strong>如果想要恢复到曾经安装过的驱动</strong>。可以按照下面步骤操作：</p>
-<p>首先在设备管理器中选择添加过时硬件。</p>
-<p><img src="../../../assets/1b40b74499ab2e5aa844b2f760b83e97.png"></p>
-<p>看到首页之后点下一页。然后选中手动安装，再点一次下一页。</p>
-<p><img src="../../../assets/b39de0e9b20b6a51f01e8be31cfc3e94.png"></p>
-<p>找到 <strong>显示适配器</strong>，再点下一页。</p>
-<p><img src="../../../assets/d57892a054bb0271fd86881725098f75.png"></p>
-<p>选择要安装的驱动，这里能找到和我的显卡匹配的两个版本的驱动。</p>
-          <!--noindex-->
-            <div class="post-button">
-              <a class="btn" href="../../systems/windows/windows-%E5%9B%9E%E9%80%80%E9%A9%B1%E5%8A%A8%E6%88%96%E7%BB%99%E5%B7%B2%E7%BB%8F%E5%88%A0%E9%99%A4%E7%9A%84%E8%AE%BE%E5%A4%87%E6%B7%BB%E5%8A%A0%E9%A9%B1%E5%8A%A8.html#more" rel="contents">
-                阅读全文 &raquo;
-              </a>
-            </div>
-          <!--/noindex-->
-        
+          <p>在所有设置中点排序。</p>
+<p><img src="../../../assets/1a5bb26a09cd937ee65801bf61378ad9.png"></p>
+
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://hxhue.github.io/cli/bash/bash-%E9%85%8D%E7%BD%AE.html">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="../../images/avatar.gif">
+      <meta itemprop="name" content="😋">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Bluegill">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="../../cli/bash/bash-%E9%85%8D%E7%BD%AE.html" class="post-title-link" itemprop="url">bash 配置</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2023-08-12 15:17:00" itemprop="dateCreated datePublished" datetime="2023-08-12T15:17:00+08:00">2023-08-12</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2024-03-18 16:06:37" itemprop="dateModified" datetime="2024-03-18T16:06:37+08:00">2024-03-18</time>
+              </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="../../categories/cli/" itemprop="url" rel="index"><span itemprop="name">cli</span></a>
+                </span>
+            </span>
+
+          <br>
+            <span class="post-meta-item" title="本文字数">
+              <span class="post-meta-item-icon">
+                <i class="far fa-file-word"></i>
+              </span>
+                <span class="post-meta-item-text">本文字数：</span>
+              <span>236</span>
+            </span>
+            <span class="post-meta-item" title="阅读时长">
+              <span class="post-meta-item-icon">
+                <i class="far fa-clock"></i>
+              </span>
+                <span class="post-meta-item-text">阅读时长 &asymp;</span>
+              <span>1 分钟</span>
+            </span>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <h1 id="bash-的两个配置文件"><a href="#bash-的两个配置文件" class="headerlink" title="bash 的两个配置文件"></a>bash 的两个配置文件</h1><p>login 时只加载 <code>.bash_profile</code>（如果存在），其他时候只加载 <code>.bashrc</code>。</p>
+<p>最好是把内容放在 <code>.bashrc</code>，然后让 ~&#x2F;.bash_profile 去 <code>source ~/.bashrc</code>。</p>
+<p>虽然 <code>~/.bashrc</code> 是所有非登陆的 bash 都会读，但默认的 <code>~/.bashrc</code> 的开头检查了当前是否为交互终端，如果不是则退出。如果非要绕过这个限制，可以强制一个终端为交互终端：<code>bash -i</code>。</p>
+<blockquote>
+<p>Windows 的 Cygwin 目录下自己有 home。因此要让它的 ~&#x2F;.bashrc 去 source Windows 用户目录的 ~&#x2F;.bashrc，不然会出现两处配置不一致的情况。</p>
+</blockquote>
+<h1 id="bash-显示-git-分支"><a href="#bash-显示-git-分支" class="headerlink" title="bash 显示 git 分支"></a>bash 显示 git 分支</h1><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="title">parse_git_branch</span></span>() &#123;</span><br><span class="line">    <span class="keyword">if</span> ! [[ $(git rev-parse --is-bare-repository 2&gt;/dev/null) == <span class="literal">true</span> ]]; <span class="keyword">then</span></span><br><span class="line">        <span class="built_in">local</span> BRANCH=<span class="string">&quot;<span class="subst">$(git branch 2&gt;/dev/null | sed -e &#x27;/^[^*]/d&#x27; -e &#x27;s/* \(.*\)/\1/&#x27;)</span>&quot;</span></span><br><span class="line">        [[ <span class="string">&quot;<span class="variable">$&#123;BRANCH&#125;</span>&quot;</span> == <span class="string">&quot;&quot;</span> ]] &amp;&amp; <span class="built_in">return</span> 0</span><br><span class="line">        <span class="built_in">local</span> MSG=<span class="string">&quot;<span class="subst">$(git status 2&gt; /dev/null | tail -n1)</span>&quot;</span></span><br><span class="line">        <span class="keyword">if</span> [[ <span class="string">&quot;<span class="variable">$MSG</span>&quot;</span> != <span class="string">&quot;nothing to commit&quot;</span>* ]]; <span class="keyword">then</span></span><br><span class="line">            <span class="built_in">echo</span> -n <span class="string">&quot;(<span class="variable">$&#123;BRANCH&#125;</span>*) &quot;</span></span><br><span class="line">        <span class="keyword">else</span></span><br><span class="line">            <span class="built_in">echo</span> -n <span class="string">&quot;(<span class="variable">$&#123;BRANCH&#125;</span>) &quot;</span></span><br><span class="line">        <span class="keyword">fi</span></span><br><span class="line">    <span class="keyword">fi</span></span><br><span class="line">&#125;</span><br><span class="line">EXITCODE=<span class="string">&#x27;$(code=$?; if (( code )); then echo -ne &quot;\[\e[91m\][$code]\[\e[00m\] &quot;; fi)&#x27;</span></span><br><span class="line"><span class="built_in">export</span> PS1=<span class="string">&quot;<span class="variable">$&#123;EXITCODE&#125;</span>\u \[\e[32m\]\w \[\e[00m\]\[\e[91m\]\$(parse_git_branch)\[\e[00m\]$ &quot;</span></span><br></pre></td></tr></table></figure>
+
       
     </div>
 

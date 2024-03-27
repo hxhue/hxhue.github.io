@@ -74,35 +74,137 @@
 </noscript>
 
 <!-- hexo injector head_end start -->
-<script> 
+<link
+  rel="stylesheet"
+  href="https://cdn.jsdelivr.net/npm/github-markdown-css@5.3.0/github-markdown-dark.css"
+/>
+<style>
+.markdown-body {
+  background: #22272e;
+  color: #adbac7;
+}
+
+#content {
+  margin: 0 auto;
+  padding: 1rem;
+  max-width: 928px;
+}
+
+.markdown-alert {
+  padding: 0 1em;
+  margin-bottom: 16px;
+  color: inherit;
+  border-left: 0.25em solid #444c56;
+}
+
+.markdown-alert-title {
+  display: inline-flex;
+  align-items: center;
+  font-weight: 500;
+  margin-bottom: 8px; /* default is 20px, why? */
+}
+
+.markdown-alert-note {
+  border-left-color: #539bf5;
+}
+
+.markdown-alert-tip {
+  border-left-color: #57ab5a;
+}
+
+.markdown-alert-important {
+  border-left-color: #986ee2;
+}
+
+.markdown-alert-warning {
+  border-left-color: #c69026;
+}
+
+.markdown-alert-caution {
+  border-left-color: #e5534b;
+}
+
+.markdown-alert-note > .markdown-alert-title {
+  color: #539bf5;
+  fill: #539bf5;
+}
+
+.markdown-alert-tip > .markdown-alert-title {
+  color: #57ab5a;
+  fill: #57ab5a;
+}
+
+.markdown-alert-important > .markdown-alert-title {
+  color: #986ee2;
+  fill: #986ee2;
+}
+
+.markdown-alert-warning > .markdown-alert-title {
+  color: #c69026;
+  fill: #c69026;
+}
+
+.markdown-alert-caution > .markdown-alert-title {
+  color: #e5534b;
+  fill: #e5534b;
+}
+
+.mr-2 {
+  margin-right: 0.5rem;
+}
+</style>
+<script>
 function f() {
   const map = {
     TIP: {
-      classList: ["note", "success"],
+      classList: ["markdown-alert", "markdown-alert-tip"],
+      icon: `<svg class="octicon octicon-light-bulb mr-2" viewBox="0 0 16 16" width="16" height="16" aria-hidden="true"><path d="M8 1.5c-2.363 0-4 1.69-4 3.75 0 .984.424 1.625.984 2.304l.214.253c.223.264.47.556.673.848.284.411.537.896.621 1.49a.75.75 0 0 1-1.484.211c-.04-.282-.163-.547-.37-.847a8.456 8.456 0 0 0-.542-.68c-.084-.1-.173-.205-.268-.32C3.201 7.75 2.5 6.766 2.5 5.25 2.5 2.31 4.863 0 8 0s5.5 2.31 5.5 5.25c0 1.516-.701 2.5-1.328 3.259-.095.115-.184.22-.268.319-.207.245-.383.453-.541.681-.208.3-.33.565-.37.847a.751.751 0 0 1-1.485-.212c.084-.593.337-1.078.621-1.489.203-.292.45-.584.673-.848.075-.088.147-.173.213-.253.561-.679.985-1.32.985-2.304 0-2.06-1.637-3.75-4-3.75ZM5.75 12h4.5a.75.75 0 0 1 0 1.5h-4.5a.75.75 0 0 1 0-1.5ZM6 15.25a.75.75 0 0 1 .75-.75h2.5a.75.75 0 0 1 0 1.5h-2.5a.75.75 0 0 1-.75-.75Z"></path></svg>`,
     },
     CAUTION: {
-      classList: ["note", "danger"],
+      classList: ["markdown-alert", "markdown-alert-caution"],
+      icon: `<svg class="octicon octicon-stop mr-2" viewBox="0 0 16 16" width="16" height="16" aria-hidden="true"><path d="M4.47.22A.749.749 0 0 1 5 0h6c.199 0 .389.079.53.22l4.25 4.25c.141.14.22.331.22.53v6a.749.749 0 0 1-.22.53l-4.25 4.25A.749.749 0 0 1 11 16H5a.749.749 0 0 1-.53-.22L.22 11.53A.749.749 0 0 1 0 11V5c0-.199.079-.389.22-.53Zm.84 1.28L1.5 5.31v5.38l3.81 3.81h5.38l3.81-3.81V5.31L10.69 1.5ZM8 4a.75.75 0 0 1 .75.75v3.5a.75.75 0 0 1-1.5 0v-3.5A.75.75 0 0 1 8 4Zm0 8a1 1 0 1 1 0-2 1 1 0 0 1 0 2Z"></path></svg>`,
     },
     IMPORTANT: {
-      classList: ["note", "primary"],
+      classList: ["markdown-alert", "markdown-alert-important"],
+      icon: `<svg class="octicon octicon-report mr-2" viewBox="0 0 16 16" width="16" height="16" aria-hidden="true"><path d="M0 1.75C0 .784.784 0 1.75 0h12.5C15.216 0 16 .784 16 1.75v9.5A1.75 1.75 0 0 1 14.25 13H8.06l-2.573 2.573A1.458 1.458 0 0 1 3 14.543V13H1.75A1.75 1.75 0 0 1 0 11.25Zm1.75-.25a.25.25 0 0 0-.25.25v9.5c0 .138.112.25.25.25h2a.75.75 0 0 1 .75.75v2.19l2.72-2.72a.749.749 0 0 1 .53-.22h6.5a.25.25 0 0 0 .25-.25v-9.5a.25.25 0 0 0-.25-.25Zm7 2.25v2.5a.75.75 0 0 1-1.5 0v-2.5a.75.75 0 0 1 1.5 0ZM9 9a1 1 0 1 1-2 0 1 1 0 0 1 2 0Z"></path></svg>`,
     },
     NOTE: {
-      classList: ["note", "info"],
+      classList: ["markdown-alert", "markdown-alert-note"],
+      icon: `<svg class="octicon octicon-info mr-2" viewBox="0 0 16 16" width="16" height="16" aria-hidden="true"><path d="M0 8a8 8 0 1 1 16 0A8 8 0 0 1 0 8Zm8-6.5a6.5 6.5 0 1 0 0 13 6.5 6.5 0 0 0 0-13ZM6.5 7.75A.75.75 0 0 1 7.25 7h1a.75.75 0 0 1 .75.75v2.75h.25a.75.75 0 0 1 0 1.5h-2a.75.75 0 0 1 0-1.5h.25v-2h-.25a.75.75 0 0 1-.75-.75ZM8 6a1 1 0 1 1 0-2 1 1 0 0 1 0 2Z"></path></svg>`,
     },
     WARNING: {
-      classList: ["note", "warning"],
+      classList: ["markdown-alert", "markdown-alert-warning"],
+      icon: `<svg class="octicon octicon-alert mr-2" viewBox="0 0 16 16" width="16" height="16" aria-hidden="true"><path d="M6.457 1.047c.659-1.234 2.427-1.234 3.086 0l6.082 11.378A1.75 1.75 0 0 1 14.082 15H1.918a1.75 1.75 0 0 1-1.543-2.575Zm1.763.707a.25.25 0 0 0-.44 0L1.698 13.132a.25.25 0 0 0 .22.368h12.164a.25.25 0 0 0 .22-.368Zm.53 3.996v2.5a.75.75 0 0 1-1.5 0v-2.5a.75.75 0 0 1 1.5 0ZM9 11a1 1 0 1 1-2 0 1 1 0 0 1 2 0Z"></path></svg>`,
     },
   };
-  const makeCallout = (p) => {
+  const makeNode = (html) => {
+    const div = document.createElement("div");
+    div.innerHTML = html;
+    return div.firstChild;
+  };
+  const makeAlert = (p) => {
+    // Not inside blockquote
     if (p.parentElement.tagName !== "BLOCKQUOTE") {
+      return;
+    }
+    // Not the first child
+    if (p !== p.parentElement.firstElementChild) {
       return;
     }
     const s = p.textContent;
     if (s && s.startsWith("[!") && s.endsWith("]")) {
-      const callout = s.slice(2, s.length - 1).toUpperCase();
-      const setting = map[callout];
+      const alert = s.slice(2, s.length - 1).toUpperCase();
+      const setting = map[alert];
       if (setting) {
         p.parentElement.classList.add(...setting.classList);
+        const title = document.createElement("p");
+        title.classList.add("markdown-alert-title");
+        const icon = makeNode(setting.icon);
+        title.appendChild(icon);
+        title.appendChild(
+          document.createTextNode(alert[0] + alert.slice(1).toLowerCase())
+        );
+        p.insertAdjacentElement("beforebegin", title);
         p.parentElement.removeChild(p);
       }
     }
@@ -112,12 +214,12 @@ function f() {
       if (mutation.type === "childList") {
         Array.from(mutation.addedNodes)
           .filter((p) => p.tagName === "P")
-          .forEach(makeCallout);
+          .forEach(makeAlert);
       }
     }
   });
   observer.observe(document.body, { childList: true, subtree: true });
-  Array.from(document.querySelectorAll("p")).forEach(makeCallout);
+  Array.from(document.querySelectorAll("p")).forEach(makeAlert);
 }
 setTimeout(f, 0);
 </script>
@@ -354,105 +456,6 @@ setTimeout(f, 0);
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="https://hxhue.github.io/programming/cpp/cpp-templates-the-complete-guide/07-by-value-or-by-reference.html">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="../../images/avatar.gif">
-      <meta itemprop="name" content="😋">
-      <meta itemprop="description" content="">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Bluegill">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          
-            <a href="../../programming/cpp/cpp-templates-the-complete-guide/07-by-value-or-by-reference.html" class="post-title-link" itemprop="url">CTTCG 07 By Value or by Reference</a>
-        </h2>
-
-        <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-calendar"></i>
-              </span>
-              <span class="post-meta-item-text">发表于</span>
-
-              <time title="创建时间：2023-08-12 00:00:00" itemprop="dateCreated datePublished" datetime="2023-08-12T00:00:00+08:00">2023-08-12</time>
-            </span>
-              <span class="post-meta-item">
-                <span class="post-meta-item-icon">
-                  <i class="far fa-calendar-check"></i>
-                </span>
-                <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2024-03-21 16:27:13" itemprop="dateModified" datetime="2024-03-21T16:27:13+08:00">2024-03-21</time>
-              </span>
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-folder"></i>
-              </span>
-              <span class="post-meta-item-text">分类于</span>
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="../../categories/programming/" itemprop="url" rel="index"><span itemprop="name">programming</span></a>
-                </span>
-            </span>
-
-          <br>
-            <span class="post-meta-item" title="本文字数">
-              <span class="post-meta-item-icon">
-                <i class="far fa-file-word"></i>
-              </span>
-                <span class="post-meta-item-text">本文字数：</span>
-              <span>303</span>
-            </span>
-            <span class="post-meta-item" title="阅读时长">
-              <span class="post-meta-item-icon">
-                <i class="far fa-clock"></i>
-              </span>
-                <span class="post-meta-item-text">阅读时长 &asymp;</span>
-              <span>1 分钟</span>
-            </span>
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          <h1 id="传值：T"><a href="#传值：T" class="headerlink" title="传值：T"></a>传值：<code>T</code></h1><p>有 decay。</p>
-<h1 id="传左值引用：T"><a href="#传左值引用：T" class="headerlink" title="传左值引用：T &amp;"></a>传左值引用：<code>T &amp;</code></h1><p>注意遇到数组时可能需要 decay。</p>
-<p>注意 <code>T</code> 类型可能是常量，导致 <code>T &amp;</code> 其实是常引用。这样的参数不能被修改，因而不能作为传出参数。可以使用 concept 限定参数非常量：</p>
-<p><img src="../../../../assets/e66f40f02b68770a1db6edfa2aed29f9.png"></p>
-<h1 id="传转发引用：T"><a href="#传转发引用：T" class="headerlink" title="传转发引用：T &amp;&amp;"></a>传转发引用：<code>T &amp;&amp;</code></h1><p>这是 T 唯一可能匹配到引用类型的情况。如果 T 本身就是引用类型，就不能用它创建值类型的同类数据。解决方法有：① 用 type traits 去除引用属性 ② 使用 auto，因为 auto 默认不会匹配到引用。</p>
-          <!--noindex-->
-            <div class="post-button">
-              <a class="btn" href="../../programming/cpp/cpp-templates-the-complete-guide/07-by-value-or-by-reference.html#more" rel="contents">
-                阅读全文 &raquo;
-              </a>
-            </div>
-          <!--/noindex-->
-        
-      
-    </div>
-
-    
-    
-    
-      <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  
-  
-  
-
-      
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
     <link itemprop="mainEntityOfPage" href="https://hxhue.github.io/programming/cpp/cpp-templates-the-complete-guide/06-move-semantics-and-enable-if.html">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -555,7 +558,7 @@ setTimeout(f, 0);
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="https://hxhue.github.io/programming/cpp/cpp-templates-the-complete-guide/09-using-templates-in-practice.html">
+    <link itemprop="mainEntityOfPage" href="https://hxhue.github.io/programming/cpp/cpp-templates-the-complete-guide/07-by-value-or-by-reference.html">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="image" content="../../images/avatar.gif">
@@ -569,7 +572,7 @@ setTimeout(f, 0);
       <header class="post-header">
         <h2 class="post-title" itemprop="name headline">
           
-            <a href="../../programming/cpp/cpp-templates-the-complete-guide/09-using-templates-in-practice.html" class="post-title-link" itemprop="url">CTTCG 09 Using Templates in Practice</a>
+            <a href="../../programming/cpp/cpp-templates-the-complete-guide/07-by-value-or-by-reference.html" class="post-title-link" itemprop="url">CTTCG 07 By Value or by Reference</a>
         </h2>
 
         <div class="post-meta">
@@ -586,7 +589,7 @@ setTimeout(f, 0);
                   <i class="far fa-calendar-check"></i>
                 </span>
                 <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2024-03-15 16:31:51" itemprop="dateModified" datetime="2024-03-15T16:31:51+08:00">2024-03-15</time>
+                <time title="修改时间：2024-03-21 16:27:13" itemprop="dateModified" datetime="2024-03-21T16:27:13+08:00">2024-03-21</time>
               </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
@@ -604,14 +607,14 @@ setTimeout(f, 0);
                 <i class="far fa-file-word"></i>
               </span>
                 <span class="post-meta-item-text">本文字数：</span>
-              <span>626</span>
+              <span>303</span>
             </span>
             <span class="post-meta-item" title="阅读时长">
               <span class="post-meta-item-icon">
                 <i class="far fa-clock"></i>
               </span>
                 <span class="post-meta-item-text">阅读时长 &asymp;</span>
-              <span>2 分钟</span>
+              <span>1 分钟</span>
             </span>
 
         </div>
@@ -623,14 +626,14 @@ setTimeout(f, 0);
     <div class="post-body" itemprop="articleBody">
 
       
-          <h1 id="包含模型-The-Inclusion-Model"><a href="#包含模型-The-Inclusion-Model" class="headerlink" title="包含模型 - The Inclusion Model"></a>包含模型 - The Inclusion Model</h1><p>通常模板需要被包含在头文件中工作。</p>
-<p>注意：函数模板完全特化之后也需要 inline 才能够在头文件中使用，否则会出现不同的翻译单元有重复定义的情况。</p>
-<h1 id="改进一：precompiled-headers"><a href="#改进一：precompiled-headers" class="headerlink" title="改进一：precompiled headers"></a>改进一：precompiled headers</h1><p>可以把 pch 理解为编译器中间工作状态的一个 dump。编译器可以在读取到某些源代码之后保存其状态，包括符号表等。如果两个文件中有公共的前缀代码（比如一个标准库的头文件就包含了数千行公共代码），编译器就可以读取预先保存的状态，从而跳过对于这些代码的处理。</p>
-<p>很遗憾的是前缀的判定是必须完全相同，即便改变头文件的包含顺序，其中与宏相关的定义也可能结果不同。由于宏无法从模块中导出，模块将可能解决这一痛点。</p>
-<h1 id="改进二：explicit-template-instantiation"><a href="#改进二：explicit-template-instantiation" class="headerlink" title="改进二：explicit template instantiation"></a>改进二：explicit template instantiation</h1><p>只在头文件中留模板函数的声明，而不是定义。然后在其他的源文件中提供特化的定义。</p>
+          <h1 id="传值：T"><a href="#传值：T" class="headerlink" title="传值：T"></a>传值：<code>T</code></h1><p>有 decay。</p>
+<h1 id="传左值引用：T"><a href="#传左值引用：T" class="headerlink" title="传左值引用：T &amp;"></a>传左值引用：<code>T &amp;</code></h1><p>注意遇到数组时可能需要 decay。</p>
+<p>注意 <code>T</code> 类型可能是常量，导致 <code>T &amp;</code> 其实是常引用。这样的参数不能被修改，因而不能作为传出参数。可以使用 concept 限定参数非常量：</p>
+<p><img src="../../../../assets/e66f40f02b68770a1db6edfa2aed29f9.png"></p>
+<h1 id="传转发引用：T"><a href="#传转发引用：T" class="headerlink" title="传转发引用：T &amp;&amp;"></a>传转发引用：<code>T &amp;&amp;</code></h1><p>这是 T 唯一可能匹配到引用类型的情况。如果 T 本身就是引用类型，就不能用它创建值类型的同类数据。解决方法有：① 用 type traits 去除引用属性 ② 使用 auto，因为 auto 默认不会匹配到引用。</p>
           <!--noindex-->
             <div class="post-button">
-              <a class="btn" href="../../programming/cpp/cpp-templates-the-complete-guide/09-using-templates-in-practice.html#more" rel="contents">
+              <a class="btn" href="../../programming/cpp/cpp-templates-the-complete-guide/07-by-value-or-by-reference.html#more" rel="contents">
                 阅读全文 &raquo;
               </a>
             </div>
@@ -730,6 +733,105 @@ setTimeout(f, 0);
           <!--noindex-->
             <div class="post-button">
               <a class="btn" href="../../programming/cpp/cpp-templates-the-complete-guide/08-compile-time-programming.html#more" rel="contents">
+                阅读全文 &raquo;
+              </a>
+            </div>
+          <!--/noindex-->
+        
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://hxhue.github.io/programming/cpp/cpp-templates-the-complete-guide/09-using-templates-in-practice.html">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="../../images/avatar.gif">
+      <meta itemprop="name" content="😋">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Bluegill">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="../../programming/cpp/cpp-templates-the-complete-guide/09-using-templates-in-practice.html" class="post-title-link" itemprop="url">CTTCG 09 Using Templates in Practice</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2023-08-12 00:00:00" itemprop="dateCreated datePublished" datetime="2023-08-12T00:00:00+08:00">2023-08-12</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2024-03-15 16:31:51" itemprop="dateModified" datetime="2024-03-15T16:31:51+08:00">2024-03-15</time>
+              </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="../../categories/programming/" itemprop="url" rel="index"><span itemprop="name">programming</span></a>
+                </span>
+            </span>
+
+          <br>
+            <span class="post-meta-item" title="本文字数">
+              <span class="post-meta-item-icon">
+                <i class="far fa-file-word"></i>
+              </span>
+                <span class="post-meta-item-text">本文字数：</span>
+              <span>626</span>
+            </span>
+            <span class="post-meta-item" title="阅读时长">
+              <span class="post-meta-item-icon">
+                <i class="far fa-clock"></i>
+              </span>
+                <span class="post-meta-item-text">阅读时长 &asymp;</span>
+              <span>2 分钟</span>
+            </span>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <h1 id="包含模型-The-Inclusion-Model"><a href="#包含模型-The-Inclusion-Model" class="headerlink" title="包含模型 - The Inclusion Model"></a>包含模型 - The Inclusion Model</h1><p>通常模板需要被包含在头文件中工作。</p>
+<p>注意：函数模板完全特化之后也需要 inline 才能够在头文件中使用，否则会出现不同的翻译单元有重复定义的情况。</p>
+<h1 id="改进一：precompiled-headers"><a href="#改进一：precompiled-headers" class="headerlink" title="改进一：precompiled headers"></a>改进一：precompiled headers</h1><p>可以把 pch 理解为编译器中间工作状态的一个 dump。编译器可以在读取到某些源代码之后保存其状态，包括符号表等。如果两个文件中有公共的前缀代码（比如一个标准库的头文件就包含了数千行公共代码），编译器就可以读取预先保存的状态，从而跳过对于这些代码的处理。</p>
+<p>很遗憾的是前缀的判定是必须完全相同，即便改变头文件的包含顺序，其中与宏相关的定义也可能结果不同。由于宏无法从模块中导出，模块将可能解决这一痛点。</p>
+<h1 id="改进二：explicit-template-instantiation"><a href="#改进二：explicit-template-instantiation" class="headerlink" title="改进二：explicit template instantiation"></a>改进二：explicit template instantiation</h1><p>只在头文件中留模板函数的声明，而不是定义。然后在其他的源文件中提供特化的定义。</p>
+          <!--noindex-->
+            <div class="post-button">
+              <a class="btn" href="../../programming/cpp/cpp-templates-the-complete-guide/09-using-templates-in-practice.html#more" rel="contents">
                 阅读全文 &raquo;
               </a>
             </div>
@@ -856,104 +958,6 @@ setTimeout(f, 0);
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="https://hxhue.github.io/programming/cpp/cpp-templates-the-complete-guide/11-generic-libraries.html">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="../../images/avatar.gif">
-      <meta itemprop="name" content="😋">
-      <meta itemprop="description" content="">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Bluegill">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          
-            <a href="../../programming/cpp/cpp-templates-the-complete-guide/11-generic-libraries.html" class="post-title-link" itemprop="url">CTTCG 11 Generic Libraries</a>
-        </h2>
-
-        <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-calendar"></i>
-              </span>
-              <span class="post-meta-item-text">发表于</span>
-
-              <time title="创建时间：2023-08-12 00:00:00" itemprop="dateCreated datePublished" datetime="2023-08-12T00:00:00+08:00">2023-08-12</time>
-            </span>
-              <span class="post-meta-item">
-                <span class="post-meta-item-icon">
-                  <i class="far fa-calendar-check"></i>
-                </span>
-                <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2024-03-23 11:33:02" itemprop="dateModified" datetime="2024-03-23T11:33:02+08:00">2024-03-23</time>
-              </span>
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-folder"></i>
-              </span>
-              <span class="post-meta-item-text">分类于</span>
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="../../categories/programming/" itemprop="url" rel="index"><span itemprop="name">programming</span></a>
-                </span>
-            </span>
-
-          <br>
-            <span class="post-meta-item" title="本文字数">
-              <span class="post-meta-item-icon">
-                <i class="far fa-file-word"></i>
-              </span>
-                <span class="post-meta-item-text">本文字数：</span>
-              <span>1.5k</span>
-            </span>
-            <span class="post-meta-item" title="阅读时长">
-              <span class="post-meta-item-icon">
-                <i class="far fa-clock"></i>
-              </span>
-                <span class="post-meta-item-text">阅读时长 &asymp;</span>
-              <span>5 分钟</span>
-            </span>
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          <h1 id="Callables"><a href="#Callables" class="headerlink" title="Callables"></a>Callables</h1><p>Callable 有很多：函数、函数指针、成员函数、lambda 表达式（函数对象特例）、函数对象（Functor）等。</p>
-<h2 id="lambda-表达式"><a href="#lambda-表达式" class="headerlink" title="lambda 表达式"></a>lambda 表达式</h2><p>lambda 是函数对象。当捕获列表没有参数的时候，lambda 还有一个转换成一般函数指针的隐式转换操作符。在无捕获列表的 lambda 前加上 <code>+</code> 符号，能使得 lambda 变成函数指针也就是这个道理。</p>
-<h2 id="std-invoke"><a href="#std-invoke" class="headerlink" title="std::invoke"></a><code>std::invoke</code></h2><p>支持 Callable 并不简单，因为需要考虑到成员函数的调用需要通过 this 指针来完成。C++17 提供了 <code>std::invoke</code> 来将这些操作统一起来，只需要把 this 指针当作第一个参数传入。</p>
-<h2 id="Surrogate-Function-从类型隐式转换得来"><a href="#Surrogate-Function-从类型隐式转换得来" class="headerlink" title="Surrogate Function - 从类型隐式转换得来"></a>Surrogate Function - 从类型隐式转换得来</h2><p>Dummy&#x2F;Surrogate function（哑函数&#x2F;替代函数）指的是某一个函数对象还具有一个到普通函数引用或者普通函数指针的隐式转换，这个转换好的函数就是替代函数。替代函数用到了一次隐式转换，所以在参数匹配均不优于函数对象的其他<code>()</code>操作符重载时不会被选中。但若替代函数是更好的替代，将出现函数使用 ambiguous 的情况。</p>
-          <!--noindex-->
-            <div class="post-button">
-              <a class="btn" href="../../programming/cpp/cpp-templates-the-complete-guide/11-generic-libraries.html#more" rel="contents">
-                阅读全文 &raquo;
-              </a>
-            </div>
-          <!--/noindex-->
-        
-      
-    </div>
-
-    
-    
-    
-      <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  
-  
-  
-
-      
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
     <link itemprop="mainEntityOfPage" href="https://hxhue.github.io/programming/cpp/cpp-templates-the-complete-guide/12-fundamentals-in-depth.html">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -1029,6 +1033,104 @@ setTimeout(f, 0);
           <!--noindex-->
             <div class="post-button">
               <a class="btn" href="../../programming/cpp/cpp-templates-the-complete-guide/12-fundamentals-in-depth.html#more" rel="contents">
+                阅读全文 &raquo;
+              </a>
+            </div>
+          <!--/noindex-->
+        
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://hxhue.github.io/programming/cpp/cpp-templates-the-complete-guide/11-generic-libraries.html">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="../../images/avatar.gif">
+      <meta itemprop="name" content="😋">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Bluegill">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="../../programming/cpp/cpp-templates-the-complete-guide/11-generic-libraries.html" class="post-title-link" itemprop="url">CTTCG 11 Generic Libraries</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2023-08-12 00:00:00" itemprop="dateCreated datePublished" datetime="2023-08-12T00:00:00+08:00">2023-08-12</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2024-03-23 11:33:02" itemprop="dateModified" datetime="2024-03-23T11:33:02+08:00">2024-03-23</time>
+              </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="../../categories/programming/" itemprop="url" rel="index"><span itemprop="name">programming</span></a>
+                </span>
+            </span>
+
+          <br>
+            <span class="post-meta-item" title="本文字数">
+              <span class="post-meta-item-icon">
+                <i class="far fa-file-word"></i>
+              </span>
+                <span class="post-meta-item-text">本文字数：</span>
+              <span>1.5k</span>
+            </span>
+            <span class="post-meta-item" title="阅读时长">
+              <span class="post-meta-item-icon">
+                <i class="far fa-clock"></i>
+              </span>
+                <span class="post-meta-item-text">阅读时长 &asymp;</span>
+              <span>5 分钟</span>
+            </span>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <h1 id="Callables"><a href="#Callables" class="headerlink" title="Callables"></a>Callables</h1><p>Callable 有很多：函数、函数指针、成员函数、lambda 表达式（函数对象特例）、函数对象（Functor）等。</p>
+<h2 id="lambda-表达式"><a href="#lambda-表达式" class="headerlink" title="lambda 表达式"></a>lambda 表达式</h2><p>lambda 是函数对象。当捕获列表没有参数的时候，lambda 还有一个转换成一般函数指针的隐式转换操作符。在无捕获列表的 lambda 前加上 <code>+</code> 符号，能使得 lambda 变成函数指针也就是这个道理。</p>
+<h2 id="std-invoke"><a href="#std-invoke" class="headerlink" title="std::invoke"></a><code>std::invoke</code></h2><p>支持 Callable 并不简单，因为需要考虑到成员函数的调用需要通过 this 指针来完成。C++17 提供了 <code>std::invoke</code> 来将这些操作统一起来，只需要把 this 指针当作第一个参数传入。</p>
+<h2 id="Surrogate-Function-从类型隐式转换得来"><a href="#Surrogate-Function-从类型隐式转换得来" class="headerlink" title="Surrogate Function - 从类型隐式转换得来"></a>Surrogate Function - 从类型隐式转换得来</h2><p>Dummy&#x2F;Surrogate function（哑函数&#x2F;替代函数）指的是某一个函数对象还具有一个到普通函数引用或者普通函数指针的隐式转换，这个转换好的函数就是替代函数。替代函数用到了一次隐式转换，所以在参数匹配均不优于函数对象的其他<code>()</code>操作符重载时不会被选中。但若替代函数是更好的替代，将出现函数使用 ambiguous 的情况。</p>
+          <!--noindex-->
+            <div class="post-button">
+              <a class="btn" href="../../programming/cpp/cpp-templates-the-complete-guide/11-generic-libraries.html#more" rel="contents">
                 阅读全文 &raquo;
               </a>
             </div>
