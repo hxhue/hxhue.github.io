@@ -1,0 +1,180 @@
+/* 还有一部分注入见 themes/hugo-theme-next/layouts/partials/head/style.html */
+
+@font-face {
+    font-family: 'Twemoji';
+    src: url('/fonts/twemoji.ttf') format("truetype");
+    font-display: swap;
+    /* 声称这个字体能够提供 100 到 900 中所有字重，这样 Firefox 就不会对表情符号字体变形 */
+    font-weight: 100 900;
+}
+
+/* 脚注 */
+.footnote-ref {
+    text-decoration: none !important;
+    border-width: 0px;
+    /* 如果没有空格的话还是会很拥挤的 */
+    margin: 0 2px 0 -2px;
+    color: red;
+}
+
+/* 覆盖正文字体，参考 themes/hugo-theme-next/assets/css/_common/scaffolding/base.scss */
+body,
+h1,
+h2,
+h3,
+h4,
+h5,
+h6,
+p,
+a,
+div,
+.post-body {
+    font-family: "Noto Sans", Twemoji, "Noto Sans SC", sans-serif !important;
+    font-optical-sizing: auto !important;
+    font-style: normal !important;
+}
+
+/* hugo-theme-next 中的 p>code, li>code 不能保证 strong 和 i 标签中的显示正常 */
+:not(:is(pre, span, mark))>code {
+    padding: 2px 5px !important;
+    border-radius: 3px !important;
+}
+
+:not(pre)>code {
+    background-color: #eee !important;
+}
+
+/* 内联代码 */
+code {
+    color: #555 !important;
+}
+
+pre {
+    background-color: #f7f7f7 !important;
+    /* 原本只有 div.highlight 才有 margin-bottom，但是有些代码块是没有高亮的（比如没标注语言） */
+    margin-bottom: 26px;
+}
+
+[data-theme="dark"] code {
+    background-color: #1b1b1b !important;
+    color: #ddd !important;
+}
+
+[data-theme="dark"] pre {
+    /* background-color: #555555 !important; */
+    /* background-color: #f7f7f7 !important; */
+    background-color: #0d1117 !important;
+}
+
+[data-theme="dark"] pre code span[font-weight=700] {
+    color: #ffffff;
+}
+
+pre span {
+    line-height: 25.2px;
+    font-size: 15.75px;
+}
+
+pre,
+code {
+    font-family: 'JetBrains Mono NL', 'Consolas', 'Menlo', 'Roboto Mono', 'Source Code Pro', monospace;
+}
+
+/* viewerjs 改背景为模糊效果，这样黑暗模式也看得清 */
+.viewer-container {
+    backdrop-filter: blur(20px);
+    background-clip: border-box;
+}
+
+:root {
+    --custom-viewer-open-padding-r: 0px;
+    --custom-viewer-open-margin-r: 16px;
+}
+
+.tool-buttons {
+    position: fixed !important;
+    right: auto;
+    left: 30px;
+    bottom: 25px !important;
+}
+
+/* viewerjs 改样式，以免打开图片的时候 body 宽度变化、文字跟着伸缩 */
+/* static/js/fix-viewjs.js 会动态修改这两个属性 */
+body.viewer-open {
+    padding-right: var(--custom-viewer-open-padding-r) !important;
+    margin-right: var(--custom-viewer-open-margin-r) !important;
+}
+
+/* medium-zoom 需要适配黑暗模式 */
+[data-theme="dark"] .medium-zoom-overlay {
+    background-color: #282828 !important;
+}
+
+/* Github 风格报警框 */
+.markdown-body {
+    background: #22272e;
+    color: #adbac7;
+}
+
+.markdown-alert {
+    padding: 0 1em;
+    margin: 1em 0;
+    color: inherit;
+    border-left: 0.25em solid #444c56;
+}
+
+.markdown-alert-title {
+    display: inline-flex;
+    align-items: center;
+    font-weight: 500;
+    margin-top: 0;
+}
+
+.markdown-alert-note {
+    border-left-color: #539bf5;
+}
+
+.markdown-alert-tip {
+    border-left-color: #57ab5a;
+}
+
+.markdown-alert-important {
+    border-left-color: #986ee2;
+}
+
+.markdown-alert-warning {
+    border-left-color: #c69026;
+}
+
+.markdown-alert-caution {
+    border-left-color: #e5534b;
+}
+
+.markdown-alert-note>.markdown-alert-title {
+    color: #539bf5;
+    fill: #539bf5;
+}
+
+.markdown-alert-tip>.markdown-alert-title {
+    color: #57ab5a;
+    fill: #57ab5a;
+}
+
+.markdown-alert-important>.markdown-alert-title {
+    color: #986ee2;
+    fill: #986ee2;
+}
+
+.markdown-alert-warning>.markdown-alert-title {
+    color: #c69026;
+    fill: #c69026;
+}
+
+.markdown-alert-caution>.markdown-alert-title {
+    color: #e5534b;
+    fill: #e5534b;
+}
+
+.mr-2 {
+    margin-right: 0.5rem;
+}
