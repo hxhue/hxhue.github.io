@@ -1,0 +1,815 @@
+<!doctype html><html lang=zh-CN data-theme=light><head><meta charset=UTF-8><meta name=viewport content="width=device-width"><meta name=theme-color content="#222" media="(prefers-color-scheme: light)"><meta name=generator content="Hugo 0.134.2"><link rel="shortcut icon" type=image/x-icon href=/imgs/icons/favicon.ico><link rel=icon type=image/x-icon href=/imgs/icons/favicon.ico><link rel=icon type=image/png sizes=16x16 href=/imgs/icons/favicon_16x16_next.png><link rel=icon type=image/png sizes=32x32 href=/imgs/icons/favicon_32_32_next.png><link rel=apple-touch-icon sizes=180x180 href=/imgs/icons/apple_touch_icon_next.png><meta itemprop=name content="Inside-the-Cpp-Object-Models"><meta itemprop=description content="个人博客，主要是零散的笔记。"><meta itemprop=image content="https://hxhue.github.io/imgs/371907.jpg"><meta itemprop=keywords content><link type=text/css rel=stylesheet href=https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.1.2/css/all.min.css><link type=text/css rel=stylesheet href=https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.1.1/animate.min.css><link rel=stylesheet href=/css/main.min.d330fb2cc9752429e916c2f8eb322af410a36b4f69bd16131428c4f359d91650.css><link rel=stylesheet type=text/css href=/css/style.css><link rel=preconnect href=https://fonts.googleapis.com><link rel=preconnect href=https://fonts.gstatic.com crossorigin><link rel=stylesheet href=https://cdn.jsdelivr.net/npm/github-markdown-css@5.3.0/github-markdown-dark.css><script id=MathJax-script async src=https://cdn.jsdelivr.net/npm/mathjax@3/es5/mml-svg.js></script><script type=module>
+  import mermaid from 'https://cdn.jsdelivr.net/npm/mermaid/dist/mermaid.esm.min.mjs';
+  mermaid.initialize({ startOnLoad: false });
+  mermaid.mermaidAPI.initialize();
+  window.mermaid = mermaid;
+</script><script type=text/javascript>(function(){localDB={set:function(e,t,n){if(n===0)return;const s=new Date,o=n*864e5,i={value:t,expiry:s.getTime()+o};localStorage.setItem(e,JSON.stringify(i))},get:function(e){const t=localStorage.getItem(e);if(!t)return void 0;const n=JSON.parse(t),s=new Date;return s.getTime()>n.expiry?(localStorage.removeItem(e),void 0):n.value}},theme={active:function(){const e=localDB.get("theme");if(e==null)return;theme.toggle(e),window.matchMedia("(prefers-color-scheme: dark)").addListener(function(e){theme.toggle(e.matches?"dark":"light")})},toggle:function(e){document.documentElement.setAttribute("data-theme",e),localDB.set("theme",e,2);const t=document.querySelector("iframe.giscus-frame");if(t){const n={setConfig:{theme:e}};t.contentWindow.postMessage({giscus:n},"https://giscus.app")}}},theme.active()})(window)</script><script class=next-config data-name=page type=application/json>{"comments":false,"isHome":false,"isPage":false,"path":"inside-the-cpp-object-model","permalink":"https://hxhue.github.io/inside-the-cpp-object-model/","title":"Inside-the-Cpp-Object-Models","waline":{"js":[{"alias":"waline","alias_name":"@waline/client","file":"dist/pageview.js","name":"pageview","version":"2.13.0"},{"alias":"waline","alias_name":"@waline/client","file":"dist/comment.js","name":"comment","version":"2.13.0"}]}}</script><script type=text/javascript>document.addEventListener("DOMContentLoaded",()=>{var e=document.createElement("script");e.charset="UTF-8",e.src="",e.async=!1,e.defer=!0,document.head.appendChild(e),e.onload=function(){NexT.utils.fmtBusuanzi()}})</script><title>inside-the-cpp-object-model - Bluegill</title><noscript><link rel=stylesheet href=/css/noscript.css></noscript></head><body itemscope itemtype=http://schema.org/WebPage class=use-motion><div class=headband></div><main class=main><header class=header itemscope itemtype=http://schema.org/WPHeader><div class=header-inner><div class=site-brand-container><div class=site-nav-toggle><div class=toggle aria-label role=button><span class=toggle-line></span>
+<span class=toggle-line></span>
+<span class=toggle-line></span></div></div><div class=site-meta><a href=/ class=brand rel=start><i class=logo-line></i><h1 class=site-title>Bluegill</h1><i class=logo-line></i></a><p class=site-subtitle itemprop=description></p></div><div class=site-nav-right><div class="toggle popup-trigger"><i class="fa fa-search fa-fw fa-lg"></i></div></div></div><nav class=site-nav><ul class="main-menu menu"><li class="menu-item menu-item-home"><a href=/ class=hvr-icon-pulse rel=section><i class="fa fa-home hvr-icon"></i>首页</a></li><li class="menu-item menu-item-about"><a href=/about/ class=hvr-icon-pulse rel=section><i class="fa fa-user hvr-icon"></i>关于</a></li><li class="menu-item menu-item-archives"><a href=/archives/ class=hvr-icon-pulse rel=section><i class="fa fa-archive hvr-icon"></i>归档</a></li><li class="menu-item menu-item-categories"><a href=/categories/ class=hvr-icon-pulse rel=section><i class="fa fa-th hvr-icon"></i>分类</a></li><li class="menu-item menu-item-tags"><a href=/tags/ class=hvr-icon-pulse rel=section><i class="fa fa-hashtag hvr-icon"></i>标签</a></li><li class="menu-item menu-item-series"><a href=/series/ class=hvr-icon-pulse rel=section><i class="fa fa-tags hvr-icon"></i>系列</a></li><li class="menu-item menu-item-news"><a href=/news/ class=hvr-icon-pulse rel=section><i class="fa fa-newspaper hvr-icon"></i>趣闻</a></li><li class="menu-item menu-item-search"><a role=button class="popup-trigger hvr-icon-pulse"><i class="fa fa-search fa-fw hvr-icon"></i>搜索</a></li></ul></nav><div class=search-pop-overlay><div class="popup search-popup"><div class=search-header><span class=search-icon><i class="fa fa-search"></i></span><div class=search-input-container><input autocomplete=off autocapitalize=off maxlength=80 placeholder=搜索... spellcheck=false type=search class=search-input></div><span class=popup-btn-close role=button><i class="fa fa-times-circle"></i></span></div><div class="search-result-container no-result"><div class=search-result-icon><i class="fa fa-spinner fa-pulse fa-5x"></i></div></div></div></div></div><div class="toggle sidebar-toggle" role=button><span class=toggle-line></span>
+<span class=toggle-line></span>
+<span class=toggle-line></span></div><aside class=sidebar><div class="sidebar-inner sidebar-overview-active"><ul class=sidebar-nav><li class=sidebar-nav-toc>文章目录</li><li class=sidebar-nav-overview>站点概览</li></ul><div class=sidebar-panel-container><div class="post-toc-wrap sidebar-panel"><div class="post-toc animated"><nav id=TableOfContents></nav></div></div><div class="site-overview-wrap sidebar-panel"><div class="site-author site-overview-item animated" itemprop=author itemscope itemtype=http://schema.org/Person><img class=site-author-image itemprop=image alt=🚮 src=/imgs/371907.jpg><p class=site-author-name itemprop=name>🚮</p><div class=site-description itemprop=description>个人博客，主要是零散的笔记。</div></div><div class="site-state-wrap site-overview-item animated"><nav class=site-state><div class="site-state-item site-state-posts"><a href=/archives/><span class=site-state-item-count>351</span>
+<span class=site-state-item-name>日志</span></a></div><div class="site-state-item site-state-categories"><a href=/categories/><span class=site-state-item-count>10</span>
+<span class=site-state-item-name>分类</span></a></div><div class="site-state-item site-state-tags"><a href=/tags/><span class=site-state-item-count>65</span>
+<span class=site-state-item-name>标签</span></a></div></nav></div><div class="links-of-social site-overview-item animated"><span class=links-of-social-item><a href=https://github.com/hxhue title="Github → https://github.com/hxhue" rel=noopener class=hvr-icon-pulse target=_blank><i class="fab fa-github fa-fw hvr-icon"></i>
+</a></span><span class=links-of-social-item><a href=/rss.xml title="RSS 订阅 → /rss.xml" rel=noopener class=hvr-icon-pulse target=_blank><i class="fa fa-rss subscript-one fa-fw hvr-icon"></i>
+</a></span><span class=links-of-social-item><a href=/atom.xml title="Atom 订阅 → /atom.xml" rel=noopener class=hvr-icon-pulse target=_blank><i class="fa fa-rss subscript-two fa-fw hvr-icon"></i></a></span></div><div class="cc-license animated" itemprop=license><a href=https://creativecommons.org/licenses/by-nc-sa/4.0/deed.zh class=cc-opacity rel=noopener target=_blank title=共享知识><img src=/imgs/cc/big/by_nc_sa.svg alt=共享知识></a></div><div class="links-of-blogroll site-overview-item animated"><div class=links-of-blogroll-title><i class="fa fa-globe fa-fw"></i>
+友情链接</div><ul class=links-of-blogroll-list><li class=links-of-blogroll-item><a href=https://shuai.guru/ title=https://shuai.guru/ target=_blank>shuai.guru</a></li></ul></div></div></div></div></aside><div class=sidebar-dimmer></div></header><div class=tool-buttons><div id=toggle-theme class=button title=深浅模式切换><i class="fas fa-adjust"></i></div><div class=back-to-top role=button title=返回顶部><i class="fa fa-arrow-up"></i>
+<span>0%</span></div></div><div class=reading-progress-bar></div><noscript><div class=noscript-warning>Theme NexT works best with JavaScript enabled</div></noscript><div class="main-inner index posts-expand"><div class=post-block><article itemscope itemtype=http://schema.org/Article class=post-content lang><link itemprop=mainEntityOfPage href=https://hxhue.github.io/inside-the-cpp-object-model/c++-%E5%AF%B9%E8%B1%A1%E6%A8%A1%E5%9E%8B%E5%BC%80%E9%94%80%E6%80%BB%E7%BB%93/><span hidden itemprop=author itemscope itemtype=http://schema.org/Person><meta itemprop=image content="/imgs/371907.jpg"><meta itemprop=name content="🚮"></span><span hidden itemprop=publisher itemscope itemtype=http://schema.org/Organization><meta itemprop=name content="🚮"><meta itemprop=description content="个人博客，主要是零散的笔记。"></span><span hidden itemprop=post itemscope itemtype=http://schema.org/CreativeWork><meta itemprop=name content="C++ 对象模型开销总结"><meta itemprop=description content="下面都是用的 Itanium C++ ABI。处理器架构为 x86-64。
+
+  
+      
+      
+    Caution"></span><header class=post-header><h2 class=post-title itemprop="name headline"><a href=/inside-the-cpp-object-model/c++-%E5%AF%B9%E8%B1%A1%E6%A8%A1%E5%9E%8B%E5%BC%80%E9%94%80%E6%80%BB%E7%BB%93/ itemprop=url class=post-title-link>C++ 对象模型开销总结</a></h2><div class=post-meta-container><div class=post-meta-items><span class=post-meta-item><span class=post-meta-item-icon><i class="far fa-calendar"></i>
+</span><span class=post-meta-item-text title=发表于>发表于：
+</span><time title="创建时间：2023-08-12 00:00:00 +0800 CST" itemprop="dateCreated datePublished" datetime="2023-08-12 00:00:00 +0800 CST">2023-08-12
+</time></span><span class=post-meta-item><span class=post-meta-item-icon><i class="far fa-calendar-check"></i>
+</span><span class=post-meta-item-text title=更新于>更新于：
+</span><time title=修改时间：2024-10-01T00:00:00+08:00 itemprop=dateModified datetime=2024-10-01T00:00:00+08:00>2024-10-01</time>
+</span><span class=post-meta-item><span class=post-meta-item-icon><i class="far fa-folder-open"></i>
+</span><span class=post-meta-item-text title=分类于>分类于：
+</span><span itemprop=about itemscope itemtype=http://schema.org/Thing><a href=/categories/inside-the-cpp-object-model itemprop=url rel=index><span itemprop=name>inside-the-cpp-object-model</span></a></span></span></div></div></header><div class=post-body itemprop=articleBody><p><strong>下面都是用的 Itanium C++ ABI。处理器架构为 x86-64。</strong></p><div class="markdown-alert markdown-alert-caution"><p class=markdown-alert-title><svg class="octicon octicon-stop mr-2" viewBox="0 0 16 16" width="16" height="16" aria-hidden="true"><path d="M4.47.22A.749.749.0 015 0h6c.199.0.389.079.53.22l4.25 4.25c.141.14.22.331.22.53v6a.749.749.0 01-.22.53l-4.25 4.25A.749.749.0 0111 16H5a.749.749.0 01-.53-.22L.22 11.53A.749.749.0 010 11V5c0-.199.079-.389.22-.53zm.84 1.28L1.5 5.31v5.38l3.81 3.81h5.38l3.81-3.81V5.31L10.69 1.5zM8 4a.75.75.0 01.75.75v3.5a.75.75.0 01-1.5.0v-3.5A.75.75.0 018 4zm0 8a1 1 0 110-2 1 1 0 010 2z"/></svg>Caution</p><p>下面很多指针转整数用的是 <code>long</code>，实际上用 <code>intptr_t</code> 才更合理。既然是 Itanium ABI，基本可以猜到是 Linux 上的了。在 x86_64-linux-gnu 上 <code>long</code> 类型的确就是 8 字节，但是在 x86-64 的 Windows 上 <code>long</code> 类型为 4 字节，和指针类型的大小不同。不过 Windows 也不会用 Itanium C++ ABI。</p></div><h1 id=指向成员函数的指针2-倍大小>指向成员函数的指针：2 倍大小
+<a class=header-anchor href=#%e6%8c%87%e5%90%91%e6%88%90%e5%91%98%e5%87%bd%e6%95%b0%e7%9a%84%e6%8c%87%e9%92%882-%e5%80%8d%e5%a4%a7%e5%b0%8f></a></h1><p>在 64 位下是 16 字节，因为需要支持虚函数调用。指向成员函数的指针会保存两部分数据：</p><p><code>ptr</code>：非虚函数则存储函数地址。虚函数则存储虚表中偏置加 1（1 plus the virtual table offset (in bytes) of the function, represented as a <code>ptrdiff_t</code>）</p><p><code>adj</code>：存储对 this 指针的调整量。</p><p><img src=/assets/330ad93e6e502a485f38a465497e5685.png></p><p>用 <code>指向成员函数的指针</code> 调用函数时，需要在传入的 this 指针上添加偏置（在多继承中有用），偏置信息就存储在该指针内。下一节“调用虚函数的开销”也描述了如何在跨平台 C++ ABI 上装配一个 指向成员函数的指针。</p><h1 id=调用虚函数多访存-2-次>调用虚函数：多访存 2 次
+<a class=header-anchor href=#%e8%b0%83%e7%94%a8%e8%99%9a%e5%87%bd%e6%95%b0%e5%a4%9a%e8%ae%bf%e5%ad%98-2-%e6%ac%a1></a></h1><div class=highlight><pre tabindex=0 style=color:#93a1a1;background-color:#002b36;-moz-tab-size:2;-o-tab-size:2;tab-size:2><code class=language-cpp data-lang=cpp><span style=display:flex><span><span style=color:#719e07>#include</span> <span style=color:#719e07>&lt;cstdio&gt;</span><span style=color:#719e07>
+</span></span></span><span style=display:flex><span><span style=color:#719e07></span>
+</span></span><span style=display:flex><span><span style=color:#719e07>struct</span> <span style=color:#268bd2>BaseObject</span> {
+</span></span><span style=display:flex><span>    <span style=color:#719e07>virtual</span> <span style=color:#dc322f>int</span> <span style=color:#268bd2>f</span>() { <span style=color:#719e07>return</span> <span style=color:#2aa198>13</span>; }
+</span></span><span style=display:flex><span>};
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#719e07>struct</span> <span style=color:#268bd2>DerivedObject</span> <span style=color:#719e07>:</span> BaseObject {
+</span></span><span style=display:flex><span>    <span style=color:#dc322f>int</span> <span style=color:#268bd2>f</span>() <span style=color:#719e07>override</span> { <span style=color:#719e07>return</span> <span style=color:#2aa198>4000</span>; }
+</span></span><span style=display:flex><span>};
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#dc322f>int</span> <span style=color:#268bd2>main</span>() {
+</span></span><span style=display:flex><span>    BaseObject <span style=color:#719e07>*</span>p <span style=color:#719e07>=</span> <span style=color:#719e07>new</span> DerivedObject;
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>    <span style=color:#586e75>// 访存两次得到虚函数（感觉 long 类型比 char*/void* 模拟汇编更加合适）
+</span></span></span><span style=display:flex><span><span style=color:#586e75></span>    <span style=color:#dc322f>long</span> vptr <span style=color:#719e07>=</span> <span style=color:#719e07>*</span>(<span style=color:#dc322f>long</span> <span style=color:#719e07>*</span>)p;
+</span></span><span style=display:flex><span>    <span style=color:#dc322f>long</span> func <span style=color:#719e07>=</span> <span style=color:#719e07>*</span>(<span style=color:#dc322f>long</span> <span style=color:#719e07>*</span>)(vptr <span style=color:#719e07>+</span> <span style=color:#2aa198>0</span>);
+</span></span><span style=display:flex><span>    
+</span></span><span style=display:flex><span>    <span style=color:#586e75>// 把 this 指针作为第一个参数传入
+</span></span></span><span style=display:flex><span><span style=color:#586e75></span>    <span style=color:#719e07>auto</span> method <span style=color:#719e07>=</span> (<span style=color:#dc322f>int</span> (<span style=color:#719e07>*</span>)(BaseObject <span style=color:#719e07>*</span>))func;
+</span></span><span style=display:flex><span>    <span style=color:#dc322f>int</span> result <span style=color:#719e07>=</span> method(p);
+</span></span><span style=display:flex><span>    
+</span></span><span style=display:flex><span>    <span style=color:#586e75>// 尽管也可以按照 Itanium C++ ABI 装配成员函数指针，
+</span></span></span><span style=display:flex><span><span style=color:#586e75></span>    <span style=color:#586e75>// 但实际上调用时还是会动态查找，相当于上面的访存操作白做了。
+</span></span></span><span style=display:flex><span><span style=color:#586e75></span>    <span style=color:#586e75>// int (BaseObject::*method)();
+</span></span></span><span style=display:flex><span><span style=color:#586e75></span>    <span style=color:#586e75>// auto &amp;manip = (long (&amp;)[2])method;
+</span></span></span><span style=display:flex><span><span style=color:#586e75></span>    <span style=color:#586e75>// manip[0] = (long)func;
+</span></span></span><span style=display:flex><span><span style=color:#586e75></span>    <span style=color:#586e75>// manip[1] = 0; // single inheritance
+</span></span></span><span style=display:flex><span><span style=color:#586e75></span>    <span style=color:#586e75>// int result = (p-&gt;*method)();
+</span></span></span><span style=display:flex><span><span style=color:#586e75></span>
+</span></span><span style=display:flex><span>    printf(<span style=color:#2aa198>&#34;result: %d</span><span style=color:#cb4b16>\n</span><span style=color:#2aa198>&#34;</span>, result);
+</span></span><span style=display:flex><span>    <span style=color:#586e75>// 打印结果：result: 4000
+</span></span></span><span style=display:flex><span><span style=color:#586e75></span>}
+</span></span></code></pre></div><h1 id=访问继承自虚基类的成员多访存-2-次>访问继承自虚基类的成员：多访存 2 次
+<a class=header-anchor href=#%e8%ae%bf%e9%97%ae%e7%bb%a7%e6%89%bf%e8%87%aa%e8%99%9a%e5%9f%ba%e7%b1%bb%e7%9a%84%e6%88%90%e5%91%98%e5%a4%9a%e8%ae%bf%e5%ad%98-2-%e6%ac%a1></a></h1><p>需要多访存 2 次得到虚基类子对象的位置。</p><div class=highlight><pre tabindex=0 style=color:#93a1a1;background-color:#002b36;-moz-tab-size:2;-o-tab-size:2;tab-size:2><code class=language-cpp data-lang=cpp><span style=display:flex><span>BaseObject <span style=color:#719e07>*</span>p <span style=color:#719e07>=</span> <span style=color:#719e07>new</span> DerivedObject;
+</span></span><span style=display:flex><span><span style=color:#586e75>// 编译期能计算出这个常量，该常量为负数且小于 -(int64_t)sizeof(long) * 2
+</span></span></span><span style=display:flex><span><span style=color:#586e75></span><span style=color:#dc322f>long</span> vptr_to_offset <span style=color:#719e07>=</span> ...; 
+</span></span><span style=display:flex><span><span style=color:#dc322f>char</span> <span style=color:#719e07>*</span>vptr <span style=color:#719e07>=</span> <span style=color:#719e07>*</span>(<span style=color:#dc322f>char</span> <span style=color:#719e07>**</span>)p;                        <span style=color:#586e75>// [1]
+</span></span></span><span style=display:flex><span><span style=color:#586e75></span><span style=color:#dc322f>long</span> offset <span style=color:#719e07>=</span> <span style=color:#719e07>*</span>(<span style=color:#dc322f>long</span> <span style=color:#719e07>*</span>)(vptr <span style=color:#719e07>+</span> vptr_to_offset ); <span style=color:#586e75>// [2]
+</span></span></span><span style=display:flex><span><span style=color:#586e75></span><span style=color:#dc322f>char</span> <span style=color:#719e07>*</span>subobject <span style=color:#719e07>=</span> p <span style=color:#719e07>+</span> offset;                    <span style=color:#586e75>// 这一步不访存
+</span></span></span><span style=display:flex><span><span style=color:#586e75>// 省略：用虚基类子对象的指针访问其成员
+</span></span></span></code></pre></div><p>当然，通过虚基类的指针访问它自己的成员，是不需要先计算偏置的。</p><h1 id=调用继承自虚基类的虚函数多访存-2--4-次>调用继承自虚基类的虚函数：多访存 2 / 4 次
+<a class=header-anchor href=#%e8%b0%83%e7%94%a8%e7%bb%a7%e6%89%bf%e8%87%aa%e8%99%9a%e5%9f%ba%e7%b1%bb%e7%9a%84%e8%99%9a%e5%87%bd%e6%95%b0%e5%a4%9a%e8%ae%bf%e5%ad%98-2--4-%e6%ac%a1></a></h1><p>首先取虚函数的地址要 2 次访存。其次，如果该虚函数是在虚基类实现的，且继承链上没有覆盖实现，则需要将 this 指针对准到虚基类，获取偏置又要 2 次访存，所以一共是 4 次。（如果有覆盖实现，则对准 this 指针所用的偏置是编译期常量。如果覆盖了实现，但是实现中仍然使用了来自于虚基类的数据，则也得多 2 次访存来获取偏置。）</p><blockquote><p>在使用虚基类的虚函数版本时，gcc 倾向于先获得虚基类的偏置，然后得到虚基类的 vptr，再通过这个 vptr 读取虚函数地址——尽管子类的 vtable 中也记录有虚函数。</p></blockquote><p>按照上面的说法，<strong>如果虚基类提供的虚函数都是纯虚函数，且虚基类本身不带有数据</strong>，那么用于对齐 this 指针的 2 次访存代价是不需要付出的。</p><div class=highlight><pre tabindex=0 style=color:#93a1a1;background-color:#002b36;-moz-tab-size:2;-o-tab-size:2;tab-size:2><code class=language-cpp data-lang=cpp><span style=display:flex><span><span style=color:#719e07>#include</span> <span style=color:#719e07>&lt;cstdio&gt;</span><span style=color:#719e07>
+</span></span></span><span style=display:flex><span><span style=color:#719e07>#include</span> <span style=color:#719e07>&lt;memory&gt;</span><span style=color:#719e07>
+</span></span></span><span style=display:flex><span><span style=color:#719e07></span>
+</span></span><span style=display:flex><span><span style=color:#719e07>struct</span> <span style=color:#268bd2>Dog</span> {
+</span></span><span style=display:flex><span>  <span style=color:#719e07>virtual</span> <span style=color:#dc322f>void</span> <span style=color:#268bd2>bark</span>() <span style=color:#719e07>=</span> <span style=color:#2aa198>0</span>;
+</span></span><span style=display:flex><span>  <span style=color:#719e07>virtual</span> <span style=color:#719e07>~</span>Dog() <span style=color:#719e07>=</span> <span style=color:#719e07>default</span>; <span style=color:#586e75>// &lt;-- 很重要
+</span></span></span><span style=display:flex><span><span style=color:#586e75></span>};
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#586e75>// 虚拟继承能够支持菱形继承，但代价是接口类的vptr不能被复用
+</span></span></span><span style=display:flex><span><span style=color:#586e75></span><span style=color:#719e07>struct</span> <span style=color:#268bd2>GoldenRetriever</span> <span style=color:#719e07>:</span> <span style=color:#719e07>virtual</span> Dog {
+</span></span><span style=display:flex><span>  <span style=color:#dc322f>void</span> <span style=color:#268bd2>bark</span>() <span style=color:#719e07>override</span> {
+</span></span><span style=display:flex><span>    puts(<span style=color:#2aa198>&#34;I&#39;m golden!&#34;</span>);
+</span></span><span style=display:flex><span>  }
+</span></span><span style=display:flex><span>};
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#dc322f>int</span> <span style=color:#268bd2>main</span>() {
+</span></span><span style=display:flex><span>    <span style=color:#586e75>// 这里有向基类的隐式类型转换，所以得有虚析构函数。
+</span></span></span><span style=display:flex><span><span style=color:#586e75></span>    <span style=color:#586e75>// 只是恰好这个子类没有覆写析构函数而已，换个子类可能就不安全了。
+</span></span></span><span style=display:flex><span><span style=color:#586e75></span>    std<span style=color:#719e07>::</span>unique_ptr<span style=color:#719e07>&lt;</span>Dog<span style=color:#719e07>&gt;</span> dog <span style=color:#719e07>=</span> std<span style=color:#719e07>::</span>make_unique<span style=color:#719e07>&lt;</span>GoldenRetriever<span style=color:#719e07>&gt;</span>();
+</span></span><span style=display:flex><span>    dog<span style=color:#719e07>-&gt;</span>bark();
+</span></span><span style=display:flex><span>}
+</span></span></code></pre></div><div class=highlight><pre tabindex=0 style=color:#93a1a1;background-color:#002b36;-moz-tab-size:2;-o-tab-size:2;tab-size:2><code class=language-java data-lang=java><span style=display:flex><span><span style=color:#268bd2>interface</span> <span style=color:#268bd2>Dog</span> {
+</span></span><span style=display:flex><span>  <span style=color:#dc322f>void</span> <span style=color:#268bd2>bark</span>();
+</span></span><span style=display:flex><span>}
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#268bd2>class</span> <span style=color:#268bd2>GoldenRetriever</span> <span style=color:#268bd2>implements</span> Dog {
+</span></span><span style=display:flex><span>  <span style=color:#268bd2>@Override</span>
+</span></span><span style=display:flex><span>  <span style=color:#268bd2>public</span> <span style=color:#dc322f>void</span> <span style=color:#268bd2>bark</span>() {
+</span></span><span style=display:flex><span>    System.out.println(<span style=color:#2aa198>&#34;I&#39;m golden!&#34;</span>);
+</span></span><span style=display:flex><span>  }
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>  <span style=color:#268bd2>public</span> <span style=color:#268bd2>static</span> <span style=color:#dc322f>void</span> <span style=color:#268bd2>main</span>(String<span style=color:#719e07>[]</span> args) {
+</span></span><span style=display:flex><span>    Dog dog <span style=color:#719e07>=</span> <span style=color:#719e07>new</span> GoldenRetriever();
+</span></span><span style=display:flex><span>    dog.bark();
+</span></span><span style=display:flex><span>  }
+</span></span><span style=display:flex><span>}
+</span></span></code></pre></div><p>上面是 Java 和 C++ 中定义接口的不同之处。在 C++ 中，为了使得接口支持菱形继承，有必要加上 virtual 属性；Java 中对象只能单继承，因而没有这个问题。</p><p>Java 中接口继承接口用关键字 extends；C++ 中接口继承接口也得加上 virtual，因为接口概念虽然存在，但 C++ 里接口是类的子集，而不是 C++ 直接支持的类型。</p><h1 id=读-stdtype_info静态访存-0-次动态-2-次>读 <code>std::type_info</code>：静态访存 0 次，动态 2 次
+<a class=header-anchor href=#%e8%af%bb-stdtype_info%e9%9d%99%e6%80%81%e8%ae%bf%e5%ad%98-0-%e6%ac%a1%e5%8a%a8%e6%80%81-2-%e6%ac%a1></a></h1><p>⚠ 在多态类的指针或引用上使用 typeid 关键字才会用以下方式访问（虚拟继承得到了 vptr 也不行）。如果该类的类型完全确定，则在编译期可以直接确定地址。</p><p>在编译器内部实现中有两种方式可以读取 <code>std::type_info *</code> 。</p><div class=highlight><pre tabindex=0 style=color:#93a1a1;background-color:#002b36;-moz-tab-size:2;-o-tab-size:2;tab-size:2><code class=language-cpp data-lang=cpp><span style=display:flex><span>BaseObject <span style=color:#719e07>*</span>p <span style=color:#719e07>=</span> <span style=color:#719e07>new</span> DerivedObject;
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#586e75>// vtable_prefix = { whole_object, whole_type, origin }
+</span></span></span><span style=display:flex><span><span style=color:#586e75></span><span style=color:#dc322f>char</span> <span style=color:#719e07>*</span>vptr <span style=color:#719e07>=</span> <span style=color:#719e07>*</span>(<span style=color:#dc322f>char</span> <span style=color:#719e07>**</span>)p;                         <span style=color:#586e75>// [1]
+</span></span></span><span style=display:flex><span><span style=color:#586e75></span><span style=color:#dc322f>long</span> offset <span style=color:#719e07>=</span> <span style=color:#719e07>*</span>(<span style=color:#dc322f>long</span> <span style=color:#719e07>*</span>)(vptr <span style=color:#719e07>-</span> <span style=color:#719e07>sizeof</span>(<span style=color:#dc322f>long</span>) <span style=color:#719e07>*</span> <span style=color:#2aa198>2</span>); <span style=color:#586e75>// [2]
+</span></span></span><span style=display:flex><span><span style=color:#586e75></span><span style=color:#dc322f>char</span> <span style=color:#719e07>*</span>realp <span style=color:#719e07>=</span> p <span style=color:#719e07>+</span> offset;                         <span style=color:#586e75>// 这一步不访存
+</span></span></span><span style=display:flex><span><span style=color:#586e75></span><span style=color:#dc322f>char</span> <span style=color:#719e07>*</span>realvptr <span style=color:#719e07>=</span> <span style=color:#719e07>*</span>(<span style=color:#dc322f>char</span> <span style=color:#719e07>**</span>)realp;                 <span style=color:#586e75>// [3]
+</span></span></span><span style=display:flex><span><span style=color:#586e75></span>
+</span></span><span style=display:flex><span><span style=color:#586e75>// __class_type_info 继承于 std::type_info
+</span></span></span><span style=display:flex><span><span style=color:#586e75></span>__class_type_info <span style=color:#719e07>*</span>info <span style=color:#719e07>=</span> <span style=color:#719e07>*</span>(__class_type_info <span style=color:#719e07>**</span>)(realvptr <span style=color:#719e07>-</span> <span style=color:#719e07>sizeof</span>(<span style=color:#dc322f>long</span>)); <span style=color:#586e75>// [4]
+</span></span></span></code></pre></div><p>或者：</p><div class=highlight><pre tabindex=0 style=color:#93a1a1;background-color:#002b36;-moz-tab-size:2;-o-tab-size:2;tab-size:2><code class=language-cpp data-lang=cpp><span style=display:flex><span>BaseObject <span style=color:#719e07>*</span>p <span style=color:#719e07>=</span> <span style=color:#719e07>new</span> DerivedObject;
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#dc322f>long</span> vptr <span style=color:#719e07>=</span> <span style=color:#719e07>*</span>(<span style=color:#dc322f>long</span> <span style=color:#719e07>*</span>)p;                         
+</span></span><span style=display:flex><span>__class_type_info <span style=color:#719e07>*</span>info <span style=color:#719e07>=</span> <span style=color:#719e07>*</span>(__class_type_info <span style=color:#719e07>**</span>)(vptr <span style=color:#719e07>-</span> <span style=color:#719e07>sizeof</span>(<span style=color:#dc322f>long</span>));
+</span></span></code></pre></div><p>前者访存 4 次，后者访存 2 次。如果<strong>类型正在构建中</strong>，这两个地址是不同的，否则应该相等，dynamic_cast 对这个特殊情况有专门的处理（两个都读，一共 6 次访存，可以看之后的小节）。如果是我们的代码动态使用，用到的是访存 2 次的版本！</p><div class=highlight><pre tabindex=0 style=color:#93a1a1;background-color:#002b36;-moz-tab-size:2;-o-tab-size:2;tab-size:2><code class=language-cpp data-lang=cpp><span style=display:flex><span><span style=color:#719e07>#include</span> <span style=color:#719e07>&lt;typeinfo&gt;</span><span style=color:#719e07>
+</span></span></span><span style=display:flex><span><span style=color:#719e07></span>
+</span></span><span style=display:flex><span><span style=color:#719e07>struct</span> <span style=color:#268bd2>A</span> {
+</span></span><span style=display:flex><span>    <span style=color:#dc322f>int</span> a;
+</span></span><span style=display:flex><span>    <span style=color:#719e07>virtual</span> <span style=color:#dc322f>void</span> <span style=color:#268bd2>f</span>() {}
+</span></span><span style=display:flex><span>};
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#719e07>struct</span> <span style=color:#268bd2>B</span> <span style=color:#719e07>:</span> A {
+</span></span><span style=display:flex><span>    <span style=color:#dc322f>int</span> b;
+</span></span><span style=display:flex><span>};
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#dc322f>int</span> <span style=color:#268bd2>main</span>() {
+</span></span><span style=display:flex><span>    A <span style=color:#719e07>*</span>p <span style=color:#719e07>=</span> <span style=color:#719e07>new</span> B;
+</span></span><span style=display:flex><span>    <span style=color:#719e07>auto</span> <span style=color:#719e07>&amp;</span>info <span style=color:#719e07>=</span> <span style=color:#719e07>typeid</span>(<span style=color:#719e07>*</span>p);
+</span></span><span style=display:flex><span>}
+</span></span></code></pre></div><p><img src=/assets/2b8d47a8e6b1211028438a01a87879dc.png></p><h1 id=比较-stdtype_info--stdtype_index类型名mangled字符串比较>比较 <code>std::type_info</code> / <code>std::type_index</code>：类型名（mangled）字符串比较
+<a class=header-anchor href=#%e6%af%94%e8%be%83-stdtype_info--stdtype_index%e7%b1%bb%e5%9e%8b%e5%90%8dmangled%e5%ad%97%e7%ac%a6%e4%b8%b2%e6%af%94%e8%be%83></a></h1><p>用 RTTI 比较类型等同于比较字符串。</p><p>编译期间只需要比较地址，但是编译期无论多慢都不影响运行性能所以显得没那么重要。</p><div class=highlight><pre tabindex=0 style=color:#93a1a1;background-color:#002b36;-moz-tab-size:2;-o-tab-size:2;tab-size:2><code class=language-cpp data-lang=cpp><span style=display:flex><span><span style=color:#586e75>// 去掉了一些条件编译分支
+</span></span></span><span style=display:flex><span><span style=color:#586e75></span>_GLIBCXX23_CONSTEXPR <span style=color:#268bd2>inline</span> <span style=color:#dc322f>bool</span>
+</span></span><span style=display:flex><span>type_info<span style=color:#719e07>::</span><span style=color:#719e07>operator</span><span style=color:#719e07>==</span>(<span style=color:#719e07>const</span> type_info<span style=color:#719e07>&amp;</span> __arg) <span style=color:#719e07>const</span> _GLIBCXX_NOEXCEPT
+</span></span><span style=display:flex><span>{
+</span></span><span style=display:flex><span>    <span style=color:#719e07>if</span> (std<span style=color:#719e07>::</span>__is_constant_evaluated())
+</span></span><span style=display:flex><span>      <span style=color:#719e07>return</span> <span style=color:#719e07>this</span> <span style=color:#719e07>==</span> <span style=color:#719e07>&amp;</span>__arg;
+</span></span><span style=display:flex><span>    <span style=color:#719e07>if</span> (__name <span style=color:#719e07>==</span> __arg.__name)
+</span></span><span style=display:flex><span>      <span style=color:#719e07>return</span> <span style=color:#b58900>true</span>;
+</span></span><span style=display:flex><span>    <span style=color:#719e07>return</span> __name[<span style=color:#2aa198>0</span>] <span style=color:#719e07>!=</span> <span style=color:#2aa198>&#39;*&#39;</span> <span style=color:#719e07>&amp;&amp;</span> __builtin_strcmp (__name, __arg.name()) <span style=color:#719e07>==</span> <span style=color:#2aa198>0</span>;
+</span></span><span style=display:flex><span>}
+</span></span></code></pre></div><p><code>std::type_index</code> 包含了一个 <code>std::type_info</code> 的指针，比较运算符会转发到 <code>std::type_info</code> 的比较上，内联之后代价一样。</p><h1 id=dynamic_cast--static_cast-向上转型非零偏移需先判空><code>dynamic_cast</code> / <code>static_cast</code> 向上转型：非零偏移需先判空
+<a class=header-anchor href=#dynamic_cast--static_cast-%e5%90%91%e4%b8%8a%e8%bd%ac%e5%9e%8b%e9%9d%9e%e9%9b%b6%e5%81%8f%e7%a7%bb%e9%9c%80%e5%85%88%e5%88%a4%e7%a9%ba></a></h1><p>如果是向第一个基类转型，则地址没有偏移，直接赋值即可。<strong>如果是第二个或更后面的非空基类转型，则地址会发生偏移，需要判断指针是否为空再赋值</strong>：若为空则仍保持空；若不空则对指针做偏移运算。</p><h1 id=dynamic_cast-向下转型精确命中则快否则是开销大的图搜索><code>dynamic_cast</code> 向下转型：精确命中则快，否则是开销大的图搜索
+<a class=header-anchor href=#dynamic_cast-%e5%90%91%e4%b8%8b%e8%bd%ac%e5%9e%8b%e7%b2%be%e7%a1%ae%e5%91%bd%e4%b8%ad%e5%88%99%e5%bf%ab%e5%90%a6%e5%88%99%e6%98%af%e5%bc%80%e9%94%80%e5%a4%a7%e7%9a%84%e5%9b%be%e6%90%9c%e7%b4%a2></a></h1><p>用 <code>static_cast</code> 做向下转型没有运行时检查，用 <code>dynamic_cast</code> 做向上转型则效果等同于 <code>static_cast</code>。<strong>所以一般说 <code>dynamic_cast</code>，关注的多是 <code>dynamic_cast</code> 的运行时检查。</strong></p><p>首先检查类型是否正在构建，这个阶段会从两个地方读 type_info，检查其地址一致性。**一共访存 6 次。**如果地址不同则类型正在构建，不允许转换，返回 nullptr。</p><p><img src=/assets/8df4c419d661852da7eccf5709ec60eb.png></p><p><img src=/assets/f9ac45d4d57dd1d7c0c52cc6afa1db5c.png></p><p>接下来判断是否目的类型和当前真实类型完全相符，如果相符可以直接返回。多判断 <code>src2dst</code> 和偏置的相等性可能是冗余信息检查，以便避免失败时 <strong>type_info 中的字符串比较</strong>（个人想法）。</p><p><img src=/assets/31b3aadd8a98cd2b2f2d0fcf7791f013.png></p><p>如果失败，则还需要<strong>考虑目的类是否为真实类型的基类</strong>。这会用到一个另外的虚函数，其结果还需要进行一些校验。这个过程就比较耗时了。</p><p><img src=/assets/30fb8fc1adba1e75180fb9c4c5935c36.png></p><blockquote><p>如果我们向下转型时要求类型必须精确匹配，则可以用比较 type_info 和 static_cast 的方式减少开销。首先是我们读 type_info 往往不是在构造函数中，所以只需要 2 次访存而不是 6 次；其次是如果精确匹配失败可以直接返回，而不是进入接下来的图搜索步骤。</p></blockquote></div><footer class=post-footer><div readmore=false><div class=readmore-overlay><div class=readmore-overlay-center><div class=post-button><a class=btn href=/inside-the-cpp-object-model/c++-%E5%AF%B9%E8%B1%A1%E6%A8%A1%E5%9E%8B%E5%BC%80%E9%94%80%E6%80%BB%E7%BB%93/#more rel=contents>阅读全文 &#187;</a></div></div></div><div class=no-more-to-read><hr><center>没有啦~</center></div></div><div class=post-eof></div></footer></article></div><div class=post-block><article itemscope itemtype=http://schema.org/Article class=post-content lang><link itemprop=mainEntityOfPage href=https://hxhue.github.io/inside-the-cpp-object-model/cfront-%E5%A6%82%E4%BD%95%E6%8F%92%E5%85%A5%E6%9E%84%E9%80%A0%E5%87%BD%E6%95%B0/><span hidden itemprop=author itemscope itemtype=http://schema.org/Person><meta itemprop=image content="/imgs/371907.jpg"><meta itemprop=name content="🚮"></span><span hidden itemprop=publisher itemscope itemtype=http://schema.org/Organization><meta itemprop=name content="🚮"><meta itemprop=description content="个人博客，主要是零散的笔记。"></span><span hidden itemprop=post itemscope itemtype=http://schema.org/CreativeWork><meta itemprop=name content="Cfront 如何插入构造函数"><meta itemprop=description content="实际上复制构造函数的插入比较困难，比如在函数返回和传参的时候。由于 C 语言是按位复制（而不是按成员），cfront 会在函数调用前插入返回值变量声明，在函数中使用局部变量运算，并在返回时调用复制构造函数从局部变量复制成员到返回值处。"></span><header class=post-header><h2 class=post-title itemprop="name headline"><a href=/inside-the-cpp-object-model/cfront-%E5%A6%82%E4%BD%95%E6%8F%92%E5%85%A5%E6%9E%84%E9%80%A0%E5%87%BD%E6%95%B0/ itemprop=url class=post-title-link>Cfront 如何插入构造函数</a></h2><div class=post-meta-container><div class=post-meta-items><span class=post-meta-item><span class=post-meta-item-icon><i class="far fa-calendar"></i>
+</span><span class=post-meta-item-text title=发表于>发表于：
+</span><time title="创建时间：2023-08-12 00:00:00 +0800 CST" itemprop="dateCreated datePublished" datetime="2023-08-12 00:00:00 +0800 CST">2023-08-12
+</time></span><span class=post-meta-item><span class=post-meta-item-icon><i class="far fa-calendar-check"></i>
+</span><span class=post-meta-item-text title=更新于>更新于：
+</span><time title=修改时间：2024-04-15T00:00:00+08:00 itemprop=dateModified datetime=2024-04-15T00:00:00+08:00>2024-04-15</time>
+</span><span class=post-meta-item><span class=post-meta-item-icon><i class="far fa-folder-open"></i>
+</span><span class=post-meta-item-text title=分类于>分类于：
+</span><span itemprop=about itemscope itemtype=http://schema.org/Thing><a href=/categories/inside-the-cpp-object-model itemprop=url rel=index><span itemprop=name>inside-the-cpp-object-model</span></a></span></span></div></div></header><div class=post-body itemprop=articleBody><p>实际上复制构造函数的插入比较困难，比如在函数返回和传参的时候。由于 C 语言是按位复制（而不是按成员），cfront 会在函数调用前插入返回值变量声明，在函数中使用局部变量运算，并在返回时调用复制构造函数从局部变量复制成员到返回值处。</p><p><strong>NRVO</strong> (Named Return Value Optimization) 则能省略返回时的复制构造：</p><p><img src=/assets/cc2fdb90393c80df691782129795025a.png></p><h1 id=关于返回值优化>关于返回值优化
+<a class=header-anchor href=#%e5%85%b3%e4%ba%8e%e8%bf%94%e5%9b%9e%e5%80%bc%e4%bc%98%e5%8c%96></a></h1><p><img src=/assets/91e5f009f558bdd67bca51ca0d3776de.png></p><p>RVO 的范畴很广，NRVO 是 RVO 的一种特例。</p><p>URVO（无名临时变量的优化）：</p><p><img src=/assets/f0dd4f2b4cb038186ac5a8e9d6687282.png></p><p>NRVO（具名局部变量的返回的优化）：</p><p><img src=/assets/87aa8de6c40b1ec9d484b7ccf3880a88.png></p></div><footer class=post-footer><div readmore=false><div class=readmore-overlay><div class=readmore-overlay-center><div class=post-button><a class=btn href=/inside-the-cpp-object-model/cfront-%E5%A6%82%E4%BD%95%E6%8F%92%E5%85%A5%E6%9E%84%E9%80%A0%E5%87%BD%E6%95%B0/#more rel=contents>阅读全文 &#187;</a></div></div></div><div class=no-more-to-read><hr><center>没有啦~</center></div></div><div class=post-eof></div></footer></article></div><div class=post-block><article itemscope itemtype=http://schema.org/Article class=post-content lang><link itemprop=mainEntityOfPage href=https://hxhue.github.io/inside-the-cpp-object-model/new-%E5%92%8C-delete/><span hidden itemprop=author itemscope itemtype=http://schema.org/Person><meta itemprop=image content="/imgs/371907.jpg"><meta itemprop=name content="🚮"></span><span hidden itemprop=publisher itemscope itemtype=http://schema.org/Organization><meta itemprop=name content="🚮"><meta itemprop=description content="个人博客，主要是零散的笔记。"></span><span hidden itemprop=post itemscope itemtype=http://schema.org/CreativeWork><meta itemprop=name content="new 和 delete"><meta itemprop=description content="new
+
+用 new 申请的内存最少占用 1 个字节——尽管我们申请的可能是 0 个字节。
+
+
+delete/delete[]
+
+delete 和 delete[] 都会归还空间，但是 delete[] 会询问元素数量，并析构数组中的每个元素，而 delete 只会析构一个元素。"></span><header class=post-header><h2 class=post-title itemprop="name headline"><a href=/inside-the-cpp-object-model/new-%E5%92%8C-delete/ itemprop=url class=post-title-link>new 和 delete</a></h2><div class=post-meta-container><div class=post-meta-items><span class=post-meta-item><span class=post-meta-item-icon><i class="far fa-calendar"></i>
+</span><span class=post-meta-item-text title=发表于>发表于：
+</span><time title="创建时间：2023-08-12 00:00:00 +0800 CST" itemprop="dateCreated datePublished" datetime="2023-08-12 00:00:00 +0800 CST">2023-08-12
+</time></span><span class=post-meta-item><span class=post-meta-item-icon><i class="far fa-calendar-check"></i>
+</span><span class=post-meta-item-text title=更新于>更新于：
+</span><time title=修改时间：2024-09-24T00:00:00+08:00 itemprop=dateModified datetime=2024-09-24T00:00:00+08:00>2024-09-24</time>
+</span><span class=post-meta-item><span class=post-meta-item-icon><i class="far fa-folder-open"></i>
+</span><span class=post-meta-item-text title=分类于>分类于：
+</span><span itemprop=about itemscope itemtype=http://schema.org/Thing><a href=/categories/inside-the-cpp-object-model itemprop=url rel=index><span itemprop=name>inside-the-cpp-object-model</span></a></span></span></div></div></header><div class=post-body itemprop=articleBody><h1 id=new><code>new</code>
+<a class=header-anchor href=#new></a></h1><p>用 new 申请的内存最少占用 1 个字节——尽管我们申请的可能是 0 个字节。</p><p><img src=/assets/e06da70dc841cb03e9e0076d20f8f899.png></p><h1 id=deletedelete><code>delete</code>/<code>delete[]</code>
+<a class=header-anchor href=#deletedelete></a></h1><p>delete 和 delete[] 都会归还空间，但是 delete[] 会询问元素数量，并析构数组中的每个元素，而 delete 只会析构一个元素。</p><p>尽管虚析构函数允许我们正常 delete 掉指向子类对象的基类指针，但是在基类指针上使用 delete[] 可能是有错的：</p><div class=highlight><pre tabindex=0 style=color:#93a1a1;background-color:#002b36;-moz-tab-size:2;-o-tab-size:2;tab-size:2><code class=language-cpp data-lang=cpp><span style=display:flex><span><span style=color:#719e07>#include</span> <span style=color:#719e07>&lt;cstdio&gt;</span><span style=color:#719e07>
+</span></span></span><span style=display:flex><span><span style=color:#719e07></span>
+</span></span><span style=display:flex><span><span style=color:#719e07>struct</span> <span style=color:#268bd2>A</span> {
+</span></span><span style=display:flex><span>    <span style=color:#dc322f>double</span> a;
+</span></span><span style=display:flex><span>    <span style=color:#719e07>virtual</span> <span style=color:#719e07>~</span>A() {
+</span></span><span style=display:flex><span>        puts(<span style=color:#2aa198>&#34;~A()&#34;</span>);
+</span></span><span style=display:flex><span>        fflush(stdout);
+</span></span><span style=display:flex><span>    }
+</span></span><span style=display:flex><span>};
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#719e07>struct</span> <span style=color:#268bd2>B</span> <span style=color:#719e07>:</span> A {
+</span></span><span style=display:flex><span>    <span style=color:#dc322f>double</span> b;
+</span></span><span style=display:flex><span>    <span style=color:#719e07>~</span>B() <span style=color:#719e07>override</span> {
+</span></span><span style=display:flex><span>        puts(<span style=color:#2aa198>&#34;~B()&#34;</span>);
+</span></span><span style=display:flex><span>        fflush(stdout);
+</span></span><span style=display:flex><span>    }
+</span></span><span style=display:flex><span>};
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#719e07>static_assert</span>(<span style=color:#719e07>sizeof</span>(A) <span style=color:#719e07>==</span> <span style=color:#2aa198>16</span>);
+</span></span><span style=display:flex><span><span style=color:#719e07>static_assert</span>(<span style=color:#719e07>sizeof</span>(B) <span style=color:#719e07>==</span> <span style=color:#2aa198>24</span>);
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#dc322f>int</span> <span style=color:#268bd2>main</span>() {
+</span></span><span style=display:flex><span>    A <span style=color:#719e07>*</span>array_of_A <span style=color:#719e07>=</span> <span style=color:#719e07>new</span> B[<span style=color:#2aa198>2</span>];
+</span></span><span style=display:flex><span>    <span style=color:#719e07>delete</span> [] array_of_A; <span style=color:#586e75>// &lt;-- 大问题！
+</span></span></span><span style=display:flex><span><span style=color:#586e75></span>}
+</span></span></code></pre></div><p>上述代码在 Compiler Explorer 上编译后返回 139。这里应用 delete[]，程序会将数组当成 A 数组来析构，把 A 的大小作为步长分割申请的空间，然后在每个”对象“上调用析构函数。这显然是不正确的，因为真正的步长是 B 的大小。</p><p>如果注释掉 B 类中的 <code>double b;</code> 声明，让 A 和 B 的大小一致，那么析构过程不会引发程序错误。但是非常不建议这么做！这对程序修改的容错不友好。</p><h1 id=placement-new>Placement <code>new</code>
+<a class=header-anchor href=#placement-new></a></h1><p>一般不用于在已有对象上重新构造，毕竟那样可以直接赋值。可以用于在 arena（一块足够大的、连续的空间）上初始化对象，但是需要<strong>记得自行析构</strong>。</p></div><footer class=post-footer><div readmore=false><div class=readmore-overlay><div class=readmore-overlay-center><div class=post-button><a class=btn href=/inside-the-cpp-object-model/new-%E5%92%8C-delete/#more rel=contents>阅读全文 &#187;</a></div></div></div><div class=no-more-to-read><hr><center>没有啦~</center></div></div><div class=post-eof></div></footer></article></div><div class=post-block><article itemscope itemtype=http://schema.org/Article class=post-content lang><link itemprop=mainEntityOfPage href=https://hxhue.github.io/inside-the-cpp-object-model/vtable/><span hidden itemprop=author itemscope itemtype=http://schema.org/Person><meta itemprop=image content="/imgs/371907.jpg"><meta itemprop=name content="🚮"></span><span hidden itemprop=publisher itemscope itemtype=http://schema.org/Organization><meta itemprop=name content="🚮"><meta itemprop=description content="个人博客，主要是零散的笔记。"></span><span hidden itemprop=post itemscope itemtype=http://schema.org/CreativeWork><meta itemprop=name content="vtable"><meta itemprop=description content="TL;DR 性能开销
+
+在不开启优化选项时编译：
+
+每次调用虚函数比普通函数多两次访存。
+每次动态类型转换（除非类型精确命中）都是耗时的图搜索算法。
+明确需要精确转换时用 std::type_index 和 static_cast 会更快。
+
+相关代码下载："></span><header class=post-header><h2 class=post-title itemprop="name headline"><a href=/inside-the-cpp-object-model/vtable/ itemprop=url class=post-title-link>vtable</a></h2><div class=post-meta-container><div class=post-meta-items><span class=post-meta-item><span class=post-meta-item-icon><i class="far fa-calendar"></i>
+</span><span class=post-meta-item-text title=发表于>发表于：
+</span><time title="创建时间：2023-08-12 00:00:00 +0800 CST" itemprop="dateCreated datePublished" datetime="2023-08-12 00:00:00 +0800 CST">2023-08-12
+</time></span><span class=post-meta-item><span class=post-meta-item-icon><i class="far fa-calendar-check"></i>
+</span><span class=post-meta-item-text title=更新于>更新于：
+</span><time title=修改时间：2024-05-03T00:00:00+08:00 itemprop=dateModified datetime=2024-05-03T00:00:00+08:00>2024-05-03</time>
+</span><span class=post-meta-item><span class=post-meta-item-icon><i class="far fa-folder-open"></i>
+</span><span class=post-meta-item-text title=分类于>分类于：
+</span><span itemprop=about itemscope itemtype=http://schema.org/Thing><a href=/categories/inside-the-cpp-object-model itemprop=url rel=index><span itemprop=name>inside-the-cpp-object-model</span></a></span></span></div></div></header><div class=post-body itemprop=articleBody><h1 id=tldr-性能开销>TL;DR 性能开销
+<a class=header-anchor href=#tldr-%e6%80%a7%e8%83%bd%e5%bc%80%e9%94%80></a></h1><p>在不开启优化选项时编译：</p><ol><li>每次调用虚函数比普通函数多两次访存。</li><li>每次动态类型转换（除非类型精确命中）都是耗时的图搜索算法。</li><li>明确需要精确转换时用 <code>std::type_index</code> 和 <code>static_cast</code> 会更快。</li></ol><p>相关代码下载：</p><div class=highlight><pre tabindex=0 style=color:#93a1a1;background-color:#002b36;-moz-tab-size:2;-o-tab-size:2;tab-size:2><code class=language-bash data-lang=bash><span style=display:flex><span>git clone -n --depth<span style=color:#719e07>=</span><span style=color:#2aa198>1</span> --filter<span style=color:#719e07>=</span>tree:0 https://github.com/gcc-mirror/gcc.git
+</span></span><span style=display:flex><span><span style=color:#b58900>cd</span> gcc
+</span></span><span style=display:flex><span>git sparse-checkout <span style=color:#b58900>set</span> --no-cone <span style=color:#2aa198>&#34;libstdc++-v3/libsupc++/&#34;</span>
+</span></span><span style=display:flex><span>git checkout
+</span></span></code></pre></div><h1 id=虚表内存结构>虚表内存结构
+<a class=header-anchor href=#%e8%99%9a%e8%a1%a8%e5%86%85%e5%ad%98%e7%bb%93%e6%9e%84></a></h1><h2 id=代码>代码
+<a class=header-anchor href=#%e4%bb%a3%e7%a0%81></a></h2><p>首先：在共享代码区域存储的虚表记录了特定类的信息。对象中的虚表指针其实是虚函数表指针，指向虚表中的一块位置。</p><div class="markdown-alert markdown-alert-caution"><p class=markdown-alert-title><svg class="octicon octicon-stop mr-2" viewBox="0 0 16 16" width="16" height="16" aria-hidden="true"><path d="M4.47.22A.749.749.0 015 0h6c.199.0.389.079.53.22l4.25 4.25c.141.14.22.331.22.53v6a.749.749.0 01-.22.53l-4.25 4.25A.749.749.0 0111 16H5a.749.749.0 01-.53-.22L.22 11.53A.749.749.0 010 11V5c0-.199.079-.389.22-.53zm.84 1.28L1.5 5.31v5.38l3.81 3.81h5.38l3.81-3.81V5.31L10.69 1.5zM8 4a.75.75.0 01.75.75v3.5a.75.75.0 01-1.5.0v-3.5A.75.75.0 018 4zm0 8a1 1 0 110-2 1 1 0 010 2z"/></svg>Caution</p><p>这里我所称的虚表对应于 GCC 代码中的 <code>vtable_prefix</code>，虚函数表对应于 GCC 代码中的 <code>vtable</code>。可能不是很正规。</p></div><p>对于下面的代码，使用 gcc 13.1 编译：</p><div class=highlight><pre tabindex=0 style=color:#93a1a1;background-color:#002b36;-moz-tab-size:2;-o-tab-size:2;tab-size:2><code class=language-cpp data-lang=cpp><span style=display:flex><span><span style=color:#719e07>#include</span> <span style=color:#719e07>&lt;iostream&gt;</span><span style=color:#719e07>
+</span></span></span><span style=display:flex><span><span style=color:#719e07></span><span style=color:#586e75>// 会存储一个虚表指针，8字节
+</span></span></span><span style=display:flex><span><span style=color:#586e75></span><span style=color:#719e07>struct</span> <span style=color:#268bd2>A</span> { <span style=color:#719e07>virtual</span> <span style=color:#dc322f>void</span> <span style=color:#268bd2>f1</span>() { std<span style=color:#719e07>::</span>cout <span style=color:#719e07>&lt;&lt;</span> <span style=color:#2aa198>&#34;f1 from A</span><span style=color:#cb4b16>\n</span><span style=color:#2aa198>&#34;</span>; } };
+</span></span><span style=display:flex><span><span style=color:#719e07>struct</span> <span style=color:#268bd2>C</span> { <span style=color:#719e07>virtual</span> <span style=color:#dc322f>void</span> <span style=color:#268bd2>f2</span>() { std<span style=color:#719e07>::</span>cout <span style=color:#719e07>&lt;&lt;</span> <span style=color:#2aa198>&#34;f2 from C</span><span style=color:#cb4b16>\n</span><span style=color:#2aa198>&#34;</span>; } };
+</span></span><span style=display:flex><span><span style=color:#719e07>struct</span> <span style=color:#268bd2>D</span> { <span style=color:#719e07>virtual</span> <span style=color:#dc322f>void</span> <span style=color:#268bd2>f3</span>() { std<span style=color:#719e07>::</span>cout <span style=color:#719e07>&lt;&lt;</span> <span style=color:#2aa198>&#34;f3 from D</span><span style=color:#cb4b16>\n</span><span style=color:#2aa198>&#34;</span>; } };
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#719e07>struct</span> <span style=color:#268bd2>B</span><span style=color:#719e07>:</span> A, C, D {
+</span></span><span style=display:flex><span>    B() {}
+</span></span><span style=display:flex><span>    <span style=color:#719e07>virtual</span> <span style=color:#dc322f>void</span> <span style=color:#268bd2>f1</span>() <span style=color:#719e07>override</span> {
+</span></span><span style=display:flex><span>        std<span style=color:#719e07>::</span>cout <span style=color:#719e07>&lt;&lt;</span> <span style=color:#2aa198>&#34;f1 from B</span><span style=color:#cb4b16>\n</span><span style=color:#2aa198>&#34;</span>;
+</span></span><span style=display:flex><span>    }
+</span></span><span style=display:flex><span>};
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#dc322f>int</span> <span style=color:#268bd2>main</span>() {
+</span></span><span style=display:flex><span>    B <span style=color:#719e07>*</span>p <span style=color:#719e07>=</span> <span style=color:#719e07>new</span> B;
+</span></span><span style=display:flex><span>    p<span style=color:#719e07>-&gt;</span>f1();
+</span></span><span style=display:flex><span>    std<span style=color:#719e07>::</span>cout <span style=color:#719e07>&lt;&lt;</span> <span style=color:#2aa198>&#34;sizeof(A) = &#34;</span> <span style=color:#719e07>&lt;&lt;</span> <span style=color:#719e07>sizeof</span>(A) <span style=color:#719e07>&lt;&lt;</span> <span style=color:#2aa198>&#39;\n&#39;</span>; <span style=color:#586e75>// 8
+</span></span></span><span style=display:flex><span><span style=color:#586e75></span>    std<span style=color:#719e07>::</span>cout <span style=color:#719e07>&lt;&lt;</span> <span style=color:#2aa198>&#34;sizeof(B) = &#34;</span> <span style=color:#719e07>&lt;&lt;</span> <span style=color:#719e07>sizeof</span>(B) <span style=color:#719e07>&lt;&lt;</span> <span style=color:#2aa198>&#39;\n&#39;</span>; <span style=color:#586e75>// 24
+</span></span></span><span style=display:flex><span><span style=color:#586e75></span>}
+</span></span></code></pre></div><h2 id=虚表和类型表的布局>虚表和类型表的布局
+<a class=header-anchor href=#%e8%99%9a%e8%a1%a8%e5%92%8c%e7%b1%bb%e5%9e%8b%e8%a1%a8%e7%9a%84%e5%b8%83%e5%b1%80></a></h2><p>vtable</p><p><img src=/assets/4f0a0a01ea14fdd8d071c17c58dc6e76.png></p><p>typeinfo</p><p><img src=/assets/add6889071399ed982a5ac10fd79c8f5.png></p><p>虚表由虚表段组成，一个表段由三个信息组成：</p><div class=highlight><pre tabindex=0 style=color:#93a1a1;background-color:#002b36;-moz-tab-size:2;-o-tab-size:2;tab-size:2><code class=language-cpp data-lang=cpp><span style=display:flex><span><span style=color:#719e07>struct</span> <span style=color:#268bd2>vtable_prefix</span>
+</span></span><span style=display:flex><span>{
+</span></span><span style=display:flex><span>  <span style=color:#586e75>// Offset to most derived object.
+</span></span></span><span style=display:flex><span><span style=color:#586e75></span>  ptrdiff_t whole_object;
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>  <span style=color:#586e75>// Pointer to most derived type_info.
+</span></span></span><span style=display:flex><span><span style=color:#586e75></span>  <span style=color:#719e07>const</span> __class_type_info <span style=color:#719e07>*</span>whole_type;
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>  <span style=color:#586e75>// What a class&#39;s vptr points to.
+</span></span></span><span style=display:flex><span><span style=color:#586e75></span>  <span style=color:#719e07>const</span> <span style=color:#dc322f>void</span> <span style=color:#719e07>*</span>origin;
+</span></span><span style=display:flex><span>};
+</span></span></code></pre></div><p>其中：</p><ol><li>在 64 位环境下，虚表段最少占用 24 个字节。</li><li>虚表除了虚函数外中还存储了对象的其他信息，包括 <code>type_info</code> 表指针。<code>type_info</code> 表中指明了类型的直接继承关系，如果想要查找间接继承关系，则需要用到图搜索算法。</li><li><code>whole_object</code> 的偏移是相对于 vptr / vtable 来说的，不是相对于 <code>vtable_prefix</code> 来说的。同时，<code>origin</code> <strong>的地址</strong>是 vptr 指向的地址，而并不是 <code>origin</code> 和 vptr 相等（origin 的类型是指针，是因为它至少需要占用一个指针的地址，而且往后的每一项都要按照指针的要求来对齐）。</li><li><code>vtable_prefix</code> 上面还存储了到虚基类子对象的偏移。这个例子中没有虚基类子对象。</li></ol><p>再给个有虚基类子对象的例子：</p><p><img src=/assets/Pasted%20image%2020240503181017.png></p><p>代码：</p><div class=highlight><pre tabindex=0 style=color:#93a1a1;background-color:#002b36;-moz-tab-size:2;-o-tab-size:2;tab-size:2><code class=language-cpp data-lang=cpp><span style=display:flex><span><span style=color:#719e07>#include</span> <span style=color:#719e07>&lt;cassert&gt;</span><span style=color:#719e07>
+</span></span></span><span style=display:flex><span><span style=color:#719e07>#include</span> <span style=color:#719e07>&lt;iostream&gt;</span><span style=color:#719e07>
+</span></span></span><span style=display:flex><span><span style=color:#719e07></span>
+</span></span><span style=display:flex><span><span style=color:#719e07>struct</span> <span style=color:#268bd2>A</span> {
+</span></span><span style=display:flex><span>    A() { std<span style=color:#719e07>::</span>cout <span style=color:#719e07>&lt;&lt;</span> <span style=color:#2aa198>&#34;A</span><span style=color:#cb4b16>\n</span><span style=color:#2aa198>&#34;</span>; }
+</span></span><span style=display:flex><span>    <span style=color:#719e07>virtual</span> <span style=color:#dc322f>void</span> <span style=color:#268bd2>first</span>() {}
+</span></span><span style=display:flex><span>    <span style=color:#719e07>virtual</span> <span style=color:#dc322f>void</span> <span style=color:#268bd2>second</span>() {}
+</span></span><span style=display:flex><span>    <span style=color:#dc322f>int</span> data;
+</span></span><span style=display:flex><span>};
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#719e07>struct</span> <span style=color:#268bd2>B</span> <span style=color:#719e07>:</span> <span style=color:#719e07>virtual</span> A {
+</span></span><span style=display:flex><span>    B() { std<span style=color:#719e07>::</span>cout <span style=color:#719e07>&lt;&lt;</span> <span style=color:#2aa198>&#34;B</span><span style=color:#cb4b16>\n</span><span style=color:#2aa198>&#34;</span>; }
+</span></span><span style=display:flex><span>};
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#dc322f>int</span> <span style=color:#268bd2>main</span>() {
+</span></span><span style=display:flex><span>    B <span style=color:#719e07>*</span>pb <span style=color:#719e07>=</span> <span style=color:#719e07>new</span> B{};
+</span></span><span style=display:flex><span>    pb<span style=color:#719e07>-&gt;</span>data <span style=color:#719e07>=</span> <span style=color:#2aa198>42</span>;
+</span></span><span style=display:flex><span>    assert(<span style=color:#719e07>*</span>(<span style=color:#dc322f>int</span> <span style=color:#719e07>*</span>)((<span style=color:#dc322f>unsigned</span> <span style=color:#dc322f>char</span> <span style=color:#719e07>*</span>)pb <span style=color:#719e07>+</span> <span style=color:#2aa198>16</span>) <span style=color:#719e07>==</span> <span style=color:#2aa198>42</span>);
+</span></span><span style=display:flex><span>    <span style=color:#586e75>// vptr.B   vptr.A  A::data  padding
+</span></span></span><span style=display:flex><span><span style=color:#586e75></span>    <span style=color:#586e75>//   8B       8B      4B       4B
+</span></span></span><span style=display:flex><span><span style=color:#586e75></span>    <span style=color:#586e75>// |---     object of type B     ---|
+</span></span></span><span style=display:flex><span><span style=color:#586e75></span>    <span style=color:#586e75>//          |-   object of type A  -|
+</span></span></span><span style=display:flex><span><span style=color:#586e75></span>}
+</span></span></code></pre></div><h1 id=虚函数调用>虚函数调用
+<a class=header-anchor href=#%e8%99%9a%e5%87%bd%e6%95%b0%e8%b0%83%e7%94%a8></a></h1><p><img src=/assets/6c8d3afd84c9856730193b1d4122a606.png></p><p>能观察到：</p><ol><li><strong>查虚表在不打开优化选项时比普通函数需要多访问两次内存</strong>。</li><li>来自不同基类的虚函数会在不同的虚表段里去查，将上面的 <code>p->f1();</code> 改成 <code>p->f2();</code> 重新编译就能看出来。</li><li>在虚表内，虚函数地址通过编译期确定的下标访问，所以下标本身不会增加访存次数。例如给 A 增加虚函数 f4，并修改 <code>p->f1();</code> 为 <code>p->f4();</code> 会发现只在 first entry of vtable 之前增加了一个将 rax 增 8 的操作。</li><li>一个虚表指针占 8 字节，一个对象有几个继承链存在多态行为，就需要存储几个虚表指针。</li><li><strong>对象中存储的虚函数表指针其实对应于虚表段 vtable_prefix 的 origin 域的地址</strong>。虚函数表至少有一个函数，否则这个表项可以被消除。</li></ol><p>第 1 点可以和 C 语言常用的数据驱动编程进行对比：</p><p>对于一个含有 tag 的结构体，读 tag 是一次访存，用 tag 查表得到函数指针，又需要访存一次，一共也是两次。数据驱动编程下函数指针数组的位置已知，但 tag 未知；虚函数查找时虚表项下标已知（虚表在编译完成后各虚函数的下标就能确定，见
+<a href=/inside-the-cpp-object-model/vtable#%e8%99%9a%e5%87%bd%e6%95%b0%e5%9c%a8%e7%bc%96%e8%af%91%e6%97%b6%e5%a6%82%e4%bd%95%e7%a1%ae%e5%ae%9a%e4%b8%8b%e6%a0%87 title=虚函数在编译时如何确定下标？>虚函数在编译时如何确定下标？</a> ），但是虚函数表地址未知。</p><h1 id=动态类型转换>动态类型转换
+<a class=header-anchor href=#%e5%8a%a8%e6%80%81%e7%b1%bb%e5%9e%8b%e8%bd%ac%e6%8d%a2></a></h1><p>对代码稍作修改：</p><div class=highlight><pre tabindex=0 style=color:#93a1a1;background-color:#002b36;-moz-tab-size:2;-o-tab-size:2;tab-size:2><code class=language-cpp data-lang=cpp><span style=display:flex><span><span style=color:#719e07>#include</span> <span style=color:#719e07>&lt;iostream&gt;</span><span style=color:#719e07>
+</span></span></span><span style=display:flex><span><span style=color:#719e07></span><span style=color:#586e75>// 会存储一个虚表指针，8字节
+</span></span></span><span style=display:flex><span><span style=color:#586e75></span><span style=color:#719e07>struct</span> <span style=color:#268bd2>A</span>    { <span style=color:#719e07>virtual</span> <span style=color:#dc322f>void</span> <span style=color:#268bd2>f1</span>() { std<span style=color:#719e07>::</span>cout <span style=color:#719e07>&lt;&lt;</span> <span style=color:#2aa198>&#34;f1 from A</span><span style=color:#cb4b16>\n</span><span style=color:#2aa198>&#34;</span>; } };
+</span></span><span style=display:flex><span><span style=color:#719e07>struct</span> <span style=color:#268bd2>C</span><span style=color:#719e07>:</span> A { <span style=color:#719e07>virtual</span> <span style=color:#dc322f>void</span> <span style=color:#268bd2>f2</span>() { std<span style=color:#719e07>::</span>cout <span style=color:#719e07>&lt;&lt;</span> <span style=color:#2aa198>&#34;f2 from C</span><span style=color:#cb4b16>\n</span><span style=color:#2aa198>&#34;</span>; } };
+</span></span><span style=display:flex><span><span style=color:#586e75>//      ^^^  继承于A
+</span></span></span><span style=display:flex><span><span style=color:#586e75></span><span style=color:#719e07>struct</span> <span style=color:#268bd2>D</span>    { <span style=color:#719e07>virtual</span> <span style=color:#dc322f>void</span> <span style=color:#268bd2>f3</span>() { std<span style=color:#719e07>::</span>cout <span style=color:#719e07>&lt;&lt;</span> <span style=color:#2aa198>&#34;f3 from D</span><span style=color:#cb4b16>\n</span><span style=color:#2aa198>&#34;</span>; } };
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#719e07>struct</span> <span style=color:#268bd2>B</span><span style=color:#719e07>:</span> C, D {
+</span></span><span style=display:flex><span><span style=color:#586e75>//       ^^ 不再继承于A
+</span></span></span><span style=display:flex><span><span style=color:#586e75></span>    B() {}
+</span></span><span style=display:flex><span>    <span style=color:#719e07>virtual</span> <span style=color:#dc322f>void</span> <span style=color:#268bd2>f1</span>() <span style=color:#719e07>override</span> {
+</span></span><span style=display:flex><span>        std<span style=color:#719e07>::</span>cout <span style=color:#719e07>&lt;&lt;</span> <span style=color:#2aa198>&#34;f1 from B</span><span style=color:#cb4b16>\n</span><span style=color:#2aa198>&#34;</span>;
+</span></span><span style=display:flex><span>    }
+</span></span><span style=display:flex><span>};
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#dc322f>int</span> <span style=color:#268bd2>main</span>() {
+</span></span><span style=display:flex><span>    A <span style=color:#719e07>*</span>p <span style=color:#719e07>=</span> <span style=color:#719e07>new</span> B;
+</span></span><span style=display:flex><span>    <span style=color:#719e07>auto</span> bp <span style=color:#719e07>=</span> <span style=color:#719e07>dynamic_cast</span><span style=color:#719e07>&lt;</span>C <span style=color:#719e07>*&gt;</span>(p);
+</span></span><span style=display:flex><span>    bp<span style=color:#719e07>-&gt;</span>f2();
+</span></span><span style=display:flex><span>}
+</span></span></code></pre></div><p>动态转换的汇编如下：</p><p><img src=/assets/cda064490a70ed80caf3abf439fe2115.png></p><p><strong>这就成了有向无环图的搜索问题</strong>。</p><p>下面是 GCC 的实现：</p><p><img src=/assets/58a492125effbd1305227cfa692e25a5.png></p><ol><li><p>空检查</p></li><li><p>根据虚函数表找到虚表段，再找到整个表开始地址。</p></li><li><p>获得 src_ptr 的类型信息。</p><p><img src=/assets/5e61441c40c9c46d7c9ac0da8d33da97.png></p></li><li><p>确认约束：拿到的表指针必须以含这个类信息的虚表段开头。这一点是不一定满足的（比如正在构造对象时），毕竟如果必定满足，则可以简化查找虚表开始地址的操作，不用通过表段找开头了。不满足时转换不成功。</p><p><img src=/assets/7387a8366540b2f0273abb277e9fe241.png></p></li><li><p><strong>特殊情况优化：在编译器提示下去找虚表中的某一段，如果是本类型，则能直接成功。</strong></p></li></ol><p>后面的就比较复杂了：</p><p><img src=/assets/e78dbb73101fb72aca72d57fc545f98d.png></p><p><strong>class_type_info 类型继承于 std::type_info，其</strong> do_dyncast 函数是虚函数。从前面的图（离这里有点远）可以看到 B 的 type_info 是 **cxxabiv1::**vmi_class_type_info 类型的，其实现在 <code>gcc/libstdc++-v3/libsupc++/vmi_class_type_info.cc:79</code> 中，这是一个具体的图搜索实现，还考虑了可见性，理解起来会比较困难，这里略去。</p><h1 id=用-type_index-精确判断类型>用 type_index 精确判断类型
+<a class=header-anchor href=#%e7%94%a8-type_index-%e7%b2%be%e7%a1%ae%e5%88%a4%e6%96%ad%e7%b1%bb%e5%9e%8b></a></h1><p><a href=/inside-the-cpp-object-model/type_index/ title=type_index>type_index</a></p><h1 id=虚函数在编译时如何确定下标>虚函数在编译时如何确定下标？
+<a class=header-anchor href=#%e8%99%9a%e5%87%bd%e6%95%b0%e5%9c%a8%e7%bc%96%e8%af%91%e6%97%b6%e5%a6%82%e4%bd%95%e7%a1%ae%e5%ae%9a%e4%b8%8b%e6%a0%87></a></h1><p>这是由于 C++ 需要支持多继承，因而指针转换时地址需要偏移。（不过空指针不需要做偏移处理）举例：</p><p><img src=/assets/20e0d2fb343477435cb83f5d785603dc.png></p><div class=highlight><pre tabindex=0 style=color:#93a1a1;background-color:#002b36;-moz-tab-size:2;-o-tab-size:2;tab-size:2><code class=language-cpp data-lang=cpp><span style=display:flex><span><span style=color:#719e07>#include</span> <span style=color:#719e07>&lt;iostream&gt;</span><span style=color:#719e07>
+</span></span></span><span style=display:flex><span><span style=color:#719e07></span><span style=color:#719e07>using</span> <span style=color:#719e07>namespace</span> std;
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#719e07>struct</span> <span style=color:#268bd2>A</span> { <span style=color:#dc322f>int</span> v; };
+</span></span><span style=display:flex><span><span style=color:#719e07>struct</span> <span style=color:#268bd2>B</span> { <span style=color:#dc322f>int</span> u; };
+</span></span><span style=display:flex><span><span style=color:#719e07>struct</span> <span style=color:#268bd2>C</span><span style=color:#719e07>:</span> A, B {};
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#dc322f>int</span> <span style=color:#268bd2>main</span>() {
+</span></span><span style=display:flex><span>    C <span style=color:#719e07>*</span>p <span style=color:#719e07>=</span> <span style=color:#719e07>new</span> C;
+</span></span><span style=display:flex><span>    A<span style=color:#719e07>*</span> pa <span style=color:#719e07>=</span> (A <span style=color:#719e07>*</span>)p;
+</span></span><span style=display:flex><span>    B<span style=color:#719e07>*</span> pb <span style=color:#719e07>=</span> (B <span style=color:#719e07>*</span>)p;
+</span></span><span style=display:flex><span>    cout <span style=color:#719e07>&lt;&lt;</span> p  <span style=color:#719e07>&lt;&lt;</span> <span style=color:#2aa198>&#39;\n&#39;</span>; <span style=color:#586e75>// 0x14612b0
+</span></span></span><span style=display:flex><span><span style=color:#586e75></span>    cout <span style=color:#719e07>&lt;&lt;</span> pa <span style=color:#719e07>&lt;&lt;</span> <span style=color:#2aa198>&#39;\n&#39;</span>; <span style=color:#586e75>// 0x14612b0
+</span></span></span><span style=display:flex><span><span style=color:#586e75></span>    cout <span style=color:#719e07>&lt;&lt;</span> pb <span style=color:#719e07>&lt;&lt;</span> <span style=color:#2aa198>&#39;\n&#39;</span>; <span style=color:#586e75>// 0x14612b4 注意地址变化了！
+</span></span></span><span style=display:flex><span><span style=color:#586e75></span>}
+</span></span></code></pre></div><p>上面只涉及到了基本的多继承，还没有涉及到虚函数。再考虑虚函数（有虚表指针，所以 A 和 B 都不是空基类）：</p><div class=highlight><pre tabindex=0 style=color:#93a1a1;background-color:#002b36;-moz-tab-size:2;-o-tab-size:2;tab-size:2><code class=language-cpp data-lang=cpp><span style=display:flex><span><span style=color:#719e07>#include</span> <span style=color:#719e07>&lt;iostream&gt;</span><span style=color:#719e07>
+</span></span></span><span style=display:flex><span><span style=color:#719e07></span><span style=color:#719e07>using</span> <span style=color:#719e07>namespace</span> std;
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#719e07>struct</span> <span style=color:#268bd2>A</span> { <span style=color:#719e07>virtual</span> <span style=color:#dc322f>void</span> <span style=color:#268bd2>a</span>() {} };
+</span></span><span style=display:flex><span><span style=color:#719e07>struct</span> <span style=color:#268bd2>B</span> { <span style=color:#719e07>virtual</span> <span style=color:#dc322f>void</span> <span style=color:#268bd2>b</span>() {} };
+</span></span><span style=display:flex><span><span style=color:#719e07>struct</span> <span style=color:#268bd2>C</span><span style=color:#719e07>:</span> A, B {};
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#dc322f>int</span> <span style=color:#268bd2>main</span>() {
+</span></span><span style=display:flex><span>    C <span style=color:#719e07>*</span>p <span style=color:#719e07>=</span> <span style=color:#719e07>new</span> C;
+</span></span><span style=display:flex><span>    A <span style=color:#719e07>*</span>pa <span style=color:#719e07>=</span> (A <span style=color:#719e07>*</span>)p;
+</span></span><span style=display:flex><span>    B <span style=color:#719e07>*</span>pb <span style=color:#719e07>=</span> (B <span style=color:#719e07>*</span>)p;
+</span></span><span style=display:flex><span>    pa<span style=color:#719e07>-&gt;</span>a();
+</span></span><span style=display:flex><span>    pb<span style=color:#719e07>-&gt;</span>b();
+</span></span><span style=display:flex><span>    cout <span style=color:#719e07>&lt;&lt;</span> p  <span style=color:#719e07>&lt;&lt;</span> endl; <span style=color:#586e75>// 0xc3a2b0
+</span></span></span><span style=display:flex><span><span style=color:#586e75></span>    cout <span style=color:#719e07>&lt;&lt;</span> pa <span style=color:#719e07>&lt;&lt;</span> endl; <span style=color:#586e75>// 0xc3a2b0
+</span></span></span><span style=display:flex><span><span style=color:#586e75></span>    cout <span style=color:#719e07>&lt;&lt;</span> pb <span style=color:#719e07>&lt;&lt;</span> endl; <span style=color:#586e75>// 0xc3a2b8，同样变化了！
+</span></span></span><span style=display:flex><span><span style=color:#586e75></span>}
+</span></span></code></pre></div><p>可以看出 p 转换成 pb 之后，地址也变化了。</p><p>地址偏移之后，新的指针指向区域的开头部分就是新的虚表指针。这也是为什么编译器能够确定虚函数在各自表中的下标——<strong>类型转换时只有虚表指针改变了，虚函数在表中的下标不变</strong>。</p><p>一个 <code>C*</code> 转换成 <code>B*</code>。指针 <code>p</code> 有了偏移，从而虚表指针值 <code>*p</code> 从 <code>vtable.C.C</code> 变成了 <code>vtable.C.B</code>。（C 的大表上有 A 和 B 的两张小表。这里我用第一个类名表示大表是谁的，第二个类名表示小表段是谁的。）</p><p>那么 <code>delete</code> 掉 <code>new</code> 出来但动态转换后的指针安全吗？</p><p>如果没有虚析构函数 <del>虚表</del> 则不安全：</p><div class=highlight><pre tabindex=0 style=color:#93a1a1;background-color:#002b36;-moz-tab-size:2;-o-tab-size:2;tab-size:2><code class=language-cpp data-lang=cpp><span style=display:flex><span><span style=color:#719e07>struct</span> <span style=color:#268bd2>A</span> { <span style=color:#dc322f>int</span> x; };
+</span></span><span style=display:flex><span><span style=color:#719e07>struct</span> <span style=color:#268bd2>B</span> { <span style=color:#dc322f>int</span> y; };
+</span></span><span style=display:flex><span><span style=color:#719e07>struct</span> <span style=color:#268bd2>C</span><span style=color:#719e07>:</span> A, B {};
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#dc322f>int</span> <span style=color:#268bd2>main</span>() {
+</span></span><span style=display:flex><span>    C <span style=color:#719e07>*</span>p <span style=color:#719e07>=</span> <span style=color:#719e07>new</span> C;
+</span></span><span style=display:flex><span>    B<span style=color:#719e07>*</span> pb <span style=color:#719e07>=</span> (B <span style=color:#719e07>*</span>)p;
+</span></span><span style=display:flex><span>    <span style=color:#719e07>delete</span> pb;
+</span></span><span style=display:flex><span>}
+</span></span><span style=display:flex><span><span style=color:#586e75>// Program returned: 139
+</span></span></span><span style=display:flex><span><span style=color:#586e75>// free(): invalid pointer
+</span></span></span></code></pre></div><p><code>std::unique_ptr</code> 也支持类型转换，但是类型转换之后仍然不安全：</p><div class=highlight><pre tabindex=0 style=color:#93a1a1;background-color:#002b36;-moz-tab-size:2;-o-tab-size:2;tab-size:2><code class=language-cpp data-lang=cpp><span style=display:flex><span><span style=color:#719e07>#include</span> <span style=color:#719e07>&lt;memory&gt;</span><span style=color:#719e07>
+</span></span></span><span style=display:flex><span><span style=color:#719e07></span>
+</span></span><span style=display:flex><span><span style=color:#719e07>struct</span> <span style=color:#268bd2>BaseObject</span> {
+</span></span><span style=display:flex><span>    <span style=color:#dc322f>int</span> x;
+</span></span><span style=display:flex><span>};
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#719e07>struct</span> <span style=color:#268bd2>AnotherBase</span> {
+</span></span><span style=display:flex><span>    <span style=color:#dc322f>int</span> y;
+</span></span><span style=display:flex><span>};
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#719e07>struct</span> <span style=color:#268bd2>DerivedObject</span> <span style=color:#719e07>:</span> BaseObject, AnotherBase {
+</span></span><span style=display:flex><span>};
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#dc322f>int</span> <span style=color:#268bd2>main</span>() {
+</span></span><span style=display:flex><span>    std<span style=color:#719e07>::</span>unique_ptr<span style=color:#719e07>&lt;</span>AnotherBase<span style=color:#719e07>&gt;</span> uptr <span style=color:#719e07>=</span> std<span style=color:#719e07>::</span>make_unique<span style=color:#719e07>&lt;</span>DerivedObject<span style=color:#719e07>&gt;</span>();
+</span></span><span style=display:flex><span>}
+</span></span><span style=display:flex><span><span style=color:#586e75>// Program returned: 139
+</span></span></span><span style=display:flex><span><span style=color:#586e75>// free(): invalid pointer
+</span></span></span></code></pre></div><p>如果 B 有虚析构函数<del>有虚表（也就是</del> <code>vptr</code><del>：不一定得是虚析构函数；也不一定得是多态类，通过虚拟继承引入的</del> <code>vptr</code> <del>也行）</del>：</p><div class=highlight><pre tabindex=0 style=color:#93a1a1;background-color:#002b36;-moz-tab-size:2;-o-tab-size:2;tab-size:2><code class=language-cpp data-lang=cpp><span style=display:flex><span><span style=color:#719e07>#include</span> <span style=color:#719e07>&lt;iostream&gt;</span><span style=color:#719e07>
+</span></span></span><span style=display:flex><span><span style=color:#719e07>#include</span> <span style=color:#719e07>&lt;cassert&gt;</span><span style=color:#719e07>
+</span></span></span><span style=display:flex><span><span style=color:#719e07></span><span style=color:#719e07>using</span> <span style=color:#719e07>namespace</span> std;
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#719e07>struct</span> <span style=color:#268bd2>A</span> { <span style=color:#719e07>virtual</span> <span style=color:#719e07>~</span>A() {} };
+</span></span><span style=display:flex><span><span style=color:#719e07>struct</span> <span style=color:#268bd2>B</span> { <span style=color:#719e07>virtual</span> <span style=color:#719e07>~</span>B() {} };
+</span></span><span style=display:flex><span><span style=color:#719e07>struct</span> <span style=color:#268bd2>C</span><span style=color:#719e07>:</span> A, B {  };
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#dc322f>int</span> <span style=color:#268bd2>main</span>() {
+</span></span><span style=display:flex><span>    C <span style=color:#719e07>*</span>p <span style=color:#719e07>=</span> <span style=color:#719e07>new</span> C;
+</span></span><span style=display:flex><span>    A <span style=color:#719e07>*</span>pa <span style=color:#719e07>=</span> (A <span style=color:#719e07>*</span>)p;
+</span></span><span style=display:flex><span>    B <span style=color:#719e07>*</span>pb <span style=color:#719e07>=</span> (B <span style=color:#719e07>*</span>)p;
+</span></span><span style=display:flex><span>    assert((<span style=color:#dc322f>void</span> <span style=color:#719e07>*</span>)pb <span style=color:#719e07>!=</span> (<span style=color:#dc322f>void</span> <span style=color:#719e07>*</span>)p);
+</span></span><span style=display:flex><span>    <span style=color:#719e07>delete</span> pb; <span style=color:#586e75>// pb 是 B* 类型，而 B 又有虚析构函数，因此做偏移可以找到真正的指针起始位置
+</span></span></span><span style=display:flex><span><span style=color:#586e75></span>}
+</span></span></code></pre></div><p>结果：Program returned: 0</p><p><strong>如果把 A 中的析构函数定义换成定义一个数据成员，上面的</strong> <code>assert</code> <strong>语句就会被触发</strong>，可能是编译期倾向于把有虚表的数据段放在尽可能开头的位置（2023 年 6 月 13 日：是的，这样可以共用 vptr）。</p><p>实验的时候还应该保证用到的基类非空，否则有空基类优化，影响对结果的观察。</p></div><footer class=post-footer><div readmore=false><div class=readmore-overlay><div class=readmore-overlay-center><div class=post-button><a class=btn href=/inside-the-cpp-object-model/vtable/#more rel=contents>阅读全文 &#187;</a></div></div></div><div class=no-more-to-read><hr><center>没有啦~</center></div></div><div class=post-eof></div></footer></article></div><div class=post-block><article itemscope itemtype=http://schema.org/Article class=post-content lang><link itemprop=mainEntityOfPage href=https://hxhue.github.io/inside-the-cpp-object-model/%E6%8C%89%E9%9C%80%E5%90%88%E6%88%90%E6%9E%84%E9%80%A0%E5%87%BD%E6%95%B0/><span hidden itemprop=author itemscope itemtype=http://schema.org/Person><meta itemprop=image content="/imgs/371907.jpg"><meta itemprop=name content="🚮"></span><span hidden itemprop=publisher itemscope itemtype=http://schema.org/Organization><meta itemprop=name content="🚮"><meta itemprop=description content="个人博客，主要是零散的笔记。"></span><span hidden itemprop=post itemscope itemtype=http://schema.org/CreativeWork><meta itemprop=name content="按需合成构造函数"><meta itemprop=description content="
+
+
+
+复制、默认构造都是按需生成的。对于平凡的情况不需要生成，只是在语意上满足“拥有构造函数”的含义。
+x86-64 gcc 13.1 -std=c++20
+struct Point {
+    int x;
+    int y;
+    Point() = default; // 即便显式声明了默认构造函数，也不会合成
+};
+
+int main() {
+    auto some_point = Point{}; // {}初始化对聚合类有清零的效果
+}
+main:
+        push    rbp
+        mov     rbp, rsp
+        mov     DWORD PTR [rbp-8], 0
+        mov     DWORD PTR [rbp-4], 0
+        mov     eax, 0
+        pop     rbp
+        ret
+修改 Point 的定义："></span><header class=post-header><h2 class=post-title itemprop="name headline"><a href=/inside-the-cpp-object-model/%E6%8C%89%E9%9C%80%E5%90%88%E6%88%90%E6%9E%84%E9%80%A0%E5%87%BD%E6%95%B0/ itemprop=url class=post-title-link>按需合成构造函数</a></h2><div class=post-meta-container><div class=post-meta-items><span class=post-meta-item><span class=post-meta-item-icon><i class="far fa-calendar"></i>
+</span><span class=post-meta-item-text title=发表于>发表于：
+</span><time title="创建时间：2023-08-12 00:00:00 +0800 CST" itemprop="dateCreated datePublished" datetime="2023-08-12 00:00:00 +0800 CST">2023-08-12
+</time></span><span class=post-meta-item><span class=post-meta-item-icon><i class="far fa-calendar-check"></i>
+</span><span class=post-meta-item-text title=更新于>更新于：
+</span><time title=修改时间：2024-04-08T00:00:00+08:00 itemprop=dateModified datetime=2024-04-08T00:00:00+08:00>2024-04-08</time>
+</span><span class=post-meta-item><span class=post-meta-item-icon><i class="far fa-folder-open"></i>
+</span><span class=post-meta-item-text title=分类于>分类于：
+</span><span itemprop=about itemscope itemtype=http://schema.org/Thing><a href=/categories/inside-the-cpp-object-model itemprop=url rel=index><span itemprop=name>inside-the-cpp-object-model</span></a></span></span></div></div></header><div class=post-body itemprop=articleBody><p><img src=/assets/862beea85cbeacd098f8815be021dd62.png></p><p><img src=/assets/44d6ca6c8f48a441c50cc07501a274e2.png></p><p>复制、默认构造都是按需生成的。对于平凡的情况不需要生成，只是在语意上满足“拥有构造函数”的含义。</p><p><code>x86-64 gcc 13.1 -std=c++20</code></p><div class=highlight><pre tabindex=0 style=color:#93a1a1;background-color:#002b36;-moz-tab-size:2;-o-tab-size:2;tab-size:2><code class=language-cpp data-lang=cpp><span style=display:flex><span><span style=color:#719e07>struct</span> <span style=color:#268bd2>Point</span> {
+</span></span><span style=display:flex><span>    <span style=color:#dc322f>int</span> x;
+</span></span><span style=display:flex><span>    <span style=color:#dc322f>int</span> y;
+</span></span><span style=display:flex><span>    Point() <span style=color:#719e07>=</span> <span style=color:#719e07>default</span>; <span style=color:#586e75>// 即便显式声明了默认构造函数，也不会合成
+</span></span></span><span style=display:flex><span><span style=color:#586e75></span>};
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#dc322f>int</span> <span style=color:#268bd2>main</span>() {
+</span></span><span style=display:flex><span>    <span style=color:#719e07>auto</span> some_point <span style=color:#719e07>=</span> Point{}; <span style=color:#586e75>// {}初始化对聚合类有清零的效果
+</span></span></span><span style=display:flex><span><span style=color:#586e75></span>}
+</span></span></code></pre></div><div class=highlight><pre tabindex=0 style=color:#93a1a1;background-color:#002b36;-moz-tab-size:2;-o-tab-size:2;tab-size:2><code class=language-nasm data-lang=nasm><span style=display:flex><span>main:
+</span></span><span style=display:flex><span>        <span style=color:#268bd2>push</span>    <span style=color:#b58900>rbp</span>
+</span></span><span style=display:flex><span>        <span style=color:#268bd2>mov</span>     <span style=color:#b58900>rbp</span>, <span style=color:#b58900>rsp</span>
+</span></span><span style=display:flex><span>        <span style=color:#268bd2>mov</span>     <span style=color:#dc322f>DWORD</span> <span style=color:#268bd2>PTR</span> [<span style=color:#b58900>rbp</span><span style=color:#719e07>-</span><span style=color:#2aa198>8</span>], <span style=color:#2aa198>0</span>
+</span></span><span style=display:flex><span>        <span style=color:#268bd2>mov</span>     <span style=color:#dc322f>DWORD</span> <span style=color:#268bd2>PTR</span> [<span style=color:#b58900>rbp</span><span style=color:#719e07>-</span><span style=color:#2aa198>4</span>], <span style=color:#2aa198>0</span>
+</span></span><span style=display:flex><span>        <span style=color:#268bd2>mov</span>     <span style=color:#b58900>eax</span>, <span style=color:#2aa198>0</span>
+</span></span><span style=display:flex><span>        <span style=color:#268bd2>pop</span>     <span style=color:#b58900>rbp</span>
+</span></span><span style=display:flex><span>        <span style=color:#268bd2>ret</span>
+</span></span></code></pre></div><p>修改 Point 的定义：</p><div class=highlight><pre tabindex=0 style=color:#93a1a1;background-color:#002b36;-moz-tab-size:2;-o-tab-size:2;tab-size:2><code class=language-cpp data-lang=cpp><span style=display:flex><span><span style=color:#719e07>struct</span> <span style=color:#268bd2>Point</span> {
+</span></span><span style=display:flex><span>    <span style=color:#dc322f>int</span> x{}; <span style=color:#586e75>// 只修改了这里，结果合成了默认构造函数
+</span></span></span><span style=display:flex><span><span style=color:#586e75></span>    <span style=color:#dc322f>int</span> y;
+</span></span><span style=display:flex><span>    Point() <span style=color:#719e07>=</span> <span style=color:#719e07>default</span>;
+</span></span><span style=display:flex><span>};
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#dc322f>int</span> <span style=color:#268bd2>main</span>() {
+</span></span><span style=display:flex><span>    <span style=color:#719e07>auto</span> some_point <span style=color:#719e07>=</span> Point{};
+</span></span><span style=display:flex><span>}
+</span></span></code></pre></div><div class=highlight><pre tabindex=0 style=color:#93a1a1;background-color:#002b36;-moz-tab-size:2;-o-tab-size:2;tab-size:2><code class=language-nasm data-lang=nasm><span style=display:flex><span>Point::<span style=color:#268bd2>Point</span>() [<span style=color:#268bd2>base</span> <span style=color:#268bd2>object</span> <span style=color:#268bd2>constructor</span>]:
+</span></span><span style=display:flex><span>        <span style=color:#268bd2>push</span>    <span style=color:#b58900>rbp</span>
+</span></span><span style=display:flex><span>        <span style=color:#268bd2>mov</span>     <span style=color:#b58900>rbp</span>, <span style=color:#b58900>rsp</span>
+</span></span><span style=display:flex><span>        <span style=color:#268bd2>mov</span>     <span style=color:#dc322f>QWORD</span> <span style=color:#268bd2>PTR</span> [<span style=color:#b58900>rbp</span><span style=color:#719e07>-</span><span style=color:#2aa198>8</span>], <span style=color:#b58900>rdi</span>
+</span></span><span style=display:flex><span>        <span style=color:#268bd2>mov</span>     <span style=color:#b58900>rax</span>, <span style=color:#dc322f>QWORD</span> <span style=color:#268bd2>PTR</span> [<span style=color:#b58900>rbp</span><span style=color:#719e07>-</span><span style=color:#2aa198>8</span>]
+</span></span><span style=display:flex><span>        <span style=color:#268bd2>mov</span>     <span style=color:#dc322f>DWORD</span> <span style=color:#268bd2>PTR</span> [<span style=color:#b58900>rax</span>], <span style=color:#2aa198>0</span>
+</span></span><span style=display:flex><span>        <span style=color:#268bd2>nop</span>
+</span></span><span style=display:flex><span>        <span style=color:#268bd2>pop</span>     <span style=color:#b58900>rbp</span>
+</span></span><span style=display:flex><span>        <span style=color:#268bd2>ret</span>
+</span></span><span style=display:flex><span>main:
+</span></span><span style=display:flex><span>        <span style=color:#268bd2>push</span>    <span style=color:#b58900>rbp</span>
+</span></span><span style=display:flex><span>        <span style=color:#268bd2>mov</span>     <span style=color:#b58900>rbp</span>, <span style=color:#b58900>rsp</span>
+</span></span><span style=display:flex><span>        <span style=color:#268bd2>sub</span>     <span style=color:#b58900>rsp</span>, <span style=color:#2aa198>16</span>
+</span></span><span style=display:flex><span>        <span style=color:#268bd2>mov</span>     <span style=color:#dc322f>DWORD</span> <span style=color:#268bd2>PTR</span> [<span style=color:#b58900>rbp</span><span style=color:#719e07>-</span><span style=color:#2aa198>8</span>], <span style=color:#2aa198>0</span>
+</span></span><span style=display:flex><span>        <span style=color:#268bd2>mov</span>     <span style=color:#dc322f>DWORD</span> <span style=color:#268bd2>PTR</span> [<span style=color:#b58900>rbp</span><span style=color:#719e07>-</span><span style=color:#2aa198>4</span>], <span style=color:#2aa198>0</span>
+</span></span><span style=display:flex><span>        <span style=color:#268bd2>lea</span>     <span style=color:#b58900>rax</span>, [<span style=color:#b58900>rbp</span><span style=color:#719e07>-</span><span style=color:#2aa198>8</span>]
+</span></span><span style=display:flex><span>        <span style=color:#268bd2>mov</span>     <span style=color:#b58900>rdi</span>, <span style=color:#b58900>rax</span>
+</span></span><span style=display:flex><span>        <span style=color:#268bd2>call</span>    <span style=color:#268bd2>Point</span>::<span style=color:#268bd2>Point</span>() [<span style=color:#268bd2>complete</span> <span style=color:#268bd2>object</span> <span style=color:#268bd2>constructor</span>]
+</span></span><span style=display:flex><span>        <span style=color:#268bd2>mov</span>     <span style=color:#b58900>eax</span>, <span style=color:#2aa198>0</span>
+</span></span><span style=display:flex><span>        <span style=color:#268bd2>leave</span>
+</span></span><span style=display:flex><span>        <span style=color:#268bd2>ret</span>
+</span></span></code></pre></div><p>接下来删掉默认构造函数的声明：</p><div class=highlight><pre tabindex=0 style=color:#93a1a1;background-color:#002b36;-moz-tab-size:2;-o-tab-size:2;tab-size:2><code class=language-cpp data-lang=cpp><span style=display:flex><span><span style=color:#719e07>struct</span> <span style=color:#268bd2>Point</span> {
+</span></span><span style=display:flex><span>    <span style=color:#dc322f>int</span> x{};
+</span></span><span style=display:flex><span>    <span style=color:#dc322f>int</span> y;
+</span></span><span style=display:flex><span>        <span style=color:#586e75>// 删掉了默认构造函数声明，结果不再合成默认构造函数
+</span></span></span><span style=display:flex><span><span style=color:#586e75></span>};
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#dc322f>int</span> <span style=color:#268bd2>main</span>() {
+</span></span><span style=display:flex><span>    <span style=color:#719e07>auto</span> some_point <span style=color:#719e07>=</span> Point{};
+</span></span><span style=display:flex><span>}
+</span></span></code></pre></div><div class=highlight><pre tabindex=0 style=color:#93a1a1;background-color:#002b36;-moz-tab-size:2;-o-tab-size:2;tab-size:2><code class=language-nasm data-lang=nasm><span style=display:flex><span>main:
+</span></span><span style=display:flex><span>        <span style=color:#268bd2>push</span>    <span style=color:#b58900>rbp</span>
+</span></span><span style=display:flex><span>        <span style=color:#268bd2>mov</span>     <span style=color:#b58900>rbp</span>, <span style=color:#b58900>rsp</span>
+</span></span><span style=display:flex><span>        <span style=color:#268bd2>mov</span>     <span style=color:#dc322f>QWORD</span> <span style=color:#268bd2>PTR</span> [<span style=color:#b58900>rbp</span><span style=color:#719e07>-</span><span style=color:#2aa198>8</span>], <span style=color:#2aa198>0</span>
+</span></span><span style=display:flex><span>        <span style=color:#268bd2>mov</span>     <span style=color:#b58900>eax</span>, <span style=color:#2aa198>0</span>
+</span></span><span style=display:flex><span>        <span style=color:#268bd2>pop</span>     <span style=color:#b58900>rbp</span>
+</span></span><span style=display:flex><span>        <span style=color:#268bd2>ret</span>
+</span></span></code></pre></div><p>构造函数和成员默认值同时出现时，就会合成默认构造函数。这个和书中的描述是相符的，因为有成员默认值时，默认构造函数需要特别处理一些内容。</p><p>接下来：</p><div class=highlight><pre tabindex=0 style=color:#93a1a1;background-color:#002b36;-moz-tab-size:2;-o-tab-size:2;tab-size:2><code class=language-cpp data-lang=cpp><span style=display:flex><span><span style=color:#719e07>struct</span> <span style=color:#268bd2>Point</span> {
+</span></span><span style=display:flex><span>    <span style=color:#dc322f>int</span> x{};
+</span></span><span style=display:flex><span>    <span style=color:#dc322f>int</span> y;
+</span></span><span style=display:flex><span>};
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#dc322f>int</span> <span style=color:#268bd2>main</span>() {
+</span></span><span style=display:flex><span>    <span style=color:#719e07>auto</span> some_point <span style=color:#719e07>=</span> Point(); <span style=color:#586e75>// 注意花括号变成了圆括号
+</span></span></span><span style=display:flex><span><span style=color:#586e75></span>}
+</span></span></code></pre></div><div class=highlight><pre tabindex=0 style=color:#93a1a1;background-color:#002b36;-moz-tab-size:2;-o-tab-size:2;tab-size:2><code class=language-nasm data-lang=nasm><span style=display:flex><span>Point::<span style=color:#268bd2>Point</span>() [<span style=color:#268bd2>base</span> <span style=color:#268bd2>object</span> <span style=color:#268bd2>constructor</span>]:
+</span></span><span style=display:flex><span>        <span style=color:#268bd2>push</span>    <span style=color:#b58900>rbp</span>
+</span></span><span style=display:flex><span>        <span style=color:#268bd2>mov</span>     <span style=color:#b58900>rbp</span>, <span style=color:#b58900>rsp</span>
+</span></span><span style=display:flex><span>        <span style=color:#268bd2>mov</span>     <span style=color:#dc322f>QWORD</span> <span style=color:#268bd2>PTR</span> [<span style=color:#b58900>rbp</span><span style=color:#719e07>-</span><span style=color:#2aa198>8</span>], <span style=color:#b58900>rdi</span>
+</span></span><span style=display:flex><span>        <span style=color:#268bd2>mov</span>     <span style=color:#b58900>rax</span>, <span style=color:#dc322f>QWORD</span> <span style=color:#268bd2>PTR</span> [<span style=color:#b58900>rbp</span><span style=color:#719e07>-</span><span style=color:#2aa198>8</span>]
+</span></span><span style=display:flex><span>        <span style=color:#268bd2>mov</span>     <span style=color:#dc322f>DWORD</span> <span style=color:#268bd2>PTR</span> [<span style=color:#b58900>rax</span>], <span style=color:#2aa198>0</span>
+</span></span><span style=display:flex><span>        <span style=color:#268bd2>nop</span>
+</span></span><span style=display:flex><span>        <span style=color:#268bd2>pop</span>     <span style=color:#b58900>rbp</span>
+</span></span><span style=display:flex><span>        <span style=color:#268bd2>ret</span>
+</span></span><span style=display:flex><span>main:
+</span></span><span style=display:flex><span>        <span style=color:#268bd2>push</span>    <span style=color:#b58900>rbp</span>
+</span></span><span style=display:flex><span>        <span style=color:#268bd2>mov</span>     <span style=color:#b58900>rbp</span>, <span style=color:#b58900>rsp</span>
+</span></span><span style=display:flex><span>        <span style=color:#268bd2>sub</span>     <span style=color:#b58900>rsp</span>, <span style=color:#2aa198>16</span>
+</span></span><span style=display:flex><span>        <span style=color:#268bd2>mov</span>     <span style=color:#dc322f>DWORD</span> <span style=color:#268bd2>PTR</span> [<span style=color:#b58900>rbp</span><span style=color:#719e07>-</span><span style=color:#2aa198>8</span>], <span style=color:#2aa198>0</span>
+</span></span><span style=display:flex><span>        <span style=color:#268bd2>mov</span>     <span style=color:#dc322f>DWORD</span> <span style=color:#268bd2>PTR</span> [<span style=color:#b58900>rbp</span><span style=color:#719e07>-</span><span style=color:#2aa198>4</span>], <span style=color:#2aa198>0</span>
+</span></span><span style=display:flex><span>        <span style=color:#268bd2>lea</span>     <span style=color:#b58900>rax</span>, [<span style=color:#b58900>rbp</span><span style=color:#719e07>-</span><span style=color:#2aa198>8</span>]
+</span></span><span style=display:flex><span>        <span style=color:#268bd2>mov</span>     <span style=color:#b58900>rdi</span>, <span style=color:#b58900>rax</span>
+</span></span><span style=display:flex><span>        <span style=color:#268bd2>call</span>    <span style=color:#268bd2>Point</span>::<span style=color:#268bd2>Point</span>() [<span style=color:#268bd2>complete</span> <span style=color:#268bd2>object</span> <span style=color:#268bd2>constructor</span>]
+</span></span><span style=display:flex><span>        <span style=color:#268bd2>mov</span>     <span style=color:#b58900>eax</span>, <span style=color:#2aa198>0</span>
+</span></span><span style=display:flex><span>        <span style=color:#268bd2>leave</span>
+</span></span><span style=display:flex><span>        <span style=color:#268bd2>ret</span>
+</span></span></code></pre></div><p>显式使用构造函数相当于声明了构造函数。</p><p><strong>不过但凡用上 <code>-O1</code> 级别的优化，空的默认构造函数就可以被内联。</strong></p></div><footer class=post-footer><div readmore=false><div class=readmore-overlay><div class=readmore-overlay-center><div class=post-button><a class=btn href=/inside-the-cpp-object-model/%E6%8C%89%E9%9C%80%E5%90%88%E6%88%90%E6%9E%84%E9%80%A0%E5%87%BD%E6%95%B0/#more rel=contents>阅读全文 &#187;</a></div></div></div><div class=no-more-to-read><hr><center>没有啦~</center></div></div><div class=post-eof></div></footer></article></div><div class=post-block><article itemscope itemtype=http://schema.org/Article class=post-content lang><link itemprop=mainEntityOfPage href=https://hxhue.github.io/inside-the-cpp-object-model/%E5%AF%B9%E8%B1%A1%E5%B8%83%E5%B1%80/><span hidden itemprop=author itemscope itemtype=http://schema.org/Person><meta itemprop=image content="/imgs/371907.jpg"><meta itemprop=name content="🚮"></span><span hidden itemprop=publisher itemscope itemtype=http://schema.org/Organization><meta itemprop=name content="🚮"><meta itemprop=description content="个人博客，主要是零散的笔记。"></span><span hidden itemprop=post itemscope itemtype=http://schema.org/CreativeWork><meta itemprop=name content="对象布局"><meta itemprop=description content="关于 access section
+
+不同 access section 数据不保证按序布局。
+
+
+
+
+
+  我在 Compiler Explorer 上测试了 gcc 和 clang，他们都是忽略 access 权限，将各个 access section 的变量布局直接拼接在一起的。
+注：同一个权限也可以是不同的 access section："></span><header class=post-header><h2 class=post-title itemprop="name headline"><a href=/inside-the-cpp-object-model/%E5%AF%B9%E8%B1%A1%E5%B8%83%E5%B1%80/ itemprop=url class=post-title-link>对象布局</a></h2><div class=post-meta-container><div class=post-meta-items><span class=post-meta-item><span class=post-meta-item-icon><i class="far fa-calendar"></i>
+</span><span class=post-meta-item-text title=发表于>发表于：
+</span><time title="创建时间：2023-08-12 00:00:00 +0800 CST" itemprop="dateCreated datePublished" datetime="2023-08-12 00:00:00 +0800 CST">2023-08-12
+</time></span><span class=post-meta-item><span class=post-meta-item-icon><i class="far fa-calendar-check"></i>
+</span><span class=post-meta-item-text title=更新于>更新于：
+</span><time title=修改时间：2024-09-24T00:00:00+08:00 itemprop=dateModified datetime=2024-09-24T00:00:00+08:00>2024-09-24</time>
+</span><span class=post-meta-item><span class=post-meta-item-icon><i class="far fa-folder-open"></i>
+</span><span class=post-meta-item-text title=分类于>分类于：
+</span><span itemprop=about itemscope itemtype=http://schema.org/Thing><a href=/categories/inside-the-cpp-object-model itemprop=url rel=index><span itemprop=name>inside-the-cpp-object-model</span></a></span></span></div></div></header><div class=post-body itemprop=articleBody><h1 id=关于-access-section>关于 access section
+<a class=header-anchor href=#%e5%85%b3%e4%ba%8e-access-section></a></h1><p>不同 access section 数据不保证按序布局。</p><p><img src=/assets/a8b2681128b573bd4e51d97c763af9e4.png></p><p><img src=/assets/a0ad7b8b74861c3674b93d10f9853a35.png></p><blockquote><p>我在 Compiler Explorer 上测试了 gcc 和 clang，他们都是忽略 access 权限，将各个 access section 的变量布局直接拼接在一起的。</p></blockquote><p>注：同一个权限也可以是不同的 access section：</p><p><img src=/assets/5a91347031f84400aab6513e9feb85bb.png></p><h1 id=具体concrete继承布局>具体（concrete）继承布局
+<a class=header-anchor href=#%e5%85%b7%e4%bd%93concrete%e7%bb%a7%e6%89%bf%e5%b8%83%e5%b1%80></a></h1><p>基类对象直接嵌入到子类中。<strong>如果基类中有 padding，默认布局下也不会利用</strong>。</p><div class=highlight><pre tabindex=0 style=color:#93a1a1;background-color:#002b36;-moz-tab-size:2;-o-tab-size:2;tab-size:2><code class=language-cpp data-lang=cpp><span style=display:flex><span><span style=color:#719e07>struct</span> <span style=color:#268bd2>A1</span> {
+</span></span><span style=display:flex><span>    <span style=color:#dc322f>int</span> x;
+</span></span><span style=display:flex><span>    <span style=color:#719e07>virtual</span> <span style=color:#dc322f>void</span> <span style=color:#268bd2>f</span>() {} <span style=color:#586e75>// vptr 加上 int 值，本来只有 12 个字节但还有 4 字节的 padding
+</span></span></span><span style=display:flex><span><span style=color:#586e75></span>};
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#586e75>// 如果把 y 放在 A1 的 padding 的位置，就只需要 24 字节，但很遗憾不能这么布局
+</span></span></span><span style=display:flex><span><span style=color:#586e75></span><span style=color:#719e07>struct</span> <span style=color:#268bd2>B1</span><span style=color:#719e07>:</span> <span style=color:#719e07>virtual</span> A1 { <span style=color:#dc322f>int</span> y; };
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#719e07>static_assert</span>(<span style=color:#719e07>sizeof</span>(A1) <span style=color:#719e07>==</span> <span style=color:#2aa198>16</span>);
+</span></span><span style=display:flex><span><span style=color:#719e07>static_assert</span>(<span style=color:#719e07>sizeof</span>(B1) <span style=color:#719e07>==</span> <span style=color:#2aa198>32</span>);
+</span></span></code></pre></div><h1 id=虚拟virtual继承布局>虚拟（virtual）继承布局
+<a class=header-anchor href=#%e8%99%9a%e6%8b%9fvirtual%e7%bb%a7%e6%89%bf%e5%b8%83%e5%b1%80></a></h1><p><a href=/inside-the-cpp-object-model/%e8%99%9a%e6%8b%9f%e7%bb%a7%e6%89%bf/ title=虚拟继承>虚拟继承</a>的数据放在具体继承基类和非静态数据的后面：</p><ol><li>vptr：如果可能，从基类列表中选择第一个<strong>具体继承</strong>的、<strong>带有 vptr</strong> 的基类，将它提到最前面，保持其他基类的次序不变。这样该基类和子类的 vptr 可以共享，<strong>从而对象直接由基类开始，没有额外的 vptr</strong>。<ol><li>虚拟继承的基类不会被考虑 vptr 共享，因为它们始终被放在对象的最后位置。</li><li>被选择的基类的 vptr 可以是因为虚拟继承得到的（即可以不是多态类）。</li><li>如果需要 vptr 但又不能共享，则在开头添加<strong>额外的 vptr</strong>。</li></ol></li><li>具体继承基类子对象</li><li>本类非静态数据</li><li>虚基类子对象</li></ol><hr><p><strong>第一个基类子对象的 vptr 和本身的 vptr 尽可能重合（相当于不额外增加 vptr）。多继承的后续基类子对象要单独存储 vptr。</strong></p><p><img src=/assets/e2ebb6daeaf5fde79962725f28a65670.png></p><p>下面的 Cat 的 vptr 和 Garfield 的 vptr 重合。</p><p><img src=/assets/0d96ec571ff6308aeee6d2f537c69da4.png></p><p>改变继承的先后顺序可以节省空间：</p><p><img src=/assets/c58a31789b41d497784e7ed01ca92a90.png></p><hr><p>下面的代码能印证上面的推理：</p><div class=highlight><pre tabindex=0 style=color:#93a1a1;background-color:#002b36;-moz-tab-size:2;-o-tab-size:2;tab-size:2><code class=language-cpp data-lang=cpp><span style=display:flex><span><span style=color:#719e07>#include</span> <span style=color:#719e07>&lt;cstdint&gt;</span><span style=color:#719e07>
+</span></span></span><span style=display:flex><span><span style=color:#719e07>#include</span> <span style=color:#719e07>&lt;cstdio&gt;</span><span style=color:#719e07>
+</span></span></span><span style=display:flex><span><span style=color:#719e07></span>
+</span></span><span style=display:flex><span><span style=color:#719e07>struct</span> <span style=color:#268bd2>A</span> {
+</span></span><span style=display:flex><span>  <span style=color:#dc322f>uint64_t</span> x;
+</span></span><span style=display:flex><span>};
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#719e07>struct</span> <span style=color:#268bd2>B</span> {
+</span></span><span style=display:flex><span>  <span style=color:#dc322f>int</span> b;
+</span></span><span style=display:flex><span>  <span style=color:#719e07>virtual</span> <span style=color:#dc322f>void</span> <span style=color:#268bd2>foo</span>() {}
+</span></span><span style=display:flex><span>};
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#719e07>struct</span> <span style=color:#268bd2>C</span> {
+</span></span><span style=display:flex><span>  <span style=color:#dc322f>int</span> c;
+</span></span><span style=display:flex><span>  <span style=color:#719e07>virtual</span> <span style=color:#dc322f>void</span> <span style=color:#268bd2>foo</span>() {}
+</span></span><span style=display:flex><span>};
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#719e07>struct</span> <span style=color:#268bd2>D</span> <span style=color:#719e07>:</span> A, B, C {
+</span></span><span style=display:flex><span>  <span style=color:#dc322f>uint64_t</span> y;
+</span></span><span style=display:flex><span>  <span style=color:#dc322f>void</span> <span style=color:#268bd2>foo</span>() <span style=color:#719e07>override</span> {}
+</span></span><span style=display:flex><span>};
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#dc322f>int</span> <span style=color:#268bd2>main</span>() {
+</span></span><span style=display:flex><span>  D <span style=color:#719e07>*</span>p <span style=color:#719e07>=</span> <span style=color:#719e07>new</span> D;
+</span></span><span style=display:flex><span>  A <span style=color:#719e07>*</span>q <span style=color:#719e07>=</span> p;
+</span></span><span style=display:flex><span>  B <span style=color:#719e07>*</span>r <span style=color:#719e07>=</span> p;
+</span></span><span style=display:flex><span>  C <span style=color:#719e07>*</span>t <span style=color:#719e07>=</span> p;
+</span></span><span style=display:flex><span>  <span style=color:#586e75>// printf 打印指针有没有 0x 前缀得看实现
+</span></span></span><span style=display:flex><span><span style=color:#586e75></span>  <span style=color:#586e75>// std::cout 打印指针会增加 0x 前缀而且默认不打印前导零
+</span></span></span><span style=display:flex><span><span style=color:#586e75></span>  printf(<span style=color:#2aa198>&#34;%p</span><span style=color:#cb4b16>\n</span><span style=color:#2aa198>&#34;</span>, p); <span style=color:#586e75>// 0000020128496730
+</span></span></span><span style=display:flex><span><span style=color:#586e75></span>  printf(<span style=color:#2aa198>&#34;%p</span><span style=color:#cb4b16>\n</span><span style=color:#2aa198>&#34;</span>, q); <span style=color:#586e75>// 0000020128496740
+</span></span></span><span style=display:flex><span><span style=color:#586e75></span>  printf(<span style=color:#2aa198>&#34;%p</span><span style=color:#cb4b16>\n</span><span style=color:#2aa198>&#34;</span>, r); <span style=color:#586e75>// 0000020128496730
+</span></span></span><span style=display:flex><span><span style=color:#586e75></span>  printf(<span style=color:#2aa198>&#34;%p</span><span style=color:#cb4b16>\n</span><span style=color:#2aa198>&#34;</span>, t); <span style=color:#586e75>// 0000020128496748
+</span></span></span><span style=display:flex><span><span style=color:#586e75></span>}
+</span></span></code></pre></div></div><footer class=post-footer><div readmore=false><div class=readmore-overlay><div class=readmore-overlay-center><div class=post-button><a class=btn href=/inside-the-cpp-object-model/%E5%AF%B9%E8%B1%A1%E5%B8%83%E5%B1%80/#more rel=contents>阅读全文 &#187;</a></div></div></div><div class=no-more-to-read><hr><center>没有啦~</center></div></div><div class=post-eof></div></footer></article></div><div class=post-block><article itemscope itemtype=http://schema.org/Article class=post-content lang><link itemprop=mainEntityOfPage href=https://hxhue.github.io/inside-the-cpp-object-model/%E5%A4%9A%E7%BB%A7%E6%89%BF%E7%BB%99-c++-%E5%B8%A6%E6%9D%A5%E4%BA%86%E5%93%AA%E4%BA%9B%E8%AE%BE%E8%AE%A1%E8%B4%9F%E6%8B%85/><span hidden itemprop=author itemscope itemtype=http://schema.org/Person><meta itemprop=image content="/imgs/371907.jpg"><meta itemprop=name content="🚮"></span><span hidden itemprop=publisher itemscope itemtype=http://schema.org/Organization><meta itemprop=name content="🚮"><meta itemprop=description content="个人博客，主要是零散的笔记。"></span><span hidden itemprop=post itemscope itemtype=http://schema.org/CreativeWork><meta itemprop=name content="多继承给 C++ 带来了哪些设计负担？"><meta itemprop=description content="
+指针偏移本身有少量开销，若需要偏移则得先判空，这样才能保证空指针永远为空。
+指针偏移对设计虚函数表带来了困难。例如 thunk 技术用来对 this 指针做适配再调用对应函数。
+指针偏移让指向成员函数的指针携带了 this 偏移量，变成了胖指针。
+多继承引入了菱形继承困境，进而又引入了虚拟继承。
+虚拟继承使得 vtable 中还要存储虚基类子对象的偏移。由于不同继承结构中 vtable 里虚基类子对象的偏移可能不同，又引入了 VTT，让子类调用基类构造函数时为基类的构造函数提供 vptr 参数。
+"></span><header class=post-header><h2 class=post-title itemprop="name headline"><a href=/inside-the-cpp-object-model/%E5%A4%9A%E7%BB%A7%E6%89%BF%E7%BB%99-c++-%E5%B8%A6%E6%9D%A5%E4%BA%86%E5%93%AA%E4%BA%9B%E8%AE%BE%E8%AE%A1%E8%B4%9F%E6%8B%85/ itemprop=url class=post-title-link>多继承给 C++ 带来了哪些设计负担？</a></h2><div class=post-meta-container><div class=post-meta-items><span class=post-meta-item><span class=post-meta-item-icon><i class="far fa-calendar"></i>
+</span><span class=post-meta-item-text title=发表于>发表于：
+</span><time title="创建时间：2023-08-12 00:00:00 +0800 CST" itemprop="dateCreated datePublished" datetime="2023-08-12 00:00:00 +0800 CST">2023-08-12
+</time></span><span class=post-meta-item><span class=post-meta-item-icon><i class="far fa-folder-open"></i>
+</span><span class=post-meta-item-text title=分类于>分类于：
+</span><span itemprop=about itemscope itemtype=http://schema.org/Thing><a href=/categories/inside-the-cpp-object-model itemprop=url rel=index><span itemprop=name>inside-the-cpp-object-model</span></a></span></span></div></div></header><div class=post-body itemprop=articleBody><ol><li>指针偏移本身有少量开销，若需要偏移则得先判空，这样才能保证空指针永远为空。</li><li>指针偏移对设计虚函数表带来了困难。例如 <strong>thunk</strong> 技术用来对 this 指针做适配再调用对应函数。</li><li>指针偏移让指向成员函数的指针携带了 this 偏移量，变成了胖指针。</li><li>多继承引入了菱形继承困境，进而又引入了虚拟继承。</li><li>虚拟继承使得 vtable 中还要存储虚基类子对象的偏移。由于不同继承结构中 vtable 里虚基类子对象的偏移可能不同，又引入了 <strong>VTT</strong>，让子类调用基类构造函数时为基类的构造函数提供 vptr 参数。</li></ol></div><footer class=post-footer><div readmore=false><div class=readmore-overlay><div class=readmore-overlay-center><div class=post-button><a class=btn href=/inside-the-cpp-object-model/%E5%A4%9A%E7%BB%A7%E6%89%BF%E7%BB%99-c++-%E5%B8%A6%E6%9D%A5%E4%BA%86%E5%93%AA%E4%BA%9B%E8%AE%BE%E8%AE%A1%E8%B4%9F%E6%8B%85/#more rel=contents>阅读全文 &#187;</a></div></div></div><div class=no-more-to-read><hr><center>没有啦~</center></div></div><div class=post-eof></div></footer></article></div><div class=post-block><article itemscope itemtype=http://schema.org/Article class=post-content lang><link itemprop=mainEntityOfPage href=https://hxhue.github.io/inside-the-cpp-object-model/%E5%A4%9A%E7%BB%A7%E6%89%BF%E4%B8%8B%E7%9A%84%E8%99%9A%E5%87%BD%E6%95%B0/><span hidden itemprop=author itemscope itemtype=http://schema.org/Person><meta itemprop=image content="/imgs/371907.jpg"><meta itemprop=name content="🚮"></span><span hidden itemprop=publisher itemscope itemtype=http://schema.org/Organization><meta itemprop=name content="🚮"><meta itemprop=description content="个人博客，主要是零散的笔记。"></span><span hidden itemprop=post itemscope itemtype=http://schema.org/CreativeWork><meta itemprop=name content="多继承下的虚函数"><meta itemprop=description content="多继承下重载签名相同的函数
+
+
+
+结果是会把基类同签名的所有非 final 虚函数都重写了，而且实现方式相同。尽管基类的虚函数签名一样，但是他们没有关联性，所以在子类的虚表中占两个槽（slots）（一个槽是一个指针）。同样的，如果 Interface 中有虚函数 foo，而 A 和 B 都继承了 Interface，C 继承了 A 和 B。如果 A 和 B 没有虚拟继承 Interface，那么在 C 的对象调用函数 foo 时将出现 ambiguous 指代错误。如果 C 重写了 foo 函数，那么指代就还是明确的。或者，如果 A 和 B 都是虚拟继承自 Interface，那么也不会有编译错误。但这样通过指针/引用调用虚函数 foo 就需要先取虚基类子对象 this 的偏移，修改 this 之后再从 vptr 中读虚函数 foo，开销是 4 次访存（将虚拟继承和虚函数调用的代价累加起来了） 。"></span><header class=post-header><h2 class=post-title itemprop="name headline"><a href=/inside-the-cpp-object-model/%E5%A4%9A%E7%BB%A7%E6%89%BF%E4%B8%8B%E7%9A%84%E8%99%9A%E5%87%BD%E6%95%B0/ itemprop=url class=post-title-link>多继承下的虚函数</a></h2><div class=post-meta-container><div class=post-meta-items><span class=post-meta-item><span class=post-meta-item-icon><i class="far fa-calendar"></i>
+</span><span class=post-meta-item-text title=发表于>发表于：
+</span><time title="创建时间：2023-08-12 00:00:00 +0800 CST" itemprop="dateCreated datePublished" datetime="2023-08-12 00:00:00 +0800 CST">2023-08-12
+</time></span><span class=post-meta-item><span class=post-meta-item-icon><i class="far fa-calendar-check"></i>
+</span><span class=post-meta-item-text title=更新于>更新于：
+</span><time title=修改时间：2024-04-08T00:00:00+08:00 itemprop=dateModified datetime=2024-04-08T00:00:00+08:00>2024-04-08</time>
+</span><span class=post-meta-item><span class=post-meta-item-icon><i class="far fa-folder-open"></i>
+</span><span class=post-meta-item-text title=分类于>分类于：
+</span><span itemprop=about itemscope itemtype=http://schema.org/Thing><a href=/categories/inside-the-cpp-object-model itemprop=url rel=index><span itemprop=name>inside-the-cpp-object-model</span></a></span></span></div></div></header><div class=post-body itemprop=articleBody><h1 id=多继承下重载签名相同的函数><strong>多继承下重载签名相同的函数</strong>
+<a class=header-anchor href=#%e5%a4%9a%e7%bb%a7%e6%89%bf%e4%b8%8b%e9%87%8d%e8%bd%bd%e7%ad%be%e5%90%8d%e7%9b%b8%e5%90%8c%e7%9a%84%e5%87%bd%e6%95%b0></a></h1><p><img src=/assets/7bd760c39d3ddb901cc71b7795369680.png></p><p>结果是<strong>会把基类同签名的所有非 final 虚函数都重写了</strong>，而且实现方式相同。尽管基类的虚函数签名一样，但是他们没有关联性，所以在子类的虚表中占两个槽（slots）（一个槽是一个指针）。同样的，如果 Interface 中有虚函数 foo，而 A 和 B 都继承了 Interface，C 继承了 A 和 B。如果 A 和 B 没有虚拟继承 Interface，那么在 C 的对象调用函数 foo 时将出现 ambiguous 指代错误。如果 C 重写了 foo 函数，那么指代就还是明确的。<strong>或者，如果 A 和 B 都是虚拟继承自 Interface，那么也不会有编译错误</strong>。但这样通过指针/引用调用虚函数 foo 就需要先取虚基类子对象 this 的偏移，修改 this 之后再从 vptr 中读虚函数 foo，开销是 4 次访存（将虚拟继承和虚函数调用的代价累加起来了） 。</p><h1 id=多继承下调用虚函数时修正-this-指针>多继承下调用虚函数时修正 this 指针
+<a class=header-anchor href=#%e5%a4%9a%e7%bb%a7%e6%89%bf%e4%b8%8b%e8%b0%83%e7%94%a8%e8%99%9a%e5%87%bd%e6%95%b0%e6%97%b6%e4%bf%ae%e6%ad%a3-this-%e6%8c%87%e9%92%88></a></h1><h2 id=为什么需要修正-this-指针>为什么需要修正 this 指针？
+<a class=header-anchor href=#%e4%b8%ba%e4%bb%80%e4%b9%88%e9%9c%80%e8%a6%81%e4%bf%ae%e6%ad%a3-this-%e6%8c%87%e9%92%88></a></h2><p>重写签名相同的虚函数时，生成的函数代码只能对其中一个基类的虚函数做 this 修正。</p><div class=highlight><pre tabindex=0 style=color:#93a1a1;background-color:#002b36;-moz-tab-size:2;-o-tab-size:2;tab-size:2><code class=language-cpp data-lang=cpp><span style=display:flex><span><span style=color:#719e07>#include</span> <span style=color:#719e07>&lt;cstdio&gt;</span><span style=color:#719e07>
+</span></span></span><span style=display:flex><span><span style=color:#719e07></span><span style=color:#719e07>using</span> <span style=color:#719e07>namespace</span> std;
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#719e07>struct</span> <span style=color:#268bd2>A</span> {
+</span></span><span style=display:flex><span>    <span style=color:#dc322f>int</span> x;
+</span></span><span style=display:flex><span>    <span style=color:#719e07>virtual</span> <span style=color:#dc322f>void</span> <span style=color:#268bd2>foo</span>() { printf(<span style=color:#2aa198>&#34;A::foo() x=%d</span><span style=color:#cb4b16>\n</span><span style=color:#2aa198>&#34;</span>, x); }
+</span></span><span style=display:flex><span>};
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#719e07>struct</span> <span style=color:#268bd2>B</span> {
+</span></span><span style=display:flex><span>    <span style=color:#719e07>virtual</span> <span style=color:#dc322f>void</span> <span style=color:#268bd2>foo</span>() { printf(<span style=color:#2aa198>&#34;B::foo()</span><span style=color:#cb4b16>\n</span><span style=color:#2aa198>&#34;</span>); }
+</span></span><span style=display:flex><span>};
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#719e07>struct</span> <span style=color:#268bd2>C</span> <span style=color:#719e07>:</span> A, B {
+</span></span><span style=display:flex><span>    <span style=color:#dc322f>void</span> <span style=color:#268bd2>foo</span>() <span style=color:#719e07>override</span> { printf(<span style=color:#2aa198>&#34;C::foo()</span><span style=color:#cb4b16>\n</span><span style=color:#2aa198>&#34;</span>); }
+</span></span><span style=display:flex><span>};
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#dc322f>int</span> <span style=color:#268bd2>main</span>() {
+</span></span><span style=display:flex><span>    C c;
+</span></span><span style=display:flex><span>    A <span style=color:#719e07>*</span>p <span style=color:#719e07>=</span> <span style=color:#719e07>&amp;</span>c;    <span style=color:#586e75>// &lt;--
+</span></span></span><span style=display:flex><span><span style=color:#586e75></span>    p<span style=color:#719e07>-&gt;</span>foo();
+</span></span><span style=display:flex><span>    A <span style=color:#719e07>*</span>q <span style=color:#719e07>=</span> <span style=color:#719e07>new</span> A;
+</span></span><span style=display:flex><span>    q<span style=color:#719e07>-&gt;</span>foo();
+</span></span><span style=display:flex><span>    B <span style=color:#719e07>*</span>r <span style=color:#719e07>=</span> <span style=color:#719e07>new</span> C; <span style=color:#586e75>// &lt;--
+</span></span></span><span style=display:flex><span><span style=color:#586e75></span>    r<span style=color:#719e07>-&gt;</span>foo();
+</span></span><span style=display:flex><span>}
+</span></span></code></pre></div><p>首先 <code>C::foo()</code> 代码只有一份（生成多份太浪费了），通过上面 <code>p</code> 指针调用 <code>foo()</code>，会从 vtable 中选中 <code>C::foo()</code>，然后用 C 的 this（这是因为 A 和 C 的 this 是重合的，不需要修改）。如果用 <code>r</code> 指针调用<code>foo()</code>，则需要将 B 的 this 修改成 C 的 this，那么直接复用 <code>C::foo()</code> 代码就不行了！</p><p>单继承不需要担心指针修正，因为 this 指针没有偏移。</p><h2 id=thunk>thunk
+<a class=header-anchor href=#thunk></a></h2><p>一说为 knuth 博士名字的倒写。作用是提供一层间接关系，先修改指针，再调用真正的代码。gcc 用的就是这种。</p><p><img src=/assets/91cd4a92704bce795e99f935fd8a4e2e.png></p><p>（<code>.LTHUNK0</code> 应该就是 <code>C::foo()</code> 的地址）</p><p>而vtable 中对应项就不存储原本的虚函数了，而是存这个 thunk。</p><p><img src=/assets/373e49607db06fb488645d293d20af93.png></p><p>上面虚表中的两个函数地址最终都会落到 <code>C::foo()</code> 上面。</p><h2 id=哪些时候需要地址偏移>哪些时候需要地址偏移
+<a class=header-anchor href=#%e5%93%aa%e4%ba%9b%e6%97%b6%e5%80%99%e9%9c%80%e8%a6%81%e5%9c%b0%e5%9d%80%e5%81%8f%e7%a7%bb></a></h2><ol><li><strong>第二基类指针指向子类时，通过该指针调用由子类改写过的方法</strong>。需要将第二基类 this 指针偏移到子类 this。</li><li><strong>子类指针指向子类时，通过该指针调用子类从第二基类继承来但未改写的方法</strong>。需要将子类 this 指针偏移到第二基类 this。</li><li><strong>子类重写了基类的虚函数，并且返回值类型更加具体（协变），又用基类指针指向子类并调用前面提到的虚函数</strong>。如果返回值以引用/指针出现，而且 this 需要偏移，则还需要做额外处理。可能的处理方式：thunk 里先调用真实函数再对返回值偏移后，返回结果。</li></ol><h2 id=thunk-的替代>thunk 的替代
+<a class=header-anchor href=#thunk-%e7%9a%84%e6%9b%bf%e4%bb%a3></a></h2><ol><li>对于足够短的函数，可以直接<strong>生成一份新的函数</strong>，在函数中有不同的 this 地址调整操作。</li><li>也可以使用<strong>多入口点</strong>。函数一开始就做调整 this 指针的操作，然后跳转到共享代码。对于不需要调整 this 指针的情况，vtable 中可以直接留下共享代码的入口地址；对需要调整 this 指针的情况，vtable 中留下调整 this 指针代码的地址。在双继承场景下，这种处理不会引入额外的跳转，相当于 thunk 紧密排列在真实函数之前。</li><li>微软使用的是 <strong>address point</strong>，也就是先调整完 this 指针再传入，而不是在虚函数中调整 this。</li></ol></div><footer class=post-footer><div readmore=false><div class=readmore-overlay><div class=readmore-overlay-center><div class=post-button><a class=btn href=/inside-the-cpp-object-model/%E5%A4%9A%E7%BB%A7%E6%89%BF%E4%B8%8B%E7%9A%84%E8%99%9A%E5%87%BD%E6%95%B0/#more rel=contents>阅读全文 &#187;</a></div></div></div><div class=no-more-to-read><hr><center>没有啦~</center></div></div><div class=post-eof></div></footer></article></div><div class=post-block><article itemscope itemtype=http://schema.org/Article class=post-content lang><link itemprop=mainEntityOfPage href=https://hxhue.github.io/inside-the-cpp-object-model/%E5%A4%9A%E7%BB%A7%E6%89%BF%E4%B8%8B%E7%9A%84%E6%8C%87%E9%92%88%E8%BD%AC%E6%8D%A2/><span hidden itemprop=author itemscope itemtype=http://schema.org/Person><meta itemprop=image content="/imgs/371907.jpg"><meta itemprop=name content="🚮"></span><span hidden itemprop=publisher itemscope itemtype=http://schema.org/Organization><meta itemprop=name content="🚮"><meta itemprop=description content="个人博客，主要是零散的笔记。"></span><span hidden itemprop=post itemscope itemtype=http://schema.org/CreativeWork><meta itemprop=name content="多继承下的指针转换"><meta itemprop=description content="要注意空指针是特殊情况：
+
+"></span><header class=post-header><h2 class=post-title itemprop="name headline"><a href=/inside-the-cpp-object-model/%E5%A4%9A%E7%BB%A7%E6%89%BF%E4%B8%8B%E7%9A%84%E6%8C%87%E9%92%88%E8%BD%AC%E6%8D%A2/ itemprop=url class=post-title-link>多继承下的指针转换</a></h2><div class=post-meta-container><div class=post-meta-items><span class=post-meta-item><span class=post-meta-item-icon><i class="far fa-calendar"></i>
+</span><span class=post-meta-item-text title=发表于>发表于：
+</span><time title="创建时间：2023-08-12 00:00:00 +0800 CST" itemprop="dateCreated datePublished" datetime="2023-08-12 00:00:00 +0800 CST">2023-08-12
+</time></span><span class=post-meta-item><span class=post-meta-item-icon><i class="far fa-calendar-check"></i>
+</span><span class=post-meta-item-text title=更新于>更新于：
+</span><time title=修改时间：2024-04-08T00:00:00+08:00 itemprop=dateModified datetime=2024-04-08T00:00:00+08:00>2024-04-08</time>
+</span><span class=post-meta-item><span class=post-meta-item-icon><i class="far fa-folder-open"></i>
+</span><span class=post-meta-item-text title=分类于>分类于：
+</span><span itemprop=about itemscope itemtype=http://schema.org/Thing><a href=/categories/inside-the-cpp-object-model itemprop=url rel=index><span itemprop=name>inside-the-cpp-object-model</span></a></span></span></div></div></header><div class=post-body itemprop=articleBody><p>要注意空指针是特殊情况：</p><p><img src=/assets/b91cf97c72043857b03f7b43bb65feac.png></p></div><footer class=post-footer><div readmore=false><div class=readmore-overlay><div class=readmore-overlay-center><div class=post-button><a class=btn href=/inside-the-cpp-object-model/%E5%A4%9A%E7%BB%A7%E6%89%BF%E4%B8%8B%E7%9A%84%E6%8C%87%E9%92%88%E8%BD%AC%E6%8D%A2/#more rel=contents>阅读全文 &#187;</a></div></div></div><div class=no-more-to-read><hr><center>没有啦~</center></div></div><div class=post-eof></div></footer></article></div><div class=post-block><article itemscope itemtype=http://schema.org/Article class=post-content lang><link itemprop=mainEntityOfPage href=https://hxhue.github.io/inside-the-cpp-object-model/%E9%9D%9E%E8%87%AA%E5%8A%A8%E5%8F%98%E9%87%8F%E5%88%9D%E5%A7%8B%E5%8C%96/><span hidden itemprop=author itemscope itemtype=http://schema.org/Person><meta itemprop=image content="/imgs/371907.jpg"><meta itemprop=name content="🚮"></span><span hidden itemprop=publisher itemscope itemtype=http://schema.org/Organization><meta itemprop=name content="🚮"><meta itemprop=description content="个人博客，主要是零散的笔记。"></span><span hidden itemprop=post itemscope itemtype=http://schema.org/CreativeWork><meta itemprop=name content="非自动变量初始化"><meta itemprop=description content="C++ 和 C 的区别
+
+
+C++ 支持使用非常量表达式对全局或静态变量初始化。对于 local static / thread_local static 变量而言，这项功能使得访问时有同步开销。（像 C 一样用常量表达式初始化就不会有访问开销）
+C++ 的 thread_local 变量在函数中自动具有 static 属性，C 要手动加。而且 C 的 thread_local 在 C23 之前是个宏。
+
+全局 (static) 变量
+
+全局区域定义的变量，可以具有 static 属性也可以没有。"></span><header class=post-header><h2 class=post-title itemprop="name headline"><a href=/inside-the-cpp-object-model/%E9%9D%9E%E8%87%AA%E5%8A%A8%E5%8F%98%E9%87%8F%E5%88%9D%E5%A7%8B%E5%8C%96/ itemprop=url class=post-title-link>非自动变量初始化</a></h2><div class=post-meta-container><div class=post-meta-items><span class=post-meta-item><span class=post-meta-item-icon><i class="far fa-calendar"></i>
+</span><span class=post-meta-item-text title=发表于>发表于：
+</span><time title="创建时间：2023-08-12 00:00:00 +0800 CST" itemprop="dateCreated datePublished" datetime="2023-08-12 00:00:00 +0800 CST">2023-08-12
+</time></span><span class=post-meta-item><span class=post-meta-item-icon><i class="far fa-calendar-check"></i>
+</span><span class=post-meta-item-text title=更新于>更新于：
+</span><time title=修改时间：2024-09-24T00:00:00+08:00 itemprop=dateModified datetime=2024-09-24T00:00:00+08:00>2024-09-24</time>
+</span><span class=post-meta-item><span class=post-meta-item-icon><i class="far fa-folder-open"></i>
+</span><span class=post-meta-item-text title=分类于>分类于：
+</span><span itemprop=about itemscope itemtype=http://schema.org/Thing><a href=/categories/inside-the-cpp-object-model itemprop=url rel=index><span itemprop=name>inside-the-cpp-object-model</span></a></span></span></div></div></header><div class=post-body itemprop=articleBody><h1 id=c-和-c-的区别>C++ 和 C 的区别
+<a class=header-anchor href=#c-%e5%92%8c-c-%e7%9a%84%e5%8c%ba%e5%88%ab></a></h1><ol><li>C++ 支持使用非常量表达式对全局或静态变量初始化。对于 local static / thread_local static 变量而言，这项功能使得访问时有同步开销。（像 C 一样用常量表达式初始化就不会有访问开销）</li><li>C++ 的 thread_local 变量在函数中自动具有 static 属性，C 要手动加。而且 C 的 thread_local 在 C23 之前是个宏。</li></ol><h1 id=全局-static-变量>全局 (static) 变量
+<a class=header-anchor href=#%e5%85%a8%e5%b1%80-static-%e5%8f%98%e9%87%8f></a></h1><p>全局区域定义的变量，可以具有 static 属性也可以没有。</p><h2 id=不支持非常量初始化表达式c-模型>不支持非常量初始化表达式（C 模型）
+<a class=header-anchor href=#%e4%b8%8d%e6%94%af%e6%8c%81%e9%9d%9e%e5%b8%b8%e9%87%8f%e5%88%9d%e5%a7%8b%e5%8c%96%e8%a1%a8%e8%be%be%e5%bc%8fc-%e6%a8%a1%e5%9e%8b></a></h2><p>编译器会抱怨：initializer element is not constant。</p><h2 id=支持非常量初始化表达式但只对对象生效cfront-10-模型><del>支持非常量初始化表达式，但只对对象生效</del>（Cfront 1.0 模型）
+<a class=header-anchor href=#%e6%94%af%e6%8c%81%e9%9d%9e%e5%b8%b8%e9%87%8f%e5%88%9d%e5%a7%8b%e5%8c%96%e8%a1%a8%e8%be%be%e5%bc%8f%e4%bd%86%e5%8f%aa%e5%af%b9%e5%af%b9%e8%b1%a1%e7%94%9f%e6%95%88cfront-10-%e6%a8%a1%e5%9e%8b></a></h2><p>在用户程序真正运行前插入一段<strong>静态变量初始化代码。</strong></p><p>Cfront 早期对 class object 支持了<strong>非常量的静态初始化</strong>，但<strong>标准类型</strong>（整数、指针等）的静态支持和 C 一样。</p><p><img src=/assets/dd4139cc4c1f5af8a382e9708ca348b5.png></p><p>考虑下面的代码：</p><div class=highlight><pre tabindex=0 style=color:#93a1a1;background-color:#002b36;-moz-tab-size:2;-o-tab-size:2;tab-size:2><code class=language-cpp data-lang=cpp><span style=display:flex><span><span style=color:#719e07>struct</span> <span style=color:#268bd2>Point</span> {
+</span></span><span style=display:flex><span>    <span style=color:#dc322f>double</span> x;
+</span></span><span style=display:flex><span>    <span style=color:#dc322f>double</span> y;
+</span></span><span style=display:flex><span>};
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#719e07>struct</span> <span style=color:#268bd2>Point</span> point <span style=color:#719e07>=</span> {<span style=color:#2aa198>2.4</span>, <span style=color:#2aa198>0.1</span>};
+</span></span></code></pre></div><p>此代码是合法的 C 或 C++ 代码。它的数据值直接写到 data section 里，不需要静态初始化代码（也就是不需要用非常量表达式对变量初始化）。</p><p>修改这段代码之后就不能作为 C 语言编译了，但是可以作为 C++ 编译：</p><div class=highlight><pre tabindex=0 style=color:#93a1a1;background-color:#002b36;-moz-tab-size:2;-o-tab-size:2;tab-size:2><code class=language-cpp data-lang=cpp><span style=display:flex><span><span style=color:#719e07>struct</span> <span style=color:#268bd2>Point</span> {
+</span></span><span style=display:flex><span>    <span style=color:#dc322f>double</span> x;
+</span></span><span style=display:flex><span>    <span style=color:#dc322f>double</span> y;
+</span></span><span style=display:flex><span>};
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#719e07>struct</span> <span style=color:#268bd2>Point</span> point <span style=color:#719e07>=</span> {<span style=color:#2aa198>2.4</span>, <span style=color:#2aa198>0.1</span>};
+</span></span><span style=display:flex><span><span style=color:#719e07>struct</span> <span style=color:#268bd2>Point</span> another_point <span style=color:#719e07>=</span> point;
+</span></span></code></pre></div><p>初始化 <code>another_point</code> 需要用到 <code>point</code>，这产生了全局变量之间的依赖关系，在编译器看来不是常量表达式，所以这个过程会被放到<strong>静态变量初始化代码</strong>中进行。</p><h2 id=所有类型支持非常量初始化表达式现在的-c-模型>所有类型支持非常量初始化表达式（现在的 C++ 模型）
+<a class=header-anchor href=#%e6%89%80%e6%9c%89%e7%b1%bb%e5%9e%8b%e6%94%af%e6%8c%81%e9%9d%9e%e5%b8%b8%e9%87%8f%e5%88%9d%e5%a7%8b%e5%8c%96%e8%a1%a8%e8%be%be%e5%bc%8f%e7%8e%b0%e5%9c%a8%e7%9a%84-c-%e6%a8%a1%e5%9e%8b></a></h2><p>后来 C++ 对所有类型都支持非常量静态初始化了。这可能是支持虚基类的副产品，因为虚基类和子类之间的指针转换需要知道 offset，而 offset 只能在编译全部完成之后才能确定。</p><p>可以参考：</p><div class=highlight><pre tabindex=0 style=color:#93a1a1;background-color:#002b36;-moz-tab-size:2;-o-tab-size:2;tab-size:2><code class=language-cpp data-lang=cpp><span style=display:flex><span><span style=color:#719e07>class</span> <span style=color:#268bd2>Base</span> {};
+</span></span><span style=display:flex><span><span style=color:#719e07>class</span> <span style=color:#268bd2>VirtualBase</span><span style=color:#719e07>:</span> <span style=color:#719e07>public</span> <span style=color:#719e07>virtual</span> Base {};
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#586e75>// 不需要静态初始化代码
+</span></span></span><span style=display:flex><span><span style=color:#586e75>// Base *pbase = (Base *)0x1000;
+</span></span></span><span style=display:flex><span><span style=color:#586e75></span>
+</span></span><span style=display:flex><span><span style=color:#586e75>// 从 VirtualBase* 转换成 Base*，需要静态初始化代码
+</span></span></span><span style=display:flex><span><span style=color:#586e75>// 如果把虚继承改成具体继承，也不再会需要静态初始化代码
+</span></span></span><span style=display:flex><span><span style=color:#586e75></span>Base <span style=color:#719e07>*</span>pbase2 <span style=color:#719e07>=</span> (VirtualBase <span style=color:#719e07>*</span>)<span style=color:#2aa198>0x1000</span>;
+</span></span></code></pre></div><h3 id=gpt-对于书中说法的解释>GPT 对于书中说法的解释
+<a class=header-anchor href=#gpt-%e5%af%b9%e4%ba%8e%e4%b9%a6%e4%b8%ad%e8%af%b4%e6%b3%95%e7%9a%84%e8%a7%a3%e9%87%8a></a></h3><p>Consider the following example:</p><div class=highlight><pre tabindex=0 style=color:#93a1a1;background-color:#002b36;-moz-tab-size:2;-o-tab-size:2;tab-size:2><code class=language-cpp data-lang=cpp><span style=display:flex><span><span style=color:#719e07>class</span> <span style=color:#268bd2>Base</span> {};
+</span></span><span style=display:flex><span><span style=color:#719e07>class</span> <span style=color:#268bd2>VirtualBase</span><span style=color:#719e07>:</span> <span style=color:#719e07>public</span> <span style=color:#719e07>virtual</span> Base {};
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#719e07>class</span> <span style=color:#268bd2>Derived1</span><span style=color:#719e07>:</span> <span style=color:#719e07>public</span> VirtualBase {};
+</span></span><span style=display:flex><span><span style=color:#719e07>class</span> <span style=color:#268bd2>Derived2</span><span style=color:#719e07>:</span> <span style=color:#719e07>public</span> VirtualBase {};
+</span></span></code></pre></div><p>In this example, we have two separate derived classes, <strong><code>Derived1</code></strong> and <strong><code>Derived2</code></strong>, both inheriting from the same virtual base class <strong><code>VirtualBase</code></strong>.</p><p>Now, when the compiler encounters the definition of <strong><code>Derived1</code></strong> or <strong><code>Derived2</code></strong> in a given translation unit, it doesn&rsquo;t have information about other derived classes. As a result, the exact offset of the <strong><code>VirtualBase</code></strong> subobject within <strong><code>Derived1</code></strong> or <strong><code>Derived2</code></strong> cannot be determined at that point.</p><p>To handle this situation, the compiler employs static initialization. It generates code that initializes static variables associated with the virtual base class. These static variables store the offset information needed to access the virtual base class subobject. The initialization of these static variables happens at runtime before any objects of the derived classes are created.</p><p>By utilizing static initialization, the compiler ensures that the correct offset information is available at runtime, allowing proper access to the virtual base class subobject.</p><h1 id=局部-static-变量>局部 static 变量
+<a class=header-anchor href=#%e5%b1%80%e9%83%a8-static-%e5%8f%98%e9%87%8f></a></h1><p>这里只讨论 C++，C 没有非常量初始化的功能。</p><p>C++ 保证函数中的静态对象只在其对应函数被调用时初始化，而且仅初始化一次。如果是常量初始化表达式，则在编译时可以初始化，函数中也不需要同步措施；<strong>但如果是非常量初始化表达式，则有同步代价！</strong></p><div class=highlight><pre tabindex=0 style=color:#93a1a1;background-color:#002b36;-moz-tab-size:2;-o-tab-size:2;tab-size:2><code class=language-cpp data-lang=cpp><span style=display:flex><span><span style=color:#719e07>#include</span> <span style=color:#719e07>&lt;cstdio&gt;</span><span style=color:#719e07>
+</span></span></span><span style=display:flex><span><span style=color:#719e07></span>
+</span></span><span style=display:flex><span><span style=color:#719e07>struct</span> <span style=color:#268bd2>Echo</span> {
+</span></span><span style=display:flex><span>    Echo(<span style=color:#719e07>const</span> <span style=color:#dc322f>char</span> <span style=color:#719e07>*</span>s) {
+</span></span><span style=display:flex><span>        puts(s);
+</span></span><span style=display:flex><span>    }
+</span></span><span style=display:flex><span>    <span style=color:#719e07>static</span> Echo <span style=color:#719e07>*</span>static_member;
+</span></span><span style=display:flex><span>};
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#586e75>// 初始化只能放到这里，如果放到上面 Echo 就不是完整对象不能创建
+</span></span></span><span style=display:flex><span><span style=color:#586e75>// 前面声明不能加 inline 因为 inline 会让声明变成定义
+</span></span></span><span style=display:flex><span><span style=color:#586e75>// 此处定义不能加 static 因为不能多次指定存储类型
+</span></span></span><span style=display:flex><span><span style=color:#586e75></span><span style=color:#268bd2>inline</span> Echo <span style=color:#719e07>*</span>Echo<span style=color:#719e07>::</span>static_member <span style=color:#719e07>=</span> <span style=color:#719e07>new</span> Echo {<span style=color:#2aa198>&#34;Echo::static_member&#34;</span>};
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#dc322f>void</span> <span style=color:#268bd2>test_echo</span>() {
+</span></span><span style=display:flex><span>    <span style=color:#719e07>static</span> Echo hidden(<span style=color:#2aa198>&#34;local static&#34;</span>);
+</span></span><span style=display:flex><span>}
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>Echo <span style=color:#268bd2>global_echo</span>(<span style=color:#2aa198>&#34;global&#34;</span>);
+</span></span><span style=display:flex><span><span style=color:#719e07>static</span> Echo <span style=color:#268bd2>static_echo</span>(<span style=color:#2aa198>&#34;static echo&#34;</span>);
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#719e07>struct</span> <span style=color:#268bd2>Foo</span> {
+</span></span><span style=display:flex><span>    <span style=color:#719e07>static</span> <span style=color:#268bd2>inline</span> Echo <span style=color:#719e07>*</span>static_member <span style=color:#719e07>=</span> <span style=color:#719e07>new</span> Echo {<span style=color:#2aa198>&#34;Foo::static_member&#34;</span>};
+</span></span><span style=display:flex><span>};
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#dc322f>int</span> <span style=color:#268bd2>main</span>() {
+</span></span><span style=display:flex><span>    <span style=color:#586e75>// 试试调用 0/1/2 次
+</span></span></span><span style=display:flex><span><span style=color:#586e75></span>    test_echo();
+</span></span><span style=display:flex><span>    test_echo();
+</span></span><span style=display:flex><span>}
+</span></span></code></pre></div><p>打印结果：</p><div class=highlight><pre tabindex=0 style=color:#93a1a1;background-color:#002b36;-moz-tab-size:2;-o-tab-size:2;tab-size:2><code class=language-txt data-lang=txt><span style=display:flex><span>Echo::static_member
+</span></span><span style=display:flex><span>global
+</span></span><span style=display:flex><span>static echo
+</span></span><span style=display:flex><span>Foo::static_member
+</span></span><span style=display:flex><span>local static
+</span></span></code></pre></div><p>上面的代码中如果注释掉 main 函数中的两次调用，则 <code>hidden("local static")</code> 不会被初始化！这是汇编，有了同步措施后复杂了不少：</p><div class=highlight><pre tabindex=0 style=color:#93a1a1;background-color:#002b36;-moz-tab-size:2;-o-tab-size:2;tab-size:2><code class=language-nasm data-lang=nasm><span style=display:flex><span><span style=color:#268bd2>test_echo</span>():
+</span></span><span style=display:flex><span>        <span style=color:#268bd2>push</span>    <span style=color:#b58900>rbp</span>
+</span></span><span style=display:flex><span>        <span style=color:#268bd2>mov</span>     <span style=color:#b58900>rbp</span>, <span style=color:#b58900>rsp</span>
+</span></span><span style=display:flex><span>        <span style=color:#268bd2>push</span>    <span style=color:#268bd2>r12</span>
+</span></span><span style=display:flex><span>        <span style=color:#268bd2>push</span>    <span style=color:#b58900>rbx</span>
+</span></span><span style=display:flex><span>        <span style=color:#268bd2>movzx</span>   <span style=color:#b58900>eax</span>, <span style=color:#dc322f>BYTE</span> <span style=color:#268bd2>PTR</span> <span style=color:#268bd2>guard</span> <span style=color:#268bd2>variable</span> <span style=color:#268bd2>for</span> <span style=color:#268bd2>test_echo</span>()::<span style=color:#268bd2>hidden</span>[<span style=color:#268bd2>rip</span>]
+</span></span><span style=display:flex><span>        <span style=color:#268bd2>test</span>    <span style=color:#b58900>al</span>, <span style=color:#b58900>al</span>
+</span></span><span style=display:flex><span>        <span style=color:#268bd2>sete</span>    <span style=color:#b58900>al</span>
+</span></span><span style=display:flex><span>        <span style=color:#268bd2>test</span>    <span style=color:#b58900>al</span>, <span style=color:#b58900>al</span>
+</span></span><span style=display:flex><span>        <span style=color:#268bd2>je</span>      <span style=color:#268bd2>.L7</span>
+</span></span><span style=display:flex><span>        <span style=color:#268bd2>mov</span>     <span style=color:#b58900>edi</span>, <span style=color:#268bd2>OFFSET</span> <span style=color:#268bd2>FLAT</span>:<span style=color:#268bd2>guard</span> <span style=color:#268bd2>variable</span> <span style=color:#268bd2>for</span> <span style=color:#268bd2>test_echo</span>()::<span style=color:#268bd2>hidden</span>
+</span></span><span style=display:flex><span>        <span style=color:#268bd2>call</span>    <span style=color:#268bd2>__cxa_guard_acquire</span>
+</span></span><span style=display:flex><span>        <span style=color:#268bd2>test</span>    <span style=color:#b58900>eax</span>, <span style=color:#b58900>eax</span>
+</span></span><span style=display:flex><span>        <span style=color:#268bd2>setne</span>   <span style=color:#b58900>al</span>
+</span></span><span style=display:flex><span>        <span style=color:#268bd2>test</span>    <span style=color:#b58900>al</span>, <span style=color:#b58900>al</span>
+</span></span><span style=display:flex><span>        <span style=color:#268bd2>je</span>      <span style=color:#268bd2>.L7</span>
+</span></span><span style=display:flex><span>        <span style=color:#268bd2>mov</span>     <span style=color:#b58900>r12d</span>, <span style=color:#2aa198>0</span>
+</span></span><span style=display:flex><span>        <span style=color:#268bd2>mov</span>     <span style=color:#b58900>esi</span>, <span style=color:#268bd2>OFFSET</span> <span style=color:#268bd2>FLAT</span>:<span style=color:#268bd2>.LC0</span>
+</span></span><span style=display:flex><span>        <span style=color:#268bd2>mov</span>     <span style=color:#b58900>edi</span>, <span style=color:#268bd2>OFFSET</span> <span style=color:#268bd2>FLAT</span>:<span style=color:#268bd2>_ZZ9test_echovE6hidden</span>
+</span></span><span style=display:flex><span>        <span style=color:#268bd2>call</span>    <span style=color:#268bd2>Echo</span>::<span style=color:#268bd2>Echo</span>(<span style=color:#b58900>ch</span><span style=color:#268bd2>ar</span> <span style=color:#268bd2>const</span><span style=color:#719e07>*</span>) [<span style=color:#268bd2>complete</span> <span style=color:#268bd2>object</span> <span style=color:#268bd2>constructor</span>]
+</span></span><span style=display:flex><span>        <span style=color:#268bd2>mov</span>     <span style=color:#b58900>edi</span>, <span style=color:#268bd2>OFFSET</span> <span style=color:#268bd2>FLAT</span>:<span style=color:#268bd2>guard</span> <span style=color:#268bd2>variable</span> <span style=color:#268bd2>for</span> <span style=color:#268bd2>test_echo</span>()::<span style=color:#268bd2>hidden</span>
+</span></span><span style=display:flex><span>        <span style=color:#268bd2>call</span>    <span style=color:#268bd2>__cxa_guard_release</span>
+</span></span><span style=display:flex><span>        <span style=color:#268bd2>jmp</span>     <span style=color:#268bd2>.L7</span>
+</span></span><span style=display:flex><span>        <span style=color:#268bd2>mov</span>     <span style=color:#b58900>rbx</span>, <span style=color:#b58900>rax</span>
+</span></span><span style=display:flex><span>        <span style=color:#268bd2>test</span>    <span style=color:#b58900>r12b</span>, <span style=color:#b58900>r12b</span>
+</span></span><span style=display:flex><span>        <span style=color:#268bd2>jne</span>     <span style=color:#268bd2>.L5</span>
+</span></span><span style=display:flex><span>        <span style=color:#268bd2>mov</span>     <span style=color:#b58900>edi</span>, <span style=color:#268bd2>OFFSET</span> <span style=color:#268bd2>FLAT</span>:<span style=color:#268bd2>guard</span> <span style=color:#268bd2>variable</span> <span style=color:#268bd2>for</span> <span style=color:#268bd2>test_echo</span>()::<span style=color:#268bd2>hidden</span>
+</span></span><span style=display:flex><span>        <span style=color:#268bd2>call</span>    <span style=color:#268bd2>__cxa_guard_abort</span>
+</span></span><span style=display:flex><span>.L5:
+</span></span><span style=display:flex><span>        <span style=color:#268bd2>mov</span>     <span style=color:#b58900>rax</span>, <span style=color:#b58900>rbx</span>
+</span></span><span style=display:flex><span>        <span style=color:#268bd2>mov</span>     <span style=color:#b58900>rdi</span>, <span style=color:#b58900>rax</span>
+</span></span><span style=display:flex><span>        <span style=color:#268bd2>call</span>    <span style=color:#268bd2>_Unwind_Resume</span>
+</span></span><span style=display:flex><span>.L7:
+</span></span><span style=display:flex><span>        <span style=color:#268bd2>nop</span>
+</span></span><span style=display:flex><span>        <span style=color:#268bd2>pop</span>     <span style=color:#b58900>rbx</span>
+</span></span><span style=display:flex><span>        <span style=color:#268bd2>pop</span>     <span style=color:#268bd2>r12</span>
+</span></span><span style=display:flex><span>        <span style=color:#268bd2>pop</span>     <span style=color:#b58900>rbp</span>
+</span></span><span style=display:flex><span>        <span style=color:#268bd2>ret</span>
+</span></span></code></pre></div><h1 id=全局局部-thread_local-变量>全局/局部 thread_local 变量
+<a class=header-anchor href=#%e5%85%a8%e5%b1%80%e5%b1%80%e9%83%a8-thread_local-%e5%8f%98%e9%87%8f></a></h1><h2 id=c11-thread_local>C++11 thread_local
+<a class=header-anchor href=#c11-thread_local></a></h2><p>访问变量需要使用一个<strong>和线程相关的段寄存器</strong>和固定的变量偏移得到变量的地址，这样不同线程访问的变量地址肯定不同。</p><p>对于全局的 thread_local 变量，每次访问 thread_local 变量 i 会先调用 TLS wrapper function for i，然后该函数调用 TLS init function for i （在 Compiler Explorer 过滤的汇编中是 __tls_init）确保变量只被初始化一次，最后返回变量的<strong>地址</strong>。</p><p><a href=https://godbolt.org/z/Y8a7s4Msz title=https://godbolt.org/z/Y8a7s4Msz rel="noopener external nofollow noreferrer" target=_blank class=exturl>https://godbolt.org/z/Y8a7s4Msz<i class="fa fa-external-link-alt"></i></a></p><div class=highlight><pre tabindex=0 style=color:#93a1a1;background-color:#002b36;-moz-tab-size:2;-o-tab-size:2;tab-size:2><code class=language-cpp data-lang=cpp><span style=display:flex><span><span style=color:#719e07>#include</span> <span style=color:#719e07>&lt;iostream&gt;</span><span style=color:#719e07>
+</span></span></span><span style=display:flex><span><span style=color:#719e07>#include</span> <span style=color:#719e07>&lt;thread&gt;</span><span style=color:#719e07>
+</span></span></span><span style=display:flex><span><span style=color:#719e07></span>
+</span></span><span style=display:flex><span><span style=color:#719e07>thread_local</span> <span style=color:#dc322f>int</span> i <span style=color:#719e07>=</span> time(<span style=color:#2aa198>0</span>);
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#dc322f>int</span> <span style=color:#268bd2>main</span>() {
+</span></span><span style=display:flex><span>    i <span style=color:#719e07>=</span> <span style=color:#2aa198>7</span>;
+</span></span><span style=display:flex><span>    std<span style=color:#719e07>::</span><span style=color:#268bd2>thread</span> t{[<span style=color:#719e07>&amp;</span>](){ i <span style=color:#719e07>=</span> <span style=color:#2aa198>9</span>; }};
+</span></span><span style=display:flex><span>    t.join();
+</span></span><span style=display:flex><span>    std<span style=color:#719e07>::</span>cout <span style=color:#719e07>&lt;&lt;</span> i <span style=color:#719e07>&lt;&lt;</span> <span style=color:#2aa198>&#34;</span><span style=color:#cb4b16>\n</span><span style=color:#2aa198>&#34;</span>;
+</span></span><span style=display:flex><span>}
+</span></span></code></pre></div><p>对于局部的 thread_local 变量：</p><p><a href=https://godbolt.org/z/xdePfv3eM title=https://godbolt.org/z/xdePfv3eM rel="noopener external nofollow noreferrer" target=_blank class=exturl>https://godbolt.org/z/xdePfv3eM<i class="fa fa-external-link-alt"></i></a></p><div class=highlight><pre tabindex=0 style=color:#93a1a1;background-color:#002b36;-moz-tab-size:2;-o-tab-size:2;tab-size:2><code class=language-cpp data-lang=cpp><span style=display:flex><span><span style=color:#719e07>#include</span> <span style=color:#719e07>&lt;iostream&gt;</span><span style=color:#719e07>
+</span></span></span><span style=display:flex><span><span style=color:#719e07>#include</span> <span style=color:#719e07>&lt;thread&gt;</span><span style=color:#719e07>
+</span></span></span><span style=display:flex><span><span style=color:#719e07></span>
+</span></span><span style=display:flex><span><span style=color:#586e75>// 因为 main 入口肯定只有一个，所以尝试把 thread_local 放到其他函数中试试
+</span></span></span><span style=display:flex><span><span style=color:#586e75>// 实际上和把 thread_local 变量放在 main 中的效果一样
+</span></span></span><span style=display:flex><span><span style=color:#586e75></span><span style=color:#dc322f>int</span> <span style=color:#719e07>&amp;</span>get_i() {
+</span></span><span style=display:flex><span>    <span style=color:#719e07>thread_local</span> <span style=color:#dc322f>int</span> i <span style=color:#719e07>=</span> time(<span style=color:#2aa198>0</span>);
+</span></span><span style=display:flex><span>    <span style=color:#719e07>return</span> i;
+</span></span><span style=display:flex><span>}
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#dc322f>int</span> <span style=color:#268bd2>main</span>() {
+</span></span><span style=display:flex><span>    get_i() <span style=color:#719e07>=</span> <span style=color:#2aa198>7</span>;
+</span></span><span style=display:flex><span>    std<span style=color:#719e07>::</span><span style=color:#268bd2>thread</span> t{[<span style=color:#719e07>&amp;</span>](){ get_i() <span style=color:#719e07>=</span> <span style=color:#2aa198>9</span>; }};
+</span></span><span style=display:flex><span>    t.join();
+</span></span><span style=display:flex><span>    std<span style=color:#719e07>::</span>cout <span style=color:#719e07>&lt;&lt;</span> get_i() <span style=color:#719e07>&lt;&lt;</span> <span style=color:#2aa198>&#34;</span><span style=color:#cb4b16>\n</span><span style=color:#2aa198>&#34;</span>;
+</span></span><span style=display:flex><span>}
+</span></span></code></pre></div><p><code>get_i()</code> 中也有确保变量仅仅初始化一次的逻辑。</p><div class=highlight><pre tabindex=0 style=color:#93a1a1;background-color:#002b36;-moz-tab-size:2;-o-tab-size:2;tab-size:2><code class=language-nasm data-lang=nasm><span style=display:flex><span><span style=color:#268bd2>get_i</span>()::<span style=color:#268bd2>i</span>:
+</span></span><span style=display:flex><span>        <span style=color:#268bd2>.zero</span>   <span style=color:#2aa198>4</span>
+</span></span><span style=display:flex><span><span style=color:#268bd2>guard</span> <span style=color:#268bd2>variable</span> <span style=color:#268bd2>for</span> <span style=color:#268bd2>get_i</span>()::<span style=color:#268bd2>i</span>:
+</span></span><span style=display:flex><span>        <span style=color:#268bd2>.zero</span>   <span style=color:#2aa198>8</span>
+</span></span><span style=display:flex><span><span style=color:#268bd2>get_i</span>():
+</span></span><span style=display:flex><span>        <span style=color:#268bd2>push</span>    <span style=color:#b58900>rbp</span>
+</span></span><span style=display:flex><span>        <span style=color:#268bd2>mov</span>     <span style=color:#b58900>rbp</span>, <span style=color:#b58900>rsp</span>
+</span></span><span style=display:flex><span>        <span style=color:#268bd2>mov</span>     <span style=color:#b58900>rax</span>, <span style=color:#dc322f>QWORD</span> <span style=color:#268bd2>PTR</span> <span style=color:#b58900>fs</span>:<span style=color:#2aa198>0</span>
+</span></span><span style=display:flex><span>        <span style=color:#268bd2>add</span>     <span style=color:#b58900>rax</span>, <span style=color:#268bd2>OFFSET</span> <span style=color:#268bd2>FLAT</span>:<span style=color:#268bd2>guard</span> <span style=color:#268bd2>variable</span> <span style=color:#268bd2>for</span> <span style=color:#268bd2>get_i</span>()::<span style=color:#268bd2>i@tpoff</span>
+</span></span><span style=display:flex><span>        <span style=color:#268bd2>movzx</span>   <span style=color:#b58900>eax</span>, <span style=color:#dc322f>BYTE</span> <span style=color:#268bd2>PTR</span> [<span style=color:#b58900>rax</span>]
+</span></span><span style=display:flex><span>        <span style=color:#268bd2>test</span>    <span style=color:#b58900>al</span>, <span style=color:#b58900>al</span>
+</span></span><span style=display:flex><span>        <span style=color:#268bd2>jne</span>     <span style=color:#268bd2>.L11</span>
+</span></span><span style=display:flex><span>        <span style=color:#268bd2>mov</span>     <span style=color:#b58900>edi</span>, <span style=color:#2aa198>0</span>
+</span></span><span style=display:flex><span>        <span style=color:#268bd2>call</span>    <span style=color:#268bd2>time</span>
+</span></span><span style=display:flex><span>        <span style=color:#268bd2>mov</span>     <span style=color:#dc322f>DWORD</span> <span style=color:#268bd2>PTR</span> <span style=color:#b58900>fs</span>:<span style=color:#268bd2>get_i</span>()::<span style=color:#268bd2>i@tpoff</span>, <span style=color:#b58900>eax</span>
+</span></span><span style=display:flex><span>        <span style=color:#268bd2>mov</span>     <span style=color:#b58900>rax</span>, <span style=color:#dc322f>QWORD</span> <span style=color:#268bd2>PTR</span> <span style=color:#b58900>fs</span>:<span style=color:#2aa198>0</span>
+</span></span><span style=display:flex><span>        <span style=color:#268bd2>add</span>     <span style=color:#b58900>rax</span>, <span style=color:#268bd2>OFFSET</span> <span style=color:#268bd2>FLAT</span>:<span style=color:#268bd2>guard</span> <span style=color:#268bd2>variable</span> <span style=color:#268bd2>for</span> <span style=color:#268bd2>get_i</span>()::<span style=color:#268bd2>i@tpoff</span>
+</span></span><span style=display:flex><span>        <span style=color:#268bd2>mov</span>     <span style=color:#dc322f>BYTE</span> <span style=color:#268bd2>PTR</span> [<span style=color:#b58900>rax</span>], <span style=color:#2aa198>1</span>
+</span></span><span style=display:flex><span>.L11:
+</span></span><span style=display:flex><span>        <span style=color:#268bd2>mov</span>     <span style=color:#b58900>rax</span>, <span style=color:#dc322f>QWORD</span> <span style=color:#268bd2>PTR</span> <span style=color:#b58900>fs</span>:<span style=color:#2aa198>0</span>
+</span></span><span style=display:flex><span>        <span style=color:#268bd2>add</span>     <span style=color:#b58900>rax</span>, <span style=color:#268bd2>OFFSET</span> <span style=color:#268bd2>FLAT</span>:<span style=color:#268bd2>get_i</span>()::<span style=color:#268bd2>i@tpoff</span>
+</span></span><span style=display:flex><span>        <span style=color:#268bd2>pop</span>     <span style=color:#b58900>rbp</span>
+</span></span><span style=display:flex><span>        <span style=color:#268bd2>ret</span>
+</span></span></code></pre></div><p>所以，全局和局部的 thread_local 变量访问的代价是一样的。只不过如果 thread_local 是局部的，那么同步逻辑就直接放在函数中；如果是全局的，同步逻辑用一个生成的函数实现而已。</p><p>接下来尝试把 time(0) 这种初始化表达式换成一个常量，比如说 2，则访问 thread_local 时不会有同步措施，只是创建线程的时候要复制一份变量而已。</p><h2 id=c11-_thread_local>C11 _Thread_local
+<a class=header-anchor href=#c11-_thread_local></a></h2><p>C11 的头文件 threads.h 中有下面定义：</p><div class=highlight><pre tabindex=0 style=color:#93a1a1;background-color:#002b36;-moz-tab-size:2;-o-tab-size:2;tab-size:2><code class=language-cpp data-lang=cpp><span style=display:flex><span><span style=color:#719e07>#define thread_local _Thread_local
+</span></span></span></code></pre></div><p>这就和以前的 bool 宏需要引入一样。在 C23 之后，thread_local 就是一个单独的关键字了。</p><p>C11 的 thread_local 是不具备 static 属性的，在函数中使用时要用 thread_local static，而 C++ 中的 thread_local 在函数中自动具备 static 属性，加不加 static 都行。</p><p>C++ 标准：</p><blockquote><p>When thread_local is applied to a variable of block scope the storage-class-specifier static <strong>is implied</strong> if it does not appear explicitly.</p></blockquote><p>2023 年 6 月 15 日：C11 的 threads.h 在 Windows 上没有实现，而且也没有提供像 C++ 的 mutex 一样的同步功能，写 C 语言用线程还是 pthreads.h / Win32 API 会比较好一点。</p></div><footer class=post-footer><div readmore=false><div class=readmore-overlay><div class=readmore-overlay-center><div class=post-button><a class=btn href=/inside-the-cpp-object-model/%E9%9D%9E%E8%87%AA%E5%8A%A8%E5%8F%98%E9%87%8F%E5%88%9D%E5%A7%8B%E5%8C%96/#more rel=contents>阅读全文 &#187;</a></div></div></div><div class=no-more-to-read><hr><center>没有啦~</center></div></div><div class=post-eof></div></footer></article></div><nav class=pagination><span class="page-number current">1</span>
+<a class=page-number href=/inside-the-cpp-object-model/page/2/>2</a>
+<a class="extend next" rel=next href=/inside-the-cpp-object-model/page/2/><i class="fa fa-angle-right"></i></a></nav></div></main><footer class=footer><div class=footer-inner><div class=copyright>&copy;
+<span itemprop=copyrightYear>2023 - 2024
+</span><span class=with-love><i class="fa fa-heart"></i>
+</span><span class=author itemprop=copyrightHolder>🚮</span></div><div class=powered-by>由 <a href=https://gohugo.io title=0.134.2 target=_blank>Hugo</a> & <a href=https://github.com/hugo-next/hugo-theme-next title=4.5.3 target=_blank>Hugo NexT.Gemini</a> 强力驱动</div></div></footer><script type=text/javascript src=https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.1/anime.min.js defer></script><script type=text/javascript src=https://cdnjs.cloudflare.com/ajax/libs/medium-zoom/1.1.0/medium-zoom.min.js defer></script><script class=next-config data-name=main type=application/json>{"bookmark":{"color":"#222","enable":false,"save":"manual"},"copybtn":true,"darkmode":false,"hostname":"https://hxhue.github.io/","i18n":{"ds_day":" 天前","ds_days":" 天 ","ds_hour":" 小时前","ds_hours":" 小时 ","ds_just":"刚刚","ds_min":" 分钟前","ds_mins":" 分钟","ds_month":" 个月前","ds_years":" 年 ","empty":"没有找到任何搜索结果：${query}","hits":"找到 ${hits} 个搜索结果","hits_time":"找到 ${hits} 个搜索结果（用时 ${time} 毫秒）","placeholder":"搜索..."},"lang":"zh-CN","lazyload":false,"localSearch":{"enable":true,"limit":1e3,"path":"/searchindexes.xml","preload":false,"topnperarticle":-1,"trigger":"auto","unescape":false},"motion":{"async":true,"enable":true,"transition":{"collheader":"fadeInLeft","menu_item":"fadeInDown","postblock":"fadeIn","postbody":"fadeInDown","postheader":"fadeInDown","sidebar":"fadeInUp"}},"postmeta":{"comments":{"enable":false,"plugin":"waline"},"views":{"enable":false,"plugin":"busuanzi"}},"root":"/","scheme":"Gemini","sidebar":{"display":"post","offset":12,"padding":18,"position":"left","width":240},"vendor":{"plugins":"cdnjs","router":"https://cdnjs.cloudflare.com/ajax/libs"},"version":"4.5.3"}</script><script type=text/javascript src=/js/main.min.efdfae00296bd023ea02a453818a57ef01ef3f52ad2b1ea1ea6f050f458f5753.js defer></script></body></html>
