@@ -1,0 +1,167 @@
+<!doctype html><html lang=zh-CN data-theme=light><head><meta charset=UTF-8><meta name=viewport content="width=device-width"><meta name=theme-color content="#222" media="(prefers-color-scheme: light)"><meta name=generator content="Hugo 0.134.2"><link rel="shortcut icon" type=image/x-icon href=/imgs/icons/favicon.ico><link rel=icon type=image/x-icon href=/imgs/icons/favicon.ico><link rel=icon type=image/png sizes=16x16 href=/imgs/icons/favicon_16x16_next.png><link rel=icon type=image/png sizes=32x32 href=/imgs/icons/favicon_32_32_next.png><link rel=apple-touch-icon sizes=180x180 href=/imgs/icons/apple_touch_icon_next.png><meta itemprop=name content="Modern-Cmake-for-Cpps"><meta itemprop=description content="个人博客，主要是零散的笔记。"><meta itemprop=image content="https://hxhue.github.io/imgs/371907.jpg"><meta itemprop=keywords content><link type=text/css rel=stylesheet href=https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.1.2/css/all.min.css><link type=text/css rel=stylesheet href=https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.1.1/animate.min.css><link rel=stylesheet href=/css/main.min.505cfafb3d9d060165a27efc01baec49ccbaf2c60a8c02db3159dfbac91c89b6.css><link rel=stylesheet type=text/css href=/css/style.css><link rel=preconnect href=https://fonts.googleapis.com><link rel=preconnect href=https://fonts.gstatic.com crossorigin><link rel=stylesheet href=https://cdn.jsdelivr.net/npm/github-markdown-css@5.3.0/github-markdown-dark.css><script type=text/javascript id=MathJax-script async src=https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-svg.js></script><script>MathJax={tex:{displayMath:[["$$","$$"],["\\[","\\]"]],inlineMath:[["$","$"],["\\(","\\)"]]},svg:{fontCache:"global"}}</script><script type=module>
+  import mermaid from 'https://cdn.jsdelivr.net/npm/mermaid/dist/mermaid.esm.min.mjs';
+  mermaid.initialize({ startOnLoad: false });
+  mermaid.mermaidAPI.initialize();
+  window.mermaid = mermaid;
+</script><script type=text/javascript>(function(){localDB={set:function(e,t,n){if(n===0)return;const s=new Date,o=n*864e5,i={value:t,expiry:s.getTime()+o};localStorage.setItem(e,JSON.stringify(i))},get:function(e){const t=localStorage.getItem(e);if(!t)return void 0;const n=JSON.parse(t),s=new Date;return s.getTime()>n.expiry?(localStorage.removeItem(e),void 0):n.value}},theme={active:function(){const e=localDB.get("theme");if(e==null)return;theme.toggle(e),window.matchMedia("(prefers-color-scheme: dark)").addListener(function(e){theme.toggle(e.matches?"dark":"light")})},toggle:function(e){document.documentElement.setAttribute("data-theme",e),localDB.set("theme",e,2);const t=document.querySelector("iframe.giscus-frame");if(t){const n={setConfig:{theme:e}};t.contentWindow.postMessage({giscus:n},"https://giscus.app")}}},theme.active()})(window)</script><script class=next-config data-name=page type=application/json>{"comments":false,"isHome":false,"isPage":false,"path":"modern-cmake-for-cpp","permalink":"https://hxhue.github.io/modern-cmake-for-cpp/","title":"Modern-Cmake-for-Cpps","waline":{"js":[{"alias":"waline","alias_name":"@waline/client","file":"dist/pageview.js","name":"pageview","version":"2.13.0"},{"alias":"waline","alias_name":"@waline/client","file":"dist/comment.js","name":"comment","version":"2.13.0"}]}}</script><script type=text/javascript>document.addEventListener("DOMContentLoaded",()=>{var e=document.createElement("script");e.charset="UTF-8",e.src="",e.async=!1,e.defer=!0,document.head.appendChild(e),e.onload=function(){NexT.utils.fmtBusuanzi()}})</script><title>modern-cmake-for-cpp - Bluegill</title><noscript><link rel=stylesheet href=/css/noscript.css></noscript></head><body itemscope itemtype=http://schema.org/WebPage class=use-motion><div class=headband></div><main class=main><header class=header itemscope itemtype=http://schema.org/WPHeader><div class=header-inner><div class=site-brand-container><div class=site-nav-toggle><div class=toggle aria-label role=button><span class=toggle-line></span>
+<span class=toggle-line></span>
+<span class=toggle-line></span></div></div><div class=site-meta><a href=/ class=brand rel=start><i class=logo-line></i><h1 class=site-title>Bluegill</h1><i class=logo-line></i></a><p class=site-subtitle itemprop=description></p></div><div class=site-nav-right><div class="toggle popup-trigger"><i class="fa fa-search fa-fw fa-lg"></i></div></div></div><nav class=site-nav><ul class="main-menu menu"><li class="menu-item menu-item-home"><a href=/ class=hvr-icon-pulse rel=section><i class="fa fa-home hvr-icon"></i>首页</a></li><li class="menu-item menu-item-about"><a href=/about/ class=hvr-icon-pulse rel=section><i class="fa fa-user hvr-icon"></i>关于</a></li><li class="menu-item menu-item-archives"><a href=/archives/ class=hvr-icon-pulse rel=section><i class="fa fa-archive hvr-icon"></i>归档</a></li><li class="menu-item menu-item-categories"><a href=/categories/ class=hvr-icon-pulse rel=section><i class="fa fa-th hvr-icon"></i>分类</a></li><li class="menu-item menu-item-tags"><a href=/tags/ class=hvr-icon-pulse rel=section><i class="fa fa-hashtag hvr-icon"></i>标签</a></li><li class="menu-item menu-item-series"><a href=/series/ class=hvr-icon-pulse rel=section><i class="fa fa-tags hvr-icon"></i>系列</a></li><li class="menu-item menu-item-news"><a href=/news/ class=hvr-icon-pulse rel=section><i class="fa fa-newspaper hvr-icon"></i>趣闻</a></li><li class="menu-item menu-item-search"><a role=button class="popup-trigger hvr-icon-pulse"><i class="fa fa-search fa-fw hvr-icon"></i>搜索</a></li></ul></nav><div class=search-pop-overlay><div class="popup search-popup"><div class=search-header><span class=search-icon><i class="fa fa-search"></i></span><div class=search-input-container><input autocomplete=off autocapitalize=off maxlength=80 placeholder=搜索... spellcheck=false type=search class=search-input></div><span class=popup-btn-close role=button><i class="fa fa-times-circle"></i></span></div><div class="search-result-container no-result"><div class=search-result-icon><i class="fa fa-spinner fa-pulse fa-5x"></i></div></div></div></div></div><div class="toggle sidebar-toggle" role=button><span class=toggle-line></span>
+<span class=toggle-line></span>
+<span class=toggle-line></span></div><aside class=sidebar><div class="sidebar-inner sidebar-overview-active"><ul class=sidebar-nav><li class=sidebar-nav-toc>文章目录</li><li class=sidebar-nav-overview>站点概览</li></ul><div class=sidebar-panel-container><div class="post-toc-wrap sidebar-panel"><div class="post-toc animated"><nav id=TableOfContents></nav></div></div><div class="site-overview-wrap sidebar-panel"><div class="site-author site-overview-item animated" itemprop=author itemscope itemtype=http://schema.org/Person><img class=site-author-image itemprop=image alt=🚮 src=/imgs/371907.jpg><p class=site-author-name itemprop=name>🚮</p><div class=site-description itemprop=description>个人博客，主要是零散的笔记。</div></div><div class="site-state-wrap site-overview-item animated"><nav class=site-state><div class="site-state-item site-state-posts"><a href=/archives/><span class=site-state-item-count>358</span>
+<span class=site-state-item-name>日志</span></a></div><div class="site-state-item site-state-categories"><a href=/categories/><span class=site-state-item-count>10</span>
+<span class=site-state-item-name>分类</span></a></div><div class="site-state-item site-state-tags"><a href=/tags/><span class=site-state-item-count>66</span>
+<span class=site-state-item-name>标签</span></a></div></nav></div><div class="links-of-social site-overview-item animated"><span class=links-of-social-item><a href=https://github.com/hxhue title="Github → https://github.com/hxhue" rel=noopener target=_blank><i class="fab fa-github fa-fw"></i>
+Github
+</a></span><span class=links-of-social-item><a href=/rss.xml title="RSS 订阅 → /rss.xml" rel=noopener target=_blank><i class="fa fa-rss fa-fw"></i>
+RSS 订阅</a></span></div><div class="cc-license animated" itemprop=license><a href=https://creativecommons.org/licenses/by-nc-sa/4.0/deed.zh class=cc-opacity rel=noopener target=_blank title=共享知识><img src=/imgs/cc/big/by_nc_sa.svg alt=共享知识></a></div><div class="links-of-blogroll site-overview-item animated"><div class=links-of-blogroll-title><i class="fa fa-globe fa-fw"></i>
+友情链接</div><ul class=links-of-blogroll-list><li class=links-of-blogroll-item><a href=https://shuai.guru/ title=https://shuai.guru/ target=_blank>shuai.guru</a></li></ul></div></div></div></div></aside><div class=sidebar-dimmer></div></header><div class=tool-buttons><div id=toggle-theme class=button title=深浅模式切换><i class="fas fa-adjust"></i></div><div class=back-to-top role=button title=返回顶部><i class="fa fa-arrow-up"></i>
+<span>0%</span></div></div><div class=reading-progress-bar></div><noscript><div class=noscript-warning>Theme NexT works best with JavaScript enabled</div></noscript><div class="main-inner index posts-expand"><div class=post-block><article itemscope itemtype=http://schema.org/Article class=post-content lang><link itemprop=mainEntityOfPage href=https://hxhue.github.io/modern-cmake-for-cpp/chapter09---program-analysis-tools/><span hidden itemprop=author itemscope itemtype=http://schema.org/Person><meta itemprop=image content="/imgs/371907.jpg"><meta itemprop=name content="🚮"></span><span hidden itemprop=publisher itemscope itemtype=http://schema.org/Organization><meta itemprop=name content="🚮"><meta itemprop=description content="个人博客，主要是零散的笔记。"></span><span hidden itemprop=post itemscope itemtype=http://schema.org/CreativeWork><meta itemprop=name content="chapter09 - program analysis tools"><meta itemprop=description content="说明
+
+这一章节是作者将一些分析工具以函数或内置支持的形式自动化地加入到了 CMake 构建工程的过程中了。
+格式化
+
+clang-format
+静态检查
+
+
+clang-tidy
+cpplint（按照 Google Coding Style 检查）
+cppcheck
+include-what-you-use
+link what you use（CMake 内置）
+
+静态检查受到 CMake 的直接支持：
+
+  All we need to do is set an appropriate target property to a semicolon-separated list containing the path to the checker&rsquo;s executable, followed by any command-line options that should be forwarded to the checker."></span><header class=post-header><h2 class=post-title itemprop="name headline"><a href=/modern-cmake-for-cpp/chapter09---program-analysis-tools/ itemprop=url class=post-title-link>chapter09 - program analysis tools</a></h2><div class=post-meta-container><div class=post-meta-items><span class=post-meta-item><span class=post-meta-item-icon><i class="far fa-calendar"></i>
+</span><span class=post-meta-item-text title=发表于>发表于：
+</span><time title="创建时间：2024-02-01 00:00:00 +0800 CST" itemprop="dateCreated datePublished" datetime="2024-02-01 00:00:00 +0800 CST">2024-02-01
+</time></span><span class=post-meta-item><span class=post-meta-item-icon><i class="far fa-folder-open"></i>
+</span><span class=post-meta-item-text title=分类于>分类于：
+</span><span itemprop=about itemscope itemtype=http://schema.org/Thing><a href=/categories/modern-cmake-for-cpp itemprop=url rel=index><span itemprop=name>modern-cmake-for-cpp</span></a></span></span></div></div></header><div class=post-body itemprop=articleBody><h1 id=说明>说明
+<a class=header-anchor href=#%e8%af%b4%e6%98%8e></a></h1><p>这一章节是作者将一些分析工具以函数或内置支持的形式自动化地加入到了 CMake 构建工程的过程中了。</p><h1 id=格式化>格式化
+<a class=header-anchor href=#%e6%a0%bc%e5%bc%8f%e5%8c%96></a></h1><p>clang-format</p><h1 id=静态检查>静态检查
+<a class=header-anchor href=#%e9%9d%99%e6%80%81%e6%a3%80%e6%9f%a5></a></h1><ol><li>clang-tidy</li><li>cpplint（按照 Google Coding Style 检查）</li><li>cppcheck</li><li>include-what-you-use</li><li>link what you use（CMake 内置）</li></ol><p>静态检查受到 CMake 的直接支持：</p></div><footer class=post-footer><div readmore=true><div class=readmore-overlay><div class=readmore-overlay-center><div class=post-button><a class=btn href=/modern-cmake-for-cpp/chapter09---program-analysis-tools/#more rel=contents>阅读全文 &#187;</a></div></div></div><div class=no-more-to-read><hr><center>没有啦~</center></div></div><div class=post-eof></div></footer></article></div><div class=post-block><article itemscope itemtype=http://schema.org/Article class=post-content lang><link itemprop=mainEntityOfPage href=https://hxhue.github.io/modern-cmake-for-cpp/chapter10---documents/><span hidden itemprop=author itemscope itemtype=http://schema.org/Person><meta itemprop=image content="/imgs/371907.jpg"><meta itemprop=name content="🚮"></span><span hidden itemprop=publisher itemscope itemtype=http://schema.org/Organization><meta itemprop=name content="🚮"><meta itemprop=description content="个人博客，主要是零散的笔记。"></span><span hidden itemprop=post itemscope itemtype=http://schema.org/CreativeWork><meta itemprop=name content="chapter10 - documents"><meta itemprop=description content="Adding Doxygen to your project
+
+安装必要软件包：
+apt-get install doxygen graphviz
+然后就能在 CMake 中引入 Doxygen 包并使用 doxygen_add_docs。
+
+  Since CMake 3.9, we can use the doxygen_add_docs() function from FindDoxygen find-module, which sets the documentation target up.
+注意 FindDoxygen module 推荐使用方式是 find_package，虽然可以 include 但是不推荐。
+doxygen 用的是 Javadoc 的格式。
+通过设置 DOXYGEN_HTML_EXTRA_STYLESHEET 选项可以修改输出文档的样式。比如 https://github.com/jothepro/doxygen-awesome-css 就是一个比较现代化的样式。"></span><header class=post-header><h2 class=post-title itemprop="name headline"><a href=/modern-cmake-for-cpp/chapter10---documents/ itemprop=url class=post-title-link>chapter10 - documents</a></h2><div class=post-meta-container><div class=post-meta-items><span class=post-meta-item><span class=post-meta-item-icon><i class="far fa-calendar"></i>
+</span><span class=post-meta-item-text title=发表于>发表于：
+</span><time title="创建时间：2024-02-01 00:00:00 +0800 CST" itemprop="dateCreated datePublished" datetime="2024-02-01 00:00:00 +0800 CST">2024-02-01
+</time></span><span class=post-meta-item><span class=post-meta-item-icon><i class="far fa-folder-open"></i>
+</span><span class=post-meta-item-text title=分类于>分类于：
+</span><span itemprop=about itemscope itemtype=http://schema.org/Thing><a href=/categories/modern-cmake-for-cpp itemprop=url rel=index><span itemprop=name>modern-cmake-for-cpp</span></a></span></span></div></div></header><div class=post-body itemprop=articleBody><h1 id=adding-doxygen-to-your-project>Adding Doxygen to your project
+<a class=header-anchor href=#adding-doxygen-to-your-project></a></h1><p>安装必要软件包：</p><div class=highlight><pre tabindex=0 style=color:#93a1a1;background-color:#002b36;-moz-tab-size:2;-o-tab-size:2;tab-size:2><code class=language-bash data-lang=bash><span style=display:flex><span>apt-get install doxygen graphviz
+</span></span></code></pre></div><p>然后就能在 CMake 中引入 Doxygen 包并使用 <code>doxygen_add_docs</code>。</p><blockquote><p>Since CMake 3.9, we can use the <code>doxygen_add_docs()</code> function from <code>FindDoxygen</code> find-module, which sets the documentation target up.</p><p>注意 FindDoxygen module 推荐使用方式是 find_package，虽然可以 include 但是不推荐。</p></blockquote></div><footer class=post-footer><div readmore=true><div class=readmore-overlay><div class=readmore-overlay-center><div class=post-button><a class=btn href=/modern-cmake-for-cpp/chapter10---documents/#more rel=contents>阅读全文 &#187;</a></div></div></div><div class=no-more-to-read><hr><center>没有啦~</center></div></div><div class=post-eof></div></footer></article></div><div class=post-block><article itemscope itemtype=http://schema.org/Article class=post-content lang><link itemprop=mainEntityOfPage href=https://hxhue.github.io/modern-cmake-for-cpp/chapter11---installing-and-packaging/><span hidden itemprop=author itemscope itemtype=http://schema.org/Person><meta itemprop=image content="/imgs/371907.jpg"><meta itemprop=name content="🚮"></span><span hidden itemprop=publisher itemscope itemtype=http://schema.org/Organization><meta itemprop=name content="🚮"><meta itemprop=description content="个人博客，主要是零散的笔记。"></span><span hidden itemprop=post itemscope itemtype=http://schema.org/CreativeWork><meta itemprop=name content="chapter11 - installing and packaging"><meta itemprop=description content="Exporting without installation
+
+使用 export 命令可以创建导出文件，然后其他工程只要 include 这个导出文件就能使用当前这个包中的 target，而不需要先将这个包用 install 安装在系统里。
+export(TARGETS [target1 [target2 [...]]]
+      [NAMESPACE <namespace>] [APPEND] FILE <path>
+      [EXPORT_LINK_INTERFACE_LIBRARIES]
+
+  NAMESPACE is recommended as a hint, stating that the target has been imported from other projects.
+APPEND tells CMake that it shouldn&rsquo;t erase the contents of the file before writing. 也就是说本身会按照 FILE 来覆写文件，但是 APPEND 使得写入方式变成追加。"></span><header class=post-header><h2 class=post-title itemprop="name headline"><a href=/modern-cmake-for-cpp/chapter11---installing-and-packaging/ itemprop=url class=post-title-link>chapter11 - installing and packaging</a></h2><div class=post-meta-container><div class=post-meta-items><span class=post-meta-item><span class=post-meta-item-icon><i class="far fa-calendar"></i>
+</span><span class=post-meta-item-text title=发表于>发表于：
+</span><time title="创建时间：2024-02-01 00:00:00 +0800 CST" itemprop="dateCreated datePublished" datetime="2024-02-01 00:00:00 +0800 CST">2024-02-01
+</time></span><span class=post-meta-item><span class=post-meta-item-icon><i class="far fa-calendar-check"></i>
+</span><span class=post-meta-item-text title=更新于>更新于：
+</span><time title=修改时间：2024-08-18T00:00:00+08:00 itemprop=dateModified datetime=2024-08-18T00:00:00+08:00>2024-08-18</time>
+</span><span class=post-meta-item><span class=post-meta-item-icon><i class="far fa-folder-open"></i>
+</span><span class=post-meta-item-text title=分类于>分类于：
+</span><span itemprop=about itemscope itemtype=http://schema.org/Thing><a href=/categories/modern-cmake-for-cpp itemprop=url rel=index><span itemprop=name>modern-cmake-for-cpp</span></a></span></span></div></div></header><div class=post-body itemprop=articleBody><h1 id=exporting-without-installation>Exporting without installation
+<a class=header-anchor href=#exporting-without-installation></a></h1><p>使用 <code>export</code> 命令可以创建导出文件，然后其他工程只要 include 这个导出文件就能使用当前这个包中的 target，而不需要先将这个包用 <code>install</code> 安装在系统里。</p><div class=highlight><pre tabindex=0 style=color:#93a1a1;background-color:#002b36;-moz-tab-size:2;-o-tab-size:2;tab-size:2><code class=language-cmake data-lang=cmake><span style=display:flex><span><span style=color:#b58900>export</span>(<span style=color:#2aa198>TARGETS</span> <span style=color:#2aa198>[target1</span> <span style=color:#2aa198>[target2</span> <span style=color:#2aa198>[...]]]</span>
+</span></span><span style=display:flex><span>      <span style=color:#2aa198>[NAMESPACE</span> <span style=color:#2aa198>&lt;namespace&gt;]</span> <span style=color:#2aa198>[APPEND]</span> <span style=color:#2aa198>FILE</span> <span style=color:#2aa198>&lt;path&gt;</span>
+</span></span><span style=display:flex><span>      <span style=color:#2aa198>[EXPORT_LINK_INTERFACE_LIBRARIES]</span>
+</span></span></code></pre></div><blockquote><p><code>NAMESPACE</code> is recommended as a hint, stating that the target has been imported from other projects.</p><p><code>APPEND</code> tells CMake that it shouldn&rsquo;t erase the contents of the file before writing. 也就是说本身会按照 <code>FILE</code> 来覆写文件，但是 <code>APPEND</code> 使得写入方式变成追加。</p><p><code>EXPORT_LINK_INTERFACE_LIBRARIES</code> will export target link dependencies (including imported and config-specific variants).</p></blockquote><p>例子：</p></div><footer class=post-footer><div readmore=true><div class=readmore-overlay><div class=readmore-overlay-center><div class=post-button><a class=btn href=/modern-cmake-for-cpp/chapter11---installing-and-packaging/#more rel=contents>阅读全文 &#187;</a></div></div></div><div class=no-more-to-read><hr><center>没有啦~</center></div></div><div class=post-eof></div></footer></article></div><div class=post-block><article itemscope itemtype=http://schema.org/Article class=post-content lang><link itemprop=mainEntityOfPage href=https://hxhue.github.io/modern-cmake-for-cpp/chapter11.a---%E5%AF%B9%E6%AF%94-export-%E5%92%8C-install-%E5%91%BD%E4%BB%A4/><span hidden itemprop=author itemscope itemtype=http://schema.org/Person><meta itemprop=image content="/imgs/371907.jpg"><meta itemprop=name content="🚮"></span><span hidden itemprop=publisher itemscope itemtype=http://schema.org/Organization><meta itemprop=name content="🚮"><meta itemprop=description content="个人博客，主要是零散的笔记。"></span><span hidden itemprop=post itemscope itemtype=http://schema.org/CreativeWork><meta itemprop=name content="chapter11.a - 对比 export 和 install 命令"><meta itemprop=description content="export 和 install 命令都有 TARGETS 和 EXPORT 两种参数形式，所以容易混淆：
+export (TARGETS ...)
+  将给定的 targets 导出到 target export file，不会创建 named export
+
+install(TARGETS ... [EXPORT] ...)
+  如果有 EXPORT，除了安装之外，还会顺便从 targets 创建 named export（有两个作用！！这个是我是检查了 cmake_install.cmake 的）
+
+export (EXPORT  ...)
+  将 named export 导出到文件，可以指定名字空间
+
+install(EXPORT  ...)
+  将 named export 安装到系统，和 export(EXPORT ...) 有相似的参数，同样可以指定名字空间
+export 命令用来导出 target export file。install 命令用来安装文件到系统。在 target export file 的场景下，两者都能用于“安装”，但是前者一般是用在安装在临时路径上（参考 
+Exporting without installation），而后者是用来安装进系统的。"></span><header class=post-header><h2 class=post-title itemprop="name headline"><a href=/modern-cmake-for-cpp/chapter11.a---%E5%AF%B9%E6%AF%94-export-%E5%92%8C-install-%E5%91%BD%E4%BB%A4/ itemprop=url class=post-title-link>chapter11.a - 对比 export 和 install 命令</a></h2><div class=post-meta-container><div class=post-meta-items><span class=post-meta-item><span class=post-meta-item-icon><i class="far fa-calendar"></i>
+</span><span class=post-meta-item-text title=发表于>发表于：
+</span><time title="创建时间：2024-02-01 00:00:00 +0800 CST" itemprop="dateCreated datePublished" datetime="2024-02-01 00:00:00 +0800 CST">2024-02-01
+</time></span><span class=post-meta-item><span class=post-meta-item-icon><i class="far fa-calendar-check"></i>
+</span><span class=post-meta-item-text title=更新于>更新于：
+</span><time title=修改时间：2024-08-18T00:00:00+08:00 itemprop=dateModified datetime=2024-08-18T00:00:00+08:00>2024-08-18</time>
+</span><span class=post-meta-item><span class=post-meta-item-icon><i class="far fa-folder-open"></i>
+</span><span class=post-meta-item-text title=分类于>分类于：
+</span><span itemprop=about itemscope itemtype=http://schema.org/Thing><a href=/categories/modern-cmake-for-cpp itemprop=url rel=index><span itemprop=name>modern-cmake-for-cpp</span></a></span></span></div></div></header><div class=post-body itemprop=articleBody><p><code>export</code> 和 <code>install</code> 命令都有 <code>TARGETS</code> 和 <code>EXPORT</code> 两种参数形式，所以容易混淆：</p><div class=highlight><pre tabindex=0 style=color:#93a1a1;background-color:#002b36;-moz-tab-size:2;-o-tab-size:2;tab-size:2><code class=language-cmake data-lang=cmake><span style=display:flex><span><span style=color:#b58900>export</span> (<span style=color:#2aa198>TARGETS</span> <span style=color:#2aa198>...</span>)
+</span></span><span style=display:flex><span>  将给定的 targets 导出到 target export file，不会创建 named export
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#b58900>install</span>(<span style=color:#2aa198>TARGETS</span> <span style=color:#2aa198>...</span> <span style=color:#2aa198>[EXPORT]</span> <span style=color:#2aa198>...</span>)
+</span></span><span style=display:flex><span>  如果有 EXPORT，除了安装之外，还会顺便从 targets 创建 named export（有两个作用！！这个是我是检查了 cmake_install.cmake 的）
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#b58900>export</span> (<span style=color:#2aa198>EXPORT</span>  <span style=color:#2aa198>...</span>)
+</span></span><span style=display:flex><span>  将 named export 导出到文件，可以指定名字空间
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#b58900>install</span>(<span style=color:#2aa198>EXPORT</span>  <span style=color:#2aa198>...</span>)
+</span></span><span style=display:flex><span>  将 named export 安装到系统，和 <span style=color:#b58900>export</span>(<span style=color:#2aa198>EXPORT</span> <span style=color:#2aa198>...</span>) 有相似的参数，同样可以指定名字空间
+</span></span></code></pre></div><p><code>export</code> 命令用来导出 target export file。<code>install</code> 命令用来安装文件到系统。在 target export file 的场景下，两者都能用于“安装”，但是前者一般是用在安装在临时路径上（参考
+<a href=/modern-cmake-for-cpp/chapter11---installing-and-packaging/#exporting-without-installation title="Exporting without installation">Exporting without installation</a>），而后者是用来安装进系统的。</p><p>例子：unnamed export VS named export</p></div><footer class=post-footer><div readmore=true><div class=readmore-overlay><div class=readmore-overlay-center><div class=post-button><a class=btn href=/modern-cmake-for-cpp/chapter11.a---%E5%AF%B9%E6%AF%94-export-%E5%92%8C-install-%E5%91%BD%E4%BB%A4/#more rel=contents>阅读全文 &#187;</a></div></div></div><div class=no-more-to-read><hr><center>没有啦~</center></div></div><div class=post-eof></div></footer></article></div><div class=post-block><article itemscope itemtype=http://schema.org/Article class=post-content lang><link itemprop=mainEntityOfPage href=https://hxhue.github.io/modern-cmake-for-cpp/chapter12---full-project/><span hidden itemprop=author itemscope itemtype=http://schema.org/Person><meta itemprop=image content="/imgs/371907.jpg"><meta itemprop=name content="🚮"></span><span hidden itemprop=publisher itemscope itemtype=http://schema.org/Organization><meta itemprop=name content="🚮"><meta itemprop=description content="个人博客，主要是零散的笔记。"></span><span hidden itemprop=post itemscope itemtype=http://schema.org/CreativeWork><meta itemprop=name content="chapter12 - full project"><meta itemprop=description content='总体结构
+
+
+
+一些文件的分析
+
+chapter12/01-full-project/src/calc/CMakeLists.txt
+add_library(calc_obj OBJECT calc.cpp)
+target_include_directories(calc_obj INTERFACE
+  "$<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>"
+  "$<INSTALL_INTERFACE:${CMAKE_INSTALL_INCLUDEDIR}>"
+)
+set_target_properties(calc_obj PROPERTIES
+    PUBLIC_HEADER src/calc/include/calc/calc.h
+    POSITION_INDEPENDENT_CODE 1
+)
+
+add_library(calc_shared SHARED)
+target_link_libraries(calc_shared calc_obj)
+add_library(calc_static STATIC)
+target_link_libraries(calc_static calc_obj)
+一些要点：
+
+target_include_directories 使用生成器表达式为 build 和 install 之后指定了不同的包含路径。导出 target export file 的话这个细节非常重要。
+然后是设置对象的属性。因为我们的库不是 SHARED 类型而是 OBJECT 类型，所以不是默认 PIC 的。需要正确设置 POSITION_INDEPENDENT_CODE 属性（NexusNet 是在全局编译选项中加入 -fPIC 保证这一点的）。
+
+chapter12/01-full-project/cmake/GetFTXUI.cmake'></span><header class=post-header><h2 class=post-title itemprop="name headline"><a href=/modern-cmake-for-cpp/chapter12---full-project/ itemprop=url class=post-title-link>chapter12 - full project</a></h2><div class=post-meta-container><div class=post-meta-items><span class=post-meta-item><span class=post-meta-item-icon><i class="far fa-calendar"></i>
+</span><span class=post-meta-item-text title=发表于>发表于：
+</span><time title="创建时间：2024-02-01 00:00:00 +0800 CST" itemprop="dateCreated datePublished" datetime="2024-02-01 00:00:00 +0800 CST">2024-02-01
+</time></span><span class=post-meta-item><span class=post-meta-item-icon><i class="far fa-calendar-check"></i>
+</span><span class=post-meta-item-text title=更新于>更新于：
+</span><time title=修改时间：2024-04-08T00:00:00+08:00 itemprop=dateModified datetime=2024-04-08T00:00:00+08:00>2024-04-08</time>
+</span><span class=post-meta-item><span class=post-meta-item-icon><i class="far fa-folder-open"></i>
+</span><span class=post-meta-item-text title=分类于>分类于：
+</span><span itemprop=about itemscope itemtype=http://schema.org/Thing><a href=/categories/modern-cmake-for-cpp itemprop=url rel=index><span itemprop=name>modern-cmake-for-cpp</span></a></span></span></div></div></header><div class=post-body itemprop=articleBody><h1 id=总体结构>总体结构
+<a class=header-anchor href=#%e6%80%bb%e4%bd%93%e7%bb%93%e6%9e%84></a></h1><p><img src=/assets/910d063161cd1f14c4743331743ba2d5.webp></p><h1 id=一些文件的分析>一些文件的分析
+<a class=header-anchor href=#%e4%b8%80%e4%ba%9b%e6%96%87%e4%bb%b6%e7%9a%84%e5%88%86%e6%9e%90></a></h1><p>chapter12/01-full-project/src/calc/CMakeLists.txt</p><div class=highlight><pre tabindex=0 style=color:#93a1a1;background-color:#002b36;-moz-tab-size:2;-o-tab-size:2;tab-size:2><code class=language-cmake data-lang=cmake><span style=display:flex><span><span style=color:#b58900>add_library</span>(<span style=color:#2aa198>calc_obj</span> <span style=color:#2aa198>OBJECT</span> <span style=color:#2aa198>calc.cpp</span>)
+</span></span><span style=display:flex><span><span style=color:#b58900>target_include_directories</span>(<span style=color:#2aa198>calc_obj</span> <span style=color:#2aa198>INTERFACE</span>
+</span></span><span style=display:flex><span>  <span style=color:#2aa198>&#34;$&lt;BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include&gt;&#34;</span>
+</span></span><span style=display:flex><span>  <span style=color:#2aa198>&#34;$&lt;INSTALL_INTERFACE:${CMAKE_INSTALL_INCLUDEDIR}&gt;&#34;</span>
+</span></span><span style=display:flex><span>)
+</span></span><span style=display:flex><span><span style=color:#b58900>set_target_properties</span>(<span style=color:#2aa198>calc_obj</span> <span style=color:#2aa198>PROPERTIES</span>
+</span></span><span style=display:flex><span>    <span style=color:#2aa198>PUBLIC_HEADER</span> <span style=color:#2aa198>src/calc/include/calc/calc.h</span>
+</span></span><span style=display:flex><span>    <span style=color:#2aa198>POSITION_INDEPENDENT_CODE</span> <span style=color:#2aa198>1</span>
+</span></span><span style=display:flex><span>)
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#b58900>add_library</span>(<span style=color:#2aa198>calc_shared</span> <span style=color:#2aa198>SHARED</span>)
+</span></span><span style=display:flex><span><span style=color:#b58900>target_link_libraries</span>(<span style=color:#2aa198>calc_shared</span> <span style=color:#2aa198>calc_obj</span>)
+</span></span><span style=display:flex><span><span style=color:#b58900>add_library</span>(<span style=color:#2aa198>calc_static</span> <span style=color:#2aa198>STATIC</span>)
+</span></span><span style=display:flex><span><span style=color:#b58900>target_link_libraries</span>(<span style=color:#2aa198>calc_static</span> <span style=color:#2aa198>calc_obj</span>)
+</span></span></code></pre></div><p>一些要点：</p></div><footer class=post-footer><div readmore=true><div class=readmore-overlay><div class=readmore-overlay-center><div class=post-button><a class=btn href=/modern-cmake-for-cpp/chapter12---full-project/#more rel=contents>阅读全文 &#187;</a></div></div></div><div class=no-more-to-read><hr><center>没有啦~</center></div></div><div class=post-eof></div></footer></article></div><nav class=pagination><a class="extend prev" rel=prev href=/modern-cmake-for-cpp/><i class="fa fa-angle-left"></i>
+</a><a class=page-number href=/modern-cmake-for-cpp/>1</a>
+<span class="page-number current">2</span></nav></div></main><footer class=footer><div class=footer-inner><div class=copyright>&copy;
+<span itemprop=copyrightYear>2023 - 2024
+</span><span class=with-love><i class="fa fa-heart"></i>
+</span><span class=author itemprop=copyrightHolder>🚮</span></div><div class=powered-by>由 <a href=https://gohugo.io title=0.134.2 target=_blank>Hugo</a> & <a href=https://github.com/hugo-next/hugo-theme-next title=4.5.3 target=_blank>Hugo NexT.Gemini</a> 强力驱动</div></div></footer><script type=text/javascript src=https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.1/anime.min.js defer></script><script type=text/javascript src=https://cdnjs.cloudflare.com/ajax/libs/medium-zoom/1.1.0/medium-zoom.min.js defer></script><script class=next-config data-name=main type=application/json>{"bookmark":{"color":"#222","enable":false,"save":"manual"},"copybtn":true,"darkmode":false,"hostname":"https://hxhue.github.io/","i18n":{"ds_day":" 天前","ds_days":" 天 ","ds_hour":" 小时前","ds_hours":" 小时 ","ds_just":"刚刚","ds_min":" 分钟前","ds_mins":" 分钟","ds_month":" 个月前","ds_years":" 年 ","empty":"没有找到任何搜索结果：${query}","hits":"找到 ${hits} 个搜索结果","hits_time":"找到 ${hits} 个搜索结果（用时 ${time} 毫秒）","placeholder":"搜索..."},"lang":"zh-CN","lazyload":false,"localSearch":{"enable":true,"limit":1e3,"path":"/searchindexes.xml","preload":false,"topnperarticle":-1,"trigger":"auto","unescape":false},"motion":{"async":true,"enable":true,"transition":{"collheader":"fadeInLeft","menu_item":"fadeInDown","postblock":"fadeIn","postbody":"fadeInDown","postheader":"fadeInDown","sidebar":"fadeInUp"}},"postmeta":{"comments":{"enable":false,"plugin":"waline"},"views":{"enable":false,"plugin":"busuanzi"}},"root":"/","scheme":"Gemini","sidebar":{"display":"post","offset":12,"padding":18,"position":"left","width":240},"vendor":{"plugins":"cdnjs","router":"https://cdnjs.cloudflare.com/ajax/libs"},"version":"4.5.3"}</script><script type=text/javascript src=/js/main.min.2364ac9b84ef73a8e1f410750dcb5d05304569299b7b9ee0891dd142eec7cf48.js defer></script></body></html>
