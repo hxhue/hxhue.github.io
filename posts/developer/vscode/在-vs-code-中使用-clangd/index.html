@@ -1,0 +1,105 @@
+<!doctype html><html lang=zh-CN data-theme=light><head><meta charset=UTF-8><meta name=viewport content="width=device-width"><meta name=theme-color content="#222" media="(prefers-color-scheme: light)"><meta name=generator content="Hugo 0.134.2"><link rel="shortcut icon" type=image/x-icon href=/imgs/icons/favicon.ico><link rel=icon type=image/x-icon href=/imgs/icons/favicon.ico><link rel=icon type=image/png sizes=16x16 href=/imgs/icons/favicon_16x16_next.png><link rel=icon type=image/png sizes=32x32 href=/imgs/icons/favicon_32_32_next.png><link rel=apple-touch-icon sizes=180x180 href=/imgs/icons/apple_touch_icon_next.png><meta itemprop=name content="在 VS Code 中使用 clangd"><meta itemprop=description content="个人博客，主要是零散的笔记。"><meta itemprop=datePublished zgotmplz><meta itemprop=dateModified zgotmplz><meta itemprop=image content="https://hxhue.github.io/imgs/371907.jpg"><meta itemprop=keywords content="vscode,clangd"><link type=text/css rel=stylesheet href=https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.1.2/css/all.min.css><link type=text/css rel=stylesheet href=https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.1.1/animate.min.css><link rel=stylesheet href=/css/main.min.505cfafb3d9d060165a27efc01baec49ccbaf2c60a8c02db3159dfbac91c89b6.css><link rel=stylesheet type=text/css href=/css/style.css><link rel=preconnect href=https://fonts.googleapis.com><link rel=preconnect href=https://fonts.gstatic.com crossorigin><link rel=stylesheet href=https://cdn.jsdelivr.net/npm/github-markdown-css@5.3.0/github-markdown-dark.css><script type=text/javascript id=MathJax-script async src=https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-svg.js></script><script>MathJax={tex:{displayMath:[["$$","$$"],["\\[","\\]"]],inlineMath:[["$","$"],["\\(","\\)"]]},svg:{fontCache:"global"}}</script><script type=module>
+  import mermaid from 'https://cdn.jsdelivr.net/npm/mermaid/dist/mermaid.esm.min.mjs';
+  mermaid.initialize({ startOnLoad: false });
+  mermaid.mermaidAPI.initialize();
+  window.mermaid = mermaid;
+</script><script type=text/javascript>(function(){localDB={set:function(e,t,n){if(n===0)return;const s=new Date,o=n*864e5,i={value:t,expiry:s.getTime()+o};localStorage.setItem(e,JSON.stringify(i))},get:function(e){const t=localStorage.getItem(e);if(!t)return void 0;const n=JSON.parse(t),s=new Date;return s.getTime()>n.expiry?(localStorage.removeItem(e),void 0):n.value}},theme={active:function(){const e=localDB.get("theme");if(e==null)return;theme.toggle(e),window.matchMedia("(prefers-color-scheme: dark)").addListener(function(e){theme.toggle(e.matches?"dark":"light")})},toggle:function(e){document.documentElement.setAttribute("data-theme",e),localDB.set("theme",e,2);const t=document.querySelector("iframe.giscus-frame");if(t){const n={setConfig:{theme:e}};t.contentWindow.postMessage({giscus:n},"https://giscus.app")}}},theme.active()})(window)</script><script class=next-config data-name=page type=application/json>{"comments":false,"isHome":false,"isPage":true,"path":"%E5%9C%A8-vs-code-%E4%B8%AD%E4%BD%BF%E7%94%A8-clangd","permalink":"https://hxhue.github.io/posts/developer/vscode/%E5%9C%A8-vs-code-%E4%B8%AD%E4%BD%BF%E7%94%A8-clangd/","title":"在 VS Code 中使用 clangd","waline":{"js":[{"alias":"waline","alias_name":"@waline/client","file":"dist/pageview.js","name":"pageview","version":"2.13.0"},{"alias":"waline","alias_name":"@waline/client","file":"dist/comment.js","name":"comment","version":"2.13.0"}]}}</script><script type=text/javascript>document.addEventListener("DOMContentLoaded",()=>{var e=document.createElement("script");e.charset="UTF-8",e.src="",e.async=!1,e.defer=!0,document.head.appendChild(e),e.onload=function(){NexT.utils.fmtBusuanzi()}})</script><title>在 VS Code 中使用 clangd - Bluegill</title><noscript><link rel=stylesheet href=/css/noscript.css></noscript></head><body itemscope itemtype=http://schema.org/WebPage class=use-motion><div class=headband></div><main class=main><header class=header itemscope itemtype=http://schema.org/WPHeader><div class=header-inner><div class=site-brand-container><div class=site-nav-toggle><div class=toggle aria-label role=button><span class=toggle-line></span>
+<span class=toggle-line></span>
+<span class=toggle-line></span></div></div><div class=site-meta><a href=/ class=brand rel=start><i class=logo-line></i><h1 class=site-title>Bluegill</h1><i class=logo-line></i></a><p class=site-subtitle itemprop=description></p></div><div class=site-nav-right><div class="toggle popup-trigger"><i class="fa fa-search fa-fw fa-lg"></i></div></div></div><nav class=site-nav><ul class="main-menu menu"><li class="menu-item menu-item-home"><a href=/ class=hvr-icon-pulse rel=section><i class="fa fa-home hvr-icon"></i>首页</a></li><li class="menu-item menu-item-about"><a href=/about/ class=hvr-icon-pulse rel=section><i class="fa fa-user hvr-icon"></i>关于</a></li><li class="menu-item menu-item-archives"><a href=/archives/ class=hvr-icon-pulse rel=section><i class="fa fa-archive hvr-icon"></i>归档</a></li><li class="menu-item menu-item-categories"><a href=/categories/ class=hvr-icon-pulse rel=section><i class="fa fa-th hvr-icon"></i>分类</a></li><li class="menu-item menu-item-tags"><a href=/tags/ class=hvr-icon-pulse rel=section><i class="fa fa-hashtag hvr-icon"></i>标签</a></li><li class="menu-item menu-item-series"><a href=/series/ class=hvr-icon-pulse rel=section><i class="fa fa-tags hvr-icon"></i>系列</a></li><li class="menu-item menu-item-news"><a href=/news/ class=hvr-icon-pulse rel=section><i class="fa fa-newspaper hvr-icon"></i>趣闻</a></li><li class="menu-item menu-item-search"><a role=button class="popup-trigger hvr-icon-pulse"><i class="fa fa-search fa-fw hvr-icon"></i>搜索</a></li></ul></nav><div class=search-pop-overlay><div class="popup search-popup"><div class=search-header><span class=search-icon><i class="fa fa-search"></i></span><div class=search-input-container><input autocomplete=off autocapitalize=off maxlength=80 placeholder=搜索... spellcheck=false type=search class=search-input></div><span class=popup-btn-close role=button><i class="fa fa-times-circle"></i></span></div><div class="search-result-container no-result"><div class=search-result-icon><i class="fa fa-spinner fa-pulse fa-5x"></i></div></div></div></div></div><div class="toggle sidebar-toggle" role=button><span class=toggle-line></span>
+<span class=toggle-line></span>
+<span class=toggle-line></span></div><aside class=sidebar><div class="sidebar-inner sidebar-nav-active sidebar-toc-active"><ul class=sidebar-nav><li class=sidebar-nav-toc>文章目录</li><li class=sidebar-nav-overview>站点概览</li></ul><div class=sidebar-panel-container><div class="post-toc-wrap sidebar-panel"><div class="post-toc animated"><nav id=TableOfContents><ul><li><a href=#设置-vs-code-clangd-检查的语言标准为-c17>设置 VS Code clangd 检查的语言标准为 C++17</a></li><li><a href=#clangd-找不到头文件>Clangd 找不到头文件</a></li><li><a href=#有什么缺点>有什么缺点？</a></li><li><a href=#有哪些地方要小心>有哪些地方要小心？</a></li></ul></nav></div></div><div class="site-overview-wrap sidebar-panel"><div class="site-author site-overview-item animated" itemprop=author itemscope itemtype=http://schema.org/Person><img class=site-author-image itemprop=image alt=🚮 src=/imgs/371907.jpg><p class=site-author-name itemprop=name>🚮</p><div class=site-description itemprop=description>个人博客，主要是零散的笔记。</div></div><div class="site-state-wrap site-overview-item animated"><nav class=site-state><div class="site-state-item site-state-posts"><a href=/archives/><span class=site-state-item-count>363</span>
+<span class=site-state-item-name>日志</span></a></div><div class="site-state-item site-state-categories"><a href=/categories/><span class=site-state-item-count>10</span>
+<span class=site-state-item-name>分类</span></a></div><div class="site-state-item site-state-tags"><a href=/tags/><span class=site-state-item-count>68</span>
+<span class=site-state-item-name>标签</span></a></div></nav></div><div class="links-of-social site-overview-item animated"><span class=links-of-social-item><a href=https://github.com/hxhue title="Github → https://github.com/hxhue" rel=noopener target=_blank><i class="fab fa-github fa-fw"></i>
+Github
+</a></span><span class=links-of-social-item><a href=/rss.xml title="RSS 订阅 → /rss.xml" rel=noopener target=_blank><i class="fa fa-rss fa-fw"></i>
+RSS 订阅</a></span></div><div class="cc-license animated" itemprop=license><a href=https://creativecommons.org/licenses/by-nc-sa/4.0/deed.zh class=cc-opacity rel=noopener target=_blank title=共享知识><img src=/imgs/cc/big/by_nc_sa.svg alt=共享知识></a></div><div class="links-of-blogroll site-overview-item animated"><div class=links-of-blogroll-title><i class="fa fa-globe fa-fw"></i>
+友情链接</div><ul class=links-of-blogroll-list><li class=links-of-blogroll-item><a href=https://shuai.guru/ title=https://shuai.guru/ target=_blank>shuai.guru</a></li></ul></div></div></div></div></aside><div class=sidebar-dimmer></div></header><div class=tool-buttons><div id=toggle-theme class=button title=深浅模式切换><i class="fas fa-adjust"></i></div><div class=back-to-top role=button title=返回顶部><i class="fa fa-arrow-up"></i>
+<span>0%</span></div></div><div class=reading-progress-bar></div><noscript><div class=noscript-warning>Theme NexT works best with JavaScript enabled</div></noscript><div class="main-inner post posts-expand"><div class=post-block><article itemscope itemtype=http://schema.org/Article class=post-content lang><link itemprop=mainEntityOfPage href=https://hxhue.github.io/posts/developer/vscode/%E5%9C%A8-vs-code-%E4%B8%AD%E4%BD%BF%E7%94%A8-clangd/><span hidden itemprop=author itemscope itemtype=http://schema.org/Person><meta itemprop=image content="/imgs/371907.jpg"><meta itemprop=name content="🚮"></span><span hidden itemprop=publisher itemscope itemtype=http://schema.org/Organization><meta itemprop=name content="🚮"><meta itemprop=description content="个人博客，主要是零散的笔记。"></span><span hidden itemprop=post itemscope itemtype=http://schema.org/CreativeWork><meta itemprop=name content="在 VS Code 中使用 clangd"><meta itemprop=description content='设置 VS Code clangd 检查的语言标准为 C++17
+
+
+
+Set -std in the .yaml file and then reload window of VS Code.
+CompileFlags:
+    Add:
+      [
+        --std=c++17,
+        -Wno-documentation,
+        -Wno-missing-prototypes,
+      ]
+Diagnostics:
+  ClangTidy:
+    Add:
+    [
+        performance-*,
+        bugprone-*,
+        modernize-*,
+        clang-analyzer-*,
+        readability-identifier*,
+    ]
+    CheckOptions:
+      readability-identifier-naming.VariableCase: camelCase
+Clangd 找不到头文件
+
+macOS 自带的 /usr/local/bin 中的 clang 不能提供查询路径。要么把绝对路径改成 PATH 中的命令，要么添加 "--query-driver=/usr/bin/clang++" 在参数中。'></span><header class=post-header><h1 class=post-title itemprop="name headline">在 VS Code 中使用 clangd</h1><div class=post-meta-container><div class=post-meta-items><span class=post-meta-item><span class=post-meta-item-icon><i class="far fa-calendar"></i>
+</span><span class=post-meta-item-text title=发表于>发表于：
+</span><time title="创建时间：2023-11-19 00:00:00 +0800 CST" itemprop="dateCreated datePublished" datetime="2023-11-19 00:00:00 +0800 CST">2023-11-19
+</time></span><span class=post-meta-item><span class=post-meta-item-icon><i class="far fa-calendar-check"></i>
+</span><span class=post-meta-item-text title=更新于>更新于：
+</span><time title=修改时间：2024-04-08T00:00:00+08:00 itemprop=dateModified datetime=2024-04-08T00:00:00+08:00>2024-04-08</time></span></div><div class=post-meta-items><span class=post-meta-item title=字数><span class=post-meta-item-icon><i class="far fa-file-word"></i>
+</span><span class=post-meta-item-text>字数：</span>
+<span>723</span>
+</span><span class=post-meta-item title=阅读><span class=post-meta-item-icon><i class="far fa-clock"></i>
+</span><span class=post-meta-item-text>阅读：&ap;</span>
+<span>2分钟</span></span></div></div></header><div class=post-body itemprop=articleBody><h1 id=设置-vs-code-clangd-检查的语言标准为-c17>设置 VS Code clangd 检查的语言标准为 C++17
+<a class=header-anchor href=#%e8%ae%be%e7%bd%ae-vs-code-clangd-%e6%a3%80%e6%9f%a5%e7%9a%84%e8%af%ad%e8%a8%80%e6%a0%87%e5%87%86%e4%b8%ba-c17></a></h1><p><img src=/assets/75a1c84faccb284ac8b51a1f07d3fc57.png></p><p>Set <code>-std</code> in the <code>.yaml</code> file and then reload window of VS Code.</p><div class=highlight><pre tabindex=0 style=color:#93a1a1;background-color:#002b36;-moz-tab-size:2;-o-tab-size:2;tab-size:2><code class=language-yaml data-lang=yaml><span style=display:flex><span><span style=color:#268bd2>CompileFlags</span>:
+</span></span><span style=display:flex><span>    <span style=color:#268bd2>Add</span>:
+</span></span><span style=display:flex><span>      [
+</span></span><span style=display:flex><span>        --std=c++17,
+</span></span><span style=display:flex><span>        -Wno-documentation,
+</span></span><span style=display:flex><span>        -Wno-missing-prototypes,
+</span></span><span style=display:flex><span>      ]
+</span></span><span style=display:flex><span><span style=color:#268bd2>Diagnostics</span>:
+</span></span><span style=display:flex><span>  <span style=color:#268bd2>ClangTidy</span>:
+</span></span><span style=display:flex><span>    <span style=color:#268bd2>Add</span>:
+</span></span><span style=display:flex><span>    [
+</span></span><span style=display:flex><span>        performance-*,
+</span></span><span style=display:flex><span>        bugprone-*,
+</span></span><span style=display:flex><span>        modernize-*,
+</span></span><span style=display:flex><span>        clang-analyzer-*,
+</span></span><span style=display:flex><span>        readability-identifier*,
+</span></span><span style=display:flex><span>    ]
+</span></span><span style=display:flex><span>    <span style=color:#268bd2>CheckOptions</span>:
+</span></span><span style=display:flex><span>      <span style=color:#268bd2>readability-identifier-naming.VariableCase</span>: camelCase
+</span></span></code></pre></div><h1 id=clangd-找不到头文件>Clangd 找不到头文件
+<a class=header-anchor href=#clangd-%e6%89%be%e4%b8%8d%e5%88%b0%e5%a4%b4%e6%96%87%e4%bb%b6></a></h1><p>macOS 自带的 <code>/usr/local/bin</code> 中的 clang 不能提供查询路径。要么把绝对路径改成 <code>PATH</code> 中的命令，要么添加 <code>"--query-driver=/usr/bin/clang++"</code> 在参数中。</p><p>Windows 下，如果用的是 MSYS2 的编译器，需要添加：</p><div class=highlight><pre tabindex=0 style=color:#93a1a1;background-color:#002b36;-moz-tab-size:2;-o-tab-size:2;tab-size:2><code class=language-json data-lang=json><span style=display:flex><span><span style=color:#2aa198>&#34;clangd.arguments&#34;</span>: [
+</span></span><span style=display:flex><span>    <span style=color:#2aa198>&#34;--query-driver=C:\\msys64\\mingw64\\bin\\g++.exe&#34;</span>
+</span></span><span style=display:flex><span>]
+</span></span><span style=display:flex><span><span style=color:#586e75>// ...
+</span></span></span></code></pre></div><p>到配置文件中，否则跳转到的一直是 Visual Studio 的头文件。必须提供完整路径，相对路径没有效果。</p><h1 id=有什么缺点>有什么缺点？
+<a class=header-anchor href=#%e6%9c%89%e4%bb%80%e4%b9%88%e7%bc%ba%e7%82%b9></a></h1><p><strong>对 cuda 不友好</strong>。在 cuda 文件中找不到从基类继承来的方法和属性（可能是因为用了不同的编译器？）。</p><p><strong>对工程外的文件和头文件支持也不好</strong>，很明显，头文件不会出现在 compile_commands.json 中！</p><p><strong>找不到 <code>&lt;omp.h></code> 文件</strong>（来自第三方库），这个警告总是无法被禁用（手动包含这个路径又会带来其他问题）。</p><p><strong>无法显示 doxygen 文档</strong>。这一点有可能会改变，可以参考这个 <a href=https://github.com/clangd/clangd/issues/529 title="github issue" rel="noopener external nofollow noreferrer" target=_blank class=exturl>github issue<i class="fa fa-external-link-alt"></i></a>。</p><p><strong>多配置块在文件相互跳转的情况下无法真正工作</strong>。虽然 clangd 可以给不同的文件匹配不同的配置块，但从文件 A（打开状态）跳转到文件 B（关闭状态）时，会按照文件 A 匹配上的选项来进行分析。这导致了 CUDA 文件和 C++ 文件可能使用相同的配置。所以按照是否为 CUDA 文件提供不同的配置（编译选项不同）是不现实的。</p><p><strong>Clangd 对于 CUDA 文件中子类从父类继承来的属性和方法的判断不对</strong>。这导致对 CRTP 的检查不能正常工作。</p><h1 id=有哪些地方要小心>有哪些地方要小心？
+<a class=header-anchor href=#%e6%9c%89%e5%93%aa%e4%ba%9b%e5%9c%b0%e6%96%b9%e8%a6%81%e5%b0%8f%e5%bf%83></a></h1><p>如果是使用 VS Code 进行远程开发，一定要设置好 clangd 在开发容器里的配置（比如给出空的 <code>clangd.arguments</code> 数组），不然 clangd 就会使用本地上的设置！例：</p><div class=highlight><pre tabindex=0 style=color:#93a1a1;background-color:#002b36;-moz-tab-size:2;-o-tab-size:2;tab-size:2><code class=language-bash data-lang=bash><span style=display:flex><span><span style=color:#719e07>{</span>
+</span></span><span style=display:flex><span>    <span style=color:#2aa198>&#34;clangd.path&#34;</span>: <span style=color:#2aa198>&#34;/usr/bin/clangd-17&#34;</span>,
+</span></span><span style=display:flex><span>    <span style=color:#2aa198>&#34;clangd.arguments&#34;</span>: <span style=color:#719e07>[]</span>,
+</span></span><span style=display:flex><span>    // ...
+</span></span><span style=display:flex><span><span style=color:#719e07>}</span>
+</span></span></code></pre></div><p>在 .clangd 配置文件中不能使用相对于工程根目录的路径。有人提交了 <a href=https://reviews.llvm.org/D142981 title=patch rel="noopener external nofollow noreferrer" target=_blank class=exturl>patch<i class="fa fa-external-link-alt"></i></a> 但是现在没有回复。</p><p>VS Code 的 clangd 插件是在 build 目录下调用 clangd 分析的，所以<strong>可以用 <code>-I../include/</code></strong>，前提是 build 目录就是工程根部的一个子目录。</p><div class=highlight><pre tabindex=0 style=color:#93a1a1;background-color:#002b36;-moz-tab-size:2;-o-tab-size:2;tab-size:2><code class=language-yaml data-lang=yaml><span style=display:flex><span><span style=color:#268bd2>CompileFlags</span>:
+</span></span><span style=display:flex><span>  <span style=color:#268bd2>Add</span>:
+</span></span><span style=display:flex><span>    - --cuda-path=/usr/local/cuda/
+</span></span><span style=display:flex><span>    - -I../include/
+</span></span><span style=display:flex><span>  <span style=color:#268bd2>Remove</span>:
+</span></span><span style=display:flex><span>    - -forward-unknown-to-host-compiler
+</span></span><span style=display:flex><span>    - --generate-code*
+</span></span><span style=display:flex><span>    - --expt-relaxed-constexpr
+</span></span><span style=display:flex><span>    - -G
+</span></span></code></pre></div><p><strong>之前有时候用 -isystem 不成功是因为 .clangd 的选项是要一行一个</strong>。</p><div class=highlight><pre tabindex=0 style=color:#93a1a1;background-color:#002b36;-moz-tab-size:2;-o-tab-size:2;tab-size:2><code class=language-yaml data-lang=yaml><span style=display:flex><span>...
+</span></span><span style=display:flex><span> - -isystem a/include <span style=color:#586e75># ×</span>
+</span></span><span style=display:flex><span> - -isystem           <span style=color:#586e75># ✔</span>
+</span></span><span style=display:flex><span> - a/include
+</span></span><span style=display:flex><span> - -isystemb/include  <span style=color:#586e75># ✔</span>
+</span></span></code></pre></div></div><footer class=post-footer><div class=post-tags><a href=/tags/vscode>vscode
+</a><a href=/tags/clangd>clangd</a></div><div class=addthis_inline_share_toolbox style=text-align:center></div><hr><div class=post-nav><div class="post-nav-next post-nav-item"><a href=/posts/cli/common/rsync/ rel=next title=rsync><i class="fa fa-chevron-left"></i> rsync</a></div><div class="post-nav-prev post-nav-item"><a href=/posts/systems/linux/editor-pager-browser/ rel=prev title="EDITOR, PAGER, BROWSER">EDITOR, PAGER, BROWSER
+<i class="fa fa-chevron-right"></i></a></div></div></footer></article></div></div></main><footer class=footer><div class=footer-inner><div class=copyright>&copy;
+<span itemprop=copyrightYear>2023 - 2024
+</span><span class=with-love><i class="fa fa-heart"></i>
+</span><span class=author itemprop=copyrightHolder>🚮</span></div><div class=powered-by>由 <a href=https://gohugo.io title=0.134.2 target=_blank>Hugo</a> & <a href=https://github.com/hugo-next/hugo-theme-next title=4.5.3 target=_blank>Hugo NexT.Gemini</a> 强力驱动</div></div></footer><script type=text/javascript src=https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.1/anime.min.js defer></script><script type=text/javascript src=https://cdnjs.cloudflare.com/ajax/libs/medium-zoom/1.1.0/medium-zoom.min.js defer></script><script class=next-config data-name=main type=application/json>{"bookmark":{"color":"#222","enable":false,"save":"manual"},"copybtn":true,"darkmode":false,"hostname":"https://hxhue.github.io/","i18n":{"ds_day":" 天前","ds_days":" 天 ","ds_hour":" 小时前","ds_hours":" 小时 ","ds_just":"刚刚","ds_min":" 分钟前","ds_mins":" 分钟","ds_month":" 个月前","ds_years":" 年 ","empty":"没有找到任何搜索结果：${query}","hits":"找到 ${hits} 个搜索结果","hits_time":"找到 ${hits} 个搜索结果（用时 ${time} 毫秒）","placeholder":"搜索..."},"lang":"zh-CN","lazyload":false,"localSearch":{"enable":true,"limit":1e3,"path":"/searchindexes.xml","preload":false,"topnperarticle":-1,"trigger":"auto","unescape":false},"motion":{"async":true,"enable":true,"transition":{"collheader":"fadeInLeft","menu_item":"fadeInDown","postblock":"fadeIn","postbody":"fadeInDown","postheader":"fadeInDown","sidebar":"fadeInUp"}},"postmeta":{"comments":{"enable":false,"plugin":"waline"},"views":{"enable":false,"plugin":"busuanzi"}},"root":"/","scheme":"Gemini","sidebar":{"display":"post","offset":12,"padding":18,"position":"left","width":240},"vendor":{"plugins":"cdnjs","router":"https://cdnjs.cloudflare.com/ajax/libs"},"version":"4.5.3"}</script><script type=text/javascript src=/js/main.min.2364ac9b84ef73a8e1f410750dcb5d05304569299b7b9ee0891dd142eec7cf48.js defer></script></body></html>
