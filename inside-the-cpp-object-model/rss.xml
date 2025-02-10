@@ -1,0 +1,145 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Inside-the-Cpp-Object-Models on Bluegill</title><link>https://hxhue.github.io/inside-the-cpp-object-model/</link><description>Recent content in Inside-the-Cpp-Object-Models on Bluegill</description><generator>Hugo</generator><language>zh-CN</language><lastBuildDate>Sun, 05 Jan 2025 00:00:00 +0800</lastBuildDate><atom:link href="https://hxhue.github.io/inside-the-cpp-object-model/rss.xml" rel="self" type="application/rss+xml"/><item><title>C++ 对象模型开销总结</title><link>https://hxhue.github.io/inside-the-cpp-object-model/c++-%E5%AF%B9%E8%B1%A1%E6%A8%A1%E5%9E%8B%E5%BC%80%E9%94%80%E6%80%BB%E7%BB%93/</link><pubDate>Sat, 12 Aug 2023 00:00:00 +0800</pubDate><guid>https://hxhue.github.io/inside-the-cpp-object-model/c++-%E5%AF%B9%E8%B1%A1%E6%A8%A1%E5%9E%8B%E5%BC%80%E9%94%80%E6%80%BB%E7%BB%93/</guid><description>&lt;p>&lt;strong>下面都是用的 Itanium C++ ABI。处理器架构为 x86-64。&lt;/strong>&lt;/p>
+&lt;div class="markdown-alert markdown-alert-caution">
+ &lt;p class="markdown-alert-title">&lt;svg class="octicon octicon-stop mr-2" viewBox="0 0 16 16" width="16" height="16"
+ aria-hidden="true">
+ &lt;path
+ d="M4.47.22A.749.749 0 0 1 5 0h6c.199 0 .389.079.53.22l4.25 4.25c.141.14.22.331.22.53v6a.749.749 0 0 1-.22.53l-4.25 4.25A.749.749 0 0 1 11 16H5a.749.749 0 0 1-.53-.22L.22 11.53A.749.749 0 0 1 0 11V5c0-.199.079-.389.22-.53Zm.84 1.28L1.5 5.31v5.38l3.81 3.81h5.38l3.81-3.81V5.31L10.69 1.5ZM8 4a.75.75 0 0 1 .75.75v3.5a.75.75 0 0 1-1.5 0v-3.5A.75.75 0 0 1 8 4Zm0 8a1 1 0 1 1 0-2 1 1 0 0 1 0 2Z">
+ &lt;/path>
+ &lt;/svg>Caution&lt;/p></description></item><item><title>Cfront 如何插入构造函数</title><link>https://hxhue.github.io/inside-the-cpp-object-model/cfront-%E5%A6%82%E4%BD%95%E6%8F%92%E5%85%A5%E6%9E%84%E9%80%A0%E5%87%BD%E6%95%B0/</link><pubDate>Sat, 12 Aug 2023 00:00:00 +0800</pubDate><guid>https://hxhue.github.io/inside-the-cpp-object-model/cfront-%E5%A6%82%E4%BD%95%E6%8F%92%E5%85%A5%E6%9E%84%E9%80%A0%E5%87%BD%E6%95%B0/</guid><description>&lt;p>实际上复制构造函数的插入比较困难，比如在函数返回和传参的时候。由于 C 语言是按位复制（而不是按成员），cfront 会在函数调用前插入返回值变量声明，在函数中使用局部变量运算，并在返回时调用复制构造函数从局部变量复制成员到返回值处。&lt;/p></description></item><item><title>new 和 delete</title><link>https://hxhue.github.io/inside-the-cpp-object-model/new-%E5%92%8C-delete/</link><pubDate>Sat, 12 Aug 2023 00:00:00 +0800</pubDate><guid>https://hxhue.github.io/inside-the-cpp-object-model/new-%E5%92%8C-delete/</guid><description>&lt;h1 id="new">&lt;code>new&lt;/code>
+&lt;a class="header-anchor" href="#new">&lt;/a>
+&lt;/h1>&lt;p>用 new 申请的内存最少占用 1 个字节——尽管我们申请的可能是 0 个字节。&lt;/p>
+&lt;p>
+&lt;img src="https://hxhue.github.io/assets/e06da70dc841cb03e9e0076d20f8f899.png">&lt;/p>
+&lt;h1 id="deletedelete">&lt;code>delete&lt;/code>/&lt;code>delete[]&lt;/code>
+&lt;a class="header-anchor" href="#deletedelete">&lt;/a>
+&lt;/h1>&lt;p>delete 和 delete[] 都会归还空间，但是 delete[] 会询问元素数量，并析构数组中的每个元素，而 delete 只会析构一个元素。&lt;/p></description></item><item><title>vtable</title><link>https://hxhue.github.io/inside-the-cpp-object-model/vtable/</link><pubDate>Sat, 12 Aug 2023 00:00:00 +0800</pubDate><guid>https://hxhue.github.io/inside-the-cpp-object-model/vtable/</guid><description>&lt;h1 id="tldr-性能开销">TL;DR 性能开销
+&lt;a class="header-anchor" href="#tldr-%e6%80%a7%e8%83%bd%e5%bc%80%e9%94%80">&lt;/a>
+&lt;/h1>&lt;p>在不开启优化选项时编译：&lt;/p>
+&lt;ol>
+&lt;li>每次调用虚函数比普通函数多两次访存。&lt;/li>
+&lt;li>每次动态类型转换（除非类型精确命中）都是耗时的图搜索算法。&lt;/li>
+&lt;li>明确需要精确转换时用 &lt;code>std::type_index&lt;/code> 和 &lt;code>static_cast&lt;/code> 会更快。&lt;/li>
+&lt;/ol>
+&lt;p>相关代码下载：&lt;/p></description></item><item><title>按需合成构造函数</title><link>https://hxhue.github.io/inside-the-cpp-object-model/%E6%8C%89%E9%9C%80%E5%90%88%E6%88%90%E6%9E%84%E9%80%A0%E5%87%BD%E6%95%B0/</link><pubDate>Sat, 12 Aug 2023 00:00:00 +0800</pubDate><guid>https://hxhue.github.io/inside-the-cpp-object-model/%E6%8C%89%E9%9C%80%E5%90%88%E6%88%90%E6%9E%84%E9%80%A0%E5%87%BD%E6%95%B0/</guid><description>&lt;p>
+&lt;img src="https://hxhue.github.io/assets/862beea85cbeacd098f8815be021dd62.png">&lt;/p>
+&lt;p>
+&lt;img src="https://hxhue.github.io/assets/44d6ca6c8f48a441c50cc07501a274e2.png">&lt;/p>
+&lt;p>复制、默认构造都是按需生成的。对于平凡的情况不需要生成，只是在语意上满足“拥有构造函数”的含义。&lt;/p>
+&lt;p>&lt;code>x86-64 gcc 13.1 -std=c++20&lt;/code>&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" style="color:#93a1a1;background-color:#002b36;-moz-tab-size:2;-o-tab-size:2;tab-size:2;">&lt;code class="language-cpp" data-lang="cpp">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#719e07">struct&lt;/span> &lt;span style="color:#268bd2">Point&lt;/span> {
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#dc322f">int&lt;/span> x;
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#dc322f">int&lt;/span> y;
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> Point() &lt;span style="color:#719e07">=&lt;/span> &lt;span style="color:#719e07">default&lt;/span>; &lt;span style="color:#586e75">// 即便显式声明了默认构造函数，也不会合成
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#586e75">&lt;/span>};
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#dc322f">int&lt;/span> &lt;span style="color:#268bd2">main&lt;/span>() {
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#719e07">auto&lt;/span> some_point &lt;span style="color:#719e07">=&lt;/span> Point{}; &lt;span style="color:#586e75">// {}初始化对聚合类有清零的效果
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#586e75">&lt;/span>}
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;div class="highlight">&lt;pre tabindex="0" style="color:#93a1a1;background-color:#002b36;-moz-tab-size:2;-o-tab-size:2;tab-size:2;">&lt;code class="language-nasm" data-lang="nasm">&lt;span style="display:flex;">&lt;span>main:
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#268bd2">push&lt;/span> &lt;span style="color:#b58900">rbp&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#268bd2">mov&lt;/span> &lt;span style="color:#b58900">rbp&lt;/span>, &lt;span style="color:#b58900">rsp&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#268bd2">mov&lt;/span> &lt;span style="color:#dc322f">DWORD&lt;/span> &lt;span style="color:#268bd2">PTR&lt;/span> [&lt;span style="color:#b58900">rbp&lt;/span>&lt;span style="color:#719e07">-&lt;/span>&lt;span style="color:#2aa198">8&lt;/span>], &lt;span style="color:#2aa198">0&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#268bd2">mov&lt;/span> &lt;span style="color:#dc322f">DWORD&lt;/span> &lt;span style="color:#268bd2">PTR&lt;/span> [&lt;span style="color:#b58900">rbp&lt;/span>&lt;span style="color:#719e07">-&lt;/span>&lt;span style="color:#2aa198">4&lt;/span>], &lt;span style="color:#2aa198">0&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#268bd2">mov&lt;/span> &lt;span style="color:#b58900">eax&lt;/span>, &lt;span style="color:#2aa198">0&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#268bd2">pop&lt;/span> &lt;span style="color:#b58900">rbp&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#268bd2">ret&lt;/span>
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>修改 Point 的定义：&lt;/p></description></item><item><title>对象布局</title><link>https://hxhue.github.io/inside-the-cpp-object-model/%E5%AF%B9%E8%B1%A1%E5%B8%83%E5%B1%80/</link><pubDate>Sat, 12 Aug 2023 00:00:00 +0800</pubDate><guid>https://hxhue.github.io/inside-the-cpp-object-model/%E5%AF%B9%E8%B1%A1%E5%B8%83%E5%B1%80/</guid><description>&lt;h1 id="关于-access-section">关于 access section
+&lt;a class="header-anchor" href="#%e5%85%b3%e4%ba%8e-access-section">&lt;/a>
+&lt;/h1>&lt;p>不同 access section 数据不保证按序布局。&lt;/p>
+&lt;p>
+&lt;img src="https://hxhue.github.io/assets/a8b2681128b573bd4e51d97c763af9e4.png">&lt;/p>
+&lt;p>
+&lt;img src="https://hxhue.github.io/assets/a0ad7b8b74861c3674b93d10f9853a35.png">&lt;/p>
+&lt;blockquote>
+ &lt;p>我在 Compiler Explorer 上测试了 gcc 和 clang，他们都是忽略 access 权限，将各个 access section 的变量布局直接拼接在一起的。&lt;/p>
+&lt;/blockquote>&lt;p>注：同一个权限也可以是不同的 access section：&lt;/p></description></item><item><title>多继承给 C++ 带来了哪些设计负担？</title><link>https://hxhue.github.io/inside-the-cpp-object-model/%E5%A4%9A%E7%BB%A7%E6%89%BF%E7%BB%99-c++-%E5%B8%A6%E6%9D%A5%E4%BA%86%E5%93%AA%E4%BA%9B%E8%AE%BE%E8%AE%A1%E8%B4%9F%E6%8B%85/</link><pubDate>Sat, 12 Aug 2023 00:00:00 +0800</pubDate><guid>https://hxhue.github.io/inside-the-cpp-object-model/%E5%A4%9A%E7%BB%A7%E6%89%BF%E7%BB%99-c++-%E5%B8%A6%E6%9D%A5%E4%BA%86%E5%93%AA%E4%BA%9B%E8%AE%BE%E8%AE%A1%E8%B4%9F%E6%8B%85/</guid><description>&lt;ol>
+&lt;li>指针偏移本身有少量开销，若需要偏移则得先判空，这样才能保证空指针永远为空。&lt;/li>
+&lt;li>指针偏移对设计虚函数表带来了困难。例如 &lt;strong>thunk&lt;/strong> 技术用来对 this 指针做适配再调用对应函数。&lt;/li>
+&lt;li>指针偏移让指向成员函数的指针携带了 this 偏移量，变成了胖指针。&lt;/li>
+&lt;li>多继承引入了菱形继承困境，进而又引入了虚拟继承。&lt;/li>
+&lt;li>虚拟继承使得 vtable 中还要存储虚基类子对象的偏移。由于不同继承结构中 vtable 里虚基类子对象的偏移可能不同，又引入了 &lt;strong>VTT&lt;/strong>，让子类调用基类构造函数时为基类的构造函数提供 vptr 参数。&lt;/li>
+&lt;/ol></description></item><item><title>多继承下的虚函数</title><link>https://hxhue.github.io/inside-the-cpp-object-model/%E5%A4%9A%E7%BB%A7%E6%89%BF%E4%B8%8B%E7%9A%84%E8%99%9A%E5%87%BD%E6%95%B0/</link><pubDate>Sat, 12 Aug 2023 00:00:00 +0800</pubDate><guid>https://hxhue.github.io/inside-the-cpp-object-model/%E5%A4%9A%E7%BB%A7%E6%89%BF%E4%B8%8B%E7%9A%84%E8%99%9A%E5%87%BD%E6%95%B0/</guid><description>&lt;h1 id="多继承下重载签名相同的函数">多继承下重载签名相同的函数
+&lt;a class="header-anchor" href="#%e5%a4%9a%e7%bb%a7%e6%89%bf%e4%b8%8b%e9%87%8d%e8%bd%bd%e7%ad%be%e5%90%8d%e7%9b%b8%e5%90%8c%e7%9a%84%e5%87%bd%e6%95%b0">&lt;/a>
+&lt;/h1>&lt;p>
+&lt;img src="https://hxhue.github.io/assets/7bd760c39d3ddb901cc71b7795369680.png">&lt;/p>
+&lt;p>结果是&lt;strong>会把基类同签名的所有非 final 虚函数都重写了&lt;/strong>，而且实现方式相同。尽管基类的虚函数签名一样，但是他们没有关联性，所以在子类的虚表中占两个槽（slots）（一个槽是一个指针）。同样的，如果 Interface 中有虚函数 foo，而 A 和 B 都继承了 Interface，C 继承了 A 和 B。如果 A 和 B 没有虚拟继承 Interface，那么在 C 的对象调用函数 foo 时将出现 ambiguous 指代错误。如果 C 重写了 foo 函数，那么指代就还是明确的。&lt;strong>或者，如果 A 和 B 都是虚拟继承自 Interface，那么也不会有编译错误&lt;/strong>。但这样通过指针/引用调用虚函数 foo 就需要先取虚基类子对象 this 的偏移，修改 this 之后再从 vptr 中读虚函数 foo，开销是 4 次访存（将虚拟继承和虚函数调用的代价累加起来了） 。&lt;/p></description></item><item><title>多继承下的指针转换</title><link>https://hxhue.github.io/inside-the-cpp-object-model/%E5%A4%9A%E7%BB%A7%E6%89%BF%E4%B8%8B%E7%9A%84%E6%8C%87%E9%92%88%E8%BD%AC%E6%8D%A2/</link><pubDate>Sat, 12 Aug 2023 00:00:00 +0800</pubDate><guid>https://hxhue.github.io/inside-the-cpp-object-model/%E5%A4%9A%E7%BB%A7%E6%89%BF%E4%B8%8B%E7%9A%84%E6%8C%87%E9%92%88%E8%BD%AC%E6%8D%A2/</guid><description>&lt;p>要注意空指针是特殊情况：&lt;/p>
+&lt;p>
+&lt;img src="https://hxhue.github.io/assets/b91cf97c72043857b03f7b43bb65feac.png">&lt;/p></description></item><item><title>非自动变量初始化</title><link>https://hxhue.github.io/inside-the-cpp-object-model/%E9%9D%9E%E8%87%AA%E5%8A%A8%E5%8F%98%E9%87%8F%E5%88%9D%E5%A7%8B%E5%8C%96/</link><pubDate>Sat, 12 Aug 2023 00:00:00 +0800</pubDate><guid>https://hxhue.github.io/inside-the-cpp-object-model/%E9%9D%9E%E8%87%AA%E5%8A%A8%E5%8F%98%E9%87%8F%E5%88%9D%E5%A7%8B%E5%8C%96/</guid><description>&lt;h1 id="c-和-c-thread_local-的区别">C++ 和 C &lt;code>thread_local&lt;/code> 的区别
+&lt;a class="header-anchor" href="#c-%e5%92%8c-c-thread_local-%e7%9a%84%e5%8c%ba%e5%88%ab">&lt;/a>
+&lt;/h1>&lt;ol>
+&lt;li>C++ 支持使用非常量表达式对全局或静态变量初始化 &lt;sup id="fnref:1">&lt;a href="#fn:1" class="footnote-ref" role="doc-noteref">1&lt;/a>&lt;/sup>。对于 &lt;code>static&lt;/code> local &lt;sup id="fnref:2">&lt;a href="#fn:2" class="footnote-ref" role="doc-noteref">2&lt;/a>&lt;/sup> / &lt;code>thread_local&lt;/code> 变量而言，这项功能需要在访问前检查变量是否已经完成初始化，&lt;strong>&lt;code>thread_local&lt;/code> 初始化不需要线程间同步，而 &lt;code>static&lt;/code> local 变量的访问过程需要线程间的同步（&lt;code>__cxa_guard_acquire&lt;/code> 和 &lt;code>__cxa_guard_release&lt;/code>）&lt;/strong>。&lt;/li>
+&lt;li>C++ 的 &lt;code>thread_local&lt;/code> 变量&lt;strong>在函数作用域中&lt;/strong>自动具有 &lt;code>static&lt;/code> 属性 &lt;sup id="fnref:3">&lt;a href="#fn:3" class="footnote-ref" role="doc-noteref">3&lt;/a>&lt;/sup>，而 C 要手动加。在 C 语言中，函数中的 &lt;code>thread_local&lt;/code> 必须和 &lt;code>extern&lt;/code> 或者 &lt;code>static&lt;/code> 之一一起使用，例子为 &lt;a href="https://godbolt.org/z/eKz71xh7a" title="https://godbolt.org/z/eKz71xh7a" rel="noopener external nofollow noreferrer"
+ target="_blank" class=" exturl" >https://godbolt.org/z/eKz71xh7a&lt;i class="fa fa-external-link-alt">&lt;/i>&lt;/a> 。&lt;/li>
+&lt;li>C 的 &lt;code>thread_local&lt;/code> 在 C23 之前是个宏。&lt;/li>
+&lt;/ol>
+&lt;h1 id="全局-static-变量">全局 (static) 变量
+&lt;a class="header-anchor" href="#%e5%85%a8%e5%b1%80-static-%e5%8f%98%e9%87%8f">&lt;/a>
+&lt;/h1>&lt;p>全局区域定义的变量，可以具有 static 属性也可以没有。&lt;/p></description></item><item><title>复制构造和赋值运算符</title><link>https://hxhue.github.io/inside-the-cpp-object-model/%E5%A4%8D%E5%88%B6%E6%9E%84%E9%80%A0%E5%92%8C%E8%B5%8B%E5%80%BC%E8%BF%90%E7%AE%97%E7%AC%A6/</link><pubDate>Sat, 12 Aug 2023 00:00:00 +0800</pubDate><guid>https://hxhue.github.io/inside-the-cpp-object-model/%E5%A4%8D%E5%88%B6%E6%9E%84%E9%80%A0%E5%92%8C%E8%B5%8B%E5%80%BC%E8%BF%90%E7%AE%97%E7%AC%A6/</guid><description>&lt;h1 id="vptr">vptr
+&lt;a class="header-anchor" href="#vptr">&lt;/a>
+&lt;/h1>&lt;p>这个小节没有提到 vptr 的处理。&lt;/p>
+&lt;ol>
+&lt;li>对于复制构造函数，其本质还是构造，所以和一般的构造函数流程相似，会正确设置好 vptr。&lt;/li>
+&lt;li>对于赋值运算符，原有 vptr 和新的 vptr 是一样的，不需要修改。&lt;/li>
+&lt;/ol>
+&lt;h1 id="怎么写复制构造赋值">怎么写复制构造/赋值？
+&lt;a class="header-anchor" href="#%e6%80%8e%e4%b9%88%e5%86%99%e5%a4%8d%e5%88%b6%e6%9e%84%e9%80%a0%e8%b5%8b%e5%80%bc">&lt;/a>
+&lt;/h1>&lt;p>写复制构造函数和复制赋值操作符的时候要记得把基类和成员都正确初始化（&lt;strong>用默认的最好&lt;/strong>）。复制构造函数也算是构造函数，所以要使用成员初始化列表来正确初始化。&lt;/p></description></item><item><title>构造函数的成员初始化列表</title><link>https://hxhue.github.io/inside-the-cpp-object-model/%E6%9E%84%E9%80%A0%E5%87%BD%E6%95%B0%E7%9A%84%E6%88%90%E5%91%98%E5%88%9D%E5%A7%8B%E5%8C%96%E5%88%97%E8%A1%A8/</link><pubDate>Sat, 12 Aug 2023 00:00:00 +0800</pubDate><guid>https://hxhue.github.io/inside-the-cpp-object-model/%E6%9E%84%E9%80%A0%E5%87%BD%E6%95%B0%E7%9A%84%E6%88%90%E5%91%98%E5%88%9D%E5%A7%8B%E5%8C%96%E5%88%97%E8%A1%A8/</guid><description>&lt;p>初始化会按照变量声明的顺序进行。因此虽然下面的代码想要用 j 的新值初始化 i，但实际上是 &lt;code>i(j)&lt;/code> 先被执行，然后才是 &lt;code>j(val)&lt;/code>。&lt;/p>
+&lt;p>
+&lt;img src="https://hxhue.github.io/assets/06ab52d0a31a5f56f772342fefe137d6.png">&lt;/p>
+&lt;p>不过，构造函数代码块中的初始化过程始终发生于成员初始化列表之后。&lt;/p></description></item><item><title>静态成员函数</title><link>https://hxhue.github.io/inside-the-cpp-object-model/%E9%9D%99%E6%80%81%E6%88%90%E5%91%98%E5%87%BD%E6%95%B0/</link><pubDate>Sat, 12 Aug 2023 00:00:00 +0800</pubDate><guid>https://hxhue.github.io/inside-the-cpp-object-model/%E9%9D%99%E6%80%81%E6%88%90%E5%91%98%E5%87%BD%E6%95%B0/</guid><description>&lt;h1 id="静态成员函数出现之前">静态成员函数出现之前
+&lt;a class="header-anchor" href="#%e9%9d%99%e6%80%81%e6%88%90%e5%91%98%e5%87%bd%e6%95%b0%e5%87%ba%e7%8e%b0%e4%b9%8b%e5%89%8d">&lt;/a>
+&lt;/h1>&lt;p>很久以前没有静态成员函数（直到 Cfront 2.0 才加入），那个时候静态方法可以用这种方式调用：&lt;/p>
+&lt;p>
+&lt;img src="https://hxhue.github.io/assets/07580994615633018e06f05426e98683.png">&lt;/p>
+&lt;p>该方法没有通过 this 访存，因而不会出现段错误。尽管这种方法还在某些编译器上能够使用，&lt;strong>但这种写法在现在是未定义行为&lt;/strong>。&lt;/p></description></item><item><title>类定义中的类型名可见性</title><link>https://hxhue.github.io/inside-the-cpp-object-model/%E7%B1%BB%E5%AE%9A%E4%B9%89%E4%B8%AD%E7%9A%84%E7%B1%BB%E5%9E%8B%E5%90%8D%E5%8F%AF%E8%A7%81%E6%80%A7/</link><pubDate>Sat, 12 Aug 2023 00:00:00 +0800</pubDate><guid>https://hxhue.github.io/inside-the-cpp-object-model/%E7%B1%BB%E5%AE%9A%E4%B9%89%E4%B8%AD%E7%9A%84%E7%B1%BB%E5%9E%8B%E5%90%8D%E5%8F%AF%E8%A7%81%E6%80%A7/</guid><description>&lt;p>尽管现在的编译器能够正确理解数据成员（含有隐式的 this 指针）的使用，并在看到整个类定义之后再查找名字，类型名的查找则发生的很早，导致使用时可能看不到、或者使用了错误的类型声明。&lt;/p></description></item><item><title>完整构造函数的初始化顺序</title><link>https://hxhue.github.io/inside-the-cpp-object-model/%E5%AE%8C%E6%95%B4%E6%9E%84%E9%80%A0%E5%87%BD%E6%95%B0%E7%9A%84%E5%88%9D%E5%A7%8B%E5%8C%96%E9%A1%BA%E5%BA%8F/</link><pubDate>Sat, 12 Aug 2023 00:00:00 +0800</pubDate><guid>https://hxhue.github.io/inside-the-cpp-object-model/%E5%AE%8C%E6%95%B4%E6%9E%84%E9%80%A0%E5%87%BD%E6%95%B0%E7%9A%84%E5%88%9D%E5%A7%8B%E5%8C%96%E9%A1%BA%E5%BA%8F/</guid><description>&lt;p>构造函数分为完整构造函数（Complete Object Constructor）和基类构造函数（Base Object Constructor）。&lt;/p>
+&lt;h1 id="初始化顺序">初始化顺序
+&lt;a class="header-anchor" href="#%e5%88%9d%e5%a7%8b%e5%8c%96%e9%a1%ba%e5%ba%8f">&lt;/a>
+&lt;/h1>&lt;p>显式构造一个对象的时候调用的是完整构造函数。该函数执行的初始化流程如下：&lt;/p></description></item><item><title>析构函数</title><link>https://hxhue.github.io/inside-the-cpp-object-model/%E6%9E%90%E6%9E%84%E5%87%BD%E6%95%B0/</link><pubDate>Sat, 12 Aug 2023 00:00:00 +0800</pubDate><guid>https://hxhue.github.io/inside-the-cpp-object-model/%E6%9E%90%E6%9E%84%E5%87%BD%E6%95%B0/</guid><description>&lt;p>析构函数和构造函数一样，也分完整析构函数和基类析构函数两种。而且析构函数的工作流程和构造函数相反。&lt;/p>
+&lt;p>如果一个类的基类有未实现的析构函数（未提供定义或者是纯虚函数），会导致链接失败。这是因为子类的析构函数有调用基类析构函数的逻辑！&lt;/p></description></item><item><title>虚拟继承</title><link>https://hxhue.github.io/inside-the-cpp-object-model/%E8%99%9A%E6%8B%9F%E7%BB%A7%E6%89%BF/</link><pubDate>Sat, 12 Aug 2023 00:00:00 +0800</pubDate><guid>https://hxhue.github.io/inside-the-cpp-object-model/%E8%99%9A%E6%8B%9F%E7%BB%A7%E6%89%BF/</guid><description>&lt;h1 id="基本概念">基本概念
+&lt;a class="header-anchor" href="#%e5%9f%ba%e6%9c%ac%e6%a6%82%e5%bf%b5">&lt;/a>
+&lt;/h1>&lt;p>
+&lt;img src="https://hxhue.github.io/assets/9af2a15e034c9be3cf15b35c0525e241.png">&lt;/p>
+&lt;p>
+&lt;img src="https://hxhue.github.io/assets/f28a0c3cd8d9c1ba00bb081453f3f9c6.png">&lt;/p>
+&lt;p>cfront 实现&lt;/p>
+&lt;p>
+&lt;img src="https://hxhue.github.io/assets/9d2a24e047f5cb0385a5aa819156d4db.png">&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" style="color:#93a1a1;background-color:#002b36;-moz-tab-size:2;-o-tab-size:2;tab-size:2;">&lt;code class="language-cpp" data-lang="cpp">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#719e07">#include&lt;/span> &lt;span style="color:#719e07">&amp;lt;iostream&amp;gt;&lt;/span>&lt;span style="color:#719e07">
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#719e07">&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#719e07">struct&lt;/span> &lt;span style="color:#268bd2">X&lt;/span> { &lt;span style="color:#719e07">public&lt;/span>&lt;span style="color:#719e07">:&lt;/span> &lt;span style="color:#dc322f">int&lt;/span> i; }; &lt;span style="color:#586e75">// size: 4
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#586e75">&lt;/span>&lt;span style="color:#719e07">struct&lt;/span> &lt;span style="color:#268bd2">A&lt;/span>&lt;span style="color:#719e07">:&lt;/span> &lt;span style="color:#719e07">virtual&lt;/span> X { &lt;span style="color:#dc322f">int&lt;/span> j; }; &lt;span style="color:#586e75">// size: 16
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#586e75">&lt;/span>&lt;span style="color:#719e07">struct&lt;/span> &lt;span style="color:#268bd2">B&lt;/span>&lt;span style="color:#719e07">:&lt;/span> &lt;span style="color:#719e07">virtual&lt;/span> X { &lt;span style="color:#dc322f">double&lt;/span> d; }; &lt;span style="color:#586e75">// size: 24
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#586e75">&lt;/span>&lt;span style="color:#719e07">struct&lt;/span> &lt;span style="color:#268bd2">C&lt;/span>&lt;span style="color:#719e07">:&lt;/span> A, B { &lt;span style="color:#dc322f">int&lt;/span> k; }; &lt;span style="color:#586e75">// size: 40
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#586e75">&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#dc322f">int&lt;/span> &lt;span style="color:#268bd2">main&lt;/span>() {
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> C c;
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> std&lt;span style="color:#719e07">::&lt;/span>cout &lt;span style="color:#719e07">&amp;lt;&amp;lt;&lt;/span> c.i &lt;span style="color:#719e07">&amp;lt;&amp;lt;&lt;/span> &lt;span style="color:#2aa198">&amp;#39;\n&amp;#39;&lt;/span>;
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>}
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>如果把 A 或者 B 的 virtual 继承属性删除就会出现 ambiguous 指代错误。因为 virtual 继承只保存基类的一份数据，删掉之后自然就有多份变量 i 了。不过，&lt;strong>virtual 继承并不代表该类为多态类（可用 type traits 判断）&lt;/strong>。&lt;/p></description></item><item><title>虚拟继承和虚函数对比</title><link>https://hxhue.github.io/inside-the-cpp-object-model/%E8%99%9A%E6%8B%9F%E7%BB%A7%E6%89%BF%E5%92%8C%E8%99%9A%E5%87%BD%E6%95%B0%E5%AF%B9%E6%AF%94/</link><pubDate>Sat, 12 Aug 2023 00:00:00 +0800</pubDate><guid>https://hxhue.github.io/inside-the-cpp-object-model/%E8%99%9A%E6%8B%9F%E7%BB%A7%E6%89%BF%E5%92%8C%E8%99%9A%E5%87%BD%E6%95%B0%E5%AF%B9%E6%AF%94/</guid><description>&lt;h1 id="目的不同">目的不同
+&lt;a class="header-anchor" href="#%e7%9b%ae%e7%9a%84%e4%b8%8d%e5%90%8c">&lt;/a>
+&lt;/h1>&lt;p>虚拟继承用来动态访问数据（节约存储空间或保证数据地址唯一），虚函数用来动态访问方法。&lt;/p>
+&lt;h1 id="虚表的访问方式">虚表的访问方式
+&lt;a class="header-anchor" href="#%e8%99%9a%e8%a1%a8%e7%9a%84%e8%ae%bf%e9%97%ae%e6%96%b9%e5%bc%8f">&lt;/a>
+&lt;/h1>&lt;p>如果 A 类有虚函数，那么 A 类已经有 vptr、是多态类，通过 A 类指针/引用访问虚函数则需要查找虚表。&lt;/p></description></item><item><title>异常处理</title><link>https://hxhue.github.io/inside-the-cpp-object-model/%E5%BC%82%E5%B8%B8%E5%A4%84%E7%90%86/</link><pubDate>Sat, 12 Aug 2023 00:00:00 +0800</pubDate><guid>https://hxhue.github.io/inside-the-cpp-object-model/%E5%BC%82%E5%B8%B8%E5%A4%84%E7%90%86/</guid><description>&lt;p>有人说从 Cfront 转向专门的 C++ 编译器的一大原因就是支持异常处理，因为异常处理在 C 语言中很难做。&lt;/p>
+&lt;p>一个函数的指令区域分成三种：&lt;/p>
+&lt;ol>
+&lt;li>try 以外，且没有活跃对象&lt;/li>
+&lt;li>try 以外，有活跃对象，发生异常时需要析构&lt;/li>
+&lt;li>try 以内&lt;/li>
+&lt;/ol>
+&lt;blockquote>
+ &lt;p>有一个活跃对象和两个活跃对象应该会有区别吧？这样制表/查表的压力很大。&lt;/p></description></item><item><title>指向成员的指针</title><link>https://hxhue.github.io/inside-the-cpp-object-model/%E6%8C%87%E5%90%91%E6%88%90%E5%91%98%E7%9A%84%E6%8C%87%E9%92%88/</link><pubDate>Sat, 12 Aug 2023 00:00:00 +0800</pubDate><guid>https://hxhue.github.io/inside-the-cpp-object-model/%E6%8C%87%E5%90%91%E6%88%90%E5%91%98%E7%9A%84%E6%8C%87%E9%92%88/</guid><description>&lt;p>参考 &lt;a href="https://itanium-cxx-abi.github.io/cxx-abi/abi.html#member-pointers" title="https://itanium-cxx-abi.github.io/cxx-abi/abi.html#member-pointers" rel="noopener external nofollow noreferrer"
+ target="_blank" class=" exturl" >https://itanium-cxx-abi.github.io/cxx-abi/abi.html#member-pointers&lt;i class="fa fa-external-link-alt">&lt;/i>&lt;/a>。&lt;/p>
+&lt;h1 id="向下转换的能力">向下转换的能力！
+&lt;a class="header-anchor" href="#%e5%90%91%e4%b8%8b%e8%bd%ac%e6%8d%a2%e7%9a%84%e8%83%bd%e5%8a%9b">&lt;/a>
+&lt;/h1>&lt;p>和类的指针/引用的转换不同，指向成员的指针既可以&lt;strong>向下转&lt;/strong>，又可以向上转！只需要目的类型拥有对应的成员即可。&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" style="color:#93a1a1;background-color:#002b36;-moz-tab-size:2;-o-tab-size:2;tab-size:2;">&lt;code class="language-cpp" data-lang="cpp">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#719e07">struct&lt;/span> &lt;span style="color:#268bd2">A&lt;/span> { &lt;span style="color:#dc322f">long&lt;/span> a; };
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#719e07">struct&lt;/span> &lt;span style="color:#268bd2">B&lt;/span>&lt;span style="color:#719e07">:&lt;/span> A { &lt;span style="color:#dc322f">long&lt;/span> b; };
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#dc322f">int&lt;/span> &lt;span style="color:#268bd2">main&lt;/span>() {
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#586e75">// long (A::*p) = &amp;amp;B::b; // 错误，A 类型没有成员 B::b
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#586e75">&lt;/span> &lt;span style="color:#dc322f">long&lt;/span> (A&lt;span style="color:#719e07">::*&lt;/span>q) &lt;span style="color:#719e07">=&lt;/span> &lt;span style="color:#719e07">&amp;amp;&lt;/span>B&lt;span style="color:#719e07">::&lt;/span>a; &lt;span style="color:#586e75">// B::a 和 A::a 是相同的
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#586e75">&lt;/span> &lt;span style="color:#dc322f">long&lt;/span> (B&lt;span style="color:#719e07">::*&lt;/span>r) &lt;span style="color:#719e07">=&lt;/span> &lt;span style="color:#719e07">&amp;amp;&lt;/span>A&lt;span style="color:#719e07">::&lt;/span>a; &lt;span style="color:#586e75">// 向下转
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#586e75">&lt;/span>}
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;h1 id="指向数据成员">指向数据成员
+&lt;a class="header-anchor" href="#%e6%8c%87%e5%90%91%e6%95%b0%e6%8d%ae%e6%88%90%e5%91%98">&lt;/a>
+&lt;/h1>&lt;p>需要存储 this 偏置，按照 Itanium C++ ABI，存储的类型为 &lt;strong>ptrdiff_t&lt;/strong>。一般数据成员指针就用其相对于开头的偏移作为指针的值，而空指针则用 &lt;strong>-1&lt;/strong> 表示。&lt;/p></description></item></channel></rss>
