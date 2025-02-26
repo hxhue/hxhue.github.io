@@ -1,0 +1,549 @@
+<!doctype html><html lang=zh-CN data-theme=light><head><meta charset=UTF-8><meta name=viewport content="width=device-width"><meta name=theme-color content="#222" media="(prefers-color-scheme: light)"><meta name=generator content="Hugo 0.143.1"><link rel="shortcut icon" type=image/x-icon href=/imgs/icons/favicon.ico><link rel=icon type=image/x-icon href=/imgs/icons/favicon.ico><link rel=icon type=image/png sizes=16x16 href=/imgs/icons/favicon_16x16_next.png><link rel=icon type=image/png sizes=32x32 href=/imgs/icons/favicon_32_32_next.png><link rel=apple-touch-icon sizes=180x180 href=/imgs/icons/apple_touch_icon_next.png><meta itemprop=name content="7. 设计无锁并发数据结构"><meta itemprop=description content="个人博客，主要是零散的笔记。"><meta itemprop=datePublished zgotmplz><meta itemprop=dateModified zgotmplz><meta itemprop=image content="https://hxhue.github.io/imgs/371907.jpg"><meta itemprop=keywords content="cpp,cpp-concurrency-in-action"><link type=text/css rel=stylesheet href=https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.1.2/css/all.min.css><link type=text/css rel=stylesheet href=https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.1.1/animate.min.css><link rel=stylesheet href=/css/main.min.bea76f574a755574e17d42bea39502a74ca3ca4db65807b8c82d3e26dcec8420.css><style type=text/css>.post-footer,.flinks-list-footer hr:after{content:"~ 我可是有底线的哟 ~"}</style><link rel=stylesheet type=text/css href=/css/style.css><link rel=preconnect href=https://fonts.googleapis.com><link rel=preconnect href=https://fonts.gstatic.com crossorigin><link rel=stylesheet href=https://cdn.jsdelivr.net/npm/github-markdown-css@5.3.0/github-markdown-dark.css><script type=text/javascript id=MathJax-script async src=https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-svg.js></script><script>MathJax={tex:{displayMath:[["$$","$$"],["\\[","\\]"]],inlineMath:[["$","$"],["\\(","\\)"]]},svg:{fontCache:"global"}}</script><script type=module>
+  import mermaid from 'https://cdn.jsdelivr.net/npm/mermaid/dist/mermaid.esm.min.mjs';
+  mermaid.initialize({ startOnLoad: false });
+  mermaid.mermaidAPI.initialize();
+  window.mermaid = mermaid;
+</script><script type=text/javascript>(function(){localDB={set:function(e,t,n){if(n===0)return;const s=new Date,o=n*864e5,i={value:t,expiry:s.getTime()+o};localStorage.setItem(e,JSON.stringify(i))},get:function(e){const t=localStorage.getItem(e);if(!t)return void 0;const n=JSON.parse(t),s=new Date;return s.getTime()>n.expiry?(localStorage.removeItem(e),void 0):n.value}},theme={active:function(){const e=localDB.get("theme");if(e==null)return;theme.toggle(e),window.matchMedia("(prefers-color-scheme: dark)").addListener(function(e){theme.toggle(e.matches?"dark":"light")})},toggle:function(e){document.documentElement.setAttribute("data-theme",e),localDB.set("theme",e,2);const t=document.querySelector("iframe.giscus-frame");if(t){const n={setConfig:{theme:e}};t.contentWindow.postMessage({giscus:n},"https://giscus.app")}}},theme.active()})(window)</script><script class=next-config data-name=page type=application/json>{"comments":false,"isHome":false,"isPage":true,"path":"7.-%E8%AE%BE%E8%AE%A1%E6%97%A0%E9%94%81%E5%B9%B6%E5%8F%91%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84","permalink":"https://hxhue.github.io/cpp-concurrency-in-action/7.-%E8%AE%BE%E8%AE%A1%E6%97%A0%E9%94%81%E5%B9%B6%E5%8F%91%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84/","title":"7. 设计无锁并发数据结构","waline":{"js":[{"alias":"waline","alias_name":"@waline/client","file":"dist/pageview.js","name":"pageview","version":"2.13.0"},{"alias":"waline","alias_name":"@waline/client","file":"dist/comment.js","name":"comment","version":"2.13.0"}]}}</script><script type=text/javascript>document.addEventListener("DOMContentLoaded",()=>{var e=document.createElement("script");e.charset="UTF-8",e.src="",e.async=!1,e.defer=!0,document.head.appendChild(e),e.onload=function(){NexT.utils.fmtBusuanzi()}})</script><title>7. 设计无锁并发数据结构 - Bluegill</title><noscript><link rel=stylesheet href=/css/noscript.css></noscript></head><body itemscope itemtype=http://schema.org/WebPage><div class=headband></div><main class=main><header class=header itemscope itemtype=http://schema.org/WPHeader><div class=header-inner><div class=site-brand-container><div class=site-nav-toggle><div class=toggle aria-label role=button><span class=toggle-line></span>
+<span class=toggle-line></span>
+<span class=toggle-line></span></div></div><div class=site-meta><a href=/ class=brand rel=start><i class=logo-line></i><h1 class=site-title>Bluegill</h1><i class=logo-line></i></a><p class=site-subtitle itemprop=description></p></div><div class=site-nav-right><div class="toggle popup-trigger"><i class="fa fa-search fa-fw fa-lg"></i></div></div></div><nav class=site-nav><ul class="main-menu menu"><li class="menu-item menu-item-home"><a href=/ class=hvr-icon-pulse rel=section><i class="fa fa-home hvr-icon"></i>首页</a></li><li class="menu-item menu-item-about"><a href=/about/ class=hvr-icon-pulse rel=section><i class="fa fa-user hvr-icon"></i>关于</a></li><li class="menu-item menu-item-archives"><a href=/archives/ class=hvr-icon-pulse rel=section><i class="fa fa-archive hvr-icon"></i>归档</a></li><li class="menu-item menu-item-categories"><a href=/categories/ class=hvr-icon-pulse rel=section><i class="fa fa-th hvr-icon"></i>分类</a></li><li class="menu-item menu-item-tags"><a href=/tags/ class=hvr-icon-pulse rel=section><i class="fa fa-hashtag hvr-icon"></i>标签</a></li><li class="menu-item menu-item-series"><a href=/series/ class=hvr-icon-pulse rel=section><i class="fa fa-tags hvr-icon"></i>系列</a></li><li class="menu-item menu-item-news"><a href=/news/ class=hvr-icon-pulse rel=section><i class="fa fa-newspaper hvr-icon"></i>趣闻</a></li><li class="menu-item menu-item-search"><a role=button class="popup-trigger hvr-icon-pulse"><i class="fa fa-search fa-fw hvr-icon"></i>搜索</a></li></ul></nav><div class=search-pop-overlay><div class="popup search-popup"><div class=search-header><span class=search-icon><i class="fa fa-search"></i></span><div class=search-input-container><input autocomplete=off autocapitalize=off maxlength=80 placeholder=搜索... spellcheck=false type=search class=search-input></div><span class=popup-btn-close role=button><i class="fa fa-times-circle"></i></span></div><div class="search-result-container no-result"><div class=search-result-icon><i class="fa fa-spinner fa-pulse fa-5x"></i></div></div></div></div></div><div class="toggle sidebar-toggle" role=button><span class=toggle-line></span>
+<span class=toggle-line></span>
+<span class=toggle-line></span></div><aside class=sidebar><div class="sidebar-inner sidebar-nav-active sidebar-toc-active"><ul class=sidebar-nav><li class=sidebar-nav-toc>文章目录</li><li class=sidebar-nav-overview>站点概览</li></ul><div class=sidebar-panel-container><div class="post-toc-wrap sidebar-panel"><div class="post-toc animated"><nav id=TableOfContents><ul><li><a href=#非阻塞数据结构的分类>非阻塞数据结构的分类</a></li><li><a href=#无锁的线程安全栈>无锁的线程安全栈</a><ul><li><a href=#push-和-pop-操作><code>push()</code> 和 <code>pop()</code> 操作</a></li><li><a href=#自行实现垃圾回收>自行实现垃圾回收</a><ul><li><a href=#回收链表--pop-访问计数>回收链表 + <code>pop()</code> 访问计数</a></li><li><a href=#hazard-pointers>Hazard pointers</a><ul><li><a href=#思路>思路</a></li><li><a href=#实现>实现</a></li></ul></li></ul></li><li><a href=#引用计数>引用计数</a><ul><li><a href=#stdshared_ptrt-上的原子操作><code>std::shared_ptr&lt;T></code> 上的原子操作</a></li><li><a href=#分裂引用计数>分裂引用计数</a></li></ul></li><li><a href=#以分裂引用计数为例考虑内存序要求>以分裂引用计数为例，考虑内存序要求</a></li><li><a href=#比较这几种处理内存安全问题的方式>比较这几种处理内存安全问题的方式</a></li></ul></li><li><a href=#无锁的线程安全队列>无锁的线程安全队列</a><ul><li><a href=#新增-tail-结点>新增 <code>tail</code> 结点</a></li><li><a href=#外部计数器的计数器>外部计数器的计数器</a></li><li><a href=#pop><code>pop()</code></a></li><li><a href=#push><code>push()</code></a></li><li><a href=#避免-push-中的忙等待>避免 <code>push()</code> 中的忙等待</a></li></ul></li><li><a href=#aba-问题>ABA 问题</a></li></ul></nav></div></div><div class="site-overview-wrap sidebar-panel"><div class="site-author site-overview-item animated" itemprop=author itemscope itemtype=http://schema.org/Person><img class=site-author-image itemprop=image alt=🤖 src=/imgs/371907.jpg><p class=site-author-name itemprop=name>🤖</p><div class=site-description itemprop=description>个人博客，主要是零散的笔记。</div></div><div class="site-state-wrap site-overview-item animated"><nav class=site-state><div class="site-state-item site-state-posts"><a href=/archives/><span class=site-state-item-count>399</span>
+<span class=site-state-item-name>日志</span></a></div><div class="site-state-item site-state-categories"><a href=/categories/><span class=site-state-item-count>12</span>
+<span class=site-state-item-name>分类</span></a></div><div class="site-state-item site-state-tags"><a href=/tags/><span class=site-state-item-count>71</span>
+<span class=site-state-item-name>标签</span></a></div></nav></div><div class="links-of-social site-overview-item animated"><span class=links-of-social-item><a href=https://github.com/hxhue title="Github → https://github.com/hxhue" rel=noopener target=_blank><i class="fab fa-github fa-fw"></i>
+Github
+</a></span><span class=links-of-social-item><a href=/rss.xml title="RSS 订阅 → /rss.xml" rel=noopener target=_blank><i class="fa fa-rss fa-fw"></i>
+RSS 订阅</a></span></div><div class="cc-license animated" itemprop=license><a href=https://creativecommons.org/licenses/by-nc-sa/4.0/deed.zh class=cc-opacity rel=noopener target=_blank title=共享知识><img src=/imgs/cc/big/by_nc_sa.svg alt=共享知识></a></div><div class="links-of-blogroll site-overview-item animated"><div class=links-of-blogroll-title><i class="fa fa-globe fa-fw"></i>
+友情链接</div><ul class=links-of-blogroll-list><li class=links-of-blogroll-item><a href=https://shuai.guru/ title=https://shuai.guru/ target=_blank>shuai.guru</a></li></ul></div></div></div></div></aside><div class=sidebar-dimmer></div></header><div class=tool-buttons><div id=toggle-theme class=button title=深浅模式切换><i class="fas fa-adjust"></i></div><div class=back-to-top role=button title=返回顶部><i class="fa fa-arrow-up"></i>
+<span>0%</span></div></div><div class=reading-progress-bar></div><noscript><div class=noscript-warning>Theme NexT works best with JavaScript enabled</div></noscript><div class="main-inner post posts-expand"><div class=post-block><article itemscope itemtype=http://schema.org/Article class=post-content lang><link itemprop=mainEntityOfPage href=https://hxhue.github.io/cpp-concurrency-in-action/7.-%E8%AE%BE%E8%AE%A1%E6%97%A0%E9%94%81%E5%B9%B6%E5%8F%91%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84/><span hidden itemprop=author itemscope itemtype=http://schema.org/Person><meta itemprop=image content="/imgs/371907.jpg"><meta itemprop=name content="🤖"></span><span hidden itemprop=publisher itemscope itemtype=http://schema.org/Organization><meta itemprop=name content="🤖"><meta itemprop=description content="个人博客，主要是零散的笔记。"></span><span hidden itemprop=post itemscope itemtype=http://schema.org/CreativeWork><meta itemprop=name content="7. 设计无锁并发数据结构"><meta itemprop=description content="非阻塞数据结构的分类
+
+书上给出了一个用 std::atomic_flag 实现自旋锁的代码片段：
+class spinlock_mutex {
+    std::atomic_flag flag;
+
+public:
+    spinlock_mutex() : flag(ATOMIC_FLAG_INIT) {}
+
+    void lock() {
+        while (flag.test_and_set(std::memory_order_acquire));
+    }
+
+    void unlock() {
+        flag.clear(std::memory_order_release);
+    }
+};
+自旋锁是一个 nonblocking 的例子（书上认为它没有任何阻塞调用，因此是非阻塞的），但是却不是 lock-free 的。"></span><header class=post-header><h1 class=post-title itemprop="name headline">7. 设计无锁并发数据结构</h1><div class=post-meta-container><div class=post-meta-items><span class=post-meta-item><span class=post-meta-item-icon><i class="far fa-calendar"></i>
+</span><span class=post-meta-item-text title=发表于>发表于：
+</span><time title="创建时间：2025-01-02 00:00:00 +0800 CST" itemprop="dateCreated datePublished" datetime="2025-01-02 00:00:00 +0800 CST">2025-01-02
+</time></span><span class=post-meta-item><span class=post-meta-item-icon><i class="far fa-calendar-check"></i>
+</span><span class=post-meta-item-text title=更新于>更新于：
+</span><time title=修改时间：2025-02-07T00:00:00+08:00 itemprop=dateModified datetime=2025-02-07T00:00:00+08:00>2025-02-07</time>
+</span><span class=post-meta-item><span class=post-meta-item-icon><i class="far fa-folder-open"></i>
+</span><span class=post-meta-item-text title=分类于>分类于：
+</span><span itemprop=about itemscope itemtype=http://schema.org/Thing><a href=/categories/cpp-concurrency-in-action itemprop=url rel=index><span itemprop=name>cpp-concurrency-in-action</span></a></span></span></div><div class=post-meta-items><span class=post-meta-item title=字数><span class=post-meta-item-icon><i class="far fa-file-word"></i>
+</span><span class=post-meta-item-text>字数：</span>
+<span>9372</span>
+</span><span class=post-meta-item title=阅读><span class=post-meta-item-icon><i class="far fa-clock"></i>
+</span><span class=post-meta-item-text>阅读：&ap;</span>
+<span>19分钟</span></span></div></div></header><div class=post-body itemprop=articleBody><h1 id=非阻塞数据结构的分类>非阻塞数据结构的分类
+<a class=header-anchor href=#%e9%9d%9e%e9%98%bb%e5%a1%9e%e6%95%b0%e6%8d%ae%e7%bb%93%e6%9e%84%e7%9a%84%e5%88%86%e7%b1%bb></a></h1><p>书上给出了一个用 <code>std::atomic_flag</code> 实现自旋锁的代码片段：</p><div class=highlight><pre tabindex=0 style=color:#93a1a1;background-color:#002b36;-moz-tab-size:2;-o-tab-size:2;tab-size:2><code class=language-cpp data-lang=cpp><span style=display:flex><span><span style=color:#719e07>class</span> <span style=color:#268bd2>spinlock_mutex</span> {
+</span></span><span style=display:flex><span>    std<span style=color:#719e07>::</span>atomic_flag flag;
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#719e07>public</span><span style=color:#719e07>:</span>
+</span></span><span style=display:flex><span>    spinlock_mutex() <span style=color:#719e07>:</span> flag(ATOMIC_FLAG_INIT) {}
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>    <span style=color:#dc322f>void</span> <span style=color:#268bd2>lock</span>() {
+</span></span><span style=display:flex><span>        <span style=color:#719e07>while</span> (flag.test_and_set(std<span style=color:#719e07>::</span>memory_order_acquire));
+</span></span><span style=display:flex><span>    }
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>    <span style=color:#dc322f>void</span> <span style=color:#268bd2>unlock</span>() {
+</span></span><span style=display:flex><span>        flag.clear(std<span style=color:#719e07>::</span>memory_order_release);
+</span></span><span style=display:flex><span>    }
+</span></span><span style=display:flex><span>};
+</span></span></code></pre></div><p>自旋锁是一个 nonblocking 的例子（书上认为它没有任何阻塞调用，因此是非阻塞的），但是却不是 lock-free 的。</p><p>书上给出了下面几类数据结构：</p><ol><li>Obstruction-free：如果其他线程都被暂停了，那么任何一个选定的线程都能在一定步数内完成操作。</li><li>Lock-free：多个线程同时在进行操作，有一个线程能在一定步数内完成操作。常见的范式是在循环中进行 CAS。<strong>可能有饥饿发生</strong>。</li><li>Wait-free：多个线程同时在进行操作，每个线程都能在一定步数内完成操作。</li></ol><p><a href=https://en.wikipedia.org/wiki/Non-blocking_algorithm title=https://en.wikipedia.org/wiki/Non-blocking_algorithm rel="noopener external nofollow noreferrer" target=_blank class=exturl>https://en.wikipedia.org/wiki/Non-blocking_algorithm<i class="fa fa-external-link-alt"></i></a> 给出了更精炼的描述：</p><blockquote><p>A non-blocking algorithm is <strong>lock-free</strong> if there is guaranteed system-wide <a href=https://en.wikipedia.org/wiki/Resource_starvation title=progress rel="noopener external nofollow noreferrer" target=_blank class=exturl>progress<i class="fa fa-external-link-alt"></i></a>, and <strong>wait-free</strong> if there is also guaranteed per-thread progress.</p></blockquote><p>根据以上信息，<strong>用户空间下的</strong>自旋锁也不是 obstruction-free 的。2025 年 2 月 7 日：<strong>如果没有上下文切换，受自旋锁保护的操作又能在有上界的时间内完成，那么自旋锁当然是 lock-free 的（比如在内核中</strong>）。</p><p>由于 obstruction-free 的应用场景有限，而 wait-free 的算法相当难写，所以 lock-free 的算法比较常见。Lock-free 的算法不仅有并发优势，而且更鲁棒，不会出现持有锁的线程异常终止，导致其他线程无法继续前进的情况。Lock-free 算法可能会出现活锁（live lock），但是这个过程是相对来说比较短暂的。根据百度百科，活锁可以认为是一种特殊的饥饿。</p><h1 id=无锁的线程安全栈>无锁的线程安全栈
+<a class=header-anchor href=#%e6%97%a0%e9%94%81%e7%9a%84%e7%ba%bf%e7%a8%8b%e5%ae%89%e5%85%a8%e6%a0%88></a></h1><h2 id=push-和-pop-操作><code>push()</code> 和 <code>pop()</code> 操作
+<a class=header-anchor href=#push-%e5%92%8c-pop-%e6%93%8d%e4%bd%9c></a></h2><div class=highlight><pre tabindex=0 style=color:#93a1a1;background-color:#002b36;-moz-tab-size:2;-o-tab-size:2;tab-size:2><code class=language-cpp data-lang=cpp><span style=display:flex><span><span style=color:#719e07>template</span><span style=color:#719e07>&lt;</span><span style=color:#719e07>typename</span> T<span style=color:#719e07>&gt;</span>
+</span></span><span style=display:flex><span><span style=color:#719e07>class</span> <span style=color:#268bd2>lock_free_stack</span>
+</span></span><span style=display:flex><span>{
+</span></span><span style=display:flex><span><span style=color:#719e07>private</span><span style=color:#719e07>:</span>
+</span></span><span style=display:flex><span>    <span style=color:#719e07>struct</span> <span style=color:#268bd2>node</span>
+</span></span><span style=display:flex><span>    {
+</span></span><span style=display:flex><span>        std<span style=color:#719e07>::</span>shared_ptr<span style=color:#719e07>&lt;</span>T<span style=color:#719e07>&gt;</span> data;
+</span></span><span style=display:flex><span>        node<span style=color:#719e07>*</span> next;
+</span></span><span style=display:flex><span>        node(T <span style=color:#719e07>const</span><span style=color:#719e07>&amp;</span> data_)<span style=color:#719e07>:</span>
+</span></span><span style=display:flex><span>            data(std<span style=color:#719e07>::</span>make_shared<span style=color:#719e07>&lt;</span>T<span style=color:#719e07>&gt;</span>(data_))
+</span></span><span style=display:flex><span>        {}
+</span></span><span style=display:flex><span>    };
+</span></span><span style=display:flex><span>    std<span style=color:#719e07>::</span>atomic<span style=color:#719e07>&lt;</span>node<span style=color:#719e07>*&gt;</span> head;
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#719e07>public</span><span style=color:#719e07>:</span>
+</span></span><span style=display:flex><span>    <span style=color:#dc322f>void</span> push(T <span style=color:#719e07>const</span><span style=color:#719e07>&amp;</span> data)
+</span></span><span style=display:flex><span>    {
+</span></span><span style=display:flex><span>        node<span style=color:#719e07>*</span> <span style=color:#719e07>const</span> new_node <span style=color:#719e07>=</span> <span style=color:#719e07>new</span> node(data);
+</span></span><span style=display:flex><span>        new_node<span style=color:#719e07>-&gt;</span>next <span style=color:#719e07>=</span> head.load();
+</span></span><span style=display:flex><span>        <span style=color:#719e07>while</span> (<span style=color:#719e07>!</span>head.compare_exchange_weak(new_node<span style=color:#719e07>-&gt;</span>next, new_node));
+</span></span><span style=display:flex><span>    }
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>    std<span style=color:#719e07>::</span>shared_ptr<span style=color:#719e07>&lt;</span>T<span style=color:#719e07>&gt;</span> pop()
+</span></span><span style=display:flex><span>    {
+</span></span><span style=display:flex><span>        node<span style=color:#719e07>*</span> old_head <span style=color:#719e07>=</span> head.load();
+</span></span><span style=display:flex><span>        <span style=color:#719e07>while</span> (old_head <span style=color:#719e07>&amp;&amp;</span> <span style=color:#719e07>!</span>head.compare_exchange_weak(old_head, old_head<span style=color:#719e07>-&gt;</span>next));
+</span></span><span style=display:flex><span>        <span style=color:#586e75>// 这里 old_head-&gt;data 其实可以加上 std::move
+</span></span></span><span style=display:flex><span><span style=color:#586e75></span>        <span style=color:#719e07>return</span> old_head <span style=color:#719e07>?</span> old_head<span style=color:#719e07>-&gt;</span>data : std<span style=color:#719e07>::</span>shared_ptr<span style=color:#719e07>&lt;</span>T<span style=color:#719e07>&gt;</span>();
+</span></span><span style=display:flex><span>    }
+</span></span><span style=display:flex><span>};
+</span></span></code></pre></div><p><code>data</code> 选择用 <code>std::shared_ptr&lt;T></code> 来存储而不是 <code>T</code> 类型，是因为如果 <code>pop()</code> 的接口为 <code>pop(T &)</code>，那么在取下结点，最后一步赋值的时候如果抛出异常，那么数据结构无法恢复（因为结点已经取下来了）。正因此 <code>pop()</code> 的接口被设计为无参但返回 <code>std::shared_ptr&lt;T></code>。</p><p><code>push()</code> 操作：</p><ol><li>Create a new node.</li><li>Set its <code>next</code> pointer to the current <code>head</code> node.</li><li>Set the <code>head</code> node to point to it.</li></ol><p>第 2 步和第 3 步刚好可以用一个 CAS 完成。如果失败的话 CAS 会将最新的 <code>head</code> 值加载到给定的 <code>expected</code> 参数中，所以 <code>while</code> 循环的循环体不需要清理代码。</p><p><code>pop()</code> 操作：</p><ol><li>Read the current value of head.</li><li>Read <code>head->next</code>.</li><li>Set <code>head</code> to <code>head->next</code>.</li><li>Return the data from the retrieved node.</li><li>Delete the retrieved node.</li></ol><p>第 5 步的问题比较大，假设线程 A 和 B 都在执行 <code>pop()</code> 操作，线程 A 刚删除完旧 <code>head</code>，但线程 B 恰好进行到了第 2 步，已经读到了旧 <code>head</code>，正要去读这个被删除的 <code>head</code> 结点的 <code>next</code> 字段，这就会导致内存非法访问。<strong>上面给出的代码是用内存泄漏来规避内存非法访问</strong>。<code>push()</code> 操作不会影响 <code>pop()</code> 的安全性，因为 <code>push()</code> 操作只会读 <code>head</code> 的地址，不会读 <code>head</code> 里面的内容。</p><blockquote><p>如果是垃圾回收语言，这里就已经把代码写完了。</p></blockquote><h2 id=自行实现垃圾回收>自行实现垃圾回收
+<a class=header-anchor href=#%e8%87%aa%e8%a1%8c%e5%ae%9e%e7%8e%b0%e5%9e%83%e5%9c%be%e5%9b%9e%e6%94%b6></a></h2><h3 id=回收链表--pop-访问计数>回收链表 + <code>pop()</code> 访问计数
+<a class=header-anchor href=#%e5%9b%9e%e6%94%b6%e9%93%be%e8%a1%a8--pop-%e8%ae%bf%e9%97%ae%e8%ae%a1%e6%95%b0></a></h3><p>上一小节中我们可以看到 <code>push()</code> 操作没有问题，<code>pop()</code> 操作有内存泄漏的问题。<code>pop()</code> 操作内存泄漏是因为我们无法安全删除当前的结点。<strong>我们可以把当前的结点暂时加入到另外一个（回收）链表中以防止内存泄漏</strong>，这个回收链表和工作链表的结构相同，都是 <code>std::atomic&lt;node *></code>，因为用的是 <code>push()</code> 操作，所以也没有问题。</p><p>事实上，<code>push()</code> 操作对于一段链表（不仅仅是单个结点）也是安全的，书上实现了这样的函数：</p><div class=highlight><pre tabindex=0 style=color:#93a1a1;background-color:#002b36;-moz-tab-size:2;-o-tab-size:2;tab-size:2><code class=language-cpp data-lang=cpp><span style=display:flex><span><span style=color:#586e75>// first -&gt; ... -&gt; last -&gt; nullptr
+</span></span></span><span style=display:flex><span><span style=color:#586e75></span><span style=color:#dc322f>void</span> <span style=color:#268bd2>chain_pending_nodes</span>(node<span style=color:#719e07>*</span> first, node<span style=color:#719e07>*</span> last) {
+</span></span><span style=display:flex><span>    last<span style=color:#719e07>-&gt;</span>next <span style=color:#719e07>=</span> to_be_deleted;
+</span></span><span style=display:flex><span>    <span style=color:#719e07>while</span> (<span style=color:#719e07>!</span>to_be_deleted.compare_exchange_weak(last<span style=color:#719e07>-&gt;</span>next, first));
+</span></span><span style=display:flex><span>}
+</span></span><span style=display:flex><span><span style=color:#586e75>// 工具函数，找到链表的尾结点并调用前一个重载
+</span></span></span><span style=display:flex><span><span style=color:#586e75></span><span style=color:#dc322f>void</span> <span style=color:#268bd2>chain_pending_nodes</span>(node<span style=color:#719e07>*</span> nodes) {
+</span></span><span style=display:flex><span>    node<span style=color:#719e07>*</span> last <span style=color:#719e07>=</span> nodes;
+</span></span><span style=display:flex><span>    <span style=color:#719e07>while</span> (node<span style=color:#719e07>*</span> <span style=color:#719e07>const</span> next <span style=color:#719e07>=</span> last<span style=color:#719e07>-&gt;</span>next) {
+</span></span><span style=display:flex><span>        last <span style=color:#719e07>=</span> next;
+</span></span><span style=display:flex><span>    }
+</span></span><span style=display:flex><span>    chain_pending_nodes(nodes, last);
+</span></span><span style=display:flex><span>}
+</span></span></code></pre></div><p>在有了回收链表中的逻辑后，<code>pop()</code> 变成：</p><div class=highlight><pre tabindex=0 style=color:#93a1a1;background-color:#002b36;-moz-tab-size:2;-o-tab-size:2;tab-size:2><code class=language-cpp data-lang=cpp><span style=display:flex><span>std<span style=color:#719e07>::</span>shared_ptr<span style=color:#719e07>&lt;</span>T<span style=color:#719e07>&gt;</span> pop()
+</span></span><span style=display:flex><span>{
+</span></span><span style=display:flex><span>    node<span style=color:#719e07>*</span> old_head <span style=color:#719e07>=</span> head.load();
+</span></span><span style=display:flex><span>    <span style=color:#719e07>while</span> (old_head <span style=color:#719e07>&amp;&amp;</span> <span style=color:#719e07>!</span>head.compare_exchange_weak(old_head, old_head<span style=color:#719e07>-&gt;</span>next));
+</span></span><span style=display:flex><span>    <span style=color:#719e07>auto</span> ret <span style=color:#719e07>=</span> old_head <span style=color:#719e07>?</span> std<span style=color:#719e07>::</span>move(old_head<span style=color:#719e07>-&gt;</span>data) <span style=color:#719e07>:</span> std<span style=color:#719e07>::</span>shared_ptr<span style=color:#719e07>&lt;</span>T<span style=color:#719e07>&gt;</span>();
+</span></span><span style=display:flex><span>    try_reclaim(old_head); <span style=color:#586e75>// 尝试回收
+</span></span></span><span style=display:flex><span><span style=color:#586e75></span>    <span style=color:#719e07>return</span> ret;
+</span></span><span style=display:flex><span>}
+</span></span></code></pre></div><p>其中 <code>try_reclaim()</code> 尝试对 <code>old_head</code> 进行清理，如果不能安全清理，则将其暂时放到回收链表中。</p><p>什么时候才能对回收链表进行清理呢？为了确认什么时候我们能安全清理回收链表中的结点，我们需要增加一个计数变量 <code>threads_in_pop</code>，类型是 <code>std::atomic&lt;unsigned></code>，用来追踪在 <code>pop()</code> 函数中的线程数。该变量在 <code>pop()</code> 进入时计数 +1，退出时计数 -1，<strong>计数减少的逻辑应该放在 <code>try_reclaim</code> 中做</strong>。现在 <code>pop()</code> 变成：</p><div class=highlight><pre tabindex=0 style=color:#93a1a1;background-color:#002b36;-moz-tab-size:2;-o-tab-size:2;tab-size:2><code class=language-cpp data-lang=cpp><span style=display:flex><span>std<span style=color:#719e07>::</span>shared_ptr<span style=color:#719e07>&lt;</span>T<span style=color:#719e07>&gt;</span> pop()
+</span></span><span style=display:flex><span>{
+</span></span><span style=display:flex><span>    <span style=color:#719e07>++</span>threads_in_pop;
+</span></span><span style=display:flex><span>    node<span style=color:#719e07>*</span> old_head <span style=color:#719e07>=</span> head.load();
+</span></span><span style=display:flex><span>    <span style=color:#719e07>while</span> (old_head <span style=color:#719e07>&amp;&amp;</span> <span style=color:#719e07>!</span>head.compare_exchange_weak(old_head, old_head<span style=color:#719e07>-&gt;</span>next));
+</span></span><span style=display:flex><span>    <span style=color:#719e07>auto</span> ret <span style=color:#719e07>=</span> old_head <span style=color:#719e07>?</span> std<span style=color:#719e07>::</span>move(old_head<span style=color:#719e07>-&gt;</span>data) <span style=color:#719e07>:</span> std<span style=color:#719e07>::</span>shared_ptr<span style=color:#719e07>&lt;</span>T<span style=color:#719e07>&gt;</span>();
+</span></span><span style=display:flex><span>    try_reclaim(old_head); <span style=color:#586e75>// 尝试回收，--threads_in_pop 在这里面做
+</span></span></span><span style=display:flex><span><span style=color:#586e75></span>    <span style=color:#719e07>return</span> ret;
+</span></span><span style=display:flex><span>}
+</span></span></code></pre></div><p>怎么实现 <code>try_reclaim()</code> 呢？先检查计数的当前值，如果计数为 1，说明当前只有本线程在 <code>pop()</code> 中，刚取下来的结点可以直接删除，并且可以考虑看看回收链表中的其他结点是不是可以安全删除的。否则，当前结点不能安全删除，将其放到回收链表中去。</p><div class=highlight><pre tabindex=0 style=color:#93a1a1;background-color:#002b36;-moz-tab-size:2;-o-tab-size:2;tab-size:2><code class=language-cpp data-lang=cpp><span style=display:flex><span><span style=color:#dc322f>void</span> <span style=color:#268bd2>try_reclaim</span>(node<span style=color:#719e07>*</span> old_head) {
+</span></span><span style=display:flex><span>    <span style=color:#719e07>if</span> (threads_in_pop <span style=color:#719e07>==</span> <span style=color:#2aa198>1</span>) {
+</span></span><span style=display:flex><span>        node<span style=color:#719e07>*</span> nodes_to_delete <span style=color:#719e07>=</span> to_be_deleted.exchange(<span style=color:#719e07>nullptr</span>);
+</span></span><span style=display:flex><span>        <span style=color:#719e07>if</span> (<span style=color:#719e07>!--</span>threads_in_pop) {
+</span></span><span style=display:flex><span>            <span style=color:#586e75>// 这里可以安全清理结点：
+</span></span></span><span style=display:flex><span><span style=color:#586e75></span>            <span style=color:#586e75>// 计数归零要么是其他线程没来过，要么来了又走了。
+</span></span></span><span style=display:flex><span><span style=color:#586e75></span>            <span style=color:#586e75>// 无论如何，只要当前在 pop() 中的线程只有本线程，则说明可以安全回收。
+</span></span></span><span style=display:flex><span><span style=color:#586e75></span>            <span style=color:#586e75>// 这里的情形和双重校验锁有点相似，需要检查两次！
+</span></span></span><span style=display:flex><span><span style=color:#586e75></span>            <span style=color:#586e75>// delete_nodes 实现很简单，就是对（可能为空的）链表一直删到底。
+</span></span></span><span style=display:flex><span><span style=color:#586e75></span>            delete_nodes(nodes_to_delete);
+</span></span><span style=display:flex><span>        } <span style=color:#719e07>else</span> <span style=color:#719e07>if</span> (nodes_to_delete) {
+</span></span><span style=display:flex><span>            <span style=color:#586e75>// 这里清理结点不安全，需要将结点放回去：
+</span></span></span><span style=display:flex><span><span style=color:#586e75></span>            <span style=color:#586e75>// threads_in_pop 减少后仍不为 0，这说明有新的线程进 pop() 了。
+</span></span></span><span style=display:flex><span><span style=color:#586e75></span>            <span style=color:#586e75>// 其他线程可能在 if 判断结束后、exchange 之前把新结点加入到了回收链表中，
+</span></span></span><span style=display:flex><span><span style=color:#586e75></span>            <span style=color:#586e75>// 这些结点可能还会被其他线程访问，因此删除不安全。
+</span></span></span><span style=display:flex><span><span style=color:#586e75></span>            chain_pending_nodes(nodes_to_delete);
+</span></span><span style=display:flex><span>        }
+</span></span><span style=display:flex><span>        <span style=color:#586e75>// threads_in_pop == 1 成立，表明当前结点可以安全删除。
+</span></span></span><span style=display:flex><span><span style=color:#586e75></span>        <span style=color:#586e75>// delete 语句放到 if 的下一行会更好理解，但 delete 比较耗时，我们希望能抓住
+</span></span></span><span style=display:flex><span><span style=color:#586e75></span>        <span style=color:#586e75>// threads_in_pop == 1 这个条件还成立的机会，所以把 delete 放在了最后。
+</span></span></span><span style=display:flex><span><span style=color:#586e75></span>        <span style=color:#719e07>delete</span> old_head; 
+</span></span><span style=display:flex><span>    } <span style=color:#719e07>else</span> {
+</span></span><span style=display:flex><span>        chain_pending_node(old_head); <span style=color:#586e75>// 不能安全删除，放到回收链表中。
+</span></span></span><span style=display:flex><span><span style=color:#586e75></span>        <span style=color:#719e07>--</span>threads_in_pop;
+</span></span><span style=display:flex><span>    }
+</span></span><span style=display:flex><span>}
+</span></span></code></pre></div><p>这样还是有点问题：<strong>如果总是有两个及以上的线程执行 <code>pop()</code> 操作，那么不会有结点被回收</strong>！</p><h3 id=hazard-pointers>Hazard pointers
+<a class=header-anchor href=#hazard-pointers></a></h3><h4 id=思路>思路
+<a class=header-anchor href=#%e6%80%9d%e8%b7%af></a></h4><p>只用一个 <code>pop()</code> 访问计数的问题是信息太少，每个线程都没有足够的信息来确定是否可以对回收链表安全回收。Hazard pointers 的思路是：每个线程都有一个原子变量来表示当前正在访问的指针，而且这个指针是对全局可见的，<strong>一种实现方案是有一个指针原子变量的全局数组，而每个线程的原子变量是其中的一个元素</strong>。如果某个线程在使用完一个结点，尝试删除之前，发现其他线程都没有正在访问要删除的这个指针，则说明这个指针是可以删除的，否则将其 <code>push()</code> 到回收链表。除了检查当前指针之外，在 <code>pop()</code> 退出之前还要检查回收链表的每个结点是否可以删除，逻辑和检查当前结点是一样的。因此，<code>pop()</code> 在清理阶段的时间复杂度为 $O(最大工作线程数 \times 回收链表长度)$。由于 $回收链表长度 \ge 最大工作线程数$ 时一定有结点可以回收，所以这个时间复杂度可以改写为 $O(最大工作线程数^2)$。</p><p>为了让每次搜索全局链表都能找到可以回收的结点，可以仅在 $回收链表长度 \ge 最大工作线程数 \times 2$ 时进行回收，这样至少可以回收一半的结点，这是一种空间换时间的思路。在这种优化下，每次内存回收的复杂度依然不会改变。为了回收和最大工作线程数等量的结点，需要扫描的复杂度为 $O(最大工作线程数^2)$，那么每次 <code>pop()</code> 的均摊复杂度为 $O(最大工作线程数)$。</p><p>全局回收链表上的访问是原子的，因而开销比较大。可以对每个工作线程准备一个 <code>thread_local</code> 回收链表。工作线程只负责回收本地链表中的结点。如果线程即将退出，那么本地链表应该合并到全局链表中去，这一点可以由 RAII 保证。对应地，如果一个线程发现全局链表非空，也要将全局链表并入本地链表。</p><h4 id=实现>实现
+<a class=header-anchor href=#%e5%ae%9e%e7%8e%b0></a></h4><p><code>pop()</code> 函数：</p><div class=highlight><pre tabindex=0 style=color:#93a1a1;background-color:#002b36;-moz-tab-size:2;-o-tab-size:2;tab-size:2><code class=language-cpp data-lang=cpp><span style=display:flex><span>std<span style=color:#719e07>::</span>shared_ptr<span style=color:#719e07>&lt;</span>T<span style=color:#719e07>&gt;</span> pop()
+</span></span><span style=display:flex><span>{
+</span></span><span style=display:flex><span>    std<span style=color:#719e07>::</span>atomic<span style=color:#719e07>&lt;</span><span style=color:#dc322f>void</span><span style=color:#719e07>*&gt;&amp;</span> hp <span style=color:#719e07>=</span> get_hazard_pointer_for_current_thread();
+</span></span><span style=display:flex><span>    node<span style=color:#719e07>*</span> old_head <span style=color:#719e07>=</span> head.load();
+</span></span><span style=display:flex><span>    <span style=color:#719e07>do</span> {
+</span></span><span style=display:flex><span>        node<span style=color:#719e07>*</span> temp;
+</span></span><span style=display:flex><span>        <span style=color:#719e07>do</span> {
+</span></span><span style=display:flex><span>            temp <span style=color:#719e07>=</span> old_head;
+</span></span><span style=display:flex><span>            hp.store(old_head);
+</span></span><span style=display:flex><span>            old_head <span style=color:#719e07>=</span> head.load();
+</span></span><span style=display:flex><span>        } <span style=color:#719e07>while</span> (old_head <span style=color:#719e07>!=</span> temp);
+</span></span><span style=display:flex><span>        <span style=color:#586e75>// 1. 内外双循环的必要性：
+</span></span></span><span style=display:flex><span><span style=color:#586e75></span>        <span style=color:#586e75>// 外循环的 while 语句要访问 old_head-&gt;next，因此 old_head 必须是有效指针。
+</span></span></span><span style=display:flex><span><span style=color:#586e75></span>        <span style=color:#586e75>// 内循环的 while 判断 old_head != temp 是为了保证存储 hp 的过程中 head 没有变化。
+</span></span></span><span style=display:flex><span><span style=color:#586e75></span>        <span style=color:#586e75>// 一旦 hp 成功存储，这个指针就被保护了，old_head 也就不会被别的线程删除。
+</span></span></span><span style=display:flex><span><span style=color:#586e75></span>        <span style=color:#586e75>// 2. 在循环中一般会用 compare_exchange_weak，但是这里用 compare_exchange_strong
+</span></span></span><span style=display:flex><span><span style=color:#586e75></span>        <span style=color:#586e75>// 是不想让假性失败导致高开销的重试（在循环中有几个原子操作）。
+</span></span></span><span style=display:flex><span><span style=color:#586e75></span>    } <span style=color:#719e07>while</span> (old_head <span style=color:#719e07>&amp;&amp;</span> <span style=color:#719e07>!</span>head.compare_exchange_strong(old_head, old_head<span style=color:#719e07>-&gt;</span>next));
+</span></span><span style=display:flex><span>    <span style=color:#586e75>// 上面是在有保护的情况下取走 head
+</span></span></span><span style=display:flex><span><span style=color:#586e75></span>    <span style=color:#586e75>// -------------------------------
+</span></span></span><span style=display:flex><span><span style=color:#586e75></span>    <span style=color:#586e75>// 下面是尝试回收当前指针和回收链表中的其他指针
+</span></span></span><span style=display:flex><span><span style=color:#586e75></span>    hp.store(<span style=color:#719e07>nullptr</span>);
+</span></span><span style=display:flex><span>    std<span style=color:#719e07>::</span>shared_ptr<span style=color:#719e07>&lt;</span>T<span style=color:#719e07>&gt;</span> res;
+</span></span><span style=display:flex><span>    <span style=color:#719e07>if</span> (old_head) {
+</span></span><span style=display:flex><span>        res.swap(old_head<span style=color:#719e07>-&gt;</span>data);
+</span></span><span style=display:flex><span>        <span style=color:#586e75>// outstanding_hazard_pointers_for 遍历全局记录，对每个记录简单调用 load() 来检查
+</span></span></span><span style=display:flex><span><span style=color:#586e75></span>        <span style=color:#586e75>// 是否 old_head 还在使用中。如果扫过去一遍没有找到，则 old_head 不可能被使用。这是因为
+</span></span></span><span style=display:flex><span><span style=color:#586e75></span>        <span style=color:#586e75>// 本线程已经把 old_head 取下来了，之前没有正在使用它的线程不可能再访问到它了。
+</span></span></span><span style=display:flex><span><span style=color:#586e75></span>        <span style=color:#586e75>// 时间复杂度：O(最大工作线程数)
+</span></span></span><span style=display:flex><span><span style=color:#586e75></span>        <span style=color:#719e07>if</span> (outstanding_hazard_pointers_for(old_head)) {
+</span></span><span style=display:flex><span>            <span style=color:#586e75>// 将该结点加入待删除列表。
+</span></span></span><span style=display:flex><span><span style=color:#586e75></span>            <span style=color:#586e75>// 书上是将该结点再次封装到一个新的类型中，该类型在析构函数中会将结点指针转换回原来的
+</span></span></span><span style=display:flex><span><span style=color:#586e75></span>            <span style=color:#586e75>// T* 类型，然后调用 delete 操作符。这个逻辑也可以手动来写。
+</span></span></span><span style=display:flex><span><span style=color:#586e75></span>            reclaim_later(old_head);
+</span></span><span style=display:flex><span>        } <span style=color:#719e07>else</span> {
+</span></span><span style=display:flex><span>            <span style=color:#719e07>delete</span> old_head;
+</span></span><span style=display:flex><span>        }
+</span></span><span style=display:flex><span>        <span style=color:#586e75>// 将回收链表头和 nullptr 交换，然后遍历每个结点，对每个结点调用
+</span></span></span><span style=display:flex><span><span style=color:#586e75></span>        <span style=color:#586e75>// outstanding_hazard_pointers_for，能回收就回收，不能回收就将结点重新放到回收链表中。
+</span></span></span><span style=display:flex><span><span style=color:#586e75></span>        <span style=color:#586e75>// 时间复杂度：O(最大工作线程数 * 回收队列长度) = O(最大工作线程数^2)
+</span></span></span><span style=display:flex><span><span style=color:#586e75></span>        delete_nodes_with_no_hazards();
+</span></span><span style=display:flex><span>    }
+</span></span><span style=display:flex><span>    <span style=color:#719e07>return</span> res;
+</span></span><span style=display:flex><span>}
+</span></span></code></pre></div><div class="markdown-alert markdown-alert-tip"><p class=markdown-alert-title><svg class="octicon octicon-light-bulb mr-2" viewBox="0 0 16 16" width="16" height="16" aria-hidden="true"><path d="M8 1.5c-2.363.0-4 1.69-4 3.75.0.984.424 1.625.984 2.304l.214.253c.223.264.47.556.673.848.284.411.537.896.621 1.49a.75.75.0 01-1.484.211c-.04-.282-.163-.547-.37-.847a8.456 8.456.0 00-.542-.68c-.084-.1-.173-.205-.268-.32C3.201 7.75 2.5 6.766 2.5 5.25 2.5 2.31 4.863.0 8 0s5.5 2.31 5.5 5.25c0 1.516-.701 2.5-1.328 3.259-.095.115-.184.22-.268.319-.207.245-.383.453-.541.681-.208.3-.33.565-.37.847a.751.751.0 01-1.485-.212c.084-.593.337-1.078.621-1.489.203-.292.45-.584.673-.848.075-.088.147-.173.213-.253.561-.679.985-1.32.985-2.304.0-2.06-1.637-3.75-4-3.75zM5.75 12h4.5a.75.75.0 010 1.5h-4.5a.75.75.0 010-1.5zM6 15.25a.75.75.0 01.75-.75h2.5a.75.75.0 010 1.5h-2.5A.75.75.0 016 15.25z"/></svg>Tip</p><p>书上这句话好像是在说<strong>只要 CAS 循环里面有实质工作就选 strong 版本</strong>，如果只是失败后不断尝试但是循环内部是空的就选 weak 版本：</p><blockquote><p>You’re using <code>compare_exchange_strong()</code> here <strong>because you’re doing work inside the while loop</strong>: a spurious failure <code>on compare_exchange_weak()</code> would result in resetting the hazard pointer unnecessarily.</p></blockquote></div><p>为了让每个线程的风险指针对其他线程可见，可以使用一个全局风险指针记录数组，每个线程的风险指针则是其中的元素。具体而言，全局风险指针记录数组的每个元素不是简单的指针，而是是一个带有<strong>线程 id 原子变量</strong>和<strong>指针原子变量</strong>的结构，线程 id 默认初始化表示这个位置没有分配给任何线程。全局风险指针记录数组的大小也是固定分配的。<code>get_hazard_pointer_for_current_thread()</code> 直接返回一个 <code>thread_local</code> 变量中的指针部分，<strong>该变量在初始化时从全局风险指针记录数组上搜索一个空的位置分配给当前线程</strong>。由于获取风险指针的函数返回了 <code>thread_local</code> 变量，因此尽管分配指针的操作很耗时，但每个线程只需要分配一次。在工作线程退出时，相关析构函数会将对应全局记录清理。</p><div class=highlight><pre tabindex=0 style=color:#93a1a1;background-color:#002b36;-moz-tab-size:2;-o-tab-size:2;tab-size:2><code class=language-cpp data-lang=cpp><span style=display:flex><span><span style=color:#dc322f>unsigned</span> <span style=color:#719e07>const</span> max_hazard_pointers<span style=color:#719e07>=</span><span style=color:#2aa198>100</span>;
+</span></span><span style=display:flex><span><span style=color:#719e07>struct</span> <span style=color:#268bd2>hazard_pointer</span>
+</span></span><span style=display:flex><span>{
+</span></span><span style=display:flex><span>    std<span style=color:#719e07>::</span>atomic<span style=color:#719e07>&lt;</span>std<span style=color:#719e07>::</span><span style=color:#268bd2>thread</span><span style=color:#719e07>::</span>id<span style=color:#719e07>&gt;</span> id;
+</span></span><span style=display:flex><span>    std<span style=color:#719e07>::</span>atomic<span style=color:#719e07>&lt;</span><span style=color:#dc322f>void</span><span style=color:#719e07>*&gt;</span> pointer; <span style=color:#586e75>// 只关心指针地址，这里的 pointer 隐去了类型
+</span></span></span><span style=display:flex><span><span style=color:#586e75></span>};
+</span></span><span style=display:flex><span>hazard_pointer hazard_pointers[max_hazard_pointers];
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#719e07>class</span> <span style=color:#268bd2>hp_owner</span>
+</span></span><span style=display:flex><span>{
+</span></span><span style=display:flex><span>    hazard_pointer<span style=color:#719e07>*</span> hp;
+</span></span><span style=display:flex><span><span style=color:#719e07>public</span><span style=color:#719e07>:</span>
+</span></span><span style=display:flex><span>    hp_owner(hp_owner <span style=color:#719e07>const</span><span style=color:#719e07>&amp;</span>) <span style=color:#719e07>=</span> <span style=color:#719e07>delete</span>;
+</span></span><span style=display:flex><span>    hp_owner <span style=color:#719e07>operator</span><span style=color:#719e07>=</span>(hp_owner <span style=color:#719e07>const</span><span style=color:#719e07>&amp;</span>) <span style=color:#719e07>=</span> <span style=color:#719e07>delete</span>;
+</span></span><span style=display:flex><span>    hp_owner() <span style=color:#719e07>:</span> hp(<span style=color:#719e07>nullptr</span>)
+</span></span><span style=display:flex><span>    {
+</span></span><span style=display:flex><span>        <span style=color:#719e07>for</span> (<span style=color:#dc322f>unsigned</span> i <span style=color:#719e07>=</span> <span style=color:#2aa198>0</span>; i <span style=color:#719e07>&lt;</span> max_hazard_pointers; <span style=color:#719e07>++</span>i) {
+</span></span><span style=display:flex><span>            std<span style=color:#719e07>::</span><span style=color:#268bd2>thread</span><span style=color:#719e07>::</span>id old_id;
+</span></span><span style=display:flex><span>            <span style=color:#719e07>if</span> (hazard_pointers[i].id.compare_exchange_strong(
+</span></span><span style=display:flex><span>                old_id, std<span style=color:#719e07>::</span>this_thread<span style=color:#719e07>::</span>get_id()))
+</span></span><span style=display:flex><span>            {
+</span></span><span style=display:flex><span>                hp <span style=color:#719e07>=</span> <span style=color:#719e07>&amp;</span>hazard_pointers[i];
+</span></span><span style=display:flex><span>                <span style=color:#719e07>break</span>;
+</span></span><span style=display:flex><span>            }
+</span></span><span style=display:flex><span>        }
+</span></span><span style=display:flex><span>        <span style=color:#719e07>if</span> (<span style=color:#719e07>!</span>hp) {
+</span></span><span style=display:flex><span>            <span style=color:#719e07>throw</span> std<span style=color:#719e07>::</span>runtime_error(<span style=color:#2aa198>&#34;No hazard pointers available&#34;</span>);
+</span></span><span style=display:flex><span>        }
+</span></span><span style=display:flex><span>    }
+</span></span><span style=display:flex><span>    std<span style=color:#719e07>::</span>atomic<span style=color:#719e07>&lt;</span><span style=color:#dc322f>void</span><span style=color:#719e07>*&gt;&amp;</span> get_pointer()
+</span></span><span style=display:flex><span>    {
+</span></span><span style=display:flex><span>        <span style=color:#719e07>return</span> hp<span style=color:#719e07>-&gt;</span>pointer;
+</span></span><span style=display:flex><span>    }
+</span></span><span style=display:flex><span>    <span style=color:#719e07>~</span>hp_owner()
+</span></span><span style=display:flex><span>    {
+</span></span><span style=display:flex><span>        hp<span style=color:#719e07>-&gt;</span>pointer.store(<span style=color:#719e07>nullptr</span>);
+</span></span><span style=display:flex><span>        hp<span style=color:#719e07>-&gt;</span>id.store(std<span style=color:#719e07>::</span><span style=color:#268bd2>thread</span><span style=color:#719e07>::</span>id());
+</span></span><span style=display:flex><span>    }
+</span></span><span style=display:flex><span>};
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>std<span style=color:#719e07>::</span>atomic<span style=color:#719e07>&lt;</span><span style=color:#dc322f>void</span><span style=color:#719e07>*&gt;&amp;</span> get_hazard_pointer_for_current_thread()
+</span></span><span style=display:flex><span>{
+</span></span><span style=display:flex><span>    <span style=color:#719e07>thread_local</span> <span style=color:#719e07>static</span> hp_owner hazard;
+</span></span><span style=display:flex><span>    <span style=color:#719e07>return</span> hazard.get_pointer();
+</span></span><span style=display:flex><span>}
+</span></span></code></pre></div><p><code>delete_nodes_with_no_hazards()</code> 我觉得可以继续优化，每次都把不可回收的结点直接放回回收链表，会有大量的原子操作，有点慢。可以将不能回收的结点组织成链，再对整个链表只做一次 <code>while (xx.compare_exchange_weak(...))</code> 并入回收链表中。</p><h2 id=引用计数>引用计数
+<a class=header-anchor href=#%e5%bc%95%e7%94%a8%e8%ae%a1%e6%95%b0></a></h2><h3 id=stdshared_ptrt-上的原子操作><code>std::shared_ptr&lt;T></code> 上的原子操作
+<a class=header-anchor href=#stdshared_ptrt-%e4%b8%8a%e7%9a%84%e5%8e%9f%e5%ad%90%e6%93%8d%e4%bd%9c></a></h3><p>基于访问计数的回收算法只能在没有其他线程访问 <code>pop()</code> 时回收结点，导致结点堆积，在重负荷下仍然有内存泄漏。Hazard pointers 解决了这个问题。还有没有别的思路呢？可以想到<strong>原子引用计数</strong>的实现逻辑更简单。</p><p>成书时间是在 C++20 之前，没有 <code>std::atomic&lt;shared_ptr&lt;T>></code>，因此书上是在 <code>std::shared_ptr&lt;T></code> 上做 <code>std::atomic_load()</code> 操作。书 P227 给了一个可供参考的实现。</p><p><img src=/cpp-concurrency-in-action/assets/Pasted%20image%2020250124095558.png width=700></p><p>我个人认为上图代码再获取 <code>old_head</code> 后立即将 <code>old_head->next</code> 置空只是一个取下结点的好习惯，实际上从 <code>pop()</code> 中返回时，<code>old_head</code> 会析构，<code>old_head->next</code> 也会自动被析构。</p><p>然后书介绍起了 <code>&lt;experimental/atomic></code> 头文件，它提供一个新的模板类 <code>std::experimental::atomic_shared_ptr&lt;T></code>。C++20 已经将 <code>std::atomic&lt;std::shared_ptr&lt;T>></code> 偏特化加入标准了。</p><p>不过 <code>std::atomic&lt;std::shared_ptr&lt;T>></code> 没有无锁保证！即便是机器支持 CX16，共享指针也不是一个平凡类型，它在拷贝、赋值、析构的时候要修改控制块的引用计数，导致其对应原子类型很难实现无锁。在 libstdc++ 的实现中，无论是 <code>std::atomic_load()</code> 对共享指针的特化，还是 <code>std::atomic&lt;std::shared_ptr&lt;T>></code>，均是有锁的。</p><h3 id=分裂引用计数>分裂引用计数
+<a class=header-anchor href=#%e5%88%86%e8%a3%82%e5%bc%95%e7%94%a8%e8%ae%a1%e6%95%b0></a></h3><p>这个应该是对应
+<a href=../../cppcon-talks/CppCon-2023-Lock-free-Atomic-Shared-Pointers-Without-a-Split-Reference-Count/ title="CppCon 2023 Lock-free Atomic Shared Pointers Without a Split Reference Count">CppCon 2023 Lock-free Atomic Shared Pointers Without a Split Reference Count</a> 的 split reference-counting。</p><ol><li><strong>和共享指针上的原子操作相比</strong>，分裂引用计数的计数值是实现者维护的，而不是在拷贝、赋值、析构时自动维护的。因此如果硬件支持相应大小的 CAS 指令，就可以写成无锁代码。</li><li><strong>和手动维护的单个内部引用计数相比，分裂引用计数在开始结点访问时会先把计数值加到外部计数上，防止直接操作内部计数时遭遇结点被删除的未定义行为</strong>。</li></ol><p>分裂引用计数结构的外围包含一个外部计数和一个指针，这个指针指向的结构包含数据本身和一个内部计数。一个指针加上一个外部计数也超过了机器字长，所以无锁操作同样也不能在所有平台上面保证。如果硬件支持 CX16，那么<strong>分裂引用计数</strong>就是无锁的。否则，如果是在 x86 上我们还能利用这样的硬件特性：虽然指针是 64 位，但实际有用的虚拟地址位数可能只有 48 位，剩下的 16 位可以用来存储引用计数，缺点是计数范围受限。其他硬件上也有类似的特性可以挖掘。</p><div class="markdown-alert markdown-alert-tip"><p class=markdown-alert-title><svg class="octicon octicon-light-bulb mr-2" viewBox="0 0 16 16" width="16" height="16" aria-hidden="true"><path d="M8 1.5c-2.363.0-4 1.69-4 3.75.0.984.424 1.625.984 2.304l.214.253c.223.264.47.556.673.848.284.411.537.896.621 1.49a.75.75.0 01-1.484.211c-.04-.282-.163-.547-.37-.847a8.456 8.456.0 00-.542-.68c-.084-.1-.173-.205-.268-.32C3.201 7.75 2.5 6.766 2.5 5.25 2.5 2.31 4.863.0 8 0s5.5 2.31 5.5 5.25c0 1.516-.701 2.5-1.328 3.259-.095.115-.184.22-.268.319-.207.245-.383.453-.541.681-.208.3-.33.565-.37.847a.751.751.0 01-1.485-.212c.084-.593.337-1.078.621-1.489.203-.292.45-.584.673-.848.075-.088.147-.173.213-.253.561-.679.985-1.32.985-2.304.0-2.06-1.637-3.75-4-3.75zM5.75 12h4.5a.75.75.0 010 1.5h-4.5a.75.75.0 010-1.5zM6 15.25a.75.75.0 01.75-.75h2.5a.75.75.0 010 1.5h-2.5A.75.75.0 016 15.25z"/></svg>Tip</p><p>书上开始介绍<strong>分裂引用计数</strong>这个方法就是因为共享指针原子变量的无锁性质不能得到保证，但是分裂引用计数本身也不一定是无锁的。不过，因为分裂引用计数结构是平凡类型，只要硬件支持对该大小的变量进行原子操作就可以无锁。相当于是放宽了要求。</p></div><div class="markdown-alert markdown-alert-tip"><p class=markdown-alert-title><svg class="octicon octicon-light-bulb mr-2" viewBox="0 0 16 16" width="16" height="16" aria-hidden="true"><path d="M8 1.5c-2.363.0-4 1.69-4 3.75.0.984.424 1.625.984 2.304l.214.253c.223.264.47.556.673.848.284.411.537.896.621 1.49a.75.75.0 01-1.484.211c-.04-.282-.163-.547-.37-.847a8.456 8.456.0 00-.542-.68c-.084-.1-.173-.205-.268-.32C3.201 7.75 2.5 6.766 2.5 5.25 2.5 2.31 4.863.0 8 0s5.5 2.31 5.5 5.25c0 1.516-.701 2.5-1.328 3.259-.095.115-.184.22-.268.319-.207.245-.383.453-.541.681-.208.3-.33.565-.37.847a.751.751.0 01-1.485-.212c.084-.593.337-1.078.621-1.489.203-.292.45-.584.673-.848.075-.088.147-.173.213-.253.561-.679.985-1.32.985-2.304.0-2.06-1.637-3.75-4-3.75zM5.75 12h4.5a.75.75.0 010 1.5h-4.5a.75.75.0 010-1.5zM6 15.25a.75.75.0 01.75-.75h2.5a.75.75.0 010 1.5h-2.5A.75.75.0 016 15.25z"/></svg>Tip</p><p>前面说到了 x86-64 处理器上虚拟地址最大是 48 位。但是这个说法并不完全准确。根据 <a href="https://wiki.osdev.org/Paging#:~:text=Intel%20has%20released%20documentation%20for,PiB%20of%20physical%20address%20space" title=wiki.osdev.org/Paging rel="noopener external nofollow noreferrer" target=_blank class=exturl>wiki.osdev.org/Paging<i class="fa fa-external-link-alt"></i></a>，Intel 提供了扩展到 57 位虚拟地址、5 级页表的扩展支持。4 级页表的结构是 9（顶级 / 一级）-9（二级）-9（三级）-9（四级）-12（4K 页面页内地址），5 级页表很容易想到是在顶层再次扩展了 9 位。<strong>如果使用了依赖 48 位虚拟地址的压缩指针，那么这样的代码是在 5 级页表下不可移植的</strong>。</p><p>扩展页表支持只能在非 64 位下模式设置，也就意味着开机后不能修改。在 Windows Server 上面的修改可以参考 <a href=https://lenovopress.lenovo.com/lp1911.pdf title=https://lenovopress.lenovo.com/lp1911.pdf rel="noopener external nofollow noreferrer" target=_blank class=exturl>https://lenovopress.lenovo.com/lp1911.pdf<i class="fa fa-external-link-alt"></i></a> 。</p><p>X86 不同硬件配置下的页表级数参考 <a href=https://unix.stackexchange.com/a/379238/ title=https://unix.stackexchange.com/a/379238/ rel="noopener external nofollow noreferrer" target=_blank class=exturl>https://unix.stackexchange.com/a/379238/<i class="fa fa-external-link-alt"></i></a> 。</p></div><div class="markdown-alert markdown-alert-tip"><p class=markdown-alert-title><svg class="octicon octicon-light-bulb mr-2" viewBox="0 0 16 16" width="16" height="16" aria-hidden="true"><path d="M8 1.5c-2.363.0-4 1.69-4 3.75.0.984.424 1.625.984 2.304l.214.253c.223.264.47.556.673.848.284.411.537.896.621 1.49a.75.75.0 01-1.484.211c-.04-.282-.163-.547-.37-.847a8.456 8.456.0 00-.542-.68c-.084-.1-.173-.205-.268-.32C3.201 7.75 2.5 6.766 2.5 5.25 2.5 2.31 4.863.0 8 0s5.5 2.31 5.5 5.25c0 1.516-.701 2.5-1.328 3.259-.095.115-.184.22-.268.319-.207.245-.383.453-.541.681-.208.3-.33.565-.37.847a.751.751.0 01-1.485-.212c.084-.593.337-1.078.621-1.489.203-.292.45-.584.673-.848.075-.088.147-.173.213-.253.561-.679.985-1.32.985-2.304.0-2.06-1.637-3.75-4-3.75zM5.75 12h4.5a.75.75.0 010 1.5h-4.5a.75.75.0 010-1.5zM6 15.25a.75.75.0 01.75-.75h2.5a.75.75.0 010 1.5h-2.5A.75.75.0 016 15.25z"/></svg>Tip</p><p>物理地址的长度和虚拟地址不一样，不同硬件的物理地址长度可能也不一样。我的 Intel 笔记本上物理地址占 46 位，而实验室服务器上 CPU 为 AMD，物理地址占 43 位。 看了其他几台 Intel 的服务器，物理地址也是 46 位。</p></div><p>实现思路是这样：</p><div class=highlight><pre tabindex=0 style=color:#93a1a1;background-color:#002b36;-moz-tab-size:2;-o-tab-size:2;tab-size:2><code class=language-cpp data-lang=cpp><span style=display:flex><span><span style=color:#719e07>template</span><span style=color:#719e07>&lt;</span><span style=color:#719e07>typename</span> T<span style=color:#719e07>&gt;</span>
+</span></span><span style=display:flex><span><span style=color:#719e07>class</span> <span style=color:#268bd2>lock_free_stack</span>
+</span></span><span style=display:flex><span>{
+</span></span><span style=display:flex><span><span style=color:#719e07>private</span><span style=color:#719e07>:</span>
+</span></span><span style=display:flex><span>    <span style=color:#719e07>struct</span> <span style=color:#268bd2>node</span>;
+</span></span><span style=display:flex><span>    <span style=color:#719e07>struct</span> <span style=color:#268bd2>counted_node_ptr</span>
+</span></span><span style=display:flex><span>    {
+</span></span><span style=display:flex><span>        <span style=color:#dc322f>int</span> external_count;
+</span></span><span style=display:flex><span>        node<span style=color:#719e07>*</span> ptr;
+</span></span><span style=display:flex><span>    };
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>    <span style=color:#719e07>struct</span> <span style=color:#268bd2>node</span>
+</span></span><span style=display:flex><span>    {
+</span></span><span style=display:flex><span>        std<span style=color:#719e07>::</span>shared_ptr<span style=color:#719e07>&lt;</span>T<span style=color:#719e07>&gt;</span> data;
+</span></span><span style=display:flex><span>        std<span style=color:#719e07>::</span>atomic<span style=color:#719e07>&lt;</span><span style=color:#dc322f>int</span><span style=color:#719e07>&gt;</span> internal_count;
+</span></span><span style=display:flex><span>        counted_node_ptr next;
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>        node(T <span style=color:#719e07>const</span><span style=color:#719e07>&amp;</span> data_)<span style=color:#719e07>:</span>
+</span></span><span style=display:flex><span>            data(std<span style=color:#719e07>::</span>make_shared<span style=color:#719e07>&lt;</span>T<span style=color:#719e07>&gt;</span>(data_)),
+</span></span><span style=display:flex><span>            internal_count(<span style=color:#2aa198>0</span>)
+</span></span><span style=display:flex><span>        {}
+</span></span><span style=display:flex><span>    };
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>    std<span style=color:#719e07>::</span>atomic<span style=color:#719e07>&lt;</span>counted_node_ptr<span style=color:#719e07>&gt;</span> head; <span style=color:#586e75>// 不一定无锁
+</span></span></span><span style=display:flex><span><span style=color:#586e75></span>
+</span></span><span style=display:flex><span><span style=color:#719e07>public</span><span style=color:#719e07>:</span>
+</span></span><span style=display:flex><span>    <span style=color:#719e07>~</span>lock_free_stack()
+</span></span><span style=display:flex><span>    {
+</span></span><span style=display:flex><span>        <span style=color:#719e07>while</span>(pop());
+</span></span><span style=display:flex><span>    }
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>    <span style=color:#dc322f>void</span> <span style=color:#268bd2>push</span>(T <span style=color:#719e07>const</span><span style=color:#719e07>&amp;</span> data)
+</span></span><span style=display:flex><span>    {
+</span></span><span style=display:flex><span>        counted_node_ptr new_node;
+</span></span><span style=display:flex><span>        new_node.ptr <span style=color:#719e07>=</span> <span style=color:#719e07>new</span> node(data);
+</span></span><span style=display:flex><span>        new_node.external_count <span style=color:#719e07>=</span> <span style=color:#2aa198>1</span>;
+</span></span><span style=display:flex><span>        new_node.ptr<span style=color:#719e07>-&gt;</span>next <span style=color:#719e07>=</span> head.load();
+</span></span><span style=display:flex><span>        <span style=color:#719e07>while</span>(<span style=color:#719e07>!</span>head.compare_exchange_weak(new_node.ptr<span style=color:#719e07>-&gt;</span>next, new_node));
+</span></span><span style=display:flex><span>    }
+</span></span><span style=display:flex><span>};
+</span></span></code></pre></div><p>在 <code>pop()</code> 的时候要考虑保护读出来的 <code>head</code>，将其外部引用计数加 1，增加外部引用计数的过程要用 CAS 重试直到保证“读到 head，且增加它的引用计数”这个操作是一个不可打断的整体。</p><div class=highlight><pre tabindex=0 style=color:#93a1a1;background-color:#002b36;-moz-tab-size:2;-o-tab-size:2;tab-size:2><code class=language-cpp data-lang=cpp><span style=display:flex><span><span style=color:#719e07>template</span><span style=color:#719e07>&lt;</span><span style=color:#719e07>typename</span> T<span style=color:#719e07>&gt;</span>
+</span></span><span style=display:flex><span><span style=color:#719e07>class</span> <span style=color:#268bd2>lock_free_stack</span>
+</span></span><span style=display:flex><span>{
+</span></span><span style=display:flex><span><span style=color:#719e07>private</span><span style=color:#719e07>:</span>
+</span></span><span style=display:flex><span>    <span style=color:#586e75>// other parts as in listing 7.11
+</span></span></span><span style=display:flex><span><span style=color:#586e75></span>    <span style=color:#dc322f>void</span> increase_head_count(counted_node_ptr<span style=color:#719e07>&amp;</span> old_counter)
+</span></span><span style=display:flex><span>    {
+</span></span><span style=display:flex><span>        counted_node_ptr new_counter;
+</span></span><span style=display:flex><span>        <span style=color:#719e07>do</span>
+</span></span><span style=display:flex><span>        {
+</span></span><span style=display:flex><span>            new_counter <span style=color:#719e07>=</span> old_counter;
+</span></span><span style=display:flex><span>            <span style=color:#719e07>++</span>new_counter.external_count;
+</span></span><span style=display:flex><span>        }
+</span></span><span style=display:flex><span>        <span style=color:#586e75>// 在将增加了外部计数的 counter 放回 head 之前要先检查 head 是否改变。
+</span></span></span><span style=display:flex><span><span style=color:#586e75></span>        <span style=color:#586e75>// 如果失败了那么 head 的当前值写回到 old_counter 中，再次重试直到成功。
+</span></span></span><span style=display:flex><span><span style=color:#586e75></span>        <span style=color:#719e07>while</span> (<span style=color:#719e07>!</span>head.compare_exchange_strong(old_counter, new_counter));
+</span></span><span style=display:flex><span>        old_counter.external_count <span style=color:#719e07>=</span> new_counter.external_count;
+</span></span><span style=display:flex><span>    }
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#719e07>public</span><span style=color:#719e07>:</span>
+</span></span><span style=display:flex><span>    std<span style=color:#719e07>::</span>shared_ptr<span style=color:#719e07>&lt;</span>T<span style=color:#719e07>&gt;</span> pop()
+</span></span><span style=display:flex><span>    {
+</span></span><span style=display:flex><span>        counted_node_ptr old_head <span style=color:#719e07>=</span> head.load();
+</span></span><span style=display:flex><span>        <span style=color:#719e07>for</span> (;;)
+</span></span><span style=display:flex><span>        {
+</span></span><span style=display:flex><span>            increase_head_count(old_head);
+</span></span><span style=display:flex><span>            node<span style=color:#719e07>*</span> <span style=color:#719e07>const</span> ptr <span style=color:#719e07>=</span> old_head.ptr;
+</span></span><span style=display:flex><span>            <span style=color:#719e07>if</span> (<span style=color:#719e07>!</span>ptr)
+</span></span><span style=display:flex><span>            {
+</span></span><span style=display:flex><span>                <span style=color:#719e07>return</span> std<span style=color:#719e07>::</span>shared_ptr<span style=color:#719e07>&lt;</span>T<span style=color:#719e07>&gt;</span>();
+</span></span><span style=display:flex><span>            }
+</span></span><span style=display:flex><span>            <span style=color:#586e75>// 如果失败了，head 的当前值会更新到 old_head 当中，
+</span></span></span><span style=display:flex><span><span style=color:#586e75></span>            <span style=color:#586e75>// 这就是为什么 for 循环内部不需要加载 head 值。
+</span></span></span><span style=display:flex><span><span style=color:#586e75></span>            <span style=color:#719e07>if</span> (head.compare_exchange_strong(old_head, ptr<span style=color:#719e07>-&gt;</span>next))
+</span></span><span style=display:flex><span>            {
+</span></span><span style=display:flex><span>                std<span style=color:#719e07>::</span>shared_ptr<span style=color:#719e07>&lt;</span>T<span style=color:#719e07>&gt;</span> res;
+</span></span><span style=display:flex><span>                res.swap(ptr<span style=color:#719e07>-&gt;</span>data);
+</span></span><span style=display:flex><span>                <span style=color:#586e75>// 修改计数，检查是否需要回收结点。
+</span></span></span><span style=display:flex><span><span style=color:#586e75></span>                <span style=color:#586e75>// 内部计数和外部计数其实是一个整体，它们的总和表示真实引用，这里的
+</span></span></span><span style=display:flex><span><span style=color:#586e75></span>                <span style=color:#586e75>// internal_count + external_count + offset 应该等于 0。为什么
+</span></span></span><span style=display:flex><span><span style=color:#586e75></span>                <span style=color:#586e75>// 这个 offset 要取 -2？因为外部计数初始值是 1 表明链表对结点的引用，
+</span></span></span><span style=display:flex><span><span style=color:#586e75></span>                <span style=color:#586e75>// 另外此线程在进入循环时就将外部计数加 1 了，表明 pop() 过程对结点的
+</span></span></span><span style=display:flex><span><span style=color:#586e75></span>                <span style=color:#586e75>// 引用，现在要把这两部分都减掉。
+</span></span></span><span style=display:flex><span><span style=color:#586e75></span>                <span style=color:#dc322f>int</span> <span style=color:#719e07>const</span> count_increase <span style=color:#719e07>=</span> old_head.external_count <span style=color:#719e07>-</span> <span style=color:#2aa198>2</span>;
+</span></span><span style=display:flex><span>                <span style=color:#719e07>if</span> (ptr<span style=color:#719e07>-&gt;</span>internal_count.fetch_add(count_increase) <span style=color:#719e07>==</span> <span style=color:#719e07>-</span>count_increase)
+</span></span><span style=display:flex><span>                {
+</span></span><span style=display:flex><span>                    <span style=color:#719e07>delete</span> ptr;
+</span></span><span style=display:flex><span>                }
+</span></span><span style=display:flex><span>                <span style=color:#719e07>return</span> res;
+</span></span><span style=display:flex><span>            }
+</span></span><span style=display:flex><span>            <span style=color:#586e75>// 如果失败，说明这个 head 被其他结点取下了，开始新的循环重新取一个结点。
+</span></span></span><span style=display:flex><span><span style=color:#586e75></span>            <span style=color:#586e75>// 不过因为本节点和其他节点读到了同样的 head，可能导致这个 head 没有被
+</span></span></span><span style=display:flex><span><span style=color:#586e75></span>            <span style=color:#586e75>// 正常回收，所以这里减少内部计数看看结点是否需要回收。
+</span></span></span><span style=display:flex><span><span style=color:#586e75></span>            <span style=color:#719e07>else</span> <span style=color:#268bd2>if</span> (ptr<span style=color:#719e07>-&gt;</span>internal_count.fetch_sub(<span style=color:#2aa198>1</span>) <span style=color:#719e07>==</span> <span style=color:#2aa198>1</span>)
+</span></span><span style=display:flex><span>            {
+</span></span><span style=display:flex><span>                <span style=color:#719e07>delete</span> ptr;
+</span></span><span style=display:flex><span>            }
+</span></span><span style=display:flex><span>        }
+</span></span><span style=display:flex><span>    }
+</span></span><span style=display:flex><span>};
+</span></span></code></pre></div><p>关于分裂引用计数如何等效于单个引用计数，可以参考 <a href=https://stackoverflow.com/a/68963769/ title=https://stackoverflow.com/a/68963769/ rel="noopener external nofollow noreferrer" target=_blank class=exturl>https://stackoverflow.com/a/68963769/<i class="fa fa-external-link-alt"></i></a> ：</p><blockquote><p>We can think about this as two phases: in the first phase our counter is split (into external_count and internal_count) and in the second phase our counter is merged into a single variable - internal_count. In the first phase we need to add external_count to internal_count to get real counter value. In the second phase we have to use internal_count only, because external_count has some old value that does not make any sense now (as the book says, now &ldquo;external counter is discarded&rdquo;).</p></blockquote><h2 id=以分裂引用计数为例考虑内存序要求>以分裂引用计数为例，考虑内存序要求
+<a class=header-anchor href=#%e4%bb%a5%e5%88%86%e8%a3%82%e5%bc%95%e7%94%a8%e8%ae%a1%e6%95%b0%e4%b8%ba%e4%be%8b%e8%80%83%e8%99%91%e5%86%85%e5%ad%98%e5%ba%8f%e8%a6%81%e6%b1%82></a></h2><p>之前的代码都使用了默认的、也是最严格的 <code>std::memory_order_seq_cst</code> 内存序。</p><p>考虑分裂引用计数的 <code>push()</code> 实现：</p><div class=highlight><pre tabindex=0 style=color:#93a1a1;background-color:#002b36;-moz-tab-size:2;-o-tab-size:2;tab-size:2><code class=language-cpp data-lang=cpp><span style=display:flex><span><span style=color:#dc322f>void</span> <span style=color:#268bd2>push</span>(T <span style=color:#719e07>const</span><span style=color:#719e07>&amp;</span> data) {
+</span></span><span style=display:flex><span>    counted_node_ptr new_node;
+</span></span><span style=display:flex><span>    new_node.ptr <span style=color:#719e07>=</span> <span style=color:#719e07>new</span> node(data);
+</span></span><span style=display:flex><span>    new_node.external_count <span style=color:#719e07>=</span> <span style=color:#2aa198>1</span>;
+</span></span><span style=display:flex><span>    new_node.ptr<span style=color:#719e07>-&gt;</span>next <span style=color:#719e07>=</span> head.load(std<span style=color:#719e07>::</span>memory_order_relaxed);     <span style=color:#586e75>// A
+</span></span></span><span style=display:flex><span><span style=color:#586e75></span>    <span style=color:#719e07>while</span> (<span style=color:#719e07>!</span>head.compare_exchange_weak(new_node.ptr<span style=color:#719e07>-&gt;</span>next, new_node,
+</span></span><span style=display:flex><span>                                       std<span style=color:#719e07>::</span>memory_order_release,  <span style=color:#586e75>// B
+</span></span></span><span style=display:flex><span><span style=color:#586e75></span>                                       std<span style=color:#719e07>::</span>memory_order_relaxed));<span style=color:#586e75>// C
+</span></span></span><span style=display:flex><span><span style=color:#586e75></span>}
+</span></span></code></pre></div><ol><li>A 是在加载 <code>head</code> 地址，我们只需要知道这个值是什么，并不通过这个值去做计算或者访问成员，也不需要其他同步保证，所以用 relaxed 语义即可。</li><li>B 是将 <code>new_node</code> 写入 <code>head</code>，我们希望这个值能被其他线程可见（达成同步），所以用 release 语义。</li><li>C 是在 CAS 失败的时候将最新的节点值加载到 <code>new_node.ptr->next</code> 中以便下次尝试。这个值只有本线程能访问，不需要同步，所以用 relaxed 语义。</li><li>注意这里 CAS 循环体是空的，所以用 <code>compare_exchange_weak</code> 可能比 strong 版本的更高效。</li></ol><p><code>pop()</code> 中的 <code>increase_head_count()</code> 函数：</p><div class=highlight><pre tabindex=0 style=color:#93a1a1;background-color:#002b36;-moz-tab-size:2;-o-tab-size:2;tab-size:2><code class=language-cpp data-lang=cpp><span style=display:flex><span><span style=color:#dc322f>void</span> <span style=color:#268bd2>increase_head_count</span>(counted_node_ptr <span style=color:#719e07>&amp;</span> old_counter) {
+</span></span><span style=display:flex><span>    counted_node_ptr new_counter;
+</span></span><span style=display:flex><span>    <span style=color:#719e07>do</span> {
+</span></span><span style=display:flex><span>        new_counter <span style=color:#719e07>=</span> old_counter;
+</span></span><span style=display:flex><span>        <span style=color:#719e07>++</span>new_counter.external_count;
+</span></span><span style=display:flex><span>    } <span style=color:#719e07>while</span> (<span style=color:#719e07>!</span>head.compare_exchange_strong(old_counter, new_counter,
+</span></span><span style=display:flex><span>                                           std<span style=color:#719e07>::</span>memory_order_acquire,   <span style=color:#586e75>// A
+</span></span></span><span style=display:flex><span><span style=color:#586e75></span>                                           std<span style=color:#719e07>::</span>memory_order_relaxed)); <span style=color:#586e75>// B
+</span></span></span><span style=display:flex><span><span style=color:#586e75></span>    old_counter.external_count <span style=color:#719e07>=</span> new_counter.external_count;
+</span></span><span style=display:flex><span>}
+</span></span></code></pre></div><ol><li>A 是一个 Read-Modify-Write 操作，不能简单地认为它是 store 操作。这里想和 <code>push()</code> 操作同步（因为后面要读指针里面的内容，即通过将 <code>head</code> 换成 <code>head.ptr->next</code> 来实现取下结点），所以用 acquire 语义。</li><li>B 用 relaxed 的原因同 <code>push()</code>。</li></ol><p>下面是 <code>pop()</code> 的其他部分：</p><div class=highlight><pre tabindex=0 style=color:#93a1a1;background-color:#002b36;-moz-tab-size:2;-o-tab-size:2;tab-size:2><code class=language-cpp data-lang=cpp><span style=display:flex><span>std<span style=color:#719e07>::</span>shared_ptr<span style=color:#719e07>&lt;</span>T<span style=color:#719e07>&gt;</span> pop()
+</span></span><span style=display:flex><span>{
+</span></span><span style=display:flex><span>    counted_node_ptr old_head <span style=color:#719e07>=</span> head.load(std<span style=color:#719e07>::</span>memory_order_relaxed);
+</span></span><span style=display:flex><span>    <span style=color:#719e07>for</span>(;;)
+</span></span><span style=display:flex><span>    {
+</span></span><span style=display:flex><span>        increase_head_count(old_head);
+</span></span><span style=display:flex><span>        node<span style=color:#719e07>*</span> <span style=color:#719e07>const</span> ptr <span style=color:#719e07>=</span> old_head.ptr;
+</span></span><span style=display:flex><span>        <span style=color:#719e07>if</span> (<span style=color:#719e07>!</span>ptr)
+</span></span><span style=display:flex><span>        {
+</span></span><span style=display:flex><span>            <span style=color:#719e07>return</span> std<span style=color:#719e07>::</span>shared_ptr<span style=color:#719e07>&lt;</span>T<span style=color:#719e07>&gt;</span>();
+</span></span><span style=display:flex><span>        }
+</span></span><span style=display:flex><span>        <span style=color:#719e07>if</span> (head.compare_exchange_strong(old_head, ptr<span style=color:#719e07>-&gt;</span>next,
+</span></span><span style=display:flex><span>                                        std<span style=color:#719e07>::</span>memory_order_relaxed)) <span style=color:#586e75>// A
+</span></span></span><span style=display:flex><span><span style=color:#586e75></span>        {
+</span></span><span style=display:flex><span>            std<span style=color:#719e07>::</span>shared_ptr<span style=color:#719e07>&lt;</span>T<span style=color:#719e07>&gt;</span> res;
+</span></span><span style=display:flex><span>            res.swap(ptr<span style=color:#719e07>-&gt;</span>data);
+</span></span><span style=display:flex><span>            <span style=color:#dc322f>int</span> <span style=color:#719e07>const</span> count_increase <span style=color:#719e07>=</span> old_head.external_count <span style=color:#719e07>-</span> <span style=color:#2aa198>2</span>;
+</span></span><span style=display:flex><span>            <span style=color:#719e07>if</span>(ptr<span style=color:#719e07>-&gt;</span>internal_count.fetch_add(count_increase,
+</span></span><span style=display:flex><span>                   std<span style=color:#719e07>::</span>memory_order_release) <span style=color:#719e07>==</span> <span style=color:#719e07>-</span>count_increase) <span style=color:#586e75>// B
+</span></span></span><span style=display:flex><span><span style=color:#586e75></span>            {
+</span></span><span style=display:flex><span>                <span style=color:#719e07>delete</span> ptr;
+</span></span><span style=display:flex><span>            }
+</span></span><span style=display:flex><span>            <span style=color:#719e07>return</span> res;
+</span></span><span style=display:flex><span>        }
+</span></span><span style=display:flex><span>        <span style=color:#719e07>else</span> <span style=color:#268bd2>if</span> (ptr<span style=color:#719e07>-&gt;</span>internal_count.fetch_add(<span style=color:#719e07>-</span><span style=color:#2aa198>1</span>,
+</span></span><span style=display:flex><span>                     std<span style=color:#719e07>::</span>memory_order_relaxed) <span style=color:#719e07>==</span> <span style=color:#2aa198>1</span>) <span style=color:#586e75>// C
+</span></span></span><span style=display:flex><span><span style=color:#586e75></span>        {
+</span></span><span style=display:flex><span>            ptr<span style=color:#719e07>-&gt;</span>internal_count.load(std<span style=color:#719e07>::</span>memory_order_acquire); <span style=color:#586e75>// D
+</span></span></span><span style=display:flex><span><span style=color:#586e75></span>            <span style=color:#719e07>delete</span> ptr;
+</span></span><span style=display:flex><span>        }
+</span></span><span style=display:flex><span>    }
+</span></span><span style=display:flex><span>}
+</span></span></code></pre></div><ol><li>A 在 <code>compare_exchange_strong</code> 成功后代码会访问 <code>ptr->internal_count</code>，这个是 <code>push()</code> 操作放进去的。但是我们在 <code>increase_head_count()</code> 操作中已经做过和 <code>push()</code> 的同步了，所以这里用 relaxed 就行。</li><li>如果 A 这一步的 CAS 失败了，除去 <code>push()</code> 之外，只可能是其他线程的 <code>pop()</code> 成功了。成功时我们还需要进行 <code>swap</code> 操作，要读取 <code>ptr->data</code>，希望这个操作排在其他线程删除这个指针前面（如果不是本线程删除这个指针）。因此 B 在修改内部引用计数的时候做 release 操作来做同步。</li><li>承接 2，如果 CAS 失败，我们在删除指针之前要做好同步。可以在 C 上面选择 release 语义。</li><li>在 C 上面选择 release 内存序是 overkill。因为只有最多一个线程能成功进入 C 处的 <code>if</code> 真正调用 <code>delete</code>，对每个线程都用 release 内存序是不必要的。因此 C 可以改成 relaxed 内存序，并且在删除指针之前额外增加一个 acquire 内存序的读取操作来达到同步效果。</li></ol><p>这里 2~4 的同步过程是为了保证指令的执行效果看上去是有序的。设想没有做同步，可能会出现这种情况（$t_0 < t_1 < t_2$）：</p><div class=highlight><pre tabindex=0 style=color:#93a1a1;background-color:#002b36;-moz-tab-size:2;-o-tab-size:2;tab-size:2><code class=language-cpp data-lang=cpp><span style=display:flex><span><span style=color:#586e75>// 线程 1
+</span></span></span><span style=display:flex><span><span style=color:#586e75></span><span style=color:#719e07>if</span> (head.compare_exchange_strong(old_head, ptr<span style=color:#719e07>-&gt;</span>next,
+</span></span><span style=display:flex><span>                                 std<span style=color:#719e07>::</span>memory_order_relaxed))
+</span></span><span style=display:flex><span>{
+</span></span><span style=display:flex><span>    <span style=color:#dc322f>int</span> <span style=color:#719e07>const</span> count_increase <span style=color:#719e07>=</span> old_head.external_count <span style=color:#719e07>-</span> <span style=color:#2aa198>2</span>;
+</span></span><span style=display:flex><span>    <span style=color:#719e07>if</span>(ptr<span style=color:#719e07>-&gt;</span>internal_count.fetch_add(count_increase,
+</span></span><span style=display:flex><span>           std<span style=color:#719e07>::</span>memory_order_release) <span style=color:#719e07>==</span> <span style=color:#719e07>-</span>count_increase) <span style=color:#586e75>// t0
+</span></span></span><span style=display:flex><span><span style=color:#586e75></span>    {
+</span></span><span style=display:flex><span>        <span style=color:#719e07>delete</span> ptr; <span style=color:#586e75>// 还有其他线程在使用，因此没进来
+</span></span></span><span style=display:flex><span><span style=color:#586e75></span>    }
+</span></span><span style=display:flex><span>    std<span style=color:#719e07>::</span>shared_ptr<span style=color:#719e07>&lt;</span>T<span style=color:#719e07>&gt;</span> res;
+</span></span><span style=display:flex><span>    res.swap(ptr<span style=color:#719e07>-&gt;</span>data); <span style=color:#586e75>// t2: ptr-&gt;data 和上面的指令没有相关性，因此可以重排
+</span></span></span><span style=display:flex><span><span style=color:#586e75></span>    <span style=color:#719e07>return</span> res;
+</span></span><span style=display:flex><span>}
+</span></span><span style=display:flex><span><span style=color:#586e75>// 线程 2
+</span></span></span><span style=display:flex><span><span style=color:#586e75></span><span style=color:#719e07>else</span> <span style=color:#268bd2>if</span> (ptr<span style=color:#719e07>-&gt;</span>internal_count.fetch_add(<span style=color:#719e07>-</span><span style=color:#2aa198>1</span>,
+</span></span><span style=display:flex><span>             std<span style=color:#719e07>::</span>memory_order_relaxed) <span style=color:#719e07>==</span> <span style=color:#2aa198>1</span>)
+</span></span><span style=display:flex><span>{
+</span></span><span style=display:flex><span>    <span style=color:#586e75>// ptr-&gt;internal_count.load(std::memory_order_acquire); // 假设没有做同步
+</span></span></span><span style=display:flex><span><span style=color:#586e75></span>    <span style=color:#586e75>// 同步是需要两个线程配合的，这里注释掉一个就能破坏同步
+</span></span></span><span style=display:flex><span><span style=color:#586e75></span>    <span style=color:#719e07>delete</span> ptr; <span style=color:#586e75>// t1
+</span></span></span><span style=display:flex><span><span style=color:#586e75></span>}
+</span></span></code></pre></div><h2 id=比较这几种处理内存安全问题的方式>比较这几种处理内存安全问题的方式
+<a class=header-anchor href=#%e6%af%94%e8%be%83%e8%bf%99%e5%87%a0%e7%a7%8d%e5%a4%84%e7%90%86%e5%86%85%e5%ad%98%e5%ae%89%e5%85%a8%e9%97%ae%e9%a2%98%e7%9a%84%e6%96%b9%e5%bc%8f></a></h2><ol><li><code>pop()</code> 简单访问计数：有结点堆积的可能性，导致内存永远无法回收。</li><li>Hazard pointers：总是能无锁。</li><li>共享指针上的原子操作：实现简单，但是受限于标准库实现，在大多数实现上做不到无锁。</li><li>分裂引用计数：有 CX16 则能无锁，设计成压缩指针也能无锁。</li></ol><p>最后，书上还提到：</p><blockquote><p>As we move on to look at writing a lock-free queue, you’ll see a similar pattern: lots of the complexity in lock-free code comes from managing memory.</p></blockquote><h1 id=无锁的线程安全队列>无锁的线程安全队列
+<a class=header-anchor href=#%e6%97%a0%e9%94%81%e7%9a%84%e7%ba%bf%e7%a8%8b%e5%ae%89%e5%85%a8%e9%98%9f%e5%88%97></a></h1><p>这一节在分裂引用计数的无锁栈基础上来考虑怎么实现无锁队列，很多地方可以做对比。</p><h2 id=新增-tail-结点>新增 <code>tail</code> 结点
+<a class=header-anchor href=#%e6%96%b0%e5%a2%9e-tail-%e7%bb%93%e7%82%b9></a></h2><p>队列更复杂的地方是既有 <code>head</code> 又有 <code>tail</code>（栈只有 <code>head</code>）。继续沿用<strong>分裂引用计数</strong>的思路，并且<strong>把 <code>head</code> 和 <code>tail</code> 都使用原子变量来存储</strong>。</p><p>重新考虑结点计数值的初始化：</p><ol><li>无锁栈外部计数器被初始化为 1（被 <code>head</code> 引用），无锁队列外部计数器被初始化为 2（被 <code>head</code> 和 <code>tail</code> 引用）。被 <code>head</code> 引用表示还在链表上，被 <code>tail</code> 引用表示是尾结点，每个结点刚被加入时都是尾结点。</li><li>无锁栈的内部计数器被初始化为 0，这一点在无锁队列上保持不变。</li></ol><h2 id=外部计数器的计数器>外部计数器的计数器
+<a class=header-anchor href=#%e5%a4%96%e9%83%a8%e8%ae%a1%e6%95%b0%e5%99%a8%e7%9a%84%e8%ae%a1%e6%95%b0%e5%99%a8></a></h2><p>在当前的实现中，某个结点可能同时被 <code>head</code> 和 <code>tail</code> 引用，因此代码引入了一个<strong>外部计数器的计数器</strong>，称为 <code>external_counters</code>。这个计数器和内部计数放在一起，用位域共享一个 <code>int</code> 类型字段的空间。</p><p><strong>为什么需要外部计数器的计数器</strong>？</p><p>在无锁栈的实现中，每次 <code>pop()</code> 操作失败后都会对内部计数器减 1。当内部计数器减到 0 时（也就是减 1 后的值为 0），意味着可以安全地删除该结点。这要求删除结点的操作必须观察到内部计数为 1，而这只能通过回收<strong>唯一的外部计数器</strong>并将其值累加到内部计数器来实现，因为其他操作只会减小内部计数器。<strong>但是</strong>，在无锁队列中，由于 <code>head</code> 和 <code>tail</code> 都可能对同一个结点保留外部引用，因此内部计数器为 1 时只能说明<strong>至少有一个外部计数器被回收</strong>，但无法确认是否<strong>所有外部计数器都已回收</strong>。考虑到结点的<strong>总计数</strong>是由<strong>外部计数</strong>和<strong>内部计数</strong>的总和定的，如果还有外部计数器没有加回来，就不能得到真正的计数值。</p><h2 id=pop><code>pop()</code>
+<a class=header-anchor href=#pop></a></h2><p><code>pop()</code> 操作的循环重试中，先要增加 <code>head</code> 的外部计数，如果发现队列为空（头结点和尾结点指向同一个结点）或者 CAS 修改 <code>head</code> 失败（有其他线程抢先 <code>pop()</code> 掉了头结点），就要补偿之前增加的外部计数。补偿的方式不是直接撤销外部计数，而是将内部计数减 1。将内部计数减 1 之后，要检查内部计数是否为 0，同时没有<strong>其他外部计数器</strong>了，如果条件满足则 <code>delete</code> 这个结点。如果队列非空且 CAS 成功，那么结点就从链表上成功取下了，需要将外部计数器数量减 1，并将它的值叠加到结点的内部计数器上，最后取出结点上的数据并返回。</p><p>考虑到 <code>pop()</code> 修改 <code>head</code> 为 <code>head->next</code> 之后要能直接取得数据，所以在以下 A 和 B 两种模型中应该选择 A。这可以保持 <code>pop()</code> 简单，尽管会让 <code>push()</code> 的更新变得复杂一点：不能将结点创建好后一次性 CAS 到 <code>next</code> 字段上，而是要分别修改 <code>data</code> 和 <code>next</code> 字段。</p><div class=highlight><pre tabindex=0 style=color:#93a1a1;background-color:#002b36;-moz-tab-size:2;-o-tab-size:2;tab-size:2><code class=language-txt data-lang=txt><span style=display:flex><span>P.S. x 表示结点的 data 非空
+</span></span><span style=display:flex><span>A) ✔
+</span></span><span style=display:flex><span>head          head
+</span></span><span style=display:flex><span>+---+         +---+   +---+
+</span></span><span style=display:flex><span>|   |   ==&gt;   | x |--&gt;|   |
+</span></span><span style=display:flex><span>+---+         +---+   +---+
+</span></span><span style=display:flex><span>tail                   tail
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>B) ❌
+</span></span><span style=display:flex><span>head          head
+</span></span><span style=display:flex><span>+---+         +---+   +---+
+</span></span><span style=display:flex><span>|   |   ==&gt;   |   |--&gt;| x |
+</span></span><span style=display:flex><span>+---+         +---+   +---+
+</span></span><span style=display:flex><span>tail                   tail
+</span></span></code></pre></div><h2 id=push><code>push()</code>
+<a class=header-anchor href=#push></a></h2><p>无锁队列的 <code>push()</code> 操作涉及到将数据放到 <code>tail->data</code> 中：</p><ol><li>一方面要实现操作的原子化，保证多个线程可以安全访问。之前的无锁栈的例子使用的 <code>data</code> 字段是 <code>std::shared_ptr</code> 类型，如果改成 <code>std::atomic&lt;std::shared_ptr></code> 就不能保证无锁。<strong>因此需要将其改成 <code>std::atomic&lt;T*></code></strong>，并在处理过程中和函数的返回值处用 <code>std::unique_ptr</code> 来确保内存安全。</li><li>另一方面要安全访问 <code>tail->data</code> 就要确保 <code>tail</code> 不被删掉。因此 push() 在开始访问 <code>tail</code> 时要先增加外部计数、结束访问时要减少旧 <code>tail</code> 的外部计数。之前无锁栈的 <code>push()</code> 操作是不需要访问结点内部内容的，因此不操作计数器。</li></ol><div class=highlight><pre tabindex=0 style=color:#93a1a1;background-color:#002b36;-moz-tab-size:2;-o-tab-size:2;tab-size:2><code class=language-cpp data-lang=cpp><span style=display:flex><span><span style=color:#dc322f>void</span> <span style=color:#268bd2>push</span>(T new_value)
+</span></span><span style=display:flex><span>{
+</span></span><span style=display:flex><span>    std<span style=color:#719e07>::</span>unique_ptr<span style=color:#719e07>&lt;</span>T<span style=color:#719e07>&gt;</span> new_data(<span style=color:#719e07>new</span> T(new_value));
+</span></span><span style=display:flex><span>    counted_node_ptr new_next;
+</span></span><span style=display:flex><span>    new_next.ptr<span style=color:#719e07>=</span><span style=color:#719e07>new</span> node;
+</span></span><span style=display:flex><span>    new_next.external_count<span style=color:#719e07>=</span><span style=color:#2aa198>1</span>;
+</span></span><span style=display:flex><span>    counted_node_ptr old_tail<span style=color:#719e07>=</span>tail.load();
+</span></span><span style=display:flex><span>    <span style=color:#719e07>for</span>(;;)
+</span></span><span style=display:flex><span>    {
+</span></span><span style=display:flex><span>        increase_external_count(tail,old_tail);    
+</span></span><span style=display:flex><span>        T<span style=color:#719e07>*</span> old_data<span style=color:#719e07>=</span><span style=color:#719e07>nullptr</span>;
+</span></span><span style=display:flex><span>        <span style=color:#719e07>if</span>(old_tail.ptr<span style=color:#719e07>-&gt;</span>data.compare_exchange_strong(   
+</span></span><span style=display:flex><span>           old_data,new_data.get()))          <span style=color:#586e75>// A 先尝试把 data 放上去
+</span></span></span><span style=display:flex><span><span style=color:#586e75></span>        {
+</span></span><span style=display:flex><span>            old_tail.ptr<span style=color:#719e07>-&gt;</span>next<span style=color:#719e07>=</span>new_next;      <span style=color:#586e75>// 放上去之后才修改 next
+</span></span></span><span style=display:flex><span><span style=color:#586e75></span>            old_tail<span style=color:#719e07>=</span>tail.exchange(new_next); <span style=color:#586e75>// B
+</span></span></span><span style=display:flex><span><span style=color:#586e75></span>            free_external_counter(old_tail);
+</span></span><span style=display:flex><span>            new_data.release();
+</span></span><span style=display:flex><span>            <span style=color:#719e07>break</span>;
+</span></span><span style=display:flex><span>        }
+</span></span><span style=display:flex><span>        old_tail.ptr<span style=color:#719e07>-&gt;</span>release_ref();
+</span></span><span style=display:flex><span>    }
+</span></span><span style=display:flex><span>}
+</span></span></code></pre></div><p>书上首先给的是一个有忙等待的实现，这会导致队列有锁，如果一个线程 A 操作成功，但是在 B 操作之前时间片用完了，那么其他线程就只能因为 <code>data</code> 字段已经被设置而在 CAS 上不断失败。这个问题会在之后的小节修正。</p><h2 id=避免-push-中的忙等待>避免 <code>push()</code> 中的忙等待
+<a class=header-anchor href=#%e9%81%bf%e5%85%8d-push-%e4%b8%ad%e7%9a%84%e5%bf%99%e7%ad%89%e5%be%85></a></h2><p>上一小节中只有成功存储数据的线程可以操作 <code>tail</code>，导致其他线程在忙等待。如果其他线程在碰到数据字段已经被写入时，可以自行开辟新的 dummy 结点并将其挂在 <code>next</code> 字段上，然后重试写入 <code>data</code>，就可以实现无锁。这意味着 <code>push()</code> 还要对 <code>tail->next</code> 指针原子操作，所以 <code>counted_node_ptr</code> 类型需要改成 <code>std::atomic&lt;counted_node_ptr></code> 类型。（书 P245）</p><p>和无锁栈相比，无锁队列又有两个字段被原子化了，结果是：每个字段都是原子变量。</p><div class=highlight><pre tabindex=0 style=color:#93a1a1;background-color:#002b36;-moz-tab-size:2;-o-tab-size:2;tab-size:2><code class=language-cpp data-lang=cpp><span style=display:flex><span><span style=color:#586e75>// 无锁栈（只展示了数据成员）
+</span></span></span><span style=display:flex><span><span style=color:#586e75></span><span style=color:#719e07>struct</span> <span style=color:#268bd2>node</span>
+</span></span><span style=display:flex><span>{
+</span></span><span style=display:flex><span>    std<span style=color:#719e07>::</span>shared_ptr<span style=color:#719e07>&lt;</span>T<span style=color:#719e07>&gt;</span> data;
+</span></span><span style=display:flex><span>    std<span style=color:#719e07>::</span>atomic<span style=color:#719e07>&lt;</span><span style=color:#dc322f>int</span><span style=color:#719e07>&gt;</span> internal_count;
+</span></span><span style=display:flex><span>    counted_node_ptr next;
+</span></span><span style=display:flex><span>};
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#586e75>// 无锁队列（只展示了数据成员）
+</span></span></span><span style=display:flex><span><span style=color:#586e75></span><span style=color:#719e07>struct</span> <span style=color:#268bd2>node</span>
+</span></span><span style=display:flex><span>{
+</span></span><span style=display:flex><span>    std<span style=color:#719e07>::</span>atomic<span style=color:#719e07>&lt;</span>T<span style=color:#719e07>*&gt;</span> data;               <span style=color:#586e75>// 原子化
+</span></span></span><span style=display:flex><span><span style=color:#586e75></span>    std<span style=color:#719e07>::</span>atomic<span style=color:#719e07>&lt;</span>node_counter<span style=color:#719e07>&gt;</span> count;    <span style=color:#586e75>// int 变成 node_counter，包含新的外部计数器计数
+</span></span></span><span style=display:flex><span><span style=color:#586e75></span>    std<span style=color:#719e07>::</span>atomic<span style=color:#719e07>&lt;</span>counted_node_ptr<span style=color:#719e07>&gt;</span> next; <span style=color:#586e75>// 原子化
+</span></span></span><span style=display:flex><span><span style=color:#586e75></span>};
+</span></span></code></pre></div><p>新的 <code>push()</code> 实现如下：</p><div class=highlight><pre tabindex=0 style=color:#93a1a1;background-color:#002b36;-moz-tab-size:2;-o-tab-size:2;tab-size:2><code class=language-cpp data-lang=cpp><span style=display:flex><span><span style=color:#719e07>template</span><span style=color:#719e07>&lt;</span><span style=color:#719e07>typename</span> T<span style=color:#719e07>&gt;</span>
+</span></span><span style=display:flex><span><span style=color:#719e07>class</span> <span style=color:#268bd2>lock_free_queue</span>
+</span></span><span style=display:flex><span>{
+</span></span><span style=display:flex><span><span style=color:#719e07>private</span><span style=color:#719e07>:</span>
+</span></span><span style=display:flex><span>    <span style=color:#dc322f>void</span> set_new_tail(counted_node_ptr <span style=color:#719e07>&amp;</span>old_tail,
+</span></span><span style=display:flex><span>                      counted_node_ptr <span style=color:#719e07>const</span> <span style=color:#719e07>&amp;</span>new_tail)
+</span></span><span style=display:flex><span>    {
+</span></span><span style=display:flex><span>        node<span style=color:#719e07>*</span> <span style=color:#719e07>const</span> current_tail_ptr <span style=color:#719e07>=</span> old_tail.ptr;
+</span></span><span style=display:flex><span>        <span style=color:#719e07>while</span> (<span style=color:#719e07>!</span>tail.compare_exchange_weak(old_tail, new_tail) <span style=color:#719e07>&amp;&amp;</span>
+</span></span><span style=display:flex><span>               old_tail.ptr <span style=color:#719e07>==</span> current_tail_ptr);
+</span></span><span style=display:flex><span>        <span style=color:#719e07>if</span> (old_tail.ptr <span style=color:#719e07>==</span> current_tail_ptr)
+</span></span><span style=display:flex><span>            free_external_counter(old_tail);
+</span></span><span style=display:flex><span>        <span style=color:#719e07>else</span>
+</span></span><span style=display:flex><span>            current_tail_ptr<span style=color:#719e07>-&gt;</span>release_ref();
+</span></span><span style=display:flex><span>    }
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#719e07>public</span><span style=color:#719e07>:</span>
+</span></span><span style=display:flex><span>    <span style=color:#dc322f>void</span> push(T new_value)
+</span></span><span style=display:flex><span>    {
+</span></span><span style=display:flex><span>        std<span style=color:#719e07>::</span>unique_ptr<span style=color:#719e07>&lt;</span>T<span style=color:#719e07>&gt;</span> new_data(<span style=color:#719e07>new</span> T(new_value));
+</span></span><span style=display:flex><span>        counted_node_ptr new_next;
+</span></span><span style=display:flex><span>        new_next.ptr <span style=color:#719e07>=</span> <span style=color:#719e07>new</span> node;
+</span></span><span style=display:flex><span>        new_next.external_count <span style=color:#719e07>=</span> <span style=color:#2aa198>1</span>;
+</span></span><span style=display:flex><span>        counted_node_ptr old_tail <span style=color:#719e07>=</span> tail.load();
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>        <span style=color:#719e07>for</span> (;;)
+</span></span><span style=display:flex><span>        {
+</span></span><span style=display:flex><span>            increase_external_count(tail, old_tail);
+</span></span><span style=display:flex><span>            T<span style=color:#719e07>*</span> old_data <span style=color:#719e07>=</span> <span style=color:#719e07>nullptr</span>;
+</span></span><span style=display:flex><span>            <span style=color:#719e07>if</span> (old_tail.ptr<span style=color:#719e07>-&gt;</span>data.compare_exchange_strong(old_data, new_data.get()))
+</span></span><span style=display:flex><span>            {
+</span></span><span style=display:flex><span>                counted_node_ptr old_next <span style=color:#719e07>=</span> {<span style=color:#2aa198>0</span>};
+</span></span><span style=display:flex><span>                <span style=color:#719e07>if</span> (<span style=color:#719e07>!</span>old_tail.ptr<span style=color:#719e07>-&gt;</span>next.compare_exchange_strong(old_next, new_next))
+</span></span><span style=display:flex><span>                {
+</span></span><span style=display:flex><span>                    <span style=color:#719e07>delete</span> new_next.ptr;
+</span></span><span style=display:flex><span>                    new_next <span style=color:#719e07>=</span> old_next;
+</span></span><span style=display:flex><span>                }
+</span></span><span style=display:flex><span>                <span style=color:#586e75>// set_new_tail 可能会失败，如果失败说明其他线程成功了。从结果来说 tail
+</span></span></span><span style=display:flex><span><span style=color:#586e75></span>                <span style=color:#586e75>// 一定会被更新，因此 old_tail 不再被 tail 引用。区别是如果是本线程成功
+</span></span></span><span style=display:flex><span><span style=color:#586e75></span>                <span style=color:#586e75>// 本线程就要负责清理外部计数，否则只减小内部计数。
+</span></span></span><span style=display:flex><span><span style=color:#586e75></span>                set_new_tail(old_tail, new_next);
+</span></span><span style=display:flex><span>                new_data.release();
+</span></span><span style=display:flex><span>                <span style=color:#719e07>break</span>;
+</span></span><span style=display:flex><span>            }
+</span></span><span style=display:flex><span>            <span style=color:#719e07>else</span>
+</span></span><span style=display:flex><span>            {
+</span></span><span style=display:flex><span>                counted_node_ptr old_next <span style=color:#719e07>=</span> {<span style=color:#2aa198>0</span>};
+</span></span><span style=display:flex><span>                <span style=color:#586e75>// 尽管放 data 失败了，还是可以尝试把 next 放上的。
+</span></span></span><span style=display:flex><span><span style=color:#586e75></span>                <span style=color:#586e75>// 是谁放的 next 无所谓，因为稳定后的 tail 结点是 dummy 的，里面没放数据。
+</span></span></span><span style=display:flex><span><span style=color:#586e75></span>                <span style=color:#719e07>if</span> (old_tail.ptr<span style=color:#719e07>-&gt;</span>next.compare_exchange_strong(old_next, new_next))
+</span></span><span style=display:flex><span>                {
+</span></span><span style=display:flex><span>                    old_next <span style=color:#719e07>=</span> new_next;
+</span></span><span style=display:flex><span>                    <span style=color:#586e75>// 如果已经成功放上了，就申请一个新的结点，保证 new_next.ptr 可以用于
+</span></span></span><span style=display:flex><span><span style=color:#586e75></span>                    <span style=color:#586e75>// 下一轮的重试。
+</span></span></span><span style=display:flex><span><span style=color:#586e75></span>                    new_next.ptr <span style=color:#719e07>=</span> <span style=color:#719e07>new</span> node;
+</span></span><span style=display:flex><span>                }
+</span></span><span style=display:flex><span>                set_new_tail(old_tail, old_next);
+</span></span><span style=display:flex><span>            }
+</span></span><span style=display:flex><span>        }
+</span></span><span style=display:flex><span>    }
+</span></span><span style=display:flex><span>};
+</span></span></code></pre></div><p>这个过程有比较多的 <code>new</code> 和 <code>delete</code> 操作，因此最好是有个专门的内存分配器。</p><h1 id=aba-问题>ABA 问题
+<a class=header-anchor href=#aba-%e9%97%ae%e9%a2%98></a></h1><p>如果使用了结点回收等机制，就容易出现 ABA 问题。ABA 问题在基于 compare/exchange 的算法中常见：两个指针的值相等，可能实际上是旧结点已经被回收过一次再分配出去了，它们应该是不同的结点却被 CAS 认为值相等。要避免这种问题出现，首先会想到的是在指针仍被使用时不对其进行回收。</p><p>除了指针之外，非指针的其他类型也可能会出现这种情况。某个线程在两个时间点看到的值相等，可能是值变化之后又变回去了，并不是一直没有变过。中间有别的线程的干预时，按理来说本线程应该重试，但是在这种情况下本线程没办法知道变量是否被其他线程修改过。<strong>通过将值和版本号存储在一起做 CAS</strong>，每次操作后都增加版本号，就可以解决 ABA 问题。</p></div><footer class=post-footer><div class=post-tags><a href=/tags/cpp>cpp
+</a><a href=/tags/cpp-concurrency-in-action>cpp-concurrency-in-action</a></div><div class=addthis_inline_share_toolbox style=text-align:center></div><hr><div class=post-nav><div class="post-nav-next post-nav-item"><a href=/cpp-concurrency-in-action/5.1-libstdc++-%E5%AF%B9%E5%85%B1%E4%BA%AB%E6%8C%87%E9%92%88%E5%8E%9F%E5%AD%90%E6%93%8D%E4%BD%9C%E7%9A%84%E6%94%AF%E6%8C%81/ rel=next title="5.1 libstdc++ 对共享指针原子操作的支持"><i class="fa fa-chevron-left"></i> 5.1 libstdc++ 对共享指针原子操作的支持</a></div><div class="post-nav-prev post-nav-item"><a href=/cpp-concurrency-in-action/6.-%E8%AE%BE%E8%AE%A1%E5%9F%BA%E4%BA%8E%E9%94%81%E7%9A%84%E5%B9%B6%E5%8F%91%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84/ rel=prev title="6. 设计基于锁的并发数据结构">6. 设计基于锁的并发数据结构
+<i class="fa fa-chevron-right"></i></a></div></div></footer></article></div></div></main><footer class=footer><div class=footer-inner><div class=copyright>&copy;
+<span itemprop=copyrightYear>2023 - 2025
+</span><span class=with-love><i class="fa fa-heart"></i>
+</span><span class=author itemprop=copyrightHolder>🤖</span></div><div class=powered-by>由 <a href=https://gohugo.io title=0.143.1 target=_blank>Hugo</a> & <a href=https://github.com/hugo-next/hugo-theme-next title=4.5.3 target=_blank>Hugo NexT.Gemini</a> 强力驱动</div></div></footer><script type=text/javascript src=https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.1/anime.min.js defer></script><script type=text/javascript src=https://cdnjs.cloudflare.com/ajax/libs/medium-zoom/1.1.0/medium-zoom.min.js defer></script><script class=next-config data-name=main type=application/json>{"bookmark":{"color":"#222","enable":false,"save":"manual"},"copybtn":true,"darkmode":false,"hostname":"https://hxhue.github.io/","i18n":{"ds_day":" 天前","ds_days":" 天 ","ds_hour":" 小时前","ds_hours":" 小时 ","ds_just":"刚刚","ds_min":" 分钟前","ds_mins":" 分钟","ds_month":" 个月前","ds_years":" 年 ","empty":"没有找到任何搜索结果：${query}","hits":"找到 ${hits} 个搜索结果","hits_time":"找到 ${hits} 个搜索结果（用时 ${time} 毫秒）","placeholder":"搜索..."},"lang":"zh-CN","lazyload":false,"localSearch":{"enable":true,"limit":1e3,"path":"/searchindexes.xml","preload":false,"topnperarticle":-1,"trigger":"auto","unescape":false},"motion":{"async":true,"enable":false,"transition":{"collheader":"fadeInLeft","menu_item":"fadeInDown","postblock":"fadeIn","postbody":"fadeInDown","postheader":"fadeInDown","sidebar":"fadeInUp"}},"postmeta":{"comments":{"enable":false,"plugin":"waline"},"views":{"enable":false,"plugin":"busuanzi"}},"root":"/","scheme":"Gemini","sidebar":{"display":"post","offset":12,"padding":18,"position":"left","width":256},"vendor":{"plugins":"cdnjs","router":"https://cdnjs.cloudflare.com/ajax/libs"},"version":"4.5.3"}</script><script type=text/javascript src=/js/main.min.3c552dafb85785d3ef5f76ab6bd2d1aadc6a7f8cb3af8d196c8367403431896f.js defer></script></body></html>
