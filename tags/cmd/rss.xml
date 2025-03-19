@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Cmd on Bluegill</title><link>https://hxhue.github.io/tags/cmd/</link><description>Recent content in Cmd on Bluegill</description><generator>Hugo</generator><language>zh-CN</language><lastBuildDate>Wed, 22 Nov 2023 00:00:00 +0800</lastBuildDate><atom:link href="https://hxhue.github.io/tags/cmd/rss.xml" rel="self" type="application/rss+xml"/><item><title>Windows cmd 转义</title><link>https://hxhue.github.io/posts/systems/Windows/Windows-cmd-%E8%BD%AC%E4%B9%89/</link><pubDate>Wed, 22 Nov 2023 00:00:00 +0800</pubDate><guid>https://hxhue.github.io/posts/systems/Windows/Windows-cmd-%E8%BD%AC%E4%B9%89/</guid><description>&lt;p>cmd 对 &lt;strong>双引号中的 ^&lt;/strong> 不会转义。由于单引号不是 cmd 认可的引用方式，单引号中的 ^ 会转义。&lt;/p>
+&lt;p>&lt;strong>cmd 的 echo 命令并不会去掉双引号参数的双引号&lt;/strong>。例子：&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" style="color:#93a1a1;background-color:#002b36;-moz-tab-size:2;-o-tab-size:2;tab-size:2;">&lt;code class="language-bash" data-lang="bash">&lt;span style="display:flex;">&lt;span>C:&lt;span style="color:#cb4b16">\U&lt;/span>sers&lt;span style="color:#cb4b16">\x&lt;/span>x&amp;gt;echo &lt;span style="color:#2aa198">&amp;#34;6&amp;#34;&lt;/span> | C:&lt;span style="color:#cb4b16">\U&lt;/span>sers&lt;span style="color:#cb4b16">\x&lt;/span>x&lt;span style="color:#cb4b16">\s&lt;/span>coop&lt;span style="color:#cb4b16">\s&lt;/span>hims&lt;span style="color:#cb4b16">\b&lt;/span>ash.exe -c &lt;span style="color:#2aa198">&amp;#34;cat&amp;#34;&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#2aa198">&amp;#34;6&amp;#34;&lt;/span>
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>其他命令貌似会去掉双引号，比如 cd 和 set。外置命令就更不用说了，写 git show &amp;ldquo;HEAD&amp;rdquo; 能够正常运行，可能是因为 cmd 为非内置命令去掉了双引号。&lt;/p></description></item><item><title>Windows cmd 调用和退出</title><link>https://hxhue.github.io/posts/systems/Windows/Windows-cmd-%E8%B0%83%E7%94%A8%E5%92%8C%E9%80%80%E5%87%BA/</link><pubDate>Thu, 17 Aug 2023 00:00:00 +0800</pubDate><guid>https://hxhue.github.io/posts/systems/Windows/Windows-cmd-%E8%B0%83%E7%94%A8%E5%92%8C%E9%80%80%E5%87%BA/</guid><description>&lt;ul>
+&lt;li>&lt;code>exit&lt;/code>：退出整个 &lt;code>cmd.exe&lt;/code>。&lt;/li>
+&lt;li>&lt;code>exit /b&lt;/code>：只退出当前的批处理脚本。&lt;/li>
+&lt;li>&lt;code>xx.bat&lt;/code>：转去运行 &lt;code>xx.bat&lt;/code>，不再返回。&lt;/li>
+&lt;li>&lt;code>call xx.bat&lt;/code>：转去运行 &lt;code>xx.bat&lt;/code>，结束后返回（除非调用了 &lt;code>exit&lt;/code> 使得整个 &lt;code>cmd.exe&lt;/code> 中止）。&lt;/li>
+&lt;li>&lt;code>cmd /c yy&lt;/code>：执行 &lt;code>yy&lt;/code> 命令，结束后在交互界面继续等待操作。&lt;/li>
+&lt;li>&lt;code>cmd /k yy&lt;/code>：执行 &lt;code>yy&lt;/code> 命令，结束后退出。&lt;/li>
+&lt;li>&lt;code>start zz&lt;/code>：创建一个新的窗口运行 &lt;code>zz&lt;/code>。&lt;/li>
+&lt;/ul>
+&lt;p>如果想要在子脚本有 &lt;code>exit&lt;/code>（而不是 &lt;code>exit /b&lt;/code>）的情况还能不退出，可以使用 &lt;code>cmd&lt;/code> 或者 &lt;code>start&lt;/code> 创建新的命令行提示符。&lt;/p></description></item><item><title>在 Windows 的 bat 脚本中写 python 代码</title><link>https://hxhue.github.io/posts/programming/python/%E5%9C%A8-Windows-%E7%9A%84-bat-%E8%84%9A%E6%9C%AC%E4%B8%AD%E5%86%99-python-%E4%BB%A3%E7%A0%81/</link><pubDate>Thu, 17 Aug 2023 00:00:00 +0800</pubDate><guid>https://hxhue.github.io/posts/programming/python/%E5%9C%A8-Windows-%E7%9A%84-bat-%E8%84%9A%E6%9C%AC%E4%B8%AD%E5%86%99-python-%E4%BB%A3%E7%A0%81/</guid><description>&lt;div class="highlight">&lt;pre tabindex="0" style="color:#93a1a1;background-color:#002b36;-moz-tab-size:2;-o-tab-size:2;tab-size:2;">&lt;code class="language-python" data-lang="python">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#2aa198">&amp;#34;python&amp;#34;&lt;/span> &lt;span style="color:#2aa198">&amp;#34;%~dp0%~nx0&amp;#34;&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>exit
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#2aa198">&amp;#34;&amp;#34;&amp;#34;
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#2aa198">字符串对于 cmd 来说是外部命令或参数，对于 python 来说是可拼接的字面量。
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#2aa198">exit 对 cmd 来说是退出，对于 python 来说是一个函数名。
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#2aa198">exit 会中止调用者，但在桌面点击运行的环境下可以正常使用。
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#2aa198">&amp;#34;&amp;#34;&amp;#34;&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#719e07">import&lt;/span> uuid
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#719e07">import&lt;/span> subprocess
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#719e07">def&lt;/span> &lt;span style="color:#268bd2">main&lt;/span>():
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#719e07">while&lt;/span> (&lt;span style="color:#b58900">input&lt;/span>(&lt;span style="color:#2aa198">&amp;#39;Hit enter to generate another key: &amp;#39;&lt;/span>)&lt;span style="color:#719e07">.&lt;/span>strip() &lt;span style="color:#719e07">==&lt;/span> &lt;span style="color:#2aa198">&amp;#39;&amp;#39;&lt;/span>):
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> s &lt;span style="color:#719e07">=&lt;/span> &lt;span style="color:#b58900">str&lt;/span>(uuid&lt;span style="color:#719e07">.&lt;/span>uuid4())
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> subprocess&lt;span style="color:#719e07">.&lt;/span>run(&lt;span style="color:#2aa198">&amp;#34;clip&amp;#34;&lt;/span>, text&lt;span style="color:#719e07">=&lt;/span>&lt;span style="color:#cb4b16">True&lt;/span>, &lt;span style="color:#b58900">input&lt;/span>&lt;span style="color:#719e07">=&lt;/span>s)
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#b58900">print&lt;/span>(&lt;span style="color:#2aa198">f&lt;/span>&lt;span style="color:#2aa198">&amp;#39;&lt;/span>&lt;span style="color:#2aa198">{&lt;/span>s&lt;span style="color:#2aa198">}&lt;/span>&lt;span style="color:#2aa198"> is sent to your clipboard!&lt;/span>&lt;span style="color:#cb4b16">\n&lt;/span>&lt;span style="color:#2aa198">&amp;#39;&lt;/span>)
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#719e07">if&lt;/span> __name__ &lt;span style="color:#719e07">==&lt;/span> &lt;span style="color:#2aa198">&amp;#39;__main__&amp;#39;&lt;/span>:
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#719e07">try&lt;/span>:
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> main()
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#719e07">except&lt;/span>:
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#719e07">pass&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#b58900">input&lt;/span>(&lt;span style="color:#2aa198">&amp;#39;&lt;/span>&lt;span style="color:#cb4b16">\n&lt;/span>&lt;span style="color:#2aa198">You entered something else. Program will end after your next input.&amp;#39;&lt;/span>)
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div></description></item></channel></rss>
