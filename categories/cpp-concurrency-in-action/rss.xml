@@ -1,0 +1,158 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Cpp-Concurrency-in-Action on Bluegill</title><link>https://hxhue.github.io/categories/cpp-concurrency-in-action/</link><description>Recent content in Cpp-Concurrency-in-Action on Bluegill</description><generator>Hugo</generator><language>zh-CN</language><lastBuildDate>Tue, 19 Aug 2025 00:00:00 +0800</lastBuildDate><atom:link href="https://hxhue.github.io/categories/cpp-concurrency-in-action/rss.xml" rel="self" type="application/rss+xml"/><item><title>5.0.2 阅读 libstdc++ 中原子变量 wait 和 notify 接口</title><link>https://hxhue.github.io/cpp-concurrency-in-action/5.0.2-%E9%98%85%E8%AF%BB-libstdc++-%E4%B8%AD%E5%8E%9F%E5%AD%90%E5%8F%98%E9%87%8F-wait-%E5%92%8C-notify-%E6%8E%A5%E5%8F%A3/</link><pubDate>Fri, 24 Jan 2025 00:00:00 +0800</pubDate><guid>https://hxhue.github.io/cpp-concurrency-in-action/5.0.2-%E9%98%85%E8%AF%BB-libstdc++-%E4%B8%AD%E5%8E%9F%E5%AD%90%E5%8F%98%E9%87%8F-wait-%E5%92%8C-notify-%E6%8E%A5%E5%8F%A3/</guid><description>&lt;h1 id="wait-和-notify-接口介绍">Wait 和 notify 接口介绍
+&lt;a class="header-anchor" href="#wait-%e5%92%8c-notify-%e6%8e%a5%e5%8f%a3%e4%bb%8b%e7%bb%8d">&lt;/a>
+&lt;/h1>&lt;p>&lt;code>std::atomic&amp;lt;T&amp;gt;::wait&lt;/code> 用来等待原子变量值的改变，如果原子变量值和给定的参数 old 相同则阻塞，直到被 &lt;code>notify_all()&lt;/code> 或者 &lt;code>notify_one()&lt;/code> 通知，或者&lt;strong>自发地解除阻塞&lt;/strong>。因此用 &lt;code>wait&lt;/code> 要在循环中使用。&lt;/p></description></item><item><title>10. Parallel algorithms</title><link>https://hxhue.github.io/cpp-concurrency-in-action/10.-Parallel-algorithms/</link><pubDate>Wed, 22 Jan 2025 00:00:00 +0800</pubDate><guid>https://hxhue.github.io/cpp-concurrency-in-action/10.-Parallel-algorithms/</guid><description>&lt;h1 id="执行策略c17">执行策略（C++17）
+&lt;a class="header-anchor" href="#%e6%89%a7%e8%a1%8c%e7%ad%96%e7%95%a5c17">&lt;/a>
+&lt;/h1>&lt;div class="highlight">&lt;pre tabindex="0" style="color:#93a1a1;background-color:#002b36;-moz-tab-size:2;-o-tab-size:2;tab-size:2;">&lt;code class="language-txt" data-lang="txt">&lt;span style="display:flex;">&lt;span>std::execution::seq
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>std::execution::par
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>std::execution::par_unseq
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>std::execution::unseq (C++20)
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>它们分别属于以下类型，但是使用的时候不要自己创建类型，应该直接使用标准库中提供的执行策略对象。&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" style="color:#93a1a1;background-color:#002b36;-moz-tab-size:2;-o-tab-size:2;tab-size:2;">&lt;code class="language-txt" data-lang="txt">&lt;span style="display:flex;">&lt;span>std::execution::sequenced_policy
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>std::execution::parallel_policy
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>std::execution::parallel_unsequenced_policy
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>std::execution::unsequenced_policy (C++20)
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>其中的并行策略仅仅是允许算法这样做，但不能强制算法按要求做。&lt;/p></description></item><item><title>11. 测试和调试多线程应用</title><link>https://hxhue.github.io/cpp-concurrency-in-action/11.-%E6%B5%8B%E8%AF%95%E5%92%8C%E8%B0%83%E8%AF%95%E5%A4%9A%E7%BA%BF%E7%A8%8B%E5%BA%94%E7%94%A8/</link><pubDate>Wed, 22 Jan 2025 00:00:00 +0800</pubDate><guid>https://hxhue.github.io/cpp-concurrency-in-action/11.-%E6%B5%8B%E8%AF%95%E5%92%8C%E8%B0%83%E8%AF%95%E5%A4%9A%E7%BA%BF%E7%A8%8B%E5%BA%94%E7%94%A8/</guid><description>&lt;h1 id="unwanted-blocking">Unwanted blocking
+&lt;a class="header-anchor" href="#unwanted-blocking">&lt;/a>
+&lt;/h1>&lt;ul>
+&lt;li>Deadlock&lt;/li>
+&lt;li>Livelock，和死锁的区别是在循环中积极检查条件，比如自旋锁，线程一直消耗 CPU 但始终无法前进&lt;/li>
+&lt;li>Blocking on I/O or other external input，线程在等待一个不定期的、可能永远不会到来的操作&lt;/li>
+&lt;/ul>
+&lt;h1 id="race-conditions">Race conditions
+&lt;a class="header-anchor" href="#race-conditions">&lt;/a>
+&lt;/h1>&lt;ul>
+&lt;li>Data races&lt;/li>
+&lt;li>Broken invariants&lt;/li>
+&lt;li>Lifetime issues&lt;/li>
+&lt;/ul>
+&lt;h1 id="code-review">Code review
+&lt;a class="header-anchor" href="#code-review">&lt;/a>
+&lt;/h1>&lt;ol>
+&lt;li>在并发访问下，&lt;strong>哪些数据需要保护&lt;/strong>？&lt;/li>
+&lt;li>如何确保数据受到保护？&lt;/li>
+&lt;li>此时其他线程可能位于代码的哪个部分？&lt;/li>
+&lt;li>当前线程持有哪些互斥锁？&lt;/li>
+&lt;li>其他线程可能持有哪些互斥锁？&lt;/li>
+&lt;li>在当前线程中执行的操作与在其他线程中执行的操作之间是否存在顺序要求？如何确保这些要求得到满足？&lt;/li>
+&lt;li>&lt;strong>当前线程加载的数据是否仍然有效&lt;/strong>？是否可能已被其他线程修改？（比如 CAS、双重校验锁）&lt;/li>
+&lt;li>如果假设其他线程可能正在修改数据，这意味着什么？如何确保这种情况永远不会发生？&lt;/li>
+&lt;/ol>
+&lt;h1 id="testing">Testing
+&lt;a class="header-anchor" href="#testing">&lt;/a>
+&lt;/h1>&lt;p>书 P345 给出了一些对线程安全队列进行测试的测试点。&lt;/p></description></item><item><title>9. Advanced thread management</title><link>https://hxhue.github.io/cpp-concurrency-in-action/9.-Advanced-thread-management/</link><pubDate>Sat, 18 Jan 2025 00:00:00 +0800</pubDate><guid>https://hxhue.github.io/cpp-concurrency-in-action/9.-Advanced-thread-management/</guid><description>&lt;h1 id="线程池">线程池
+&lt;a class="header-anchor" href="#%e7%ba%bf%e7%a8%8b%e6%b1%a0">&lt;/a>
+&lt;/h1>&lt;h2 id="实现可以-submit-任务并获取-future-的线程池">实现可以 submit 任务并获取 future 的线程池
+&lt;a class="header-anchor" href="#%e5%ae%9e%e7%8e%b0%e5%8f%af%e4%bb%a5-submit-%e4%bb%bb%e5%8a%a1%e5%b9%b6%e8%8e%b7%e5%8f%96-future-%e7%9a%84%e7%ba%bf%e7%a8%8b%e6%b1%a0">&lt;/a>
+&lt;/h2>&lt;p>有了 &lt;code>std::future&lt;/code> 就能对提交的任务做等待。&lt;/p>
+&lt;p>线程池初始化时就创建指定数量的工作线程，每个线程的任务就是在循环中从线程安全队列上获取任务并运行。每个任务的类型是 &lt;code>std::packaged_task&amp;lt;result_type()&amp;gt; task&lt;/code>，每次有工作要提交都会包装到 &lt;code>std::packaged_task&lt;/code>，工作的提交者因而可以获取 &lt;code>std::future&lt;/code>。&lt;/p></description></item><item><title>8. Designing concurrent code</title><link>https://hxhue.github.io/cpp-concurrency-in-action/8.-Designing-concurrent-code/</link><pubDate>Thu, 16 Jan 2025 00:00:00 +0800</pubDate><guid>https://hxhue.github.io/cpp-concurrency-in-action/8.-Designing-concurrent-code/</guid><description>&lt;h1 id="false-sharing">False sharing
+&lt;a class="header-anchor" href="#false-sharing">&lt;/a>
+&lt;/h1>&lt;ul>
+&lt;li>Cache ping-pong&lt;/li>
+&lt;/ul>
+&lt;h2 id="stdhardware_destructive_interference_sizehttpsencppreferencecomwcppthreadhardware_destructive_interference_size">&lt;a href="https://en.cppreference.com/w/cpp/thread/hardware_destructive_interference_size" title="std::hardware_destructive_interference_size" rel="noopener external nofollow noreferrer"
+ target="_blank" class=" exturl" >&lt;code>std::hardware_destructive_interference_size&lt;/code>&lt;i class="fa fa-external-link-alt">&lt;/i>&lt;/a>
+&lt;a class="header-anchor" href="#stdhardware_destructive_interference_sizehttpsencppreferencecomwcppthreadhardware_destructive_interference_size">&lt;/a>
+&lt;/h2>&lt;p>还有 &lt;code>std::hardware_constructive_interference_size&lt;/code>。在大多数情况下这两个值相等，而且都等于 cache line 的大小。&lt;/p></description></item><item><title>5.1 libstdc++ 对共享指针原子操作的支持</title><link>https://hxhue.github.io/cpp-concurrency-in-action/5.1-libstdc++-%E5%AF%B9%E5%85%B1%E4%BA%AB%E6%8C%87%E9%92%88%E5%8E%9F%E5%AD%90%E6%93%8D%E4%BD%9C%E7%9A%84%E6%94%AF%E6%8C%81/</link><pubDate>Sun, 05 Jan 2025 00:00:00 +0800</pubDate><guid>https://hxhue.github.io/cpp-concurrency-in-action/5.1-libstdc++-%E5%AF%B9%E5%85%B1%E4%BA%AB%E6%8C%87%E9%92%88%E5%8E%9F%E5%AD%90%E6%93%8D%E4%BD%9C%E7%9A%84%E6%94%AF%E6%8C%81/</guid><description>&lt;h1 id="引言">引言
+&lt;a class="header-anchor" href="#%e5%bc%95%e8%a8%80">&lt;/a>
+&lt;/h1>&lt;p>这篇笔记是承接 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ &lt;a href="https://hxhue.github.io/cppcon-talks/CppCon-2023-Lock-free-Atomic-Shared-Pointers-Without-a-Split-Reference-Count/" title="CppCon 2023 Lock-free Atomic Shared Pointers Without a Split Reference Count" >CppCon 2023 Lock-free Atomic Shared Pointers Without a Split Reference Count&lt;/a> 和 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ &lt;a href="https://hxhue.github.io/cpp-concurrency-in-action/5.-%E5%86%85%E5%AD%98%E6%A8%A1%E5%9E%8B%E5%9F%BA%E7%A1%80%E6%A0%87%E5%87%86%E5%8E%9F%E5%AD%90%E7%B1%BB%E5%9E%8B%E8%87%AA%E6%97%8B%E9%94%81/" title="内存模型基础、标准原子类型、自旋锁" >内存模型基础、标准原子类型、自旋锁&lt;/a> 来写的。&lt;/p>
+&lt;p>C++20 有 &lt;a href="https://en.cppreference.com/w/cpp/memory/shared_ptr/atomic2" title="std::atomic&amp;lt;std::shared_ptr&amp;gt;" rel="noopener external nofollow noreferrer"
+ target="_blank" class=" exturl" >&lt;code>std::atomic&amp;lt;std::shared_ptr&amp;gt;&lt;/code>&lt;i class="fa fa-external-link-alt">&lt;/i>&lt;/a> 和 &lt;a href="https://en.cppreference.com/w/cpp/memory/weak_ptr/atomic2" title="std::atomic&amp;lt;std::weak_ptr&amp;gt;" rel="noopener external nofollow noreferrer"
+ target="_blank" class=" exturl" >&lt;code>std::atomic&amp;lt;std::weak_ptr&amp;gt;&lt;/code>&lt;i class="fa fa-external-link-alt">&lt;/i>&lt;/a> 的偏特化，之前连这两个偏特化都没有，因而会编译错误（&lt;code>std::atomic&lt;/code> requires a trivially copyable type），只能使用对共享指针提供的&lt;strong>原子操作自由函数&lt;/strong>（&lt;code>std::atomic_*&lt;/code>）。但是这样的类型并不是无锁的，可以通过 &lt;code>is_lock_free()&lt;/code> 的返回值看出来，见 &lt;a href="https://godbolt.org/z/b5P84jM9f" title="https://godbolt.org/z/b5P84jM9f" rel="noopener external nofollow noreferrer"
+ target="_blank" class=" exturl" >https://godbolt.org/z/b5P84jM9f&lt;i class="fa fa-external-link-alt">&lt;/i>&lt;/a> 。根据 Daniel&lt;sup id="fnref:1">&lt;a href="#fn:1" class="footnote-ref" role="doc-noteref">1&lt;/a>&lt;/sup> 的幻灯片，MSVC 和 libstdc++ 中这两个类型都是有锁；根据我的查证，libc++ 截至 2025 年 1 月 5 日还没有实现这两个偏特化。&lt;/p></description></item><item><title>7. 设计无锁并发数据结构</title><link>https://hxhue.github.io/cpp-concurrency-in-action/7.-%E8%AE%BE%E8%AE%A1%E6%97%A0%E9%94%81%E5%B9%B6%E5%8F%91%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84/</link><pubDate>Thu, 02 Jan 2025 00:00:00 +0800</pubDate><guid>https://hxhue.github.io/cpp-concurrency-in-action/7.-%E8%AE%BE%E8%AE%A1%E6%97%A0%E9%94%81%E5%B9%B6%E5%8F%91%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84/</guid><description>&lt;h1 id="非阻塞数据结构的分类">非阻塞数据结构的分类
+&lt;a class="header-anchor" href="#%e9%9d%9e%e9%98%bb%e5%a1%9e%e6%95%b0%e6%8d%ae%e7%bb%93%e6%9e%84%e7%9a%84%e5%88%86%e7%b1%bb">&lt;/a>
+&lt;/h1>&lt;p>书上给出了一个用 &lt;code>std::atomic_flag&lt;/code> 实现自旋锁的代码片段：&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" style="color:#93a1a1;background-color:#002b36;-moz-tab-size:2;-o-tab-size:2;tab-size:2;">&lt;code class="language-cpp" data-lang="cpp">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#719e07">class&lt;/span> &lt;span style="color:#268bd2">spinlock_mutex&lt;/span> {
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> std&lt;span style="color:#719e07">::&lt;/span>atomic_flag flag;
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#719e07">public&lt;/span>&lt;span style="color:#719e07">:&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> spinlock_mutex() &lt;span style="color:#719e07">:&lt;/span> flag(ATOMIC_FLAG_INIT) {}
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#dc322f">void&lt;/span> &lt;span style="color:#268bd2">lock&lt;/span>() {
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#719e07">while&lt;/span> (flag.test_and_set(std&lt;span style="color:#719e07">::&lt;/span>memory_order_acquire));
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> }
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#dc322f">void&lt;/span> &lt;span style="color:#268bd2">unlock&lt;/span>() {
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> flag.clear(std&lt;span style="color:#719e07">::&lt;/span>memory_order_release);
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> }
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>};
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>自旋锁是一个 nonblocking 的例子（书上认为它没有任何阻塞调用，因此是非阻塞的），但是却不是 lock-free 的。&lt;/p></description></item><item><title>6. 设计基于锁的并发数据结构</title><link>https://hxhue.github.io/cpp-concurrency-in-action/6.-%E8%AE%BE%E8%AE%A1%E5%9F%BA%E4%BA%8E%E9%94%81%E7%9A%84%E5%B9%B6%E5%8F%91%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84/</link><pubDate>Tue, 31 Dec 2024 00:00:00 +0800</pubDate><guid>https://hxhue.github.io/cpp-concurrency-in-action/6.-%E8%AE%BE%E8%AE%A1%E5%9F%BA%E4%BA%8E%E9%94%81%E7%9A%84%E5%B9%B6%E5%8F%91%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84/</guid><description>&lt;h1 id="引入部分">引入部分
+&lt;a class="header-anchor" href="#%e5%bc%95%e5%85%a5%e9%83%a8%e5%88%86">&lt;/a>
+&lt;/h1>&lt;p>设计并发数据结构需要考虑两类问题：&lt;/p>
+&lt;ol>
+&lt;li>如何保护数据？&lt;/li>
+&lt;li>如何实现真正的并发？&lt;/li>
+&lt;/ol>
+&lt;p>本章实现线程安全的&lt;strong>栈&lt;/strong>（1 个全局互斥量）、&lt;strong>队列&lt;/strong>（2 个全局互斥量，头尾各用一个）、&lt;strong>哈希表&lt;/strong>（每个 slot 一个互斥量）、&lt;strong>链表&lt;/strong>（每个结点一个互斥量）。&lt;/p></description></item><item><title>5.1 原子操作的内存顺序</title><link>https://hxhue.github.io/cpp-concurrency-in-action/5.1-%E5%8E%9F%E5%AD%90%E6%93%8D%E4%BD%9C%E7%9A%84%E5%86%85%E5%AD%98%E9%A1%BA%E5%BA%8F/</link><pubDate>Sun, 29 Dec 2024 00:00:00 +0800</pubDate><guid>https://hxhue.github.io/cpp-concurrency-in-action/5.1-%E5%8E%9F%E5%AD%90%E6%93%8D%E4%BD%9C%E7%9A%84%E5%86%85%E5%AD%98%E9%A1%BA%E5%BA%8F/</guid><description>&lt;h1 id="c-内存模型概念">C++ 内存模型概念
+&lt;a class="header-anchor" href="#c-%e5%86%85%e5%ad%98%e6%a8%a1%e5%9e%8b%e6%a6%82%e5%bf%b5">&lt;/a>
+&lt;/h1>&lt;p>书上着重介绍了 synchronizes-with 和 happens-with 两个关系（relationship）。&lt;/p>
+&lt;h2 id="synchronizes-with">Synchronizes-with
+&lt;a class="header-anchor" href="#synchronizes-with">&lt;/a>
+&lt;/h2>&lt;blockquote>
+ &lt;p>The synchronizes-with relationship is something that you can get only between operations on atomic types.&lt;/p>
+&lt;/blockquote>&lt;p>书上还说：一些操作的内部实现会使用原子操作（比如对 mutex 上锁），因此也能达到同步关系，但是同步关系从根本上是由原子操作提供的。&lt;/p></description></item><item><title>GCC7 `std::atomic::is_lock_free` 的变化</title><link>https://hxhue.github.io/cpp-concurrency-in-action/5.0.1-GCC7-std-atomic-is_lock_free-%E7%9A%84%E5%8F%98%E5%8C%96/</link><pubDate>Sun, 29 Dec 2024 00:00:00 +0800</pubDate><guid>https://hxhue.github.io/cpp-concurrency-in-action/5.0.1-GCC7-std-atomic-is_lock_free-%E7%9A%84%E5%8F%98%E5%8C%96/</guid><description>&lt;h1 id="gcc7-不再认为-x86-上的-16-字节原子变量无锁">GCC7 不再认为 x86 上的 16 字节原子变量无锁
+&lt;a class="header-anchor" href="#gcc7-%e4%b8%8d%e5%86%8d%e8%ae%a4%e4%b8%ba-x86-%e4%b8%8a%e7%9a%84-16-%e5%ad%97%e8%8a%82%e5%8e%9f%e5%ad%90%e5%8f%98%e9%87%8f%e6%97%a0%e9%94%81">&lt;/a>
+&lt;/h1>&lt;p>原因：GCC7 开始在 &lt;code>std::atomic&amp;lt;T&amp;gt;::is_always_lock_free&lt;/code> 不满足时会调用 libatomic 的 &lt;code>__atomic_is_lock_free()&lt;/code> 函数，但是 libatomic 对无锁的内涵理解不同。&lt;/p>
+&lt;p>&lt;a href="https://godbolt.org/z/nc34E716Y" title="https://godbolt.org/z/nc34E716Y" rel="noopener external nofollow noreferrer"
+ target="_blank" class=" exturl" >https://godbolt.org/z/nc34E716Y&lt;i class="fa fa-external-link-alt">&lt;/i>&lt;/a> 这里表明 gcc7 处理 &lt;code>is_lock_free&lt;/code> 的行为发生了变化，即便有了 &lt;code>-mcx16&lt;/code> 编译选项，也不认为 16 字节原子变量是无锁的，gcc6 则认为 16 字节原子变量在对齐满足时是无锁的（无论 &lt;code>-mcx16&lt;/code> 标志是否存在）。Clang 则是在有无 &lt;code>-mcx16&lt;/code> 选项时呈现出不同的结果。GitHub 上有个相关的 &lt;a href="https://github.com/msys2/MINGW-packages/issues/13831" title="讨论" rel="noopener external nofollow noreferrer"
+ target="_blank" class=" exturl" >讨论&lt;i class="fa fa-external-link-alt">&lt;/i>&lt;/a> 。简单来说是 gcc7 之后不会直接通过当前编译架构来直接决定一个类型是否无锁（clang 会），而是将这个逻辑转移到对 libatomic 的函数的调用上，而 libatomic 认为 16 字节原子变量在 x86 上不算无锁。&lt;/p></description></item><item><title>5. 内存模型基础、标准原子类型、自旋锁</title><link>https://hxhue.github.io/cpp-concurrency-in-action/5.-%E5%86%85%E5%AD%98%E6%A8%A1%E5%9E%8B%E5%9F%BA%E7%A1%80%E6%A0%87%E5%87%86%E5%8E%9F%E5%AD%90%E7%B1%BB%E5%9E%8B%E8%87%AA%E6%97%8B%E9%94%81/</link><pubDate>Mon, 09 Dec 2024 00:00:00 +0800</pubDate><guid>https://hxhue.github.io/cpp-concurrency-in-action/5.-%E5%86%85%E5%AD%98%E6%A8%A1%E5%9E%8B%E5%9F%BA%E7%A1%80%E6%A0%87%E5%87%86%E5%8E%9F%E5%AD%90%E7%B1%BB%E5%9E%8B%E8%87%AA%E6%97%8B%E9%94%81/</guid><description>&lt;h1 id="内存模型基础对象和-内存位置httpsencppreferencecomwcpplanguagememory_modelmemory_location">内存模型基础：对象和 &lt;a href="https://en.cppreference.com/w/cpp/language/memory_model#Memory_location" title="内存位置" rel="noopener external nofollow noreferrer"
+ target="_blank" class=" exturl" >内存位置&lt;i class="fa fa-external-link-alt">&lt;/i>&lt;/a>
+&lt;a class="header-anchor" href="#%e5%86%85%e5%ad%98%e6%a8%a1%e5%9e%8b%e5%9f%ba%e7%a1%80%e5%af%b9%e8%b1%a1%e5%92%8c-%e5%86%85%e5%ad%98%e4%bd%8d%e7%bd%aehttpsencppreferencecomwcpplanguagememory_modelmemory_location">&lt;/a>
+&lt;/h1>&lt;p>书上给出了 4 点：&lt;/p>
+&lt;ol>
+&lt;li>每个变量都是对象，包括对象中的成员。&lt;/li>
+&lt;li>每个对象有至少一个内存位置。&lt;/li>
+&lt;li>每个基本类型（&lt;code>int&lt;/code> / &lt;code>char&lt;/code>, &amp;hellip;）刚好占用一个内存位置。&lt;/li>
+&lt;li>连续位域是同一个内存位置的一部分。&lt;/li>
+&lt;/ol>
+&lt;p>一个标量类型，或者非 0 宽的连续位域构成一个 memory location。&lt;/p></description></item><item><title>4. Synchronizing concurrent operations</title><link>https://hxhue.github.io/cpp-concurrency-in-action/4.-Synchronizing-concurrent-operations/</link><pubDate>Wed, 02 Oct 2024 00:00:00 +0800</pubDate><guid>https://hxhue.github.io/cpp-concurrency-in-action/4.-Synchronizing-concurrent-operations/</guid><description>&lt;p>这一章主要讲线程之间的同步和信息传递，包括条件变量（condition variable）、futures、latches/barries。&lt;/p>
+&lt;h1 id="条件变量">条件变量
+&lt;a class="header-anchor" href="#%e6%9d%a1%e4%bb%b6%e5%8f%98%e9%87%8f">&lt;/a>
+&lt;/h1>&lt;p>头文件是 &lt;code>&amp;lt;condition_variable&amp;gt;&lt;/code>。包含 &lt;code>std::condition_variable&lt;/code> 和 &lt;code>std::condition_variable_any&lt;/code>。前者只能在 &lt;code>std::mutex&lt;/code> 上使用，后者可以在所有满足 BasicLockable（&lt;code>lock()&lt;/code> + &lt;code>unlock()&lt;/code>，不需要 &lt;code>try_lock()&lt;/code>）的类型上使用。如果只需要使用 &lt;code>std::mutex&lt;/code>，那么就用前者，开销可能会比后者小一点。&lt;/p></description></item><item><title>3. Sharing data between threads</title><link>https://hxhue.github.io/cpp-concurrency-in-action/3.-Sharing-data-between-threads/</link><pubDate>Sun, 29 Sep 2024 00:00:00 +0800</pubDate><guid>https://hxhue.github.io/cpp-concurrency-in-action/3.-Sharing-data-between-threads/</guid><description>&lt;h1 id="三种避免竞争情况的办法">三种避免竞争情况的办法
+&lt;a class="header-anchor" href="#%e4%b8%89%e7%a7%8d%e9%81%bf%e5%85%8d%e7%ab%9e%e4%ba%89%e6%83%85%e5%86%b5%e7%9a%84%e5%8a%9e%e6%b3%95">&lt;/a>
+&lt;/h1>&lt;ol>
+&lt;li>上锁。&lt;/li>
+&lt;li>无锁编程。通常通过修改数据结构和 invariants（数据结构要保持的约束）来完成。&lt;/li>
+&lt;li>事务（software transactional memory, STM）。&lt;/li>
+&lt;/ol>
+&lt;h1 id="使用互斥量保护临界区">使用互斥量保护临界区
+&lt;a class="header-anchor" href="#%e4%bd%bf%e7%94%a8%e4%ba%92%e6%96%a5%e9%87%8f%e4%bf%9d%e6%8a%a4%e4%b8%b4%e7%95%8c%e5%8c%ba">&lt;/a>
+&lt;/h1>&lt;p>&lt;code>std::lock_guard&lt;/code>（可以用 CTAD）和 &lt;code>std::mutex&lt;/code> API。C++11 除了 &lt;code>std::mutex&lt;/code> 之外还有 &lt;code>std::timed_mutex&lt;/code>、&lt;code>std::recursive_mutex&lt;/code>、&lt;code>std::recursive_timed_mutex&lt;/code>。&lt;/p></description></item><item><title>2. Managing threads</title><link>https://hxhue.github.io/cpp-concurrency-in-action/2.-Managing-threads/</link><pubDate>Sat, 14 Sep 2024 00:00:00 +0800</pubDate><guid>https://hxhue.github.io/cpp-concurrency-in-action/2.-Managing-threads/</guid><description>&lt;h1 id="22-向线程传递参数">2.2 向线程传递参数
+&lt;a class="header-anchor" href="#22-%e5%90%91%e7%ba%bf%e7%a8%8b%e4%bc%a0%e9%80%92%e5%8f%82%e6%95%b0">&lt;/a>
+&lt;/h1>&lt;p>向线程传递参数时最好是都复制一份，而且&lt;strong>转换成线程启动函数期望的类型&lt;/strong>。举例：&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" style="color:#93a1a1;background-color:#002b36;-moz-tab-size:2;-o-tab-size:2;tab-size:2;">&lt;code class="language-cpp" data-lang="cpp">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#dc322f">void&lt;/span> &lt;span style="color:#268bd2">foo&lt;/span>(std&lt;span style="color:#719e07">::&lt;/span>string) {
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#586e75">// ...
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#586e75">&lt;/span>}
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>std&lt;span style="color:#719e07">::&lt;/span>&lt;span style="color:#268bd2">thread&lt;/span> launch_thread() {
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#dc322f">char&lt;/span> buf[&lt;span style="color:#2aa198">1024&lt;/span>];
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#719e07">return&lt;/span> std&lt;span style="color:#719e07">::&lt;/span>&lt;span style="color:#268bd2">thread&lt;/span>{ foo, buf };
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>}
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>这里 &lt;code>foo&lt;/code> 的参数是 &lt;code>std::string&lt;/code> 类型，而 &lt;code>std::thread&lt;/code> 在构造时复制的是 &lt;code>char *&lt;/code> 类型的参数。等线程创建好，真正开始执行的时候，复制过来的 &lt;code>buf&lt;/code> 就可能已经是悬挂引用了。&lt;/p></description></item></channel></rss>
