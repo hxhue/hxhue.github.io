@@ -1,0 +1,367 @@
+<!doctype html><html lang=zh-CN data-theme=light><head><meta charset=UTF-8><meta name=viewport content="width=device-width"><meta name=theme-color content="#222" media="(prefers-color-scheme: light)"><meta name=generator content="Hugo 0.143.1"><link rel="shortcut icon" type=image/x-icon href=/imgs/icons/favicon.ico><link rel=icon type=image/x-icon href=/imgs/icons/favicon.ico><link rel=icon type=image/png sizes=16x16 href=/imgs/icons/favicon_16x16_next.png><link rel=icon type=image/png sizes=32x32 href=/imgs/icons/favicon_32_32_next.png><link rel=apple-touch-icon sizes=180x180 href=/imgs/icons/apple_touch_icon_next.png><meta itemprop=name content="33.1 能不能用 kill(1) 给特定线程发送信号呢？"><meta itemprop=description content="个人博客，主要是零散的笔记。"><meta itemprop=datePublished zgotmplz><meta itemprop=dateModified zgotmplz><meta itemprop=image content="https://hxhue.github.io/imgs/371907.jpg"><meta itemprop=keywords content="the-linux-programming-interface"><link type=text/css rel=stylesheet href=https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.1.2/css/all.min.css><link type=text/css rel=stylesheet href=https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.1.1/animate.min.css><link rel=stylesheet href=/css/main.min.bea76f574a755574e17d42bea39502a74ca3ca4db65807b8c82d3e26dcec8420.css><style type=text/css>.post-footer,.flinks-list-footer hr:after{content:"~ 我可是有底线的哟 ~"}</style><link rel=stylesheet type=text/css href=/css/style.css><link rel=preconnect href=https://fonts.googleapis.com><link rel=preconnect href=https://fonts.gstatic.com crossorigin><link rel=stylesheet href=https://cdn.jsdelivr.net/npm/github-markdown-css@5.3.0/github-markdown-dark.css><script type=text/javascript id=MathJax-script async src=https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-svg.js></script><script>MathJax={tex:{displayMath:[["$$","$$"],["\\[","\\]"]],inlineMath:[["$","$"],["\\(","\\)"]]},svg:{fontCache:"global"}}</script><script type=module>
+  import mermaid from 'https://cdn.jsdelivr.net/npm/mermaid/dist/mermaid.esm.min.mjs';
+  mermaid.initialize({ startOnLoad: false });
+  mermaid.mermaidAPI.initialize();
+  window.mermaid = mermaid;
+</script><script type=text/javascript>(function(){localDB={set:function(e,t,n){if(n===0)return;const s=new Date,o=n*864e5,i={value:t,expiry:s.getTime()+o};localStorage.setItem(e,JSON.stringify(i))},get:function(e){const t=localStorage.getItem(e);if(!t)return void 0;const n=JSON.parse(t),s=new Date;return s.getTime()>n.expiry?(localStorage.removeItem(e),void 0):n.value}},theme={active:function(){const e=localDB.get("theme");if(e==null)return;theme.toggle(e),window.matchMedia("(prefers-color-scheme: dark)").addListener(function(e){theme.toggle(e.matches?"dark":"light")})},toggle:function(e){document.documentElement.setAttribute("data-theme",e),localDB.set("theme",e,2);const t=document.querySelector("iframe.giscus-frame");if(t){const n={setConfig:{theme:e}};t.contentWindow.postMessage({giscus:n},"https://giscus.app")}}},theme.active()})(window)</script><script class=next-config data-name=page type=application/json>{"comments":false,"isHome":false,"isPage":true,"path":"33.1-%E8%83%BD%E4%B8%8D%E8%83%BD%E7%94%A8-kill1-%E7%BB%99%E7%89%B9%E5%AE%9A%E7%BA%BF%E7%A8%8B%E5%8F%91%E9%80%81%E4%BF%A1%E5%8F%B7%E5%91%A2","permalink":"https://hxhue.github.io/the-linux-programming-interface/33.1-%E8%83%BD%E4%B8%8D%E8%83%BD%E7%94%A8-kill1-%E7%BB%99%E7%89%B9%E5%AE%9A%E7%BA%BF%E7%A8%8B%E5%8F%91%E9%80%81%E4%BF%A1%E5%8F%B7%E5%91%A2/","title":"33.1 能不能用 kill(1) 给特定线程发送信号呢？","waline":{"js":[{"alias":"waline","alias_name":"@waline/client","file":"dist/pageview.js","name":"pageview","version":"2.13.0"},{"alias":"waline","alias_name":"@waline/client","file":"dist/comment.js","name":"comment","version":"2.13.0"}]}}</script><script type=text/javascript>document.addEventListener("DOMContentLoaded",()=>{var e=document.createElement("script");e.charset="UTF-8",e.src="",e.async=!1,e.defer=!0,document.head.appendChild(e),e.onload=function(){NexT.utils.fmtBusuanzi()}})</script><title>33.1 能不能用 kill(1) 给特定线程发送信号呢？ - Bluegill</title><noscript><link rel=stylesheet href=/css/noscript.css></noscript></head><body itemscope itemtype=http://schema.org/WebPage><div class=headband></div><main class=main><header class=header itemscope itemtype=http://schema.org/WPHeader><div class=header-inner><div class=site-brand-container><div class=site-nav-toggle><div class=toggle aria-label role=button><span class=toggle-line></span>
+<span class=toggle-line></span>
+<span class=toggle-line></span></div></div><div class=site-meta><a href=/ class=brand rel=start><i class=logo-line></i><h1 class=site-title>Bluegill</h1><i class=logo-line></i></a><p class=site-subtitle itemprop=description></p></div><div class=site-nav-right><div class="toggle popup-trigger"><i class="fa fa-search fa-fw fa-lg"></i></div></div></div><nav class=site-nav><ul class="main-menu menu"><li class="menu-item menu-item-home"><a href=/ class=hvr-icon-pulse rel=section><i class="fa fa-home hvr-icon"></i>首页</a></li><li class="menu-item menu-item-about"><a href=/about/ class=hvr-icon-pulse rel=section><i class="fa fa-user hvr-icon"></i>关于</a></li><li class="menu-item menu-item-archives"><a href=/archives/ class=hvr-icon-pulse rel=section><i class="fa fa-archive hvr-icon"></i>归档</a></li><li class="menu-item menu-item-categories"><a href=/categories/ class=hvr-icon-pulse rel=section><i class="fa fa-th hvr-icon"></i>分类</a></li><li class="menu-item menu-item-tags"><a href=/tags/ class=hvr-icon-pulse rel=section><i class="fa fa-hashtag hvr-icon"></i>标签</a></li><li class="menu-item menu-item-daily"><a href=/daily/ class=hvr-icon-pulse rel=section><i class="fa fa-newspaper hvr-icon"></i>随笔</a></li><li class="menu-item menu-item-discovery"><a href=https://rift-fear-f2c.notion.site/2025-1e354a33cfb1802c841bdf29f2f3dab3 class=hvr-icon-pulse rel=section><i class="fa fa-compass hvr-icon"></i>发现</a></li><li class="menu-item menu-item-search"><a role=button class="popup-trigger hvr-icon-pulse"><i class="fa fa-search fa-fw hvr-icon"></i>搜索</a></li></ul></nav><div class=search-pop-overlay><div class="popup search-popup"><div class=search-header><span class=search-icon><i class="fa fa-search"></i></span><div class=search-input-container><input autocomplete=off autocapitalize=off maxlength=80 placeholder=搜索... spellcheck=false type=search class=search-input></div><span class=popup-btn-close role=button><i class="fa fa-times-circle"></i></span></div><div class="search-result-container no-result"><div class=search-result-icon><i class="fa fa-spinner fa-pulse fa-5x"></i></div></div></div></div></div><div class="toggle sidebar-toggle" role=button><span class=toggle-line></span>
+<span class=toggle-line></span>
+<span class=toggle-line></span></div><aside class=sidebar><div class="sidebar-inner sidebar-nav-active sidebar-toc-active"><ul class=sidebar-nav><li class=sidebar-nav-toc>文章目录</li><li class=sidebar-nav-overview>站点概览</li></ul><div class=sidebar-panel-container><div class="post-toc-wrap sidebar-panel"><div class="post-toc animated"><nav id=TableOfContents><ul><li><a href=#kill1-的实现>kill(1) 的实现</a></li><li><a href=#kill2-在-glibc-中没有实现>kill(2) 在 glibc 中没有实现</a></li><li><a href=#linux-kernel-中对-kill2-的实现>Linux kernel 中对 kill(2) 的实现</a><ul><li><a href=#tkill-和-tgkill><code>tkill()</code> 和 <code>tgkill()</code></a></li><li><a href=#kill><code>kill()</code></a></li></ul></li><li><a href=#解释现象>解释现象</a></li><li><a href=#结论>结论</a></li></ul></nav></div></div><div class="site-overview-wrap sidebar-panel"><div class="site-author site-overview-item animated" itemprop=author itemscope itemtype=http://schema.org/Person><img class=site-author-image itemprop=image alt=🤖 src=/imgs/371907.jpg><p class=site-author-name itemprop=name>🤖</p><div class=site-description itemprop=description>个人博客，主要是零散的笔记。</div></div><div class="site-state-wrap site-overview-item animated"><nav class=site-state><div class="site-state-item site-state-posts"><a href=/archives/><span class=site-state-item-count>432</span>
+<span class=site-state-item-name>日志</span></a></div><div class="site-state-item site-state-categories"><a href=/categories/><span class=site-state-item-count>12</span>
+<span class=site-state-item-name>分类</span></a></div><div class="site-state-item site-state-tags"><a href=/tags/><span class=site-state-item-count>86</span>
+<span class=site-state-item-name>标签</span></a></div></nav></div><div class="links-of-social site-overview-item animated"><span class=links-of-social-item><a href=https://github.com/hxhue title="Github → https://github.com/hxhue" rel=noopener target=_blank><i class="fab fa-github fa-fw"></i>
+Github
+</a></span><span class=links-of-social-item><a href=/rss.xml title="RSS 订阅 → /rss.xml" rel=noopener target=_blank><i class="fa fa-rss fa-fw"></i>
+RSS 订阅</a></span></div><div class="cc-license animated" itemprop=license><a href=https://creativecommons.org/licenses/by-nc-sa/4.0/deed.zh class=cc-opacity rel=noopener target=_blank title=共享知识><img src=/imgs/cc/big/by_nc_sa.svg alt=共享知识></a></div><div class="links-of-blogroll site-overview-item animated"><div class=links-of-blogroll-title><i class="fa fa-globe fa-fw"></i>
+友情链接</div><ul class=links-of-blogroll-list><li class=links-of-blogroll-item><a href=https://shuai.guru/ title=https://shuai.guru/ target=_blank>shuai.guru</a></li></ul></div></div></div></div></aside><div class=sidebar-dimmer></div></header><div class=tool-buttons><div id=toggle-theme class=button title=深浅模式切换><i class="fas fa-adjust"></i></div><div class=back-to-top role=button title=返回顶部><i class="fa fa-arrow-up"></i>
+<span>0%</span></div></div><div class=reading-progress-bar></div><noscript><div class=noscript-warning>Theme NexT works best with JavaScript enabled</div></noscript><div class="main-inner post posts-expand"><div class=post-block><article itemscope itemtype=http://schema.org/Article class=post-content lang><link itemprop=mainEntityOfPage href=https://hxhue.github.io/the-linux-programming-interface/33.1-%E8%83%BD%E4%B8%8D%E8%83%BD%E7%94%A8-kill1-%E7%BB%99%E7%89%B9%E5%AE%9A%E7%BA%BF%E7%A8%8B%E5%8F%91%E9%80%81%E4%BF%A1%E5%8F%B7%E5%91%A2/><span hidden itemprop=author itemscope itemtype=http://schema.org/Person><meta itemprop=image content="/imgs/371907.jpg"><meta itemprop=name content="🤖"></span><span hidden itemprop=publisher itemscope itemtype=http://schema.org/Organization><meta itemprop=name content="🤖"><meta itemprop=description content="个人博客，主要是零散的笔记。"></span><span hidden itemprop=post itemscope itemtype=http://schema.org/CreativeWork><meta itemprop=name content="33.1 能不能用 kill(1) 给特定线程发送信号呢？"><meta itemprop=description content="
+  
+  
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    用 kill 发送信号给特定线程的尝试 这篇文章提到了用 kill(1) 给特定的线程发送信号，但是标准上没有说这样是可行的。因此这篇文章探讨一下为什么 kill(1) 会具有这样的行为。以下阅读的代码都是在 2024 年 7 月 12 日 的主分支上的最新代码。"></span><header class=post-header><h1 class=post-title itemprop="name headline">33.1 能不能用 kill(1) 给特定线程发送信号呢？</h1><div class=post-meta-container><div class=post-meta-items><span class=post-meta-item><span class=post-meta-item-icon><i class="far fa-calendar"></i>
+</span><span class=post-meta-item-text title=发表于>发表于：
+</span><time title="创建时间：2024-07-12 00:00:00 +0800 CST" itemprop="dateCreated datePublished" datetime="2024-07-12 00:00:00 +0800 CST">2024-07-12
+</time></span><span class=post-meta-item><span class=post-meta-item-icon><i class="far fa-calendar-check"></i>
+</span><span class=post-meta-item-text title=更新于>更新于：
+</span><time title=修改时间：2024-09-07T00:00:00+08:00 itemprop=dateModified datetime=2024-09-07T00:00:00+08:00>2024-09-07</time>
+</span><span class=post-meta-item><span class=post-meta-item-icon><i class="far fa-folder-open"></i>
+</span><span class=post-meta-item-text title=分类于>分类于：
+</span><span itemprop=about itemscope itemtype=http://schema.org/Thing><a href=/categories/the-linux-programming-interface itemprop=url rel=index><span itemprop=name>the-linux-programming-interface</span></a></span></span></div><div class=post-meta-items><span class=post-meta-item title=字数><span class=post-meta-item-icon><i class="far fa-file-word"></i>
+</span><span class=post-meta-item-text>字数：</span>
+<span>3344</span>
+</span><span class=post-meta-item title=阅读><span class=post-meta-item-icon><i class="far fa-clock"></i>
+</span><span class=post-meta-item-text>阅读：&ap;</span>
+<span>7分钟</span></span></div></div></header><div class=post-body itemprop=articleBody><p><a href=/the-linux-programming-interface/29.2-%E7%BA%BF%E7%A8%8B%E5%88%9B%E5%BB%BA/#%e7%94%a8-kill-%e5%8f%91%e9%80%81%e4%bf%a1%e5%8f%b7%e7%bb%99%e7%89%b9%e5%ae%9a%e7%ba%bf%e7%a8%8b%e7%9a%84%e5%b0%9d%e8%af%95 title="用 kill 发送信号给特定线程的尝试">用 <code>kill</code> 发送信号给特定线程的尝试</a> 这篇文章提到了用 kill(1) 给特定的线程发送信号，但是标准上没有说这样是可行的。因此这篇文章探讨一下为什么 kill(1) 会具有这样的行为。<strong>以下阅读的代码都是在 2024 年 7 月 12 日 的主分支上的最新代码</strong>。</p><h1 id=kill1-的实现>kill(1) 的实现
+<a class=header-anchor href=#kill1-%e7%9a%84%e5%ae%9e%e7%8e%b0></a></h1><p><a href=https://github.com/coreutils/coreutils/blob/74ef0ac8a56b36ed3d0277c3876fefcbf434d0b6/src/kill.c#L180 title=这里 rel="noopener external nofollow noreferrer" target=_blank class=exturl>这里<i class="fa fa-external-link-alt"></i></a> 是 <code>kill</code> 命令实现的关键部分，其中只调用了 <code>kill()</code> 系统调用。所以可以排除是 kill(1) 自己处理了发送信号给特定线程的过程。</p><h1 id=kill2-在-glibc-中没有实现>kill(2) 在 glibc 中没有实现
+<a class=header-anchor href=#kill2-%e5%9c%a8-glibc-%e4%b8%ad%e6%b2%a1%e6%9c%89%e5%ae%9e%e7%8e%b0></a></h1><p>kill 系统调用是需要链接 libc 的，其声明的头文件也是在 signal.h 中，因此我们需要先看 glibc 的源码。</p><p>在 glibc 源码中没有找到 <code>kill()</code> 对 Linux 系统调用的包装。只有一个 <a href=https://github.com/bminor/glibc/blob/9b7651410375ec8848a1944992d663d514db4ba7/signal/kill.c#L26 title=__kill() rel="noopener external nofollow noreferrer" target=_blank class=exturl><code>__kill()</code><i class="fa fa-external-link-alt"></i></a> 的空实现（总会设置 <code>errno</code> 为 <code>ENOSYS</code> 并返回 -1）并将其声明为 <code>kill</code> 的弱别名（使用 <code>weak_alias</code> 宏）。（对于某些架构，比如 hurd，会提供 <code>kill()</code> 的实现，可能是这些系统上没有 kill 系统调用）。因此，kill 系统调用是直接在 Linux 内核中实现的。</p><h1 id=linux-kernel-中对-kill2-的实现>Linux kernel 中对 kill(2) 的实现
+<a class=header-anchor href=#linux-kernel-%e4%b8%ad%e5%af%b9-kill2-%e7%9a%84%e5%ae%9e%e7%8e%b0></a></h1><h2 id=tkill-和-tgkill><code>tkill()</code> 和 <code>tgkill()</code>
+<a class=header-anchor href=#tkill-%e5%92%8c-tgkill></a></h2><p><strong>首先看下 <code>tkill()</code> 和 <code>tgkill()</code> 的实现，方便和 <code>kill()</code> 做下对比</strong>。在 Linux 源码中，kernel/signal.c 中有 <code>tkill()</code> 和 <code>tgkill()</code> 的定义，它们都调用了 <code>do_tkill()</code>。</p><div class=highlight><pre tabindex=0 style=color:#93a1a1;background-color:#002b36;-moz-tab-size:2;-o-tab-size:2;tab-size:2><code class=language-c data-lang=c><span style=display:flex><span><span style=color:#719e07>static</span> <span style=color:#dc322f>int</span> <span style=color:#268bd2>do_tkill</span>(<span style=color:#dc322f>pid_t</span> tgid, <span style=color:#dc322f>pid_t</span> pid, <span style=color:#dc322f>int</span> sig)
+</span></span><span style=display:flex><span>{
+</span></span><span style=display:flex><span>	<span style=color:#719e07>struct</span> kernel_siginfo info;
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>	<span style=color:#268bd2>prepare_kill_siginfo</span>(sig, <span style=color:#719e07>&amp;</span>info, PIDTYPE_PID);
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>	<span style=color:#719e07>return</span> <span style=color:#268bd2>do_send_specific</span>(tgid, pid, sig, <span style=color:#719e07>&amp;</span>info);
+</span></span><span style=display:flex><span>}
+</span></span></code></pre></div><p>这些函数中的 pid 是作为线程 id 用的，pid 的枚举定义为：</p><div class=highlight><pre tabindex=0 style=color:#93a1a1;background-color:#002b36;-moz-tab-size:2;-o-tab-size:2;tab-size:2><code class=language-c data-lang=c><span style=display:flex><span><span style=color:#719e07>enum</span> pid_type {
+</span></span><span style=display:flex><span>	PIDTYPE_PID,
+</span></span><span style=display:flex><span>	PIDTYPE_TGID,
+</span></span><span style=display:flex><span>	PIDTYPE_PGID,
+</span></span><span style=display:flex><span>	PIDTYPE_SID,
+</span></span><span style=display:flex><span>	PIDTYPE_MAX,
+</span></span><span style=display:flex><span>};
+</span></span></code></pre></div><p>然后，<code>do_send_specific()</code> 会调用 <code>do_send_sig_info(sig, info, p, PIDTYPE_PID)</code>（记住这个函数，因为接下来 <code>sys_kill()</code> 也会最终调用它）。这里是非常明确地把信号发给特定进程（实际上是线程），不值得奇怪。</p><h2 id=kill><code>kill()</code>
+<a class=header-anchor href=#kill></a></h2><p>kernel/signal.c 中同时有 kill 系统调用的定义：</p><div class=highlight><pre tabindex=0 style=color:#93a1a1;background-color:#002b36;-moz-tab-size:2;-o-tab-size:2;tab-size:2><code class=language-c data-lang=c><span style=display:flex><span><span style=color:#268bd2>SYSCALL_DEFINE2</span>(kill, <span style=color:#dc322f>pid_t</span>, pid, <span style=color:#dc322f>int</span>, sig)
+</span></span><span style=display:flex><span>{
+</span></span><span style=display:flex><span>	<span style=color:#719e07>struct</span> kernel_siginfo info;
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>	<span style=color:#268bd2>prepare_kill_siginfo</span>(sig, <span style=color:#719e07>&amp;</span>info, PIDTYPE_TGID);
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>	<span style=color:#719e07>return</span> <span style=color:#268bd2>kill_something_info</span>(sig, <span style=color:#719e07>&amp;</span>info, pid);
+</span></span><span style=display:flex><span>}
+</span></span></code></pre></div><p>其形式很像 <code>do_tkill()</code>。根据 <code>PIDTYPE_TGID</code> 参数，<code>kill()</code> 的信号是发给线程组的。调用链有点长：</p><div class=highlight><pre tabindex=0 style=color:#93a1a1;background-color:#002b36;-moz-tab-size:2;-o-tab-size:2;tab-size:2><code class=language-c data-lang=c><span style=display:flex><span><span style=color:#586e75>// [1] 本文讨论的是对特定线程发送信号，显然 pid &gt; 0
+</span></span></span><span style=display:flex><span><span style=color:#586e75></span><span style=color:#719e07>static</span> <span style=color:#dc322f>int</span> <span style=color:#268bd2>kill_something_info</span>(<span style=color:#dc322f>int</span> sig, <span style=color:#719e07>struct</span> kernel_siginfo <span style=color:#719e07>*</span>info, <span style=color:#dc322f>pid_t</span> pid)
+</span></span><span style=display:flex><span>{
+</span></span><span style=display:flex><span>	<span style=color:#dc322f>int</span> ret;
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>	<span style=color:#719e07>if</span> (pid <span style=color:#719e07>&gt;</span> <span style=color:#2aa198>0</span>)
+</span></span><span style=display:flex><span>		<span style=color:#719e07>return</span> <span style=color:#268bd2>kill_proc_info</span>(sig, info, pid); <span style=color:#586e75>// 肯定走这一条
+</span></span></span><span style=display:flex><span><span style=color:#586e75></span>	<span style=color:#586e75>// ...
+</span></span></span><span style=display:flex><span><span style=color:#586e75></span>}
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#586e75>// [2] find_vpid 的返回类型是 struct pid *，而不是 pid_t
+</span></span></span><span style=display:flex><span><span style=color:#586e75></span><span style=color:#719e07>static</span> <span style=color:#dc322f>int</span> <span style=color:#268bd2>kill_proc_info</span>(<span style=color:#dc322f>int</span> sig, <span style=color:#719e07>struct</span> kernel_siginfo <span style=color:#719e07>*</span>info, <span style=color:#dc322f>pid_t</span> pid)
+</span></span><span style=display:flex><span>{
+</span></span><span style=display:flex><span>	<span style=color:#dc322f>int</span> error;
+</span></span><span style=display:flex><span>	<span style=color:#268bd2>rcu_read_lock</span>();
+</span></span><span style=display:flex><span>	error <span style=color:#719e07>=</span> <span style=color:#268bd2>kill_pid_info</span>(sig, info, <span style=color:#268bd2>find_vpid</span>(pid));
+</span></span><span style=display:flex><span>	<span style=color:#268bd2>rcu_read_unlock</span>();
+</span></span><span style=display:flex><span>	<span style=color:#719e07>return</span> error;
+</span></span><span style=display:flex><span>}
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#586e75>// [3] 参数里面还是使用了 PIDTYPE_TGID，和 do_tkill 有区别
+</span></span></span><span style=display:flex><span><span style=color:#586e75></span><span style=color:#dc322f>int</span> <span style=color:#268bd2>kill_pid_info</span>(<span style=color:#dc322f>int</span> sig, <span style=color:#719e07>struct</span> kernel_siginfo <span style=color:#719e07>*</span>info, <span style=color:#719e07>struct</span> pid <span style=color:#719e07>*</span>pid)
+</span></span><span style=display:flex><span>{
+</span></span><span style=display:flex><span>	<span style=color:#719e07>return</span> <span style=color:#268bd2>kill_pid_info_type</span>(sig, info, pid, PIDTYPE_TGID);
+</span></span><span style=display:flex><span>}
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#586e75>// [4]
+</span></span></span><span style=display:flex><span><span style=color:#586e75></span><span style=color:#719e07>static</span> <span style=color:#dc322f>int</span> <span style=color:#268bd2>kill_pid_info_type</span>(<span style=color:#dc322f>int</span> sig, <span style=color:#719e07>struct</span> kernel_siginfo <span style=color:#719e07>*</span>info,
+</span></span><span style=display:flex><span>                              <span style=color:#719e07>struct</span> pid <span style=color:#719e07>*</span>pid, <span style=color:#719e07>enum</span> pid_type type)
+</span></span><span style=display:flex><span>{
+</span></span><span style=display:flex><span>	<span style=color:#dc322f>int</span> error <span style=color:#719e07>=</span> <span style=color:#719e07>-</span>ESRCH;
+</span></span><span style=display:flex><span>	<span style=color:#719e07>struct</span> task_struct <span style=color:#719e07>*</span>p;
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>	<span style=color:#719e07>for</span> (;;) {
+</span></span><span style=display:flex><span>		<span style=color:#268bd2>rcu_read_lock</span>();
+</span></span><span style=display:flex><span>		p <span style=color:#719e07>=</span> <span style=color:#268bd2>pid_task</span>(pid, PIDTYPE_PID);
+</span></span><span style=display:flex><span>		<span style=color:#719e07>if</span> (p)
+</span></span><span style=display:flex><span>			error <span style=color:#719e07>=</span> <span style=color:#268bd2>group_send_sig_info</span>(sig, info, p, type);
+</span></span><span style=display:flex><span>		<span style=color:#268bd2>rcu_read_unlock</span>();
+</span></span><span style=display:flex><span>		<span style=color:#719e07>if</span> (<span style=color:#268bd2>likely</span>(<span style=color:#719e07>!</span>p <span style=color:#719e07>||</span> error <span style=color:#719e07>!=</span> <span style=color:#719e07>-</span>ESRCH))
+</span></span><span style=display:flex><span>			<span style=color:#719e07>return</span> error;
+</span></span><span style=display:flex><span>	}
+</span></span><span style=display:flex><span>}
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#586e75>// 接下来是：
+</span></span></span><span style=display:flex><span><span style=color:#586e75>// [5] group_send_sig_info(sig, info, p, type /* PIDTYPE_TGID */)
+</span></span></span><span style=display:flex><span><span style=color:#586e75>// [6] do_send_sig_info(sig, info, p, type /* PIDTYPE_TGID */)
+</span></span></span><span style=display:flex><span><span style=color:#586e75>// [7] send_signal_locked(sig, info, p, type /* PIDTYPE_TGID */)
+</span></span></span><span style=display:flex><span><span style=color:#586e75>// [8] __send_signal_locked(sig, info, t, type, force /* 根据内部的判断逻辑决定 */)
+</span></span></span><span style=display:flex><span><span style=color:#586e75></span>
+</span></span><span style=display:flex><span><span style=color:#719e07>static</span> <span style=color:#dc322f>int</span> <span style=color:#268bd2>__send_signal_locked</span>(<span style=color:#dc322f>int</span> sig, <span style=color:#719e07>struct</span> kernel_siginfo <span style=color:#719e07>*</span>info,
+</span></span><span style=display:flex><span>				<span style=color:#719e07>struct</span> task_struct <span style=color:#719e07>*</span>t, <span style=color:#719e07>enum</span> pid_type type, <span style=color:#dc322f>bool</span> force)
+</span></span><span style=display:flex><span>{
+</span></span><span style=display:flex><span>    <span style=color:#719e07>struct</span> sigpending <span style=color:#719e07>*</span>pending;
+</span></span><span style=display:flex><span>    <span style=color:#586e75>// ...
+</span></span></span><span style=display:flex><span><span style=color:#586e75></span>	pending <span style=color:#719e07>=</span> (type <span style=color:#719e07>!=</span> PIDTYPE_PID) <span style=color:#719e07>?</span> <span style=color:#719e07>&amp;</span>t<span style=color:#719e07>-&gt;</span>signal<span style=color:#719e07>-&gt;</span>shared_pending : <span style=color:#719e07>&amp;</span>t<span style=color:#719e07>-&gt;</span>pending;
+</span></span><span style=display:flex><span>    <span style=color:#586e75>// ...
+</span></span></span><span style=display:flex><span><span style=color:#586e75></span>out_set:
+</span></span><span style=display:flex><span>	<span style=color:#268bd2>signalfd_notify</span>(t, sig);
+</span></span><span style=display:flex><span>	<span style=color:#268bd2>sigaddset</span>(<span style=color:#719e07>&amp;</span>pending<span style=color:#719e07>-&gt;</span>signal, sig);
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>	<span style=color:#586e75>/* Let multiprocess signals appear after on-going forks */</span>
+</span></span><span style=display:flex><span>	<span style=color:#719e07>if</span> (type <span style=color:#719e07>&gt;</span> PIDTYPE_TGID) { <span style=color:#586e75>// 前面已经给出了 pid_type 的定义
+</span></span></span><span style=display:flex><span><span style=color:#586e75></span>		<span style=color:#719e07>struct</span> multiprocess_signals <span style=color:#719e07>*</span>delayed;
+</span></span><span style=display:flex><span>		<span style=color:#268bd2>hlist_for_each_entry</span>(delayed, <span style=color:#719e07>&amp;</span>t<span style=color:#719e07>-&gt;</span>signal<span style=color:#719e07>-&gt;</span>multiprocess, node) {
+</span></span><span style=display:flex><span>			<span style=color:#dc322f>sigset_t</span> <span style=color:#719e07>*</span>signal <span style=color:#719e07>=</span> <span style=color:#719e07>&amp;</span>delayed<span style=color:#719e07>-&gt;</span>signal;
+</span></span><span style=display:flex><span>			<span style=color:#586e75>/* Can&#39;t queue both a stop and a continue signal */</span>
+</span></span><span style=display:flex><span>			<span style=color:#719e07>if</span> (sig <span style=color:#719e07>==</span> SIGCONT)
+</span></span><span style=display:flex><span>				<span style=color:#268bd2>sigdelsetmask</span>(signal, SIG_KERNEL_STOP_MASK);
+</span></span><span style=display:flex><span>			<span style=color:#719e07>else</span> <span style=color:#719e07>if</span> (<span style=color:#268bd2>sig_kernel_stop</span>(sig))
+</span></span><span style=display:flex><span>				<span style=color:#268bd2>sigdelset</span>(signal, SIGCONT);
+</span></span><span style=display:flex><span>			<span style=color:#268bd2>sigaddset</span>(signal, sig);
+</span></span><span style=display:flex><span>		}
+</span></span><span style=display:flex><span>	}
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>	<span style=color:#268bd2>complete_signal</span>(sig, t, type);
+</span></span><span style=display:flex><span>ret:
+</span></span><span style=display:flex><span>	<span style=color:#268bd2>trace_signal_generate</span>(sig, info, t, type <span style=color:#719e07>!=</span> PIDTYPE_PID, result);
+</span></span><span style=display:flex><span>	<span style=color:#719e07>return</span> ret;
+</span></span><span style=display:flex><span>}
+</span></span></code></pre></div><p>这里可以看到 <code>__send_signal_locked()</code> 是控制执行信号发送流程的函数，当我们给的 pid 是线程的 id 时，会选中线程的 <code>struct task_struct *</code>，但其 pending 队列则是选的进程的共享队列。<strong>这可能表示信号仍然是发送给整个进程的，只是线程在处理信号的调度上有优先权</strong>。</p><p>可以看出 <code>complete_signal()</code> 中的 <code>if (wants_signal(sig, p))</code> 先检查了是否可以给传来的 <code>struct task_struct *</code> 发送信号，在本文的讨论中，这个 task 结构体表示一个特定线程。尤其是这句注释很醒目：<em>Try the suggested task first (may or may not be the main thread).</em></p><div class=highlight><pre tabindex=0 style=color:#93a1a1;background-color:#002b36;-moz-tab-size:2;-o-tab-size:2;tab-size:2><code class=language-c data-lang=c><span style=display:flex><span><span style=color:#586e75>// [9]
+</span></span></span><span style=display:flex><span><span style=color:#586e75></span><span style=color:#719e07>static</span> <span style=color:#dc322f>void</span> <span style=color:#268bd2>complete_signal</span>(<span style=color:#dc322f>int</span> sig, <span style=color:#719e07>struct</span> task_struct <span style=color:#719e07>*</span>p, <span style=color:#719e07>enum</span> pid_type type)
+</span></span><span style=display:flex><span>{
+</span></span><span style=display:flex><span>	<span style=color:#719e07>struct</span> signal_struct <span style=color:#719e07>*</span>signal <span style=color:#719e07>=</span> p<span style=color:#719e07>-&gt;</span>signal;
+</span></span><span style=display:flex><span>	<span style=color:#719e07>struct</span> task_struct <span style=color:#719e07>*</span>t;
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>	<span style=color:#586e75>/*
+</span></span></span><span style=display:flex><span><span style=color:#586e75>	 * Now find a thread we can wake up to take the signal off the queue.
+</span></span></span><span style=display:flex><span><span style=color:#586e75>	 *
+</span></span></span><span style=display:flex><span><span style=color:#586e75>	 * Try the suggested task first (may or may not be the main thread).
+</span></span></span><span style=display:flex><span><span style=color:#586e75>	 */</span>
+</span></span><span style=display:flex><span>	<span style=color:#719e07>if</span> (<span style=color:#268bd2>wants_signal</span>(sig, p)) <span style=color:#586e75>// [10]
+</span></span></span><span style=display:flex><span><span style=color:#586e75></span>		t <span style=color:#719e07>=</span> p;
+</span></span><span style=display:flex><span>	<span style=color:#719e07>else</span> <span style=color:#719e07>if</span> ((type <span style=color:#719e07>==</span> PIDTYPE_PID) <span style=color:#719e07>||</span> <span style=color:#268bd2>thread_group_empty</span>(p))
+</span></span><span style=display:flex><span>		<span style=color:#586e75>/*
+</span></span></span><span style=display:flex><span><span style=color:#586e75>		 * There is just one thread and it does not need to be woken.
+</span></span></span><span style=display:flex><span><span style=color:#586e75>		 * It will dequeue unblocked signals before it runs again.
+</span></span></span><span style=display:flex><span><span style=color:#586e75>		 */</span>
+</span></span><span style=display:flex><span>		<span style=color:#719e07>return</span>;
+</span></span><span style=display:flex><span>	<span style=color:#719e07>else</span> {
+</span></span><span style=display:flex><span>		<span style=color:#586e75>/*
+</span></span></span><span style=display:flex><span><span style=color:#586e75>		 * Otherwise try to find a suitable thread.
+</span></span></span><span style=display:flex><span><span style=color:#586e75>		 */</span>
+</span></span><span style=display:flex><span>		t <span style=color:#719e07>=</span> signal<span style=color:#719e07>-&gt;</span>curr_target;
+</span></span><span style=display:flex><span>		<span style=color:#719e07>while</span> (<span style=color:#719e07>!</span><span style=color:#268bd2>wants_signal</span>(sig, t)) {
+</span></span><span style=display:flex><span>			t <span style=color:#719e07>=</span> <span style=color:#268bd2>next_thread</span>(t);
+</span></span><span style=display:flex><span>			<span style=color:#719e07>if</span> (t <span style=color:#719e07>==</span> signal<span style=color:#719e07>-&gt;</span>curr_target)
+</span></span><span style=display:flex><span>				<span style=color:#586e75>/*
+</span></span></span><span style=display:flex><span><span style=color:#586e75>				 * No thread needs to be woken.
+</span></span></span><span style=display:flex><span><span style=color:#586e75>				 * Any eligible threads will see
+</span></span></span><span style=display:flex><span><span style=color:#586e75>				 * the signal in the queue soon.
+</span></span></span><span style=display:flex><span><span style=color:#586e75>				 */</span>
+</span></span><span style=display:flex><span>				<span style=color:#719e07>return</span>;
+</span></span><span style=display:flex><span>		}
+</span></span><span style=display:flex><span>		signal<span style=color:#719e07>-&gt;</span>curr_target <span style=color:#719e07>=</span> t;
+</span></span><span style=display:flex><span>	}
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>	<span style=color:#586e75>// 这些逻辑是对致命信号的处理，我们不关心
+</span></span></span><span style=display:flex><span><span style=color:#586e75></span>	<span style=color:#719e07>if</span> (<span style=color:#268bd2>sig_fatal</span>(p, sig) <span style=color:#719e07>&amp;&amp;</span>
+</span></span><span style=display:flex><span>	    (signal<span style=color:#719e07>-&gt;</span>core_state <span style=color:#719e07>||</span> <span style=color:#719e07>!</span>(signal<span style=color:#719e07>-&gt;</span>flags <span style=color:#719e07>&amp;</span> SIGNAL_GROUP_EXIT)) <span style=color:#719e07>&amp;&amp;</span>
+</span></span><span style=display:flex><span>	    <span style=color:#719e07>!</span><span style=color:#268bd2>sigismember</span>(<span style=color:#719e07>&amp;</span>t<span style=color:#719e07>-&gt;</span>real_blocked, sig) <span style=color:#719e07>&amp;&amp;</span>
+</span></span><span style=display:flex><span>	    (sig <span style=color:#719e07>==</span> SIGKILL <span style=color:#719e07>||</span> <span style=color:#719e07>!</span>p<span style=color:#719e07>-&gt;</span>ptrace)) {
+</span></span><span style=display:flex><span>        <span style=color:#586e75>// ...
+</span></span></span><span style=display:flex><span><span style=color:#586e75></span>	}
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>	<span style=color:#586e75>/*
+</span></span></span><span style=display:flex><span><span style=color:#586e75>	 * The signal is already in the shared-pending queue.
+</span></span></span><span style=display:flex><span><span style=color:#586e75>	 * Tell the chosen thread to wake up and dequeue it.
+</span></span></span><span style=display:flex><span><span style=color:#586e75>	 */</span>
+</span></span><span style=display:flex><span>	<span style=color:#268bd2>signal_wake_up</span>(t, sig <span style=color:#719e07>==</span> SIGKILL); <span style=color:#586e75>// [11]
+</span></span></span><span style=display:flex><span><span style=color:#586e75></span>	<span style=color:#719e07>return</span>;
+</span></span><span style=display:flex><span>}
+</span></span></code></pre></div><p>而在 <code>wants_signal()</code> 的检查为：</p><div class=highlight><pre tabindex=0 style=color:#93a1a1;background-color:#002b36;-moz-tab-size:2;-o-tab-size:2;tab-size:2><code class=language-c data-lang=c><span style=display:flex><span><span style=color:#586e75>// [10]
+</span></span></span><span style=display:flex><span><span style=color:#586e75></span><span style=color:#586e75>/*
+</span></span></span><span style=display:flex><span><span style=color:#586e75> * Test if P wants to take SIG.  After we&#39;ve checked all threads with this,
+</span></span></span><span style=display:flex><span><span style=color:#586e75> * it&#39;s equivalent to finding no threads not blocking SIG.  Any threads not
+</span></span></span><span style=display:flex><span><span style=color:#586e75> * blocking SIG were ruled out because they are not running and already
+</span></span></span><span style=display:flex><span><span style=color:#586e75> * have pending signals.  Such threads will dequeue from the shared queue
+</span></span></span><span style=display:flex><span><span style=color:#586e75> * as soon as they&#39;re available, so putting the signal on the shared queue
+</span></span></span><span style=display:flex><span><span style=color:#586e75> * will be equivalent to sending it to one such thread.
+</span></span></span><span style=display:flex><span><span style=color:#586e75> */</span>
+</span></span><span style=display:flex><span><span style=color:#719e07>static</span> <span style=color:#268bd2>inline</span> <span style=color:#dc322f>bool</span> <span style=color:#268bd2>wants_signal</span>(<span style=color:#dc322f>int</span> sig, <span style=color:#719e07>struct</span> task_struct <span style=color:#719e07>*</span>p)
+</span></span><span style=display:flex><span>{
+</span></span><span style=display:flex><span>	<span style=color:#719e07>if</span> (<span style=color:#268bd2>sigismember</span>(<span style=color:#719e07>&amp;</span>p<span style=color:#719e07>-&gt;</span>blocked, sig)) <span style=color:#586e75>// 条件之一：不能阻塞该信号
+</span></span></span><span style=display:flex><span><span style=color:#586e75></span>		<span style=color:#719e07>return</span> <span style=color:#b58900>false</span>;
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>	<span style=color:#719e07>if</span> (p<span style=color:#719e07>-&gt;</span>flags <span style=color:#719e07>&amp;</span> PF_EXITING)
+</span></span><span style=display:flex><span>		<span style=color:#719e07>return</span> <span style=color:#b58900>false</span>;
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>	<span style=color:#719e07>if</span> (sig <span style=color:#719e07>==</span> SIGKILL)
+</span></span><span style=display:flex><span>		<span style=color:#719e07>return</span> <span style=color:#b58900>true</span>;
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>	<span style=color:#719e07>if</span> (<span style=color:#268bd2>task_is_stopped_or_traced</span>(p)) <span style=color:#586e75>// 条件之一：不能已经停止
+</span></span></span><span style=display:flex><span><span style=color:#586e75></span>		<span style=color:#719e07>return</span> <span style=color:#b58900>false</span>;
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>	<span style=color:#719e07>return</span> <span style=color:#268bd2>task_curr</span>(p) <span style=color:#719e07>||</span> <span style=color:#719e07>!</span><span style=color:#268bd2>task_sigpending</span>(p);
+</span></span><span style=display:flex><span>}
+</span></span></code></pre></div><p><code>signal_wake_up()</code> 会用 <code>set_tsk_thread_flag(t, TIF_SIGPENDING)</code> 设置 <code>struct task_struct</code> 结构的标志位，告诉线程有信号正在等待，并随后将其唤醒。</p><div class=highlight><pre tabindex=0 style=color:#93a1a1;background-color:#002b36;-moz-tab-size:2;-o-tab-size:2;tab-size:2><code class=language-c data-lang=c><span style=display:flex><span><span style=color:#586e75>// [11] signal_wake_up 略
+</span></span></span><span style=display:flex><span><span style=color:#586e75>// [12]
+</span></span></span><span style=display:flex><span><span style=color:#586e75></span><span style=color:#dc322f>void</span> <span style=color:#268bd2>signal_wake_up_state</span>(<span style=color:#719e07>struct</span> task_struct <span style=color:#719e07>*</span>t, <span style=color:#dc322f>unsigned</span> <span style=color:#dc322f>int</span> state)
+</span></span><span style=display:flex><span>{
+</span></span><span style=display:flex><span>	<span style=color:#268bd2>lockdep_assert_held</span>(<span style=color:#719e07>&amp;</span>t<span style=color:#719e07>-&gt;</span>sighand<span style=color:#719e07>-&gt;</span>siglock);
+</span></span><span style=display:flex><span>	<span style=color:#268bd2>set_tsk_thread_flag</span>(t, TIF_SIGPENDING);
+</span></span><span style=display:flex><span>	<span style=color:#719e07>if</span> (<span style=color:#719e07>!</span><span style=color:#268bd2>wake_up_state</span>(t, state <span style=color:#719e07>|</span> TASK_INTERRUPTIBLE))
+</span></span><span style=display:flex><span>		<span style=color:#268bd2>kick_process</span>(t);
+</span></span><span style=display:flex><span>}
+</span></span></code></pre></div><h1 id=解释现象>解释现象
+<a class=header-anchor href=#%e8%a7%a3%e9%87%8a%e7%8e%b0%e8%b1%a1></a></h1><p>在我之前的测试中，主线程调用 <code>pthread_exit()</code> 退出成为僵尸，而另外一个线程仍在运行，这时向主线程发送信号就无法通过 <code>task_is_stopped_or_traced(p)</code> 的检查，因此内核会通知另外一个线程。</p><p>但是我之前的测试有个缺陷，即主线程在等待 <code>thread1</code>，而 <code>thread1</code> 因为 <code>pause()</code> 而等待，所以它们都处于阻塞状态，<code>kill()</code> 只对选择的线程做了唤醒，意味着这个线程总是先处理信号。我又修改了测试代码：</p><div class=highlight><pre tabindex=0 style=color:#93a1a1;background-color:#002b36;-moz-tab-size:2;-o-tab-size:2;tab-size:2><code class=language-c data-lang=c><span style=display:flex><span><span style=color:#719e07>#define _GNU_SOURCE
+</span></span></span><span style=display:flex><span><span style=color:#719e07>#include</span> <span style=color:#719e07>&lt;pthread.h&gt;</span><span style=color:#719e07>
+</span></span></span><span style=display:flex><span><span style=color:#719e07>#include</span> <span style=color:#719e07>&lt;signal.h&gt;</span><span style=color:#719e07>
+</span></span></span><span style=display:flex><span><span style=color:#719e07>#include</span> <span style=color:#719e07>&lt;stdio.h&gt;</span><span style=color:#719e07>
+</span></span></span><span style=display:flex><span><span style=color:#719e07>#include</span> <span style=color:#719e07>&lt;unistd.h&gt;</span><span style=color:#719e07>
+</span></span></span><span style=display:flex><span><span style=color:#719e07></span>
+</span></span><span style=display:flex><span><span style=color:#dc322f>void</span> <span style=color:#268bd2>cpu_intensive_task</span>() {
+</span></span><span style=display:flex><span>    <span style=color:#dc322f>int</span> a <span style=color:#719e07>=</span> <span style=color:#2aa198>0</span>;
+</span></span><span style=display:flex><span>    <span style=color:#719e07>for</span> (;;) {
+</span></span><span style=display:flex><span>        <span style=color:#719e07>++</span>a;
+</span></span><span style=display:flex><span>    }
+</span></span><span style=display:flex><span>}
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#586e75>// Not portable since gettid is only on Linux.
+</span></span></span><span style=display:flex><span><span style=color:#586e75></span><span style=color:#dc322f>unsigned</span> <span style=color:#dc322f>long</span> <span style=color:#268bd2>get_thread_id</span>(<span style=color:#dc322f>void</span>) { <span style=color:#719e07>return</span> (<span style=color:#dc322f>unsigned</span> <span style=color:#dc322f>long</span>)<span style=color:#268bd2>gettid</span>(); }
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#dc322f>void</span> <span style=color:#719e07>*</span><span style=color:#268bd2>f</span>(<span style=color:#dc322f>void</span> <span style=color:#719e07>*</span>arg) {
+</span></span><span style=display:flex><span>    <span style=color:#268bd2>fprintf</span>(stderr, <span style=color:#2aa198>&#34;Thread %lu starts</span><span style=color:#cb4b16>\n</span><span style=color:#2aa198>&#34;</span>, <span style=color:#268bd2>get_thread_id</span>());
+</span></span><span style=display:flex><span>    <span style=color:#268bd2>cpu_intensive_task</span>();
+</span></span><span style=display:flex><span>    <span style=color:#268bd2>fprintf</span>(stderr, <span style=color:#2aa198>&#34;Thread %lu but shouldn&#39;t reached here</span><span style=color:#cb4b16>\n</span><span style=color:#2aa198>&#34;</span>, <span style=color:#268bd2>get_thread_id</span>());
+</span></span><span style=display:flex><span>    <span style=color:#719e07>return</span> <span style=color:#b58900>NULL</span>;
+</span></span><span style=display:flex><span>}
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#dc322f>void</span> <span style=color:#268bd2>chld_handler</span>(<span style=color:#dc322f>int</span> sig) {
+</span></span><span style=display:flex><span>    <span style=color:#719e07>struct</span> timespec t;
+</span></span><span style=display:flex><span>    <span style=color:#268bd2>clock_gettime</span>(CLOCK_MONOTONIC, <span style=color:#719e07>&amp;</span>t);
+</span></span><span style=display:flex><span>    <span style=color:#586e75>// (f)printf is not async-signal-safe, but I use it for testing.
+</span></span></span><span style=display:flex><span><span style=color:#586e75></span>    <span style=color:#268bd2>fprintf</span>(stderr, <span style=color:#2aa198>&#34;[%ld.%08ld] Handler thread is %lu</span><span style=color:#cb4b16>\n</span><span style=color:#2aa198>&#34;</span>, t.tv_sec, t.tv_nsec, <span style=color:#268bd2>get_thread_id</span>());
+</span></span><span style=display:flex><span>}
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#dc322f>int</span> <span style=color:#268bd2>main</span>() {
+</span></span><span style=display:flex><span>    <span style=color:#268bd2>fprintf</span>(stderr, <span style=color:#2aa198>&#34;Main thread is %lu</span><span style=color:#cb4b16>\n</span><span style=color:#2aa198>&#34;</span>, <span style=color:#268bd2>get_thread_id</span>());
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>    <span style=color:#586e75>// 因为 SIGCHLD 的默认行为是忽略，所以不设置信号处理器函数，SIGCHLD 就不会让 thread1 从 pause() 返回。
+</span></span></span><span style=display:flex><span><span style=color:#586e75></span>    <span style=color:#719e07>struct</span> sigaction action;
+</span></span><span style=display:flex><span>    action.sa_handler <span style=color:#719e07>=</span> chld_handler;
+</span></span><span style=display:flex><span>    <span style=color:#dc322f>sigset_t</span> signals_blocked;
+</span></span><span style=display:flex><span>    <span style=color:#268bd2>sigfillset</span>(<span style=color:#719e07>&amp;</span>signals_blocked);
+</span></span><span style=display:flex><span>    action.sa_mask <span style=color:#719e07>=</span> signals_blocked;
+</span></span><span style=display:flex><span>    action.sa_flags <span style=color:#719e07>=</span> <span style=color:#2aa198>0</span>;
+</span></span><span style=display:flex><span>    <span style=color:#719e07>if</span> (<span style=color:#268bd2>sigaction</span>(SIGCHLD, <span style=color:#719e07>&amp;</span>action, <span style=color:#b58900>NULL</span>) <span style=color:#719e07>!=</span> <span style=color:#2aa198>0</span>) {
+</span></span><span style=display:flex><span>        <span style=color:#268bd2>perror</span>(<span style=color:#2aa198>&#34;sigaction&#34;</span>);
+</span></span><span style=display:flex><span>        <span style=color:#719e07>return</span> <span style=color:#2aa198>1</span>;
+</span></span><span style=display:flex><span>    }
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>    <span style=color:#dc322f>pthread_t</span> thread1;
+</span></span><span style=display:flex><span>    <span style=color:#268bd2>pthread_create</span>(<span style=color:#719e07>&amp;</span>thread1, <span style=color:#b58900>NULL</span>, f, <span style=color:#b58900>NULL</span>);
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>    <span style=color:#268bd2>cpu_intensive_task</span>();
+</span></span><span style=display:flex><span>}
+</span></span></code></pre></div><p>我将两个线程的主要任务都改成无限循环的计算，导致它们永不进入阻塞状态（还是可能进入就绪状态），得到的结果也还是被发向信号的线程先处理信号。可能因为 <code>signal_wake_up()</code> 这个函数是先通知线程有信号需要处理，然后才将其唤醒，导致没被选择的另外一个线程根本不知道有信号要处理。</p><p>这说明我的测试方法也有缺陷，因为我一次只通知了一个线程。我之前发送信号的方法是先运行编译好的程序，得到线程的 tid，然后在命令行上运行（以下的线程 ID 会变化，因为每次测试都是启用了新的进程）：</p><div class=highlight><pre tabindex=0 style=color:#93a1a1;background-color:#002b36;-moz-tab-size:2;-o-tab-size:2;tab-size:2><code class=language-c data-lang=c><span style=display:flex><span><span style=color:#719e07>for</span> i in {<span style=color:#2aa198>1..10</span>}; <span style=color:#719e07>do</span> kill <span style=color:#719e07>-</span>SIGCHLD <span style=color:#2aa198>589999</span> <span style=color:#719e07>&amp;&amp;</span> sleep <span style=color:#2aa198>0.5</span>; done
+</span></span></code></pre></div><p>后来我决定在命令行上同时对两个线程发出信号：</p><div class=highlight><pre tabindex=0 style=color:#93a1a1;background-color:#002b36;-moz-tab-size:2;-o-tab-size:2;tab-size:2><code class=language-c data-lang=c><span style=display:flex><span><span style=color:#719e07>for</span> i in {<span style=color:#2aa198>1..10</span>}; <span style=color:#719e07>do</span> kill <span style=color:#719e07>-</span>SIGCHLD <span style=color:#2aa198>603935</span> <span style=color:#2aa198>603936</span> <span style=color:#719e07>&amp;&amp;</span> sleep <span style=color:#2aa198>0.5</span>; done
+</span></span></code></pre></div><p>输出变成了（直到我手动终止了程序）：</p><div class=highlight><pre tabindex=0 style=color:#93a1a1;background-color:#002b36;-moz-tab-size:2;-o-tab-size:2;tab-size:2><code class=language-txt data-lang=txt><span style=display:flex><span>Main thread is 603935
+</span></span><span style=display:flex><span>Thread 603936 starts
+</span></span><span style=display:flex><span>[262391.240335037] Handler thread is 603935
+</span></span><span style=display:flex><span>[262391.741273532] Handler thread is 603935
+</span></span><span style=display:flex><span>[262391.741274174] Handler thread is 603936
+</span></span><span style=display:flex><span>[262392.242183857] Handler thread is 603935
+</span></span><span style=display:flex><span>[262392.743225834] Handler thread is 603935
+</span></span><span style=display:flex><span>[262393.244485002] Handler thread is 603935
+</span></span><span style=display:flex><span>[262393.244486029] Handler thread is 603936
+</span></span><span style=display:flex><span>[262393.745667295] Handler thread is 603936
+</span></span><span style=display:flex><span>[262393.745667013] Handler thread is 603935
+</span></span><span style=display:flex><span>[262394.246845870] Handler thread is 603935
+</span></span><span style=display:flex><span>[262394.246845874] Handler thread is 603936
+</span></span><span style=display:flex><span>[262394.748568780] Handler thread is 603935
+</span></span><span style=display:flex><span>[262394.748608692] Handler thread is 603935
+</span></span><span style=display:flex><span>[262395.249990591] Handler thread is 603935
+</span></span><span style=display:flex><span>[262395.249990578] Handler thread is 603936
+</span></span><span style=display:flex><span>[262395.751949939] Handler thread is 603935
+</span></span><span style=display:flex><span>[262395.751949944] Handler thread is 603936
+</span></span><span style=display:flex><span>^C
+</span></span></code></pre></div><p>由于缓冲区刷新的顺序不同，需要对每一行按照时间排个序，排完顺序的结果是：</p><div class=highlight><pre tabindex=0 style=color:#93a1a1;background-color:#002b36;-moz-tab-size:2;-o-tab-size:2;tab-size:2><code class=language-txt data-lang=txt><span style=display:flex><span>// 1
+</span></span><span style=display:flex><span>[262391.240335037] Handler thread is 603935
+</span></span><span style=display:flex><span>// 2
+</span></span><span style=display:flex><span>[262391.741273532] Handler thread is 603935
+</span></span><span style=display:flex><span>[262391.741274174] Handler thread is 603936
+</span></span><span style=display:flex><span>// 3
+</span></span><span style=display:flex><span>[262392.242183857] Handler thread is 603935
+</span></span><span style=display:flex><span>// 4
+</span></span><span style=display:flex><span>[262392.743225834] Handler thread is 603935
+</span></span><span style=display:flex><span>// 5
+</span></span><span style=display:flex><span>[262393.244485002] Handler thread is 603935
+</span></span><span style=display:flex><span>[262393.244486029] Handler thread is 603936
+</span></span><span style=display:flex><span>// 6
+</span></span><span style=display:flex><span>[262393.745667013] Handler thread is 603935
+</span></span><span style=display:flex><span>[262393.745667295] Handler thread is 603936
+</span></span><span style=display:flex><span>// 7
+</span></span><span style=display:flex><span>[262394.246845870] Handler thread is 603935
+</span></span><span style=display:flex><span>[262394.246845874] Handler thread is 603936
+</span></span><span style=display:flex><span>// 8
+</span></span><span style=display:flex><span>[262394.748568780] Handler thread is 603935
+</span></span><span style=display:flex><span>[262394.748608692] Handler thread is 603935
+</span></span><span style=display:flex><span>// 9
+</span></span><span style=display:flex><span>[262395.249990578] Handler thread is 603936
+</span></span><span style=display:flex><span>[262395.249990591] Handler thread is 603935
+</span></span><span style=display:flex><span>// 10
+</span></span><span style=display:flex><span>[262395.751949939] Handler thread is 603935
+</span></span><span style=display:flex><span>[262395.751949944] Handler thread is 603936
+</span></span></code></pre></div><p>我们对以上结果做出如下观察：</p><ol><li>主线程处理信号的次数（11 次）明显高于另外一个线程（6 次）。如果尝试交换 kill 命令的两个参数的顺序，则会得到相反的结果。这说明先得到信号的线程更容易处理信号。</li><li>发送的 $10 \times 2 = 20$ 个信号只触发了 17 次信号处理器。这说明每轮连续发两个信号，发得太快，进程来不及处理，就有信号被丢掉了（标准信号是不排队的）。</li><li>第 1 轮只有线程 603935 处理了一次信号。说明第二个信号被丢弃，同上。</li><li>第 2 轮线程 603935 和 603936 先后处理了信号。</li><li>第 9 轮线程 603936 和 603935 先后处理了信号。尽管 <code>kill</code> 命令首先以线程 603935 为参数调用了 kill(2)（因而内核会优先考虑此线程），但却是 603936 先处理信号。这里两个线程同时被 <code>signal_wake_up_state()</code> 通知有信号要处理，也同时被非抢占式调度，因此 603936 也有处理信号的资格。<mark>这说明 <code>kill()</code> 的作用对象是整个进程，尽力、但不能保证让给定线程先处理信号</mark>。从这里就有了本文的结论。</li><li>第 8 轮线程 603935 处理了两次信号。而第二个信号本是发给另外一个线程的，这也说明了 <code>kill()</code> 不能保证特定线程一定会处理信号。信号处理只发生在从内核态到用户态的转换期间，可能另外一个线程就是很不幸。</li></ol><p><strong>如果我们向同一个线程连续发送两次信号呢</strong>？</p><div class=highlight><pre tabindex=0 style=color:#93a1a1;background-color:#002b36;-moz-tab-size:2;-o-tab-size:2;tab-size:2><code class=language-bash data-lang=bash><span style=display:flex><span><span style=color:#719e07>for</span> i in <span style=color:#719e07>{</span>1..10<span style=color:#719e07>}</span>; <span style=color:#719e07>do</span> <span style=color:#b58900>kill</span> -SIGCHLD <span style=color:#2aa198>609380</span> <span style=color:#719e07>&amp;&amp;</span> <span style=color:#b58900>kill</span> -SIGCHLD <span style=color:#2aa198>609380</span> <span style=color:#719e07>&amp;&amp;</span> sleep 0.5; <span style=color:#719e07>done</span>
+</span></span></code></pre></div><p>进程的输出（已排序）为：</p><div class=highlight><pre tabindex=0 style=color:#93a1a1;background-color:#002b36;-moz-tab-size:2;-o-tab-size:2;tab-size:2><code class=language-txt data-lang=txt><span style=display:flex><span>Main thread is 609380
+</span></span><span style=display:flex><span>Thread 609381 starts
+</span></span><span style=display:flex><span>[264162.393963823] Handler thread is 609380
+</span></span><span style=display:flex><span>[264162.393964050] Handler thread is 609381
+</span></span><span style=display:flex><span>[264162.895081060] Handler thread is 609380
+</span></span><span style=display:flex><span>[264162.895087744] Handler thread is 609381
+</span></span><span style=display:flex><span>[264163.396078337] Handler thread is 609380
+</span></span><span style=display:flex><span>[264163.396088351] Handler thread is 609381
+</span></span><span style=display:flex><span>[264163.896908446] Handler thread is 609380
+</span></span><span style=display:flex><span>[264163.896919921] Handler thread is 609381
+</span></span><span style=display:flex><span>[264164.398372334] Handler thread is 609380
+</span></span><span style=display:flex><span>[264164.398379726] Handler thread is 609381
+</span></span><span style=display:flex><span>[264164.899537885] Handler thread is 609380
+</span></span><span style=display:flex><span>[264164.899547803] Handler thread is 609381
+</span></span><span style=display:flex><span>[264165.400854500] Handler thread is 609380
+</span></span><span style=display:flex><span>[264165.400863351] Handler thread is 609381
+</span></span><span style=display:flex><span>[264165.902220393] Handler thread is 609380
+</span></span><span style=display:flex><span>[264165.902241006] Handler thread is 609381
+</span></span><span style=display:flex><span>[264166.404214382] Handler thread is 609380
+</span></span><span style=display:flex><span>[264166.404235346] Handler thread is 609381
+</span></span><span style=display:flex><span>[264166.906002041] Handler thread is 609380
+</span></span><span style=display:flex><span>[264166.906025397] Handler thread is 609381
+</span></span></code></pre></div><p>可能是因为调用了两次 <code>kill</code> 命令，中间有延迟，所以信号都被及时处理、没有丢弃。可以看出先是主线程处理信号，然后由另外一个线程处理信号（这是因为主线程处理信号期间屏蔽了相同信号，只有另外一个线程能处理信号）。</p><h1 id=结论>结论
+<a class=header-anchor href=#%e7%bb%93%e8%ae%ba></a></h1><p><code>kill</code> 命令和 <code>kill()</code> 系统调用发送信号时，会将信号发给 pid 参数所在的线程组（也就是进程），同时会优先考虑 pid 参数所表示的线程。但它们不保证该线程总能处理信号：即便给定线程具备处理信号的条件，也可能由其他同样具备处理信号条件的线程先处理信号（但是触发条件比较极端）。</p><p>用 <code>kill</code> 发给进程信号时，如果给的 PID 就是进程号，那么信号会优先发给主线程（只是优先），不保证真正处理这个信号的是主线程。</p></div><footer class=post-footer><div class=post-tags><a href=/tags/the-linux-programming-interface>the-linux-programming-interface</a></div><div class=addthis_inline_share_toolbox style=text-align:center></div><hr><div class=post-nav><div class="post-nav-next post-nav-item"><a href=/the-linux-programming-interface/33-%E7%BA%BF%E7%A8%8B%E7%9A%84%E6%9B%B4%E5%A4%9A%E7%BB%86%E8%8A%82/ rel=next title="33 线程的更多细节"><i class="fa fa-chevron-left"></i> 33 线程的更多细节</a></div><div class="post-nav-prev post-nav-item"><a href=/the-linux-programming-interface/31-%E7%BA%BF%E7%A8%8B%E7%89%B9%E6%9C%89%E6%95%B0%E6%8D%AETSD%E5%92%8C%E7%BA%BF%E7%A8%8B%E5%B1%80%E9%83%A8%E5%AD%98%E5%82%A8TLS/ rel=prev title="31 线程特有数据（TSD）和线程局部存储（TLS）">31 线程特有数据（TSD）和线程局部存储（TLS）
+<i class="fa fa-chevron-right"></i></a></div></div></footer></article></div></div></main><footer class=footer><div class=footer-inner><div class=copyright>&copy;
+<span itemprop=copyrightYear>2023 - 2025
+</span><span class=with-love><i class="fa fa-heart"></i>
+</span><span class=author itemprop=copyrightHolder>🤖</span></div><div class=powered-by>由 <a href=https://gohugo.io title=0.143.1 target=_blank>Hugo</a> & <a href=https://github.com/hugo-next/hugo-theme-next title=4.5.3 target=_blank>Hugo NexT.Gemini</a> 强力驱动</div></div></footer><script type=text/javascript src=https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.1/anime.min.js defer></script><script type=text/javascript src=https://cdnjs.cloudflare.com/ajax/libs/medium-zoom/1.1.0/medium-zoom.min.js defer></script><script class=next-config data-name=main type=application/json>{"bookmark":{"color":"#222","enable":false,"save":"manual"},"copybtn":true,"darkmode":false,"hostname":"https://hxhue.github.io/","i18n":{"ds_day":" 天前","ds_days":" 天 ","ds_hour":" 小时前","ds_hours":" 小时 ","ds_just":"刚刚","ds_min":" 分钟前","ds_mins":" 分钟","ds_month":" 个月前","ds_years":" 年 ","empty":"没有找到任何搜索结果：${query}","hits":"找到 ${hits} 个搜索结果","hits_time":"找到 ${hits} 个搜索结果（用时 ${time} 毫秒）","placeholder":"搜索..."},"lang":"zh-CN","lazyload":false,"localSearch":{"enable":true,"limit":1e3,"path":"/searchindexes.xml","preload":false,"topnperarticle":-1,"trigger":"auto","unescape":false},"motion":{"async":true,"enable":false,"transition":{"collheader":"fadeInLeft","menu_item":"fadeInDown","postblock":"fadeIn","postbody":"fadeInDown","postheader":"fadeInDown","sidebar":"fadeInUp"}},"postmeta":{"comments":{"enable":false,"plugin":"waline"},"views":{"enable":false,"plugin":"busuanzi"}},"root":"/","scheme":"Gemini","sidebar":{"display":"post","offset":12,"padding":18,"position":"left","width":256},"vendor":{"plugins":"cdnjs","router":"https://cdnjs.cloudflare.com/ajax/libs"},"version":"4.5.3"}</script><script type=text/javascript src=/js/main.min.37ba8b54f9d4d784d08028c45eea93b5d4e13eda8ee7fb0d2edd6f3fac66cfd2.js defer></script></body></html>

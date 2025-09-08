@@ -1,0 +1,449 @@
+/* 还有一部分注入见 themes/hugo-theme-next/layouts/partials/head/style.html */
+
+/**********************************************************
+ *                         basic                          *
+ **********************************************************/
+/* 声称这个字体能够提供 100 到 900 中所有字重，这样 Firefox 就不会对表情符号字体变形 */
+@font-face {
+    font-family: 'Twemoji';
+    src: url('/fonts/twemoji.ttf') format("truetype");
+    font-display: swap;
+    font-weight: 100 900;
+    unicode-range: U+1F600-1F64F; /* emojis */
+}
+
+/* 覆盖正文字体，参考 themes/hugo-theme-next/assets/css/_common/scaffolding/base.scss */
+body,
+h1,
+h2,
+h3,
+h4,
+h5,
+h6,
+p,
+a,
+div,
+.post-body {
+    /* font-family: "Noto Sans", Twemoji, "Noto Sans SC", sans-serif !important; */
+    font-family: Twemoji, 'PingFang SC', 'Hiragino Sans GB', 'Source Han Sans CN', 'Source Han Sans SC', 
+        'Noto Sans SC', 'Microsoft YaHei', 'Wenquanyi Micro Hei', 'WenQuanYi Zen Hei', 'ST Heiti', SimHei,
+        'WenQuanYi Zen Hei Sharp', -apple-system, 'Helvetica Neue', Helvetica, 'Nimbus Sans L', Arial, 
+        'Liberation Sans', sans-serif !important;
+    font-optical-sizing: auto !important;
+    font-style: normal !important;
+}
+
+/* 这里原来是 .post-body a 可以换行，现在为了照顾标题全都可以换行 */
+a {
+    word-break: break-all !important;
+}
+
+ol, ul {
+    padding-left: 1.5em;
+}
+
+/* 脚注 */
+.footnote-ref {
+    color: red;
+}
+
+/* 适用于内部含有 code 等的 a 标签。为了解决标签的横线被代码块遮住的问题。 */
+a:has(:is(code, .godbolt-code-preview)) {
+    padding-bottom: 2px;
+}
+
+u {
+    text-decoration: none !important;
+    border-bottom: 1px solid var(--text-color) !important;
+}
+
+/* Customize <del> */
+/* del {
+    color: #ddd;
+} */
+
+/* [data-theme="dark"] del {
+    color: #555;
+} */
+/* Customize <del> */
+
+#TableOfContents li {
+    line-height: 1.25em;
+    margin: 0.75em 0;
+}
+
+#TableOfContents ul :last-child {
+    margin-bottom: 0;
+}
+
+.search-input {
+    height: 100%;
+}
+
+/**********************************************************
+ *                          RSS                           *
+ **********************************************************/
+
+.rss-button {
+    border: none;
+    padding: 4px 3px;
+    border-radius: 4px;
+    margin-right: 4px;
+}
+
+.rss-button:hover {
+    background-color: var(--body-bg-color);
+    color: #fc6423;
+}
+
+.subscript-one::after {
+    content: "₁";
+    vertical-align: sub;
+}
+
+.subscript-two::after {
+    content: "₂";
+    vertical-align: sub;
+}
+
+/**********************************************************
+ *                      阅读更多的遮罩                       *
+ **********************************************************/
+
+/* desktop, tablet and mobile: themes/hugo-theme-next/assets/css/_mixins.scss */
+@media (min-width: 992px) {
+    /* .readmore-overlay {
+        margin: auto -40px;
+        transform: translateY(calc(-100% + 40px));
+    } */
+}
+
+@media (min-width: 768px) and (max-width: 991px) {
+    /* .readmore-overlay {
+        margin: auto -10px;
+        transform: translateY(calc(-100% + 10px));
+    } */
+}
+
+@media (max-width: 767px) {
+    /* .readmore-overlay {
+        margin: auto -8px;
+        transform: translateY(calc(-100% + 8px - 1px));
+    } */
+    .no-more-to-read {
+        margin-bottom: 6px;
+    }
+}
+
+/* themes/hugo-theme-next/layouts/partials/post/footer.html */
+/* .readmore-overlay {
+    bottom: 0;
+    height: 200px;
+    margin-bottom: -200px;
+    pointer-events: none;
+    z-index: 1;
+    --overlay-color: var(--content-bg-color);
+    background: linear-gradient(rgb(from var(--overlay-color) r g b / .0) 0%,
+            var(--overlay-color) 72%);
+} */
+
+/* .readmore-overlay-center {
+    margin: 0;
+    position: absolute;
+    left: 50%;
+    bottom: 40px;
+    -ms-transform: translate(-50%, 0%);
+    transform: translate(-50%, 0%);
+} */
+
+/* .readmore-overlay .post-button {
+    margin: 0;
+    pointer-events: all;
+} */
+
+/* .post-block:has(.readmore-overlay) .post-body {
+    max-height: 500px;
+    overflow: hidden;
+} */
+
+[readmore="false"] .readmore-overlay {
+    display: none;
+}
+
+[readmore="true"] .no-more-to-read {
+    display: none;
+}
+
+/**********************************************************
+ *                          code                          *
+ **********************************************************/
+pre,
+code {
+    font-family: 'JetBrains Mono NL', 'Consolas', 'Menlo', 'Roboto Mono', 'Source Code Pro', monospace;
+    word-break: break-word;
+    font-size: 0.95em;
+}
+
+/* hugo-theme-next 中的 p>code, li>code 不能保证 strong 和 i 标签中的显示正常 */
+:not(:is(pre, span))>code {
+    padding: 0px 3px !important;
+    border-radius: 3px !important;
+}
+
+#TableOfContents code {
+    padding: 0px 3px !important;
+}
+
+mark {
+    padding: 2px 0 !important;
+}
+
+:not(pre)>code {
+    background-color: #eee !important;
+}
+
+/* 内联代码 */
+code {
+    color: #555 !important;
+}
+
+pre {
+    background-color: #f7f7f7 !important;
+    /* 原本只有 div.highlight 才有 margin-bottom，但是有些代码块是没有高亮的（比如没标注语言） */
+    margin-bottom: 26px;
+    border-radius: 3px;
+}
+
+.highlight {
+    display: block;
+    background: var(--background-color);
+    width: 100%;
+}
+
+/* 2024年9月10日：修复 GitHub 风格警告块中最后一个元素为代码块时有大量空白。div.highlight 已经有规则了，就不要把 margin 加在 pre 上了。 */
+.highlight>pre {
+    display: block;
+    margin-bottom: 0;
+    padding: 0;
+    width: 100%;
+}
+
+.highlight>pre>code {
+    display: flex;
+    flex-wrap: wrap;
+    flex-direction: column;
+    padding: 18px;
+}
+
+[data-theme="dark"] code {
+    background-color: #1b1b1b !important;
+    color: #ddd !important;
+}
+
+[data-theme="dark"] pre {
+    background-color: #0d1117 !important;
+}
+
+[data-theme="dark"] pre code span[font-weight=700] {
+    color: #ffffff;
+}
+
+/* 修改正文的字间距，没想好怎么改 */
+.post-body {
+    /* line-height: 1.8; */
+    line-height: 1.65;
+
+    blockquote>* :not(:is(:last-child, svg)) {
+        margin-bottom: 1.8em;
+    }
+}
+
+/* 代码块字体和行高 */
+pre span {
+    line-height: 1.6em;
+    font-size: 1em;
+}
+
+/* mermaid */
+.mermaid > svg, .language-mermaid > svg {
+    margin: auto;
+    display: block;
+    overflow: scroll;
+}
+
+/**********************************************************
+ *                        image                           *
+ **********************************************************/
+.viewer-container {
+    background-clip: border-box;
+    background-color: rgba(0, 0, 0, 0.7);
+    position: fixed !important;
+}
+
+/* :root {
+    --custom-viewer-open-padding-r: 0px;
+    --custom-viewer-open-margin-r: 16px;
+} */
+
+.tool-buttons {
+    position: fixed !important;
+    right: auto;
+    left: 30px;
+    bottom: 25px !important;
+}
+
+/* viewerjs 改样式，以免打开图片的时候 body 宽度变化、文字跟着伸缩 */
+/* static/js/fix-viewerjs.js 会动态修改这两个属性 */
+/* body.viewer-open {
+    padding-right: var(--custom-viewer-open-padding-r) !important;
+    margin-right: var(--custom-viewer-open-margin-r) !important;
+} */
+
+.post-body img,
+.viewer-container img,
+.medium-zoom-image {
+    background-color: white;
+}
+
+/**********************************************************
+ *                     medium-zoom                        *
+ **********************************************************/
+/* medium-zoom 需要适配黑暗模式 */
+[data-theme="dark"] .medium-zoom-overlay {
+    background-color: #282828 !important;
+}
+
+/**********************************************************
+ *                     github alerts                      *
+ **********************************************************/
+blockquote {
+    margin-bottom: 1.25em;
+}
+
+blockquote :last-child {
+    margin-bottom: 0;
+}
+
+blockquote :first-child {
+    margin-top: 0;
+}
+
+/* Github 风格报警框 */
+.markdown-body {
+    background: #22272e;
+    color: #adbac7;
+}
+
+.markdown-alert {
+    padding: 0.5em 1em;
+    margin-bottom: 1em;
+    color: inherit;
+    border-left: 0.25em solid #444c56;
+}
+
+.markdown-alert .markdown-alert-title .octicon {
+    margin-right: 0.5rem;
+    display: inline-block;
+    overflow: visible !important;
+    vertical-align: text-bottom;
+    fill: currentColor;
+}
+
+.markdown-alert>:first-child {
+    margin-top: 0
+}
+
+.markdown-alert>:last-child {
+    margin-bottom: 0
+}
+
+.markdown-alert-title {
+    display: inline-flex;
+    align-items: center;
+    font-weight: 500;
+    margin-top: 0;
+    line-height: 1;
+}
+
+.markdown-alert-note {
+    border-left-color: #539bf5;
+}
+
+.markdown-alert-tip {
+    border-left-color: #57ab5a;
+}
+
+.markdown-alert-important {
+    border-left-color: #986ee2;
+}
+
+.markdown-alert-warning {
+    border-left-color: #c69026;
+}
+
+.markdown-alert-caution {
+    border-left-color: #e5534b;
+}
+
+.markdown-alert-note>.markdown-alert-title {
+    color: #539bf5;
+    fill: #539bf5;
+}
+
+.markdown-alert-tip>.markdown-alert-title {
+    color: #57ab5a;
+    fill: #57ab5a;
+}
+
+.markdown-alert-important>.markdown-alert-title {
+    color: #986ee2;
+    fill: #986ee2;
+}
+
+.markdown-alert-warning>.markdown-alert-title {
+    color: #c69026;
+    fill: #c69026;
+}
+
+.markdown-alert-caution>.markdown-alert-title {
+    color: #e5534b;
+    fill: #e5534b;
+}
+
+.mr-2 {
+    margin-right: 0.5rem;
+}
+
+/**********************************************************
+ *                compiler-explorer links                 *
+ **********************************************************/
+.godbolt-code-preview {
+    position: relative;
+    display: inline-block;
+}
+
+.godbolt-code-preview .tooltip {
+    padding: 8px;
+    position: absolute;
+    z-index: 1;
+    bottom: 100%;
+    left: 50%;
+    transform: translateX(-50%);
+    transition: opacity 0.25s ease-out;
+    opacity: 0;
+    width: 0px;
+    height: 200px;
+}
+
+.godbolt-code-preview .tooltip iframe {
+    background-color: #f7f7f7;
+    border-radius: 4px;
+    border: 1px solid #bbb !important;
+    padding: 0 8px;
+    width: 100%;
+    height: 100%;
+}
+
+.emoji {
+    display: inline-flex;
+}
