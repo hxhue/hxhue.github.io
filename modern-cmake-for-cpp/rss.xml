@@ -1,0 +1,205 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Modern-Cmake-for-Cpps on Bluegill</title><link>https://hxhue.github.io/modern-cmake-for-cpp/</link><description>Recent content in Modern-Cmake-for-Cpps on Bluegill</description><generator>Hugo</generator><language>zh-CN</language><lastBuildDate>Sat, 26 Apr 2025 00:00:00 +0800</lastBuildDate><atom:link href="https://hxhue.github.io/modern-cmake-for-cpp/rss.xml" rel="self" type="application/rss+xml"/><item><title>chapter01 - basic</title><link>https://hxhue.github.io/modern-cmake-for-cpp/chapter01-basic/</link><pubDate>Thu, 01 Feb 2024 00:00:00 +0800</pubDate><guid>https://hxhue.github.io/modern-cmake-for-cpp/chapter01-basic/</guid><description>&lt;p>三个 stages：配置、生成、构建。&lt;/p>
+&lt;p>配置会生成 CMakeCache。生成是用它去生成 build tree 的其他内容。&lt;/p>
+&lt;h1 id="generating-a-build-system">Generating a Build System
+&lt;a class="header-anchor" href="#generating-a-build-system">&lt;/a>
+&lt;/h1>&lt;p>&lt;strong>生成 build tree&lt;/strong>：&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" style="color:#93a1a1;background-color:#002b36;-moz-tab-size:2;-o-tab-size:2;tab-size:2;">&lt;code class="language-bash" data-lang="bash">&lt;span style="display:flex;">&lt;span>cmake -B build/ -S source/
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>最好不要使用无参数的 cmake。&lt;/p></description></item><item><title>chapter02 - cmake language</title><link>https://hxhue.github.io/modern-cmake-for-cpp/chapter02-cmake-language/</link><pubDate>Thu, 01 Feb 2024 00:00:00 +0800</pubDate><guid>https://hxhue.github.io/modern-cmake-for-cpp/chapter02-cmake-language/</guid><description>&lt;h1 id="comments">Comments
+&lt;a class="header-anchor" href="#comments">&lt;/a>
+&lt;/h1>&lt;ol>
+&lt;li>使用 &lt;code>#&lt;/code>&lt;/li>
+&lt;li>使用 &lt;code>#[=[&lt;/code> 和 &lt;code>#]=]&lt;/code>（&lt;strong>这种块注释是可以嵌套的&lt;/strong>）&lt;/li>
+&lt;/ol>
+&lt;p>如果 &lt;code>#[=[&lt;/code> 前面还有 &lt;code>#&lt;/code>，那么块注释开始标志本身被注释了。后续的块注释结束标志被认为是普通的单行注释。&lt;/p></description></item><item><title>chapter02.a - 总结常用的 CMake 变量</title><link>https://hxhue.github.io/modern-cmake-for-cpp/chapter02.a-%E6%80%BB%E7%BB%93%E5%B8%B8%E7%94%A8%E7%9A%84-CMake-%E5%8F%98%E9%87%8F/</link><pubDate>Thu, 01 Feb 2024 00:00:00 +0800</pubDate><guid>https://hxhue.github.io/modern-cmake-for-cpp/chapter02.a-%E6%80%BB%E7%BB%93%E5%B8%B8%E7%94%A8%E7%9A%84-CMake-%E5%8F%98%E9%87%8F/</guid><description>&lt;h1 id="project_">&lt;code>PROJECT_*&lt;/code>
+&lt;a class="header-anchor" href="#project_">&lt;/a>
+&lt;/h1>&lt;div class="highlight">&lt;pre tabindex="0" style="color:#93a1a1;background-color:#002b36;-moz-tab-size:2;-o-tab-size:2;tab-size:2;">&lt;code class="language-cmake" data-lang="cmake">&lt;span style="display:flex;">&lt;span>PROJECT_SOURCE_DIR
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>PROJECT_BINARY_DIR
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;blockquote>
+ &lt;p>不存在 &lt;code>PROJECT_LIST_DIR&lt;/code>。&lt;/p>
+&lt;/blockquote>&lt;p>&lt;code>PROJECT_*&lt;/code> 变量会随着 &lt;code>project&lt;/code> 命令的出现而变更。&lt;/p>
+&lt;h1 id="cmake_">&lt;code>CMAKE_*&lt;/code>
+&lt;a class="header-anchor" href="#cmake_">&lt;/a>
+&lt;/h1>&lt;div class="highlight">&lt;pre tabindex="0" style="color:#93a1a1;background-color:#002b36;-moz-tab-size:2;-o-tab-size:2;tab-size:2;">&lt;code class="language-cmake" data-lang="cmake">&lt;span style="display:flex;">&lt;span>CMAKE_SOURCE_DIR
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>CMAKE_BINARY_DIR
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;blockquote>
+ &lt;p>也不存在 &lt;code>CMAKE_LIST_DIR&lt;/code>。&lt;/p>
+&lt;/blockquote>&lt;p>和本次 cmake 命令有关。&lt;/p>
+&lt;h1 id="cmake_current_">&lt;code>CMAKE_CURRENT_*&lt;/code>
+&lt;a class="header-anchor" href="#cmake_current_">&lt;/a>
+&lt;/h1>&lt;p>通过 VS Code 补全可以看到有很多变量：&lt;/p>
+&lt;p>
+
+
+
+
+
+
+&lt;img src="https://hxhue.github.io/assets/c2942a998b7d4d905c57a2b327ae58ab.webp">&lt;/p>
+&lt;p>其中 &lt;code>LIST&lt;/code> 和 &lt;code>SOURCE&lt;/code> 的区别是：&lt;code>include&lt;/code> 会直接将 cmake 文件插入进来，这个时候不会改变 &lt;code>SOURCE&lt;/code>，但是会改变 &lt;code>LIST&lt;/code>。所以为了表示文件的相对位置一般还是用 LIST 吧？&lt;/p></description></item><item><title>chapter03 - first cmake project</title><link>https://hxhue.github.io/modern-cmake-for-cpp/chapter03-first-cmake-project/</link><pubDate>Thu, 01 Feb 2024 00:00:00 +0800</pubDate><guid>https://hxhue.github.io/modern-cmake-for-cpp/chapter03-first-cmake-project/</guid><description>&lt;h1 id="cmake_minimal_required">cmake_minimal_required
+&lt;a class="header-anchor" href="#cmake_minimal_required">&lt;/a>
+&lt;/h1>&lt;p>&lt;code>cmake_minimal_required(VERSION xxx)&lt;/code> 是项目都应该有的说明。因为它指定了最小的版本，而且还会隐式去调用 &lt;code>cmake_policy&lt;/code>，这样即便 cmake 版本更新了，policy 没变，旧项目仍然可以正常构建。&lt;/p></description></item><item><title>chapter04 - targets</title><link>https://hxhue.github.io/modern-cmake-for-cpp/chapter04-targets/</link><pubDate>Thu, 01 Feb 2024 00:00:00 +0800</pubDate><guid>https://hxhue.github.io/modern-cmake-for-cpp/chapter04-targets/</guid><description>&lt;h1 id="创建-target">创建 target
+&lt;a class="header-anchor" href="#%e5%88%9b%e5%bb%ba-target">&lt;/a>
+&lt;/h1>&lt;p>三种方式：&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" style="color:#93a1a1;background-color:#002b36;-moz-tab-size:2;-o-tab-size:2;tab-size:2;">&lt;code class="language-cmake" data-lang="cmake">&lt;span style="display:flex;">&lt;span>add_executable &lt;span style="color:#586e75"># 默认在 ALL 中
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#586e75">&lt;/span>add_library &lt;span style="color:#586e75"># 默认在 ALL 中
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#586e75">&lt;/span>add_custom_target &lt;span style="color:#586e75"># 默认不在 ALL 中
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#586e75"># add_custom_command 是创建文件的方式，但是不是创建 target
+&lt;/span>&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>&lt;code>add_library&lt;/code>: &lt;a href="https://cmake.org/cmake/help/latest/command/add_library.html#object-libraries" title="https://cmake.org/cmake/help/latest/command/add_library.html#object-libraries" rel="noopener external nofollow noreferrer"
+ target="_blank" class=" exturl" >https://cmake.org/cmake/help/latest/command/add_library.html#object-libraries&lt;i class="fa fa-external-link-alt">&lt;/i>&lt;/a>&lt;/p>
+&lt;ul>
+&lt;li>Normal library: 如果不指定 &lt;code>STATIC&lt;/code>/&lt;code>SHARED&lt;/code>/&lt;code>MODULE&lt;/code>，&lt;code>add_library&lt;/code> 会根据 &lt;code>BUILD_SHARED_LIBS&lt;/code> 变量去决定是否使用 &lt;code>SHARED&lt;/code> 还是 &lt;code>STATIC&lt;/code>。&lt;/li>
+&lt;li>Object library: 生成目标文件。&lt;/li>
+&lt;li>Interface library：不生成文件。用来打包传播属性。&lt;/li>
+&lt;li>Imported library：&lt;code>IMPORTED&lt;/code> 属性和 &lt;code>STATIC&lt;/code> 等是可以叠加的。&lt;code>IMPORTED&lt;/code> 库是&lt;strong>已经被编译好的库&lt;/strong>，不需要另外编译，但是需要用 &lt;code>set_target_property&lt;/code> 来设置其位置。&lt;/li>
+&lt;li>Alias library&lt;/li>
+&lt;/ul>
+&lt;p>&lt;code>add_custom_target&lt;/code> 可以有多条命令，而且不一定有产物。&lt;code>add_custom_target&lt;/code> 创建的 target 是默认不 ALL 的！和 &lt;code>add_custom_command&lt;/code> 的对比看后文。&lt;/p></description></item><item><title>chapter04.a - 梳理依赖是如何创建的</title><link>https://hxhue.github.io/modern-cmake-for-cpp/chapter04.a-%E6%A2%B3%E7%90%86%E4%BE%9D%E8%B5%96%E6%98%AF%E5%A6%82%E4%BD%95%E5%88%9B%E5%BB%BA%E7%9A%84/</link><pubDate>Thu, 01 Feb 2024 00:00:00 +0800</pubDate><guid>https://hxhue.github.io/modern-cmake-for-cpp/chapter04.a-%E6%A2%B3%E7%90%86%E4%BE%9D%E8%B5%96%E6%98%AF%E5%A6%82%E4%BD%95%E5%88%9B%E5%BB%BA%E7%9A%84/</guid><description>&lt;p>我认为的依赖有两种：&lt;/p>
+&lt;ol>
+&lt;li>文件依赖（sources）既有同级依赖（比如 &lt;code>add_custom_command&lt;/code> 的 &lt;code>DEPENDS&lt;/code> 参数），又有 targets 到 sources 的依赖。&lt;/li>
+&lt;li>target 依赖是一种 targets 之间的同级依赖关系。&lt;/li>
+&lt;/ol>
+&lt;h1 id="target-依赖">Target 依赖
+&lt;a class="header-anchor" href="#target-%e4%be%9d%e8%b5%96">&lt;/a>
+&lt;/h1>&lt;p>创建 target 可以用 &lt;code>add_executable&lt;/code>/&lt;code>add_library&lt;/code>/&lt;code>add_custom_target&lt;/code>。前面两个都默认包含在 all 中，而最后一个默认不包含在 all 中。此外，&lt;code>add_custom_target&lt;/code> 如果给的是命令，而不是依赖文件，则创建的 targets 永远处于“需要被构建”的状态；如果给的是文件，则就只是文件依赖。&lt;/p></description></item><item><title>chapter05 - compiling c++ sources</title><link>https://hxhue.github.io/modern-cmake-for-cpp/chapter05-compiling-c++-sources/</link><pubDate>Thu, 01 Feb 2024 00:00:00 +0800</pubDate><guid>https://hxhue.github.io/modern-cmake-for-cpp/chapter05-compiling-c++-sources/</guid><description>&lt;h1 id="initial-configuration">Initial configuration
+&lt;a class="header-anchor" href="#initial-configuration">&lt;/a>
+&lt;/h1>&lt;div class="highlight">&lt;pre tabindex="0" style="color:#93a1a1;background-color:#002b36;-moz-tab-size:2;-o-tab-size:2;tab-size:2;">&lt;code class="language-cmake" data-lang="cmake">&lt;span style="display:flex;">&lt;span>target_sources &lt;span style="color:#586e75"># 追加源码
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#586e75">&lt;/span>target_include_directories
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>target_compile_definitions
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>target_compile_options &lt;span style="color:#586e75"># 不能跨平台
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#586e75">&lt;/span>target_compile_features &lt;span style="color:#586e75"># 对编译器要求某种特性
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#586e75">&lt;/span>target_precompile_headers
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;ul>
+&lt;li>用 &lt;code>target_sources&lt;/code> 中添加了头文件是会被过滤掉的，会形成依赖，但是不会真正被编译。&lt;/li>
+&lt;li>&lt;code>target_compile_features&lt;/code> 的特性非常多。一般也就只用 &lt;code>cxx_std_{98,11,14,17,20,23}&lt;/code> 这种语言标准，而不是具体的标准。&lt;/li>
+&lt;/ul>
+&lt;h1 id="preprocessor-configuration">Preprocessor configuration
+&lt;a class="header-anchor" href="#preprocessor-configuration">&lt;/a>
+&lt;/h1>&lt;p>&lt;code>target_compile_definitions&lt;/code> 能够自动去除多加的 &lt;code>-D&lt;/code>，不过最好还是不要加，因为这个命令本来就是用于跨平台的，不加风格更统一。&lt;/p></description></item><item><title>chapter06 - linking</title><link>https://hxhue.github.io/modern-cmake-for-cpp/chapter06-linking/</link><pubDate>Thu, 01 Feb 2024 00:00:00 +0800</pubDate><guid>https://hxhue.github.io/modern-cmake-for-cpp/chapter06-linking/</guid><description>&lt;h1 id="程序分段">程序分段
+&lt;a class="header-anchor" href="#%e7%a8%8b%e5%ba%8f%e5%88%86%e6%ae%b5">&lt;/a>
+&lt;/h1>&lt;p>
+
+
+
+
+
+
+&lt;img src="https://hxhue.github.io/assets/64c742277ee1ef7f3cdf8b9122b1f754.webp">&lt;/p>
+&lt;ul>
+&lt;li>
+&lt;p>.text section: Machine code, with all the instructions to be executed by the processor&lt;/p>
+&lt;/li>
+&lt;li>
+&lt;p>.data section: All values of the initialized global and static objects (variables)&lt;/p>
+&lt;/li>
+&lt;li>
+&lt;p>.bss section: All values of the uninitialized global and static objects (variables), which will be initialized to zero on program start&lt;/p>
+&lt;/li>
+&lt;li>
+&lt;p>.rodata section: All values of the constants (read-only data)&lt;/p>
+&lt;/li>
+&lt;li>
+&lt;p>.strtab section: 常量字符串的表&lt;/p>
+&lt;/li>
+&lt;li>
+&lt;p>.shstrtab section: 每个 section 的名称字符串的表&lt;/p></description></item><item><title>chapter07 - managing dependencies</title><link>https://hxhue.github.io/modern-cmake-for-cpp/chapter07-managing-dependencies/</link><pubDate>Thu, 01 Feb 2024 00:00:00 +0800</pubDate><guid>https://hxhue.github.io/modern-cmake-for-cpp/chapter07-managing-dependencies/</guid><description>&lt;h1 id="best-option-find_package">Best option: &lt;code>find_package&lt;/code>
+&lt;a class="header-anchor" href="#best-option-find_package">&lt;/a>
+&lt;/h1>&lt;p>&lt;a href="https://cmake.org/cmake/help/latest/command/find_package.html" title="https://cmake.org/cmake/help/latest/command/find_package.html" rel="noopener external nofollow noreferrer"
+ target="_blank" class=" exturl" >https://cmake.org/cmake/help/latest/command/find_package.html&lt;i class="fa fa-external-link-alt">&lt;/i>&lt;/a>&lt;/p>
+&lt;p>有三种工作模式。&lt;/p>
+&lt;h2 id="module-mode">Module mode
+&lt;a class="header-anchor" href="#module-mode">&lt;/a>
+&lt;/h2>&lt;p>&lt;code>Find&amp;lt;PackageName&amp;gt;.cmake&lt;/code>&lt;/p>
+&lt;p>主要是包外提供，比如 CMake、操作系统、或者写当前工程的人提供的试探性地去搜索库的方式。先找 &lt;code>CMAKE_MODULE_PATH&lt;/code>，然后就是 cmake 的安装目录。&lt;/p></description></item><item><title>chapter08 - testing</title><link>https://hxhue.github.io/modern-cmake-for-cpp/chapter08-testing/</link><pubDate>Thu, 01 Feb 2024 00:00:00 +0800</pubDate><guid>https://hxhue.github.io/modern-cmake-for-cpp/chapter08-testing/</guid><description>&lt;h1 id="ctest">CTest
+&lt;a class="header-anchor" href="#ctest">&lt;/a>
+&lt;/h1>&lt;h2 id="基本用法">基本用法
+&lt;a class="header-anchor" href="#%e5%9f%ba%e6%9c%ac%e7%94%a8%e6%b3%95">&lt;/a>
+&lt;/h2>&lt;p>&lt;mark>要使用 CTest 和相关的东西需要调用 &lt;code>enable_testing&lt;/code>。&lt;/mark>&lt;/p>
+&lt;p>ctest 是要在 build tree 执行的。&lt;/p>
+&lt;p>ctest 也能直接编译和运行（两步合为一步），但是要手动提供测试命令（有点奇怪）。&lt;/p></description></item><item><title>chapter09 - program analysis tools</title><link>https://hxhue.github.io/modern-cmake-for-cpp/chapter09-program-analysis-tools/</link><pubDate>Thu, 01 Feb 2024 00:00:00 +0800</pubDate><guid>https://hxhue.github.io/modern-cmake-for-cpp/chapter09-program-analysis-tools/</guid><description>&lt;h1 id="说明">说明
+&lt;a class="header-anchor" href="#%e8%af%b4%e6%98%8e">&lt;/a>
+&lt;/h1>&lt;p>这一章节是作者将一些分析工具以函数或内置支持的形式自动化地加入到了 CMake 构建工程的过程中了。&lt;/p>
+&lt;h1 id="格式化">格式化
+&lt;a class="header-anchor" href="#%e6%a0%bc%e5%bc%8f%e5%8c%96">&lt;/a>
+&lt;/h1>&lt;p>clang-format&lt;/p>
+&lt;h1 id="静态检查">静态检查
+&lt;a class="header-anchor" href="#%e9%9d%99%e6%80%81%e6%a3%80%e6%9f%a5">&lt;/a>
+&lt;/h1>&lt;ol>
+&lt;li>clang-tidy&lt;/li>
+&lt;li>cpplint（按照 Google Coding Style 检查）&lt;/li>
+&lt;li>cppcheck&lt;/li>
+&lt;li>include-what-you-use&lt;/li>
+&lt;li>link what you use（CMake 内置）&lt;/li>
+&lt;/ol>
+&lt;p>静态检查受到 CMake 的直接支持：&lt;/p></description></item><item><title>chapter10 - documents</title><link>https://hxhue.github.io/modern-cmake-for-cpp/chapter10-documents/</link><pubDate>Thu, 01 Feb 2024 00:00:00 +0800</pubDate><guid>https://hxhue.github.io/modern-cmake-for-cpp/chapter10-documents/</guid><description>&lt;h1 id="adding-doxygen-to-your-project">Adding Doxygen to your project
+&lt;a class="header-anchor" href="#adding-doxygen-to-your-project">&lt;/a>
+&lt;/h1>&lt;p>安装必要软件包：&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" style="color:#93a1a1;background-color:#002b36;-moz-tab-size:2;-o-tab-size:2;tab-size:2;">&lt;code class="language-bash" data-lang="bash">&lt;span style="display:flex;">&lt;span>apt-get install doxygen graphviz
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>然后就能在 CMake 中引入 Doxygen 包并使用 &lt;code>doxygen_add_docs&lt;/code>。&lt;/p>
+&lt;blockquote>
+ &lt;p>Since CMake 3.9, we can use the &lt;code>doxygen_add_docs()&lt;/code> function from &lt;code>FindDoxygen&lt;/code> find-module, which sets the documentation target up.&lt;/p>
+&lt;p>注意 FindDoxygen module 推荐使用方式是 find_package，虽然可以 include 但是不推荐。&lt;/p></description></item><item><title>chapter11 - installing and packaging</title><link>https://hxhue.github.io/modern-cmake-for-cpp/chapter11-installing-and-packaging/</link><pubDate>Thu, 01 Feb 2024 00:00:00 +0800</pubDate><guid>https://hxhue.github.io/modern-cmake-for-cpp/chapter11-installing-and-packaging/</guid><description>&lt;h1 id="exporting-without-installation">Exporting without installation
+&lt;a class="header-anchor" href="#exporting-without-installation">&lt;/a>
+&lt;/h1>&lt;p>使用 &lt;code>export&lt;/code> 命令可以创建导出文件，然后其他工程只要 include 这个导出文件就能使用当前这个包中的 target，而不需要先将这个包用 &lt;code>install&lt;/code> 安装在系统里。&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" style="color:#93a1a1;background-color:#002b36;-moz-tab-size:2;-o-tab-size:2;tab-size:2;">&lt;code class="language-cmake" data-lang="cmake">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#b58900">export&lt;/span>(&lt;span style="color:#2aa198">TARGETS&lt;/span> &lt;span style="color:#2aa198">[target1&lt;/span> &lt;span style="color:#2aa198">[target2&lt;/span> &lt;span style="color:#2aa198">[...]]]&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#2aa198">[NAMESPACE&lt;/span> &lt;span style="color:#2aa198">&amp;lt;namespace&amp;gt;]&lt;/span> &lt;span style="color:#2aa198">[APPEND]&lt;/span> &lt;span style="color:#2aa198">FILE&lt;/span> &lt;span style="color:#2aa198">&amp;lt;path&amp;gt;&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#2aa198">[EXPORT_LINK_INTERFACE_LIBRARIES]&lt;/span>
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;blockquote>
+ &lt;p>&lt;code>NAMESPACE&lt;/code> is recommended as a hint, stating that the target has been imported from other projects.&lt;/p></description></item><item><title>chapter11.a - 对比 export 和 install 命令</title><link>https://hxhue.github.io/modern-cmake-for-cpp/chapter11.a-%E5%AF%B9%E6%AF%94-export-%E5%92%8C-install-%E5%91%BD%E4%BB%A4/</link><pubDate>Thu, 01 Feb 2024 00:00:00 +0800</pubDate><guid>https://hxhue.github.io/modern-cmake-for-cpp/chapter11.a-%E5%AF%B9%E6%AF%94-export-%E5%92%8C-install-%E5%91%BD%E4%BB%A4/</guid><description>&lt;p>&lt;code>export&lt;/code> 和 &lt;code>install&lt;/code> 命令都有 &lt;code>TARGETS&lt;/code> 和 &lt;code>EXPORT&lt;/code> 两种参数形式，所以容易混淆：&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" style="color:#93a1a1;background-color:#002b36;-moz-tab-size:2;-o-tab-size:2;tab-size:2;">&lt;code class="language-cmake" data-lang="cmake">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#b58900">export&lt;/span> (&lt;span style="color:#2aa198">TARGETS&lt;/span> &lt;span style="color:#2aa198">...&lt;/span>)
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> 将给定的 targets 导出到 target export file，不会创建 named export
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#b58900">install&lt;/span>(&lt;span style="color:#2aa198">TARGETS&lt;/span> &lt;span style="color:#2aa198">...&lt;/span> &lt;span style="color:#2aa198">[EXPORT]&lt;/span> &lt;span style="color:#2aa198">...&lt;/span>)
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> 如果有 EXPORT，除了安装之外，还会顺便从 targets 创建 named export（有两个作用！！这个是我是检查了 cmake_install.cmake 的）
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#b58900">export&lt;/span> (&lt;span style="color:#2aa198">EXPORT&lt;/span> &lt;span style="color:#2aa198">...&lt;/span>)
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> 将 named export 导出到文件，可以指定名字空间
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#b58900">install&lt;/span>(&lt;span style="color:#2aa198">EXPORT&lt;/span> &lt;span style="color:#2aa198">...&lt;/span>)
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> 将 named export 安装到系统，和 &lt;span style="color:#b58900">export&lt;/span>(&lt;span style="color:#2aa198">EXPORT&lt;/span> &lt;span style="color:#2aa198">...&lt;/span>) 有相似的参数，同样可以指定名字空间
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>&lt;code>export&lt;/code> 命令用来导出 target export file。&lt;code>install&lt;/code> 命令用来安装文件到系统。在 target export file 的场景下，两者都能用于“安装”，但是前者一般是用在安装在临时路径上（参考 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ &lt;a href="https://hxhue.github.io/modern-cmake-for-cpp/chapter11-installing-and-packaging/#exporting-without-installation" title="Exporting without installation" >Exporting without installation&lt;/a>），而后者是用来安装进系统的。&lt;/p></description></item><item><title>chapter12 - full project</title><link>https://hxhue.github.io/modern-cmake-for-cpp/chapter12-full-project/</link><pubDate>Thu, 01 Feb 2024 00:00:00 +0800</pubDate><guid>https://hxhue.github.io/modern-cmake-for-cpp/chapter12-full-project/</guid><description>&lt;h1 id="总体结构">总体结构
+&lt;a class="header-anchor" href="#%e6%80%bb%e4%bd%93%e7%bb%93%e6%9e%84">&lt;/a>
+&lt;/h1>&lt;p>
+
+
+
+
+
+
+&lt;img src="https://hxhue.github.io/assets/910d063161cd1f14c4743331743ba2d5.webp">&lt;/p>
+&lt;h1 id="一些文件的分析">一些文件的分析
+&lt;a class="header-anchor" href="#%e4%b8%80%e4%ba%9b%e6%96%87%e4%bb%b6%e7%9a%84%e5%88%86%e6%9e%90">&lt;/a>
+&lt;/h1>&lt;p>chapter12/01-full-project/src/calc/CMakeLists.txt&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" style="color:#93a1a1;background-color:#002b36;-moz-tab-size:2;-o-tab-size:2;tab-size:2;">&lt;code class="language-cmake" data-lang="cmake">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#b58900">add_library&lt;/span>(&lt;span style="color:#2aa198">calc_obj&lt;/span> &lt;span style="color:#2aa198">OBJECT&lt;/span> &lt;span style="color:#2aa198">calc.cpp&lt;/span>)
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#b58900">target_include_directories&lt;/span>(&lt;span style="color:#2aa198">calc_obj&lt;/span> &lt;span style="color:#2aa198">INTERFACE&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#2aa198">&amp;#34;$&amp;lt;BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include&amp;gt;&amp;#34;&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#2aa198">&amp;#34;$&amp;lt;INSTALL_INTERFACE:${CMAKE_INSTALL_INCLUDEDIR}&amp;gt;&amp;#34;&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>)
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#b58900">set_target_properties&lt;/span>(&lt;span style="color:#2aa198">calc_obj&lt;/span> &lt;span style="color:#2aa198">PROPERTIES&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#2aa198">PUBLIC_HEADER&lt;/span> &lt;span style="color:#2aa198">src/calc/include/calc/calc.h&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#2aa198">POSITION_INDEPENDENT_CODE&lt;/span> &lt;span style="color:#2aa198">1&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>)
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#b58900">add_library&lt;/span>(&lt;span style="color:#2aa198">calc_shared&lt;/span> &lt;span style="color:#2aa198">SHARED&lt;/span>)
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#b58900">target_link_libraries&lt;/span>(&lt;span style="color:#2aa198">calc_shared&lt;/span> &lt;span style="color:#2aa198">calc_obj&lt;/span>)
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#b58900">add_library&lt;/span>(&lt;span style="color:#2aa198">calc_static&lt;/span> &lt;span style="color:#2aa198">STATIC&lt;/span>)
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#b58900">target_link_libraries&lt;/span>(&lt;span style="color:#2aa198">calc_static&lt;/span> &lt;span style="color:#2aa198">calc_obj&lt;/span>)
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>一些要点：&lt;/p>
+&lt;ol>
+&lt;li>target_include_directories 使用生成器表达式为 build 和 install 之后指定了不同的包含路径。导出 target export file 的话这个细节非常重要。&lt;/li>
+&lt;li>然后是设置对象的属性。因为我们的库不是 SHARED 类型而是 OBJECT 类型，所以不是默认 PIC 的。需要正确设置 POSITION_INDEPENDENT_CODE 属性（我们实验室项目是在全局编译选项中加入 &lt;code>-fPIC&lt;/code> 保证这一点的）。&lt;/li>
+&lt;/ol>
+&lt;p>chapter12/01-full-project/cmake/GetFTXUI.cmake&lt;/p></description></item></channel></rss>
