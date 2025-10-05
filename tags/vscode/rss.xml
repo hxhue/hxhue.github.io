@@ -1,0 +1,110 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Vscode on Bluegill</title><link>https://hxhue.github.io/tags/vscode/</link><description>Recent content in Vscode on Bluegill</description><generator>Hugo</generator><language>zh-CN</language><lastBuildDate>Sat, 26 Apr 2025 00:00:00 +0800</lastBuildDate><atom:link href="https://hxhue.github.io/tags/vscode/rss.xml" rel="self" type="application/rss+xml"/><item><title>VS Code 远程文件传输慢，寻找替代方案</title><link>https://hxhue.github.io/posts/cli/ssh/VS-Code-%E8%BF%9C%E7%A8%8B%E6%96%87%E4%BB%B6%E4%BC%A0%E8%BE%93%E6%85%A2%E5%AF%BB%E6%89%BE%E6%9B%BF%E4%BB%A3%E6%96%B9%E6%A1%88/</link><pubDate>Mon, 14 Apr 2025 00:00:00 +0800</pubDate><guid>https://hxhue.github.io/posts/cli/ssh/VS-Code-%E8%BF%9C%E7%A8%8B%E6%96%87%E4%BB%B6%E4%BC%A0%E8%BE%93%E6%85%A2%E5%AF%BB%E6%89%BE%E6%9B%BF%E4%BB%A3%E6%96%B9%E6%A1%88/</guid><description>&lt;h1 id="说明">说明
+&lt;a class="header-anchor" href="#%e8%af%b4%e6%98%8e">&lt;/a>
+&lt;/h1>&lt;p>从 Windows 的资源管理器拖动文件到连接到远程服务器的 VS Code 窗口，或者从 VS Code 文件目录下载文件，速度都比 scp 慢得多（3M/s VS 20M/s）。此文章尝试寻求其他替代方案。&lt;/p></description></item><item><title>在 VS Code 中从 C++ 调试 pybind</title><link>https://hxhue.github.io/posts/programming/python/%E5%9C%A8-VS-Code-%E4%B8%AD%E4%BB%8E-C++-%E8%B0%83%E8%AF%95-pybind/</link><pubDate>Tue, 05 Nov 2024 00:00:00 +0800</pubDate><guid>https://hxhue.github.io/posts/programming/python/%E5%9C%A8-VS-Code-%E4%B8%AD%E4%BB%8E-C++-%E8%B0%83%E8%AF%95-pybind/</guid><description>&lt;h1 id="使用-debugpy-调试">使用 debugpy 调试
+&lt;a class="header-anchor" href="#%e4%bd%bf%e7%94%a8-debugpy-%e8%b0%83%e8%af%95">&lt;/a>
+&lt;/h1>&lt;p>在被 C++ 调用的 python 文件中加上这样的内容（端口可以随便选）：&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" style="color:#93a1a1;background-color:#002b36;-moz-tab-size:2;-o-tab-size:2;tab-size:2;">&lt;code class="language-python" data-lang="python">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#719e07">import&lt;/span> debugpy
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>debugpy&lt;span style="color:#719e07">.&lt;/span>listen(&lt;span style="color:#2aa198">5678&lt;/span>)
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>debugpy&lt;span style="color:#719e07">.&lt;/span>wait_for_client()
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>这样在第一次加载这个 python 模块的时候，这行代码就会暂停等待调试器连接。我们可以创建这样的 Python 调试配置，随后连接正在监听端口的 python 程序。&lt;/p></description></item><item><title>VS Code 终端多重 conda 环境</title><link>https://hxhue.github.io/posts/developer/vscode/VS-Code-%E7%BB%88%E7%AB%AF%E5%A4%9A%E9%87%8D-conda-%E7%8E%AF%E5%A2%83/</link><pubDate>Thu, 26 Sep 2024 00:00:00 +0800</pubDate><guid>https://hxhue.github.io/posts/developer/vscode/VS-Code-%E7%BB%88%E7%AB%AF%E5%A4%9A%E9%87%8D-conda-%E7%8E%AF%E5%A2%83/</guid><description>&lt;p>准确的说是 conda 环境的提示重复了两次，实际上是同一个环境 &lt;code>env1&lt;/code>，但显示出来是 &lt;code>(env1) (env1)&lt;/code>。&lt;/p>
+&lt;p>解决方案：&lt;/p>
+&lt;ol>
+&lt;li>关闭 &lt;code>python.terminal.activateEnvironment&lt;/code>，然后重载工作区，防止自动加载。&lt;/li>
+&lt;li>或者关闭 conda 的自动激活：&lt;code>conda config --set auto_activate_base false&lt;/code>。&lt;/li>
+&lt;/ol>
+&lt;p>我觉得 2 更方便一点，因为 vscode 调试 python 程序还是需要自动激活的。&lt;/p></description></item><item><title>VS Code 无法使用 cuda-gdb 调试</title><link>https://hxhue.github.io/posts/developer/vscode/VS-Code-%E6%97%A0%E6%B3%95%E4%BD%BF%E7%94%A8-cuda-gdb-%E8%B0%83%E8%AF%95/</link><pubDate>Mon, 22 Apr 2024 00:00:00 +0800</pubDate><guid>https://hxhue.github.io/posts/developer/vscode/VS-Code-%E6%97%A0%E6%B3%95%E4%BD%BF%E7%94%A8-cuda-gdb-%E8%B0%83%E8%AF%95/</guid><description>&lt;p>创建 &lt;code>launch.json&lt;/code> 的时候找不到 &lt;code>cuda-gdb&lt;/code> 这个 type：需要安装 Nsight Visual Studio Code Edition：&lt;/p>
+&lt;p>
+
+
+
+
+
+
+&lt;img src="https://hxhue.github.io/assets/VS%20Code%20%E6%97%A0%E6%B3%95%E4%BD%BF%E7%94%A8%20cuda-gdb%20%E8%B0%83%E8%AF%95-20240422190718604.webp">&lt;/p></description></item><item><title>VS Code 错误：Remote Extension host terminated unexpectedly 3 times within the last 5 minutes.</title><link>https://hxhue.github.io/posts/developer/vscode/VS-Code-%E9%94%99%E8%AF%AFRemote-Extension-host-terminated-unexpectedly-3-times-within-the-last-5-minutes./</link><pubDate>Fri, 02 Feb 2024 00:00:00 +0800</pubDate><guid>https://hxhue.github.io/posts/developer/vscode/VS-Code-%E9%94%99%E8%AF%AFRemote-Extension-host-terminated-unexpectedly-3-times-within-the-last-5-minutes./</guid><description>&lt;p>可能是因为上次对 wsl2 vdisk compact 之后造成的？还是因为升级之后造成的？&lt;/p>
+&lt;p>尝试过以下方法：&lt;/p>
+&lt;ul>
+&lt;li>删除 ~/.vscode 和 ~/.vscode-server 里面的所有东西然后重新下载。不行。&lt;/li>
+&lt;li>禁用所有扩展，不行。&lt;/li>
+&lt;/ul>
+&lt;p>发现在 vscode 的终端使用 code 打开文件夹就有问题，但是在 code 之外的终端用 code 命令就没有问题。一看在 vscode 终端中的 code 命令竟然还是 windows 文件系统中的 code 命令，并不是 vscode-server 提供的 code 命令。&lt;/p></description></item><item><title>VS Code 上写 LaTeX</title><link>https://hxhue.github.io/posts/developer/vscode/VS-Code-%E4%B8%8A%E5%86%99-LaTeX/</link><pubDate>Thu, 18 Jan 2024 00:00:00 +0800</pubDate><guid>https://hxhue.github.io/posts/developer/vscode/VS-Code-%E4%B8%8A%E5%86%99-LaTeX/</guid><description>&lt;h1 id="消除烦人的错误提示">消除烦人的错误提示
+&lt;a class="header-anchor" href="#%e6%b6%88%e9%99%a4%e7%83%a6%e4%ba%ba%e7%9a%84%e9%94%99%e8%af%af%e6%8f%90%e7%a4%ba">&lt;/a>
+&lt;/h1>&lt;p>如果是自动保存，则会有烦人的错误提示。即便是打开勿扰模式也会提示错误消息。&lt;/p>
+&lt;p>需要在设置中关闭 LaTeX 相关的消息。&lt;/p>
+&lt;h1 id="无法编译中文">无法编译中文
+&lt;a class="header-anchor" href="#%e6%97%a0%e6%b3%95%e7%bc%96%e8%af%91%e4%b8%ad%e6%96%87">&lt;/a>
+&lt;/h1>&lt;p>在 &lt;code>&amp;quot;latex-workshop.latex.tools&amp;quot;&lt;/code> 中改一个参数。&lt;/p>
+&lt;p>
+
+
+
+
+
+
+&lt;img src="https://hxhue.github.io/assets/4f424a2d52e9950ffe40178fd8a9725f.webp">&lt;/p>
+&lt;p>每次保存之后不自动使用中文：在 VS Code 的设置中加入这一行并重启。&lt;/p></description></item><item><title>VS Code 终端快捷键冲突</title><link>https://hxhue.github.io/posts/developer/vscode/VS-Code-%E7%BB%88%E7%AB%AF%E5%BF%AB%E6%8D%B7%E9%94%AE%E5%86%B2%E7%AA%81/</link><pubDate>Thu, 18 Jan 2024 00:00:00 +0800</pubDate><guid>https://hxhue.github.io/posts/developer/vscode/VS-Code-%E7%BB%88%E7%AB%AF%E5%BF%AB%E6%8D%B7%E9%94%AE%E5%86%B2%E7%AA%81/</guid><description>&lt;h1 id="ctrl--e-不能传进-shell">ctrl + e 不能传进 shell
+&lt;a class="header-anchor" href="#ctrl--e-%e4%b8%8d%e8%83%bd%e4%bc%a0%e8%bf%9b-shell">&lt;/a>
+&lt;/h1>&lt;p>在自定义的快捷键配置中给 ctrl+e 删掉默认的 command。&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" style="color:#93a1a1;background-color:#002b36;-moz-tab-size:2;-o-tab-size:2;tab-size:2;">&lt;code class="language-json" data-lang="json">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#586e75">// 将键绑定放在此文件中以覆盖默认值
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#586e75">&lt;/span>[
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> { &lt;span style="color:#268bd2">&amp;#34;key&amp;#34;&lt;/span>: &lt;span style="color:#2aa198">&amp;#34;ctrl+e&amp;#34;&lt;/span>, &lt;span style="color:#268bd2">&amp;#34;command&amp;#34;&lt;/span>: &lt;span style="color:#2aa198">&amp;#34;-workbench.action.quickOpen&amp;#34;&lt;/span> },
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>]
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div></description></item><item><title>VS Code 终端字符间距过宽</title><link>https://hxhue.github.io/posts/developer/vscode/VS-Code-%E7%BB%88%E7%AB%AF%E5%AD%97%E7%AC%A6%E9%97%B4%E8%B7%9D%E8%BF%87%E5%AE%BD/</link><pubDate>Thu, 18 Jan 2024 00:00:00 +0800</pubDate><guid>https://hxhue.github.io/posts/developer/vscode/VS-Code-%E7%BB%88%E7%AB%AF%E5%AD%97%E7%AC%A6%E9%97%B4%E8%B7%9D%E8%BF%87%E5%AE%BD/</guid><description>&lt;h1 id="终端字体间距过宽">终端字体间距过宽
+&lt;a class="header-anchor" href="#%e7%bb%88%e7%ab%af%e5%ad%97%e4%bd%93%e9%97%b4%e8%b7%9d%e8%bf%87%e5%ae%bd">&lt;/a>
+&lt;/h1>&lt;p>有时候恢复终端就会出现这种情况（比如显示屏分辨率变化）。暂且尝试的方法是&lt;strong>显式设置终端字体&lt;/strong>（而不是把终端字体留空，让其隐式使用编辑器字体）。感觉还是没有用！&lt;/p></description></item><item><title>VS Code + CMake: Allow building in different directories per build type</title><link>https://hxhue.github.io/posts/developer/vscode/VS-Code-+-CMakeAllow-building-in-different-directories-per-build-type/</link><pubDate>Wed, 17 Jan 2024 00:00:00 +0800</pubDate><guid>https://hxhue.github.io/posts/developer/vscode/VS-Code-+-CMakeAllow-building-in-different-directories-per-build-type/</guid><description>&lt;p>&lt;a href="https://github.com/microsoft/vscode-cmake-tools/issues/151" title="https://github.com/microsoft/vscode-cmake-tools/issues/151" rel="noopener external nofollow noreferrer"
+ target="_blank" class=" exturl" >https://github.com/microsoft/vscode-cmake-tools/issues/151&lt;i class="fa fa-external-link-alt">&lt;/i>&lt;/a>&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" style="color:#93a1a1;background-color:#002b36;-moz-tab-size:2;-o-tab-size:2;tab-size:2;">&lt;code class="language-json" data-lang="json">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#2aa198">&amp;#34;cmake.buildDirectory&amp;#34;&lt;/span> : &lt;span style="color:#2aa198">&amp;#34;${workspaceRoot}/build/${buildType}&amp;#34;&lt;/span>
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div></description></item><item><title>VS Code 友好的 pre-commit hook</title><link>https://hxhue.github.io/posts/developer/vscode/VS-Code-%E5%8F%8B%E5%A5%BD%E7%9A%84-pre-commit-hook/</link><pubDate>Mon, 20 Nov 2023 00:00:00 +0800</pubDate><guid>https://hxhue.github.io/posts/developer/vscode/VS-Code-%E5%8F%8B%E5%A5%BD%E7%9A%84-pre-commit-hook/</guid><description>&lt;p>&lt;strong>问题&lt;/strong>：加入 pre-commit 之后，在 VS Code 的侧边栏 git 模块中提交代码看似卡住，看不到 pre-commit 的输出，也无法和 pre-commit 交互。&lt;/p>
+&lt;p>将下面的 &lt;code>entry_point&lt;/code> 函数替换成要执行的流程，然后作为 .git/hooks/pre-commit 的内容即可。其主要作用是判断当前是否在 VS Code 环境中，如果是，则将输出写到一个临时文件中，然后再用 VS Code 打开这个文件以观察输出。&lt;strong>解决了看不到输出、进度的问题，但是还解决不了输入的问题&lt;/strong>。&lt;/p></description></item><item><title>在 VS Code 中使用 clangd</title><link>https://hxhue.github.io/posts/developer/vscode/%E5%9C%A8-VS-Code-%E4%B8%AD%E4%BD%BF%E7%94%A8-clangd/</link><pubDate>Sun, 19 Nov 2023 00:00:00 +0800</pubDate><guid>https://hxhue.github.io/posts/developer/vscode/%E5%9C%A8-VS-Code-%E4%B8%AD%E4%BD%BF%E7%94%A8-clangd/</guid><description>&lt;h1 id="设置-vs-code-clangd-检查的语言标准为-c17">设置 VS Code clangd 检查的语言标准为 C++17
+&lt;a class="header-anchor" href="#%e8%ae%be%e7%bd%ae-vs-code-clangd-%e6%a3%80%e6%9f%a5%e7%9a%84%e8%af%ad%e8%a8%80%e6%a0%87%e5%87%86%e4%b8%ba-c17">&lt;/a>
+&lt;/h1>&lt;p>
+
+
+
+
+
+
+&lt;img src="https://hxhue.github.io/assets/75a1c84faccb284ac8b51a1f07d3fc57.webp">&lt;/p>
+&lt;p>Set &lt;code>-std&lt;/code> in the &lt;code>.yaml&lt;/code> file and then reload window of VS Code.&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" style="color:#93a1a1;background-color:#002b36;-moz-tab-size:2;-o-tab-size:2;tab-size:2;">&lt;code class="language-yaml" data-lang="yaml">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#268bd2">CompileFlags&lt;/span>:
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#268bd2">Add&lt;/span>:
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> [
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> --std=c++17,
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> -Wno-documentation,
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> -Wno-missing-prototypes,
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> ]
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#268bd2">Diagnostics&lt;/span>:
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#268bd2">ClangTidy&lt;/span>:
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#268bd2">Add&lt;/span>:
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> [
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> performance-*,
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> bugprone-*,
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> modernize-*,
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> clang-analyzer-*,
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> readability-identifier*,
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> ]
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#268bd2">CheckOptions&lt;/span>:
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#268bd2">readability-identifier-naming.VariableCase&lt;/span>: camelCase
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;h1 id="clangd-找不到头文件">Clangd 找不到头文件
+&lt;a class="header-anchor" href="#clangd-%e6%89%be%e4%b8%8d%e5%88%b0%e5%a4%b4%e6%96%87%e4%bb%b6">&lt;/a>
+&lt;/h1>&lt;p>macOS 自带的 &lt;code>/usr/local/bin&lt;/code> 中的 clang 不能提供查询路径。要么把绝对路径改成 &lt;code>PATH&lt;/code> 中的命令，要么添加 &lt;code>&amp;quot;--query-driver=/usr/bin/clang++&amp;quot;&lt;/code> 在参数中。&lt;/p></description></item><item><title>VS Code 远程主机插件不能下载</title><link>https://hxhue.github.io/posts/developer/vscode/VS-Code-%E8%BF%9C%E7%A8%8B%E4%B8%BB%E6%9C%BA%E6%8F%92%E4%BB%B6%E4%B8%8D%E8%83%BD%E4%B8%8B%E8%BD%BD/</link><pubDate>Fri, 03 Nov 2023 00:00:00 +0800</pubDate><guid>https://hxhue.github.io/posts/developer/vscode/VS-Code-%E8%BF%9C%E7%A8%8B%E4%B8%BB%E6%9C%BA%E6%8F%92%E4%BB%B6%E4%B8%8D%E8%83%BD%E4%B8%8B%E8%BD%BD/</guid><description>&lt;p>提示 XHR failed。&lt;/p>
+&lt;p>找到插件的网页下载 Linux 版本，然后从文件资源管理器拖动文件到工作目录，拷贝文件后运行：&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" style="color:#93a1a1;background-color:#002b36;-moz-tab-size:2;-o-tab-size:2;tab-size:2;">&lt;code class="language-bash" data-lang="bash">&lt;span style="display:flex;">&lt;span>code --install-extension ./doxdocgen-1.4.0.vsix
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>也可能是本机的代理设置和远程主机的代理设置冲突了，可以修改远程主机的 &lt;code>&amp;quot;http.proxy&amp;quot;&lt;/code> 为空：&lt;/p></description></item><item><title>VS Code CMake 工程中 C++ 提示不正常</title><link>https://hxhue.github.io/posts/developer/vscode/VS-Code-CMake-%E5%B7%A5%E7%A8%8B%E4%B8%AD-C++-%E6%8F%90%E7%A4%BA%E4%B8%8D%E6%AD%A3%E5%B8%B8/</link><pubDate>Thu, 26 Oct 2023 00:00:00 +0800</pubDate><guid>https://hxhue.github.io/posts/developer/vscode/VS-Code-CMake-%E5%B7%A5%E7%A8%8B%E4%B8%AD-C++-%E6%8F%90%E7%A4%BA%E4%B8%8D%E6%AD%A3%E5%B8%B8/</guid><description>&lt;h1 id="如果用-intellisense">如果用 Intellisense
+&lt;a class="header-anchor" href="#%e5%a6%82%e6%9e%9c%e7%94%a8-intellisense">&lt;/a>
+&lt;/h1>&lt;p>以文件 &lt;code>.vscode/c_cpp_properties.json&lt;/code> 中 &lt;code>configuration&lt;/code> 的 &lt;code>configurationProvider&lt;/code> 的值来分类。&lt;/p>
+&lt;h2 id="ms-vscodecmake-tools">ms-vscode.cmake-tools
+&lt;a class="header-anchor" href="#ms-vscodecmake-tools">&lt;/a>
+&lt;/h2>&lt;p>&lt;strong>缺点：文件不在编译数据库中时 include 路径不正确（对新文件不友好）&lt;/strong>。&lt;/p>
+&lt;p>&lt;strong>&lt;code>configurationProvider&lt;/code> 是 &lt;code>ms-vscode.cmake-tools&lt;/code> 时&lt;/strong>，&lt;code>compileCommands&lt;/code> 和 &lt;code>includePath&lt;/code> 设置是无效的。这个时候如果 &lt;code>compile_commands.json&lt;/code> （编译数据库）中没有这个文件（尤其是 &lt;code>CMakeLists.txt&lt;/code> 中可能尚未加入新编写的文件的情况），或者编译数据库尚未配置（需要先编译生成一次)，include 路径就不正确。&lt;/p></description></item><item><title>WSL2 不能使用 code 打开 VS Code</title><link>https://hxhue.github.io/posts/systems/Windows/WSL2-%E4%B8%8D%E8%83%BD%E4%BD%BF%E7%94%A8-code-%E6%89%93%E5%BC%80-VS-Code/</link><pubDate>Sun, 17 Sep 2023 00:00:00 +0800</pubDate><guid>https://hxhue.github.io/posts/systems/Windows/WSL2-%E4%B8%8D%E8%83%BD%E4%BD%BF%E7%94%A8-code-%E6%89%93%E5%BC%80-VS-Code/</guid><description>&lt;p>首先检查 &lt;code>/etc/wsl.conf&lt;/code> 配置，如果设置了不追加 Windows 的 PATH，则需要自己额外添加 VS Code 的命令目录到 WSL 中。&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" style="color:#93a1a1;background-color:#002b36;-moz-tab-size:2;-o-tab-size:2;tab-size:2;">&lt;code class="language-toml" data-lang="toml">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#586e75"># /etc/wsl.conf&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>[boot]
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>systemd=&lt;span style="color:#cb4b16">true&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>[interop]
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>appendWindowsPath=&lt;span style="color:#cb4b16">false&lt;/span>
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;div class="highlight">&lt;pre tabindex="0" style="color:#93a1a1;background-color:#002b36;-moz-tab-size:2;-o-tab-size:2;tab-size:2;">&lt;code class="language-bash" data-lang="bash">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#586e75"># ~/.bashrc 或者其他配置文件&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#b58900">export&lt;/span> &lt;span style="color:#268bd2">PATH&lt;/span>&lt;span style="color:#719e07">=&lt;/span>&lt;span style="color:#2aa198">&amp;#34;/mnt/c/Users/xxx/AppData/Local/Programs/Microsoft VS Code/bin:&lt;/span>&lt;span style="color:#268bd2">$PATH&lt;/span>&lt;span style="color:#2aa198">&amp;#34;&lt;/span>
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>如果报错：&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" style="color:#93a1a1;background-color:#002b36;-moz-tab-size:2;-o-tab-size:2;tab-size:2;">&lt;code class="language-txt" data-lang="txt">&lt;span style="display:flex;">&lt;span>/mnt/c/Users/xxx/AppData/Local/Programs/Microsoft VS Code/bin/code: 61: /mnt/c/Users/xxx/AppData/Local/Programs/Microsoft VS Code/Code.exe: Exec format error
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>则可能是新版 WSL 的 systemd 打包问题。（参考 &lt;a href="https://github.com/microsoft/WSL/issues/8952#issuecomment-1568212651" title="https://github.com/microsoft/WSL/issues/8952#issuecomment-1568212651" rel="noopener external nofollow noreferrer"
+ target="_blank" class=" exturl" >https://github.com/microsoft/WSL/issues/8952#issuecomment-1568212651&lt;i class="fa fa-external-link-alt">&lt;/i>&lt;/a>）&lt;/p></description></item></channel></rss>

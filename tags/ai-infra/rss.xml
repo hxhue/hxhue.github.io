@@ -1,0 +1,103 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Ai-Infra on Bluegill</title><link>https://hxhue.github.io/tags/ai-infra/</link><description>Recent content in Ai-Infra on Bluegill</description><generator>Hugo</generator><language>zh-CN</language><lastBuildDate>Sat, 04 Oct 2025 00:00:00 +0800</lastBuildDate><atom:link href="https://hxhue.github.io/tags/ai-infra/rss.xml" rel="self" type="application/rss+xml"/><item><title>CUDA_DEVICE_MAX_CONNECTIONS</title><link>https://hxhue.github.io/posts/ai-infra/CUDA_DEVICE_MAX_CONNECTIONS/</link><pubDate>Sun, 07 Sep 2025 00:00:00 +0800</pubDate><guid>https://hxhue.github.io/posts/ai-infra/CUDA_DEVICE_MAX_CONNECTIONS/</guid><description>&lt;h1 id="环境变量解释">环境变量解释
+&lt;a class="header-anchor" href="#%e7%8e%af%e5%a2%83%e5%8f%98%e9%87%8f%e8%a7%a3%e9%87%8a">&lt;/a>
+&lt;/h1>&lt;p>&lt;code>CUDA_DEVICE_MAX_CONNECTIONS&lt;/code> 这个环境变量在 Megatron-LM 源码中经常见到，主要是用来控制硬件调度 kernel 的顺序，以尽可能提高通信计算重叠场景的重叠率。&lt;/p>
+&lt;p>&lt;a href="https://docs.nvidia.com/cuda/cuda-c-programming-guide/index.html#cuda-environment-variables" title="英伟达文档 cuda-environment-variables" rel="noopener external nofollow noreferrer"
+ target="_blank" class=" exturl" >英伟达文档 cuda-environment-variables&lt;i class="fa fa-external-link-alt">&lt;/i>&lt;/a> 说明了 &lt;code>CUDA_DEVICE_MAX_CONNECTIONS&lt;/code> 默认为 8，可以设置为 1 到 32 的整数值，表示计算和拷贝队列的数量。（同样还有 &lt;code>CUDA_DEVICE_MAX_COPY_CONNECTIONS&lt;/code> 表示对拷贝队列的设置（优先级高于 &lt;code>CUDA_DEVICE_MAX_CONNECTION&lt;/code>）。）&lt;a href="https://forums.developer.nvidia.com/t/cuda-device-max-connections-and-pci-e-traffic/262962/2" title="论坛回复" rel="noopener external nofollow noreferrer"
+ target="_blank" class=" exturl" >论坛回复&lt;i class="fa fa-external-link-alt">&lt;/i>&lt;/a> 指出这个环境变量表示有多少个硬件队列和 CUDA 流发生映射关系。（如果这个值不够大则流之间存在虚假依赖。这样一来，设置为 1 就能完全保证 kernel 执行顺序和发起顺序一致。设置为 32 则尽可能设法让不同的流并发执行 kernels。）&lt;/p></description></item><item><title>Megatron-LM 论文 PP 和 VPP 画法疑问</title><link>https://hxhue.github.io/posts/ai-infra/Megatron-LM-%E8%AE%BA%E6%96%87-PP-%E5%92%8C-VPP-%E7%94%BB%E6%B3%95%E7%96%91%E9%97%AE/</link><pubDate>Sun, 07 Sep 2025 00:00:00 +0800</pubDate><guid>https://hxhue.github.io/posts/ai-infra/Megatron-LM-%E8%AE%BA%E6%96%87-PP-%E5%92%8C-VPP-%E7%94%BB%E6%B3%95%E7%96%91%E9%97%AE/</guid><description>&lt;h1 id="问题">问题
+&lt;a class="header-anchor" href="#%e9%97%ae%e9%a2%98">&lt;/a>
+&lt;/h1>&lt;p>见到过两种画法：一是 device 1 调度到 PP*VPP 个微批次之后继续调度，二是 device 1 调度到 PP*VPP 微批次之后就停下了。&lt;/p>
+&lt;h1 id="来源-1megatron-lm-论文">来源 1：Megatron-LM 论文
+&lt;a class="header-anchor" href="#%e6%9d%a5%e6%ba%90-1megatron-lm-%e8%ae%ba%e6%96%87">&lt;/a>
+&lt;/h1>&lt;p>这个是 Megatron 的论文 Efficient Large-Scale Language Model Training on GPU Clusters Using Megatron-LM 第 3 页 &lt;a href="https://arxiv.org/pdf/2104.04473" title="https://arxiv.org/pdf/2104.04473" rel="noopener external nofollow noreferrer"
+ target="_blank" class=" exturl" >https://arxiv.org/pdf/2104.04473&lt;i class="fa fa-external-link-alt">&lt;/i>&lt;/a> ，同时显示了交错和非交错状态下 1F1B 的调度方式。&lt;/p></description></item><item><title>大模型训练通信要解决哪些问题？（个人总结）</title><link>https://hxhue.github.io/posts/ai-infra/%E5%A4%A7%E6%A8%A1%E5%9E%8B%E8%AE%AD%E7%BB%83%E9%80%9A%E4%BF%A1%E8%A6%81%E8%A7%A3%E5%86%B3%E5%93%AA%E4%BA%9B%E9%97%AE%E9%A2%98%E4%B8%AA%E4%BA%BA%E6%80%BB%E7%BB%93/</link><pubDate>Sun, 07 Sep 2025 00:00:00 +0800</pubDate><guid>https://hxhue.github.io/posts/ai-infra/%E5%A4%A7%E6%A8%A1%E5%9E%8B%E8%AE%AD%E7%BB%83%E9%80%9A%E4%BF%A1%E8%A6%81%E8%A7%A3%E5%86%B3%E5%93%AA%E4%BA%9B%E9%97%AE%E9%A2%98%E4%B8%AA%E4%BA%BA%E6%80%BB%E7%BB%93/</guid><description>&lt;h1 id="结构图">结构图
+&lt;a class="header-anchor" href="#%e7%bb%93%e6%9e%84%e5%9b%be">&lt;/a>
+&lt;/h1>&lt;p>
+
+
+
+
+
+
+&lt;img src="https://hxhue.github.io/posts/ai-infra/assets/Pasted%20image%2020250907125720.webp" width="600">&lt;/p>
+&lt;h1 id="加速通信">加速通信
+&lt;a class="header-anchor" href="#%e5%8a%a0%e9%80%9f%e9%80%9a%e4%bf%a1">&lt;/a>
+&lt;/h1>&lt;ul>
+&lt;li>减少给定操作的通信量
+&lt;ul>
+&lt;li>低精度训练&lt;/li>
+&lt;li>先量化再通信
+&lt;ul>
+&lt;li>DeepSeek V3 dispatch 时先把 BF16 量化到 FP8，通信量减少一半。但因为 combine 通信中带有规约，所以不适合用 FP8。&lt;/li>
+&lt;li>MegaScale-MoE 在 AllGather 派发器的 combine 阶段用 &lt;strong>(a)&lt;/strong> 量化到 FP8 + &lt;strong>(b)&lt;/strong> AlltoAll + &lt;strong>(c)&lt;/strong> FP32 累加器规约 来代替原先的 ReduceScatter 通信，通信量减少一半、loss 正常。ReduceScatter 时每个 rank 只需要收到自己分区的所有数据并完成规约即可（不像 AllGather 接口需要所有数据），用 AlltoAll + 接收后本地规约也能替代。&lt;/li>
+&lt;/ul>
+&lt;/li>
+&lt;li>通信去重
+&lt;ul>
+&lt;li>DeepEP&lt;/li>
+&lt;/ul>
+&lt;/li>
+&lt;/ul>
+&lt;/li>
+&lt;li>减少通信
+&lt;ul>
+&lt;li>尽可能使用效率更高的并行方式，比如用 Ulysses SP 代替 TP 可以从理论上大大降低通信。&lt;/li>
+&lt;/ul>
+&lt;/li>
+&lt;/ul>
+&lt;h1 id="保持计算流忙碌">保持计算流忙碌
+&lt;a class="header-anchor" href="#%e4%bf%9d%e6%8c%81%e8%ae%a1%e7%ae%97%e6%b5%81%e5%bf%99%e7%a2%8c">&lt;/a>
+&lt;/h1>&lt;ul>
+&lt;li>通信计算重叠
+&lt;ul>
+&lt;li>Megatron-LM 现在对 DP/TP/CP/PP/EP 均有通信重叠功能
+&lt;ul>
+&lt;li>部分选项依赖 &lt;code>CUDA_DEVICE_MAX_CONNECTIONS&lt;/code>&lt;/li>
+&lt;li>部分选项依赖交错 1F1B 调度&lt;/li>
+&lt;li>Megatron CP 的通信计算重叠强制打开、无选项可以关闭&lt;/li>
+&lt;li>Megatron 1F1B + EP A2A overlap 是 2025.8 才加入的新功能，但在 2025.3 已有人提出&lt;/li>
+&lt;/ul>
+&lt;/li>
+&lt;li>DualPipe 用前反向两个微批次的前后向来重叠&lt;/li>
+&lt;/ul>
+&lt;/li>
+&lt;li>负载均衡
+&lt;ul>
+&lt;li>DP/PP 负载均衡
+&lt;ul>
+&lt;li>ByteScale 的工作很有启发性&lt;/li>
+&lt;li>Ernie 4.5 也做了 DP 上的子序列重排&lt;/li>
+&lt;/ul>
+&lt;/li>
+&lt;li>EP 负载均衡
+&lt;ul>
+&lt;li>token drop、辅助 loss、expert bias&lt;/li>
+&lt;li>专家动态调整，这一类工作很多&lt;/li>
+&lt;li>样本动态调整，如 NetMoE&lt;/li>
+&lt;/ul>
+&lt;/li>
+&lt;li>CP 负载均衡
+&lt;ul>
+&lt;li>Ulysses SP&lt;/li>
+&lt;li>Megatron CP 未考虑子序列打包的问题，ByteScale 做了一些处理&lt;/li>
+&lt;/ul>
+&lt;/li>
+&lt;/ul>
+&lt;/li>
+&lt;li>消除卡间同步
+&lt;ul>
+&lt;li>ZeroBubble 后校验&lt;/li>
+&lt;/ul>
+&lt;/li>
+&lt;/ul></description></item><item><title>DeepSeek V3 MLA</title><link>https://hxhue.github.io/posts/ai-infra/DeepSeek-V3-MLA/</link><pubDate>Thu, 21 Aug 2025 00:00:00 +0800</pubDate><guid>https://hxhue.github.io/posts/ai-infra/DeepSeek-V3-MLA/</guid><description>&lt;p>下图标注了 MLA 的一种计算方式，橙色虚线部分可以被包裹到重计算中，入口为 q1，kv1 和 k_rope1（不保存 kv1 和 k_rope1 而是保存 kv1_and_k_rope 也可以，它们的大小一样，没区别）。&lt;code>flash_attn&lt;/code> 比较特殊，除了保存输入之外还会保存输出。&lt;/p></description></item><item><title>MoE Parallel Folding、ETP 和 DeepEP</title><link>https://hxhue.github.io/posts/ai-infra/MoE-Parallel-FoldingETP-%E5%92%8C-DeepEP/</link><pubDate>Mon, 18 Aug 2025 00:00:00 +0800</pubDate><guid>https://hxhue.github.io/posts/ai-infra/MoE-Parallel-FoldingETP-%E5%92%8C-DeepEP/</guid><description>&lt;p>DeepEP 假设了本地 node 用 NVLINK 连接的卡数为 8，因此 EP 必须在最内层。Megatron 在 MoEFlexTokenDispatcher 接入 DeepEP，也必须满足这个假设。&lt;/p>
+&lt;p>在 &lt;a href="https://arxiv.org/html/2504.14960v2" title="MoE Parallel Folding" rel="noopener external nofollow noreferrer"
+ target="_blank" class=" exturl" >MoE Parallel Folding&lt;i class="fa fa-external-link-alt">&lt;/i>&lt;/a> 下，MoE 层的 CP 消失，排在 EP 内层的只有 TP，Megatron 是如何处理 ETP &amp;gt; 1 的情况的？它将 routing map 展开了 tp_size 份，直接用 DeepEP 分发（&lt;strong>这个时候使用 TP-EP 组而不是 EP 组，大小为 &lt;code>ep_size * tp_size&lt;/code>&lt;/strong>），这样就满足了 DeepEP 的假设，实质上利用 DeepEP 把 TP 的通信也做了。&lt;/p></description></item><item><title>NVIDIA 博客：NCCL 2.12 PXN 优化</title><link>https://hxhue.github.io/posts/ai-infra/NVIDIA-%E5%8D%9A%E5%AE%A2NCCL-2.12-PXN-%E4%BC%98%E5%8C%96/</link><pubDate>Mon, 18 Aug 2025 00:00:00 +0800</pubDate><guid>https://hxhue.github.io/posts/ai-infra/NVIDIA-%E5%8D%9A%E5%AE%A2NCCL-2.12-PXN-%E4%BC%98%E5%8C%96/</guid><description>&lt;h2 id="文章总结">文章总结
+&lt;a class="header-anchor" href="#%e6%96%87%e7%ab%a0%e6%80%bb%e7%bb%93">&lt;/a>
+&lt;/h2>&lt;p>&lt;a href="https://developer.nvidia.com/blog/doubling-all2all-performance-with-nvidia-collective-communication-library-2-12/" title="https://developer.nvidia.com/blog/doubling-all2all-performance-with-nvidia-collective-communication-library-2-12/" rel="noopener external nofollow noreferrer"
+ target="_blank" class=" exturl" >https://developer.nvidia.com/blog/doubling-all2all-performance-with-nvidia-collective-communication-library-2-12/&lt;i class="fa fa-external-link-alt">&lt;/i>&lt;/a>&lt;/p>
+&lt;div class="markdown-alert markdown-alert-caution">
+ &lt;p class="markdown-alert-title">&lt;svg class="octicon octicon-stop mr-2" viewBox="0 0 16 16" width="16" height="16"
+ aria-hidden="true">
+ &lt;path
+ d="M4.47.22A.749.749 0 0 1 5 0h6c.199 0 .389.079.53.22l4.25 4.25c.141.14.22.331.22.53v6a.749.749 0 0 1-.22.53l-4.25 4.25A.749.749 0 0 1 11 16H5a.749.749 0 0 1-.53-.22L.22 11.53A.749.749 0 0 1 0 11V5c0-.199.079-.389.22-.53Zm.84 1.28L1.5 5.31v5.38l3.81 3.81h5.38l3.81-3.81V5.31L10.69 1.5ZM8 4a.75.75 0 0 1 .75.75v3.5a.75.75 0 0 1-1.5 0v-3.5A.75.75 0 0 1 8 4Zm0 8a1 1 0 1 1 0-2 1 1 0 0 1 0 2Z">
+ &lt;/path>
+ &lt;/svg>内容由 AI 生成&lt;/p></description></item></channel></rss>

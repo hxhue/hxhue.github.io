@@ -1,0 +1,222 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Cpp-Templates-the-Complete-Guides on Bluegill</title><link>https://hxhue.github.io/cpp-templates-the-complete-guide/</link><description>Recent content in Cpp-Templates-the-Complete-Guides on Bluegill</description><generator>Hugo</generator><language>zh-CN</language><lastBuildDate>Sat, 08 Mar 2025 00:00:00 +0800</lastBuildDate><atom:link href="https://hxhue.github.io/cpp-templates-the-complete-guide/rss.xml" rel="self" type="application/rss+xml"/><item><title>CTTCG 01 Function Templates</title><link>https://hxhue.github.io/cpp-templates-the-complete-guide/01-Function-Templates/</link><pubDate>Sat, 12 Aug 2023 00:00:00 +0800</pubDate><guid>https://hxhue.github.io/cpp-templates-the-complete-guide/01-Function-Templates/</guid><description>&lt;p>2023 年 5 月 7 日&lt;/p>
+&lt;h1 id="两个-type-traits">两个 type traits
+&lt;a class="header-anchor" href="#%e4%b8%a4%e4%b8%aa-type-traits">&lt;/a>
+&lt;/h1>&lt;p>&lt;code>std::decay_t&lt;/code> 可以去引用、去限定符、函数/数组变指针；&lt;code>std::common_type_t&lt;/code> 用三元运算符获得更“宽泛”类型。&lt;/p>
+&lt;h1 id="函数模板默认参数">函数模板默认参数
+&lt;a class="header-anchor" href="#%e5%87%bd%e6%95%b0%e6%a8%a1%e6%9d%bf%e9%bb%98%e8%ae%a4%e5%8f%82%e6%95%b0">&lt;/a>
+&lt;/h1>&lt;p>模板默认参数可以放在最前面，不像普通函数只能把带有默认值的参数放在最后。而且函数模板可以明确指定开头几个参数，让后面的参数由推导规则生成。&lt;/p></description></item><item><title>CTTCG 02 Class Templates</title><link>https://hxhue.github.io/cpp-templates-the-complete-guide/02-Class-Templates/</link><pubDate>Sat, 12 Aug 2023 00:00:00 +0800</pubDate><guid>https://hxhue.github.io/cpp-templates-the-complete-guide/02-Class-Templates/</guid><description>&lt;p>2023 年 5 月 7 日&lt;/p>
+&lt;h1 id="定义位置">定义位置
+&lt;a class="header-anchor" href="#%e5%ae%9a%e4%b9%89%e4%bd%8d%e7%bd%ae">&lt;/a>
+&lt;/h1>&lt;p>类模板只能在全局或者类声明中定义，不能在块或者函数中定义。&lt;/p>
+&lt;h1 id="类模板外函数定义的写法">类模板外函数定义的写法
+&lt;a class="header-anchor" href="#%e7%b1%bb%e6%a8%a1%e6%9d%bf%e5%a4%96%e5%87%bd%e6%95%b0%e5%ae%9a%e4%b9%89%e7%9a%84%e5%86%99%e6%b3%95">&lt;/a>
+&lt;/h1>&lt;p>类模板中定义函数，T 类型参数可以省略；在类模板中声明，但在外提供函数定义，就需要在定义处给出完整的类型参数：&lt;/p></description></item><item><title>CTTCG 03 Nontype Template Parameters</title><link>https://hxhue.github.io/cpp-templates-the-complete-guide/03-Nontype-Template-Parameters/</link><pubDate>Sat, 12 Aug 2023 00:00:00 +0800</pubDate><guid>https://hxhue.github.io/cpp-templates-the-complete-guide/03-Nontype-Template-Parameters/</guid><description>&lt;p>模板参数也可以不是类型，而是值。&lt;/p>
+&lt;h1 id="非类型参数推导只对直接调用有效">非类型参数推导只对直接调用有效
+&lt;a class="header-anchor" href="#%e9%9d%9e%e7%b1%bb%e5%9e%8b%e5%8f%82%e6%95%b0%e6%8e%a8%e5%af%bc%e5%8f%aa%e5%af%b9%e7%9b%b4%e6%8e%a5%e8%b0%83%e7%94%a8%e6%9c%89%e6%95%88">&lt;/a>
+&lt;/h1>&lt;p>模板函数的类型推导只对立即调用有效，而对算法模板这类需要提前知道类型信息的场合无效。比如：&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" style="color:#93a1a1;background-color:#002b36;-moz-tab-size:2;-o-tab-size:2;tab-size:2;">&lt;code class="language-cpp" data-lang="cpp">&lt;span style="display:flex;">&lt;span>std&lt;span style="color:#719e07">::&lt;/span>transform (source.begin(), source.end(), &lt;span style="color:#586e75">// start and end of source
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#586e75">&lt;/span> dest.begin(), &lt;span style="color:#586e75">// start of destination
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#586e75">&lt;/span> addValue&lt;span style="color:#719e07">&amp;lt;&lt;/span>&lt;span style="color:#2aa198">5&lt;/span>,&lt;span style="color:#dc322f">int&lt;/span>&lt;span style="color:#719e07">&amp;gt;&lt;/span>); &lt;span style="color:#586e75">// operation
+&lt;/span>&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>上面代码中尽管 &lt;code>addValue&lt;/code> 的参数可能可以推导出来，但由于 &lt;code>std::transform&lt;/code> 要求提前知道函数的类型，去掉参数之后代码无法编译。&lt;/p></description></item><item><title>CTTCG 04 Variadic Templates</title><link>https://hxhue.github.io/cpp-templates-the-complete-guide/04-Variadic-Templates/</link><pubDate>Sat, 12 Aug 2023 00:00:00 +0800</pubDate><guid>https://hxhue.github.io/cpp-templates-the-complete-guide/04-Variadic-Templates/</guid><description>&lt;blockquote>
+ &lt;p>可变长表达式可以对参数包逐个处理。与折叠表达式（相当于函数式编程中的 &lt;strong>reduce&lt;/strong>，但如果用上逗号表达式就能表达 &lt;strong>foreach&lt;/strong>）不同，可变长表达式（相当于函数式编程中的 &lt;strong>map&lt;/strong>）不会改变参数数量，允许的形式也比折叠表达式宽松一点。&lt;/p></description></item><item><title>CTTCG 05 Tricky Basics</title><link>https://hxhue.github.io/cpp-templates-the-complete-guide/05-Tricky-Basics/</link><pubDate>Sat, 12 Aug 2023 00:00:00 +0800</pubDate><guid>https://hxhue.github.io/cpp-templates-the-complete-guide/05-Tricky-Basics/</guid><description>&lt;h1 id="1-使用关键字引导编译器了解成员类型">1 使用关键字引导编译器了解成员类型
+&lt;a class="header-anchor" href="#1-%e4%bd%bf%e7%94%a8%e5%85%b3%e9%94%ae%e5%ad%97%e5%bc%95%e5%af%bc%e7%bc%96%e8%af%91%e5%99%a8%e4%ba%86%e8%a7%a3%e6%88%90%e5%91%98%e7%b1%bb%e5%9e%8b">&lt;/a>
+&lt;/h1>&lt;div class="highlight">&lt;pre tabindex="0" style="color:#93a1a1;background-color:#002b36;-moz-tab-size:2;-o-tab-size:2;tab-size:2;">&lt;code class="language-cpp" data-lang="cpp">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#719e07">template&lt;/span>&lt;span style="color:#719e07">&amp;lt;&lt;/span>&lt;span style="color:#719e07">typename&lt;/span> T&lt;span style="color:#719e07">&amp;gt;&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#719e07">class&lt;/span> &lt;span style="color:#268bd2">MyClass&lt;/span> {
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#719e07">public&lt;/span>&lt;span style="color:#719e07">:&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#dc322f">void&lt;/span> foo() {
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#719e07">typename&lt;/span> T&lt;span style="color:#719e07">::&lt;/span>SubType&lt;span style="color:#719e07">*&lt;/span> ptr;
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> }
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>}
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>上面的的代码中加了 &lt;code>typename&lt;/code> 关键字用来表示 &lt;code>SubType&lt;/code> 这个成员是一个类型。否则由于缺乏类型信息，编译器会认为该成员是某个数据域，从而构成了乘法表达式。&lt;/p></description></item><item><title>CTTCG 06 Move Semantics and enable_if</title><link>https://hxhue.github.io/cpp-templates-the-complete-guide/06-Move-Semantics-and-enable_if/</link><pubDate>Sat, 12 Aug 2023 00:00:00 +0800</pubDate><guid>https://hxhue.github.io/cpp-templates-the-complete-guide/06-Move-Semantics-and-enable_if/</guid><description>&lt;p>Perfect forwarding:&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" style="color:#93a1a1;background-color:#002b36;-moz-tab-size:2;-o-tab-size:2;tab-size:2;">&lt;code class="language-cpp" data-lang="cpp">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#719e07">template&lt;/span>&lt;span style="color:#719e07">&amp;lt;&lt;/span>&lt;span style="color:#719e07">typename&lt;/span> T&lt;span style="color:#719e07">&amp;gt;&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#dc322f">void&lt;/span> f (T&lt;span style="color:#719e07">&amp;amp;&amp;amp;&lt;/span> val) {
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> g(std&lt;span style="color:#719e07">::&lt;/span>forward&lt;span style="color:#719e07">&amp;lt;&lt;/span>T&lt;span style="color:#719e07">&amp;gt;&lt;/span>(val)); &lt;span style="color:#586e75">// perfect forward val to g()
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#586e75">&lt;/span>}
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>注意，完美转发只对模板参数有效，对依赖于模板参数的类型也是无效的，比如：&lt;code>typename T::iterator&amp;amp;&amp;amp;&lt;/code> 是无效的，仍表示严格的右值引用。&lt;/p></description></item><item><title>CTTCG 07 By Value or by Reference</title><link>https://hxhue.github.io/cpp-templates-the-complete-guide/07-By-Value-or-by-Reference/</link><pubDate>Sat, 12 Aug 2023 00:00:00 +0800</pubDate><guid>https://hxhue.github.io/cpp-templates-the-complete-guide/07-By-Value-or-by-Reference/</guid><description>&lt;h1 id="传值t">传值：&lt;code>T&lt;/code>
+&lt;a class="header-anchor" href="#%e4%bc%a0%e5%80%bct">&lt;/a>
+&lt;/h1>&lt;p>有 decay。&lt;/p>
+&lt;h1 id="传左值引用t-">传左值引用：&lt;code>T &amp;amp;&lt;/code>
+&lt;a class="header-anchor" href="#%e4%bc%a0%e5%b7%a6%e5%80%bc%e5%bc%95%e7%94%a8t-">&lt;/a>
+&lt;/h1>&lt;p>注意遇到数组时可能需要 decay。&lt;/p>
+&lt;p>注意 &lt;code>T&lt;/code> 类型可能是常量，导致 &lt;code>T &amp;amp;&lt;/code> 其实是常引用。这样的参数不能被修改，因而不能作为传出参数。可以使用 concept 限定参数非常量：&lt;/p></description></item><item><title>CTTCG 08 Compile-Time Programming</title><link>https://hxhue.github.io/cpp-templates-the-complete-guide/08-Compile-Time-Programming/</link><pubDate>Sat, 12 Aug 2023 00:00:00 +0800</pubDate><guid>https://hxhue.github.io/cpp-templates-the-complete-guide/08-Compile-Time-Programming/</guid><description>&lt;h1 id="模板元编程">模板元编程
+&lt;a class="header-anchor" href="#%e6%a8%a1%e6%9d%bf%e5%85%83%e7%bc%96%e7%a8%8b">&lt;/a>
+&lt;/h1>&lt;p>略。&lt;/p>
+&lt;h1 id="constexpr-函数">&lt;code>constexpr&lt;/code> 函数
+&lt;a class="header-anchor" href="#constexpr-%e5%87%bd%e6%95%b0">&lt;/a>
+&lt;/h1>&lt;p>在 C++11 中只能使用一条语句，而在 C++14 之后可以使用的语句变得丰富。&lt;code>constexpr&lt;/code> 函数允许编译期优化，但不阻止运行期使用。作为对比，C++20 &lt;code>consteval&lt;/code> 只能在编译期使用。&lt;/p></description></item><item><title>CTTCG 09 Using Templates in Practice</title><link>https://hxhue.github.io/cpp-templates-the-complete-guide/09-Using-Templates-in-Practice/</link><pubDate>Sat, 12 Aug 2023 00:00:00 +0800</pubDate><guid>https://hxhue.github.io/cpp-templates-the-complete-guide/09-Using-Templates-in-Practice/</guid><description>&lt;h1 id="包含模型---the-inclusion-model">包含模型 - The Inclusion Model
+&lt;a class="header-anchor" href="#%e5%8c%85%e5%90%ab%e6%a8%a1%e5%9e%8b---the-inclusion-model">&lt;/a>
+&lt;/h1>&lt;p>通常模板需要被包含在头文件中工作。&lt;/p>
+&lt;p>注意：函数模板完全特化之后也需要 inline 才能够在头文件中使用，否则会出现不同的翻译单元有重复定义的情况。&lt;/p>
+&lt;h1 id="改进一precompiled-headers">改进一：precompiled headers
+&lt;a class="header-anchor" href="#%e6%94%b9%e8%bf%9b%e4%b8%80precompiled-headers">&lt;/a>
+&lt;/h1>&lt;p>可以把 pch 理解为编译器中间工作状态的一个 dump。编译器可以在读取到某些源代码之后保存其状态，包括符号表等。如果两个文件中有公共的前缀代码（比如一个标准库的头文件就包含了数千行公共代码），编译器就可以读取预先保存的状态，从而跳过对于这些代码的处理。&lt;/p></description></item><item><title>CTTCG 10 Basic Template Terminology</title><link>https://hxhue.github.io/cpp-templates-the-complete-guide/10-Basic-Template-Terminology/</link><pubDate>Sat, 12 Aug 2023 00:00:00 +0800</pubDate><guid>https://hxhue.github.io/cpp-templates-the-complete-guide/10-Basic-Template-Terminology/</guid><description>&lt;h1 id="class-template-vs-template-class">Class Template v.s. Template Class
+&lt;a class="header-anchor" href="#class-template-vs-template-class">&lt;/a>
+&lt;/h1>&lt;p>前者是生成类的模板，后者既可以指模板，又可以指从模板生成的类。&lt;/p>
+&lt;h1 id="substitution-instantiation-and-specialization">Substitution, Instantiation, and Specialization
+&lt;a class="header-anchor" href="#substitution-instantiation-and-specialization">&lt;/a>
+&lt;/h1>&lt;ul>
+&lt;li>参数替代是模板生成相应对象（即实例化）的一个中间环节。&lt;/li>
+&lt;li>实例化是从模板生成相应对象的动作。&lt;/li>
+&lt;li>特化是和模板形式相似但匹配程度更高的对象。特化分为实例化（生成式特化）和显式特化（explicit specialization，即人为提供特化函数）。&lt;/li>
+&lt;/ul>
+&lt;h1 id="declarations-versus-definitions">Declarations versus Definitions
+&lt;a class="header-anchor" href="#declarations-versus-definitions">&lt;/a>
+&lt;/h1>&lt;p>函数、类或变量等有了名字，但是定义不完整，就算作声明。&lt;/p></description></item><item><title>CTTCG 11 Generic Libraries</title><link>https://hxhue.github.io/cpp-templates-the-complete-guide/11-Generic-Libraries/</link><pubDate>Sat, 12 Aug 2023 00:00:00 +0800</pubDate><guid>https://hxhue.github.io/cpp-templates-the-complete-guide/11-Generic-Libraries/</guid><description>&lt;h1 id="callables">Callables
+&lt;a class="header-anchor" href="#callables">&lt;/a>
+&lt;/h1>&lt;p>Callable 有很多：函数、函数指针、成员函数、lambda 表达式（函数对象特例）、函数对象（Functor）等。&lt;/p>
+&lt;h2 id="lambda-表达式">lambda 表达式
+&lt;a class="header-anchor" href="#lambda-%e8%a1%a8%e8%be%be%e5%bc%8f">&lt;/a>
+&lt;/h2>&lt;p>lambda 是函数对象。当捕获列表没有参数的时候，lambda 还有一个转换成一般函数指针的隐式转换操作符。在无捕获列表的 lambda 前加上 &lt;code>+&lt;/code> 符号，能使得 lambda 变成函数指针也就是这个道理。&lt;/p></description></item><item><title>CTTCG 12 Fundamentals in Depth</title><link>https://hxhue.github.io/cpp-templates-the-complete-guide/12-Fundamentals-in-Depth/</link><pubDate>Sat, 12 Aug 2023 00:00:00 +0800</pubDate><guid>https://hxhue.github.io/cpp-templates-the-complete-guide/12-Fundamentals-in-Depth/</guid><description>&lt;h1 id="1-参数化声明">1 参数化声明
+&lt;a class="header-anchor" href="#1-%e5%8f%82%e6%95%b0%e5%8c%96%e5%a3%b0%e6%98%8e">&lt;/a>
+&lt;/h1>&lt;h2 id="模板分类">模板分类
+&lt;a class="header-anchor" href="#%e6%a8%a1%e6%9d%bf%e5%88%86%e7%b1%bb">&lt;/a>
+&lt;/h2>&lt;p>模板有四类：类模板、函数模板、变量模板、别名模板。其中别名模板是：&lt;/p>
+&lt;p>
+
+
+
+
+
+
+&lt;img src="https://hxhue.github.io/assets/8be842c59c3eec8f5932e5043b2fd31f.webp">&lt;/p>
+&lt;h2 id="变量模板其实可以不需要-inline但是最好加上">变量模板其实可以不需要 inline（但是最好加上）
+&lt;a class="header-anchor" href="#%e5%8f%98%e9%87%8f%e6%a8%a1%e6%9d%bf%e5%85%b6%e5%ae%9e%e5%8f%af%e4%bb%a5%e4%b8%8d%e9%9c%80%e8%a6%81-inline%e4%bd%86%e6%98%af%e6%9c%80%e5%a5%bd%e5%8a%a0%e4%b8%8a">&lt;/a>
+&lt;/h2>&lt;p>C++17 中静态和全局变量都能够用 inline 来修饰。这也意味着类中的静态变量不必在类中声明、类外初始化（非头文件），而是可以在类中直接写 inline。之前笔记里面提到的问题里，inline 加不加都没有关系，因为变量模板本身可以在多个翻译单元中出现。P179&lt;/p></description></item><item><title>CTTCG 13 Names in Templates</title><link>https://hxhue.github.io/cpp-templates-the-complete-guide/13-Names-in-Templates/</link><pubDate>Sat, 12 Aug 2023 00:00:00 +0800</pubDate><guid>https://hxhue.github.io/cpp-templates-the-complete-guide/13-Names-in-Templates/</guid><description>&lt;h1 id="名字查找普通查找和-adl">名字查找：普通查找和 ADL
+&lt;a class="header-anchor" href="#%e5%90%8d%e5%ad%97%e6%9f%a5%e6%89%be%e6%99%ae%e9%80%9a%e6%9f%a5%e6%89%be%e5%92%8c-adl">&lt;/a>
+&lt;/h1>&lt;p>普通查找和 ADL 是同时进行的，不存在优先级差异。这些被找到的函数被放在一起参与重载决议。如果没有因为一般性的重载决议规则决出优劣，则会引发 ambiguous 指代错误。&lt;/p></description></item><item><title>CTTCG 15 Template Argument Deduction</title><link>https://hxhue.github.io/cpp-templates-the-complete-guide/15-Template-Argument-Deduction/</link><pubDate>Sat, 12 Aug 2023 00:00:00 +0800</pubDate><guid>https://hxhue.github.io/cpp-templates-the-complete-guide/15-Template-Argument-Deduction/</guid><description>&lt;p>2023 年 5 月 17 日&lt;/p>
+&lt;h1 id="推导上下文deduced-context">推导上下文：Deduced Context
+&lt;a class="header-anchor" href="#%e6%8e%a8%e5%af%bc%e4%b8%8a%e4%b8%8b%e6%96%87deduced-context">&lt;/a>
+&lt;/h1>&lt;p>P272 书上&lt;/p>
+&lt;ul>
+&lt;li>依赖于模板类型的子类型不是推导上下文。比如 &lt;code>typename X&amp;lt;N&amp;gt;::I&lt;/code> 不是。而 &lt;code>X&amp;lt;N&amp;gt;::*&lt;/code> 这样的指向成员的指针没有用到子类型，所以是推导上下文。&lt;/li>
+&lt;li>非类型模板参数的非平凡表达式不是推导上下文。比如模板 &lt;code>S&lt;/code> 和参数 &lt;code>I&lt;/code>，&lt;code>S&amp;lt;I+1&amp;gt;&lt;/code> 无法提供推导信息。&lt;/li>
+&lt;/ul>
+&lt;h1 id="如何推导出模板参数">如何推导出模板参数
+&lt;a class="header-anchor" href="#%e5%a6%82%e4%bd%95%e6%8e%a8%e5%af%bc%e5%87%ba%e6%a8%a1%e6%9d%bf%e5%8f%82%e6%95%b0">&lt;/a>
+&lt;/h1>&lt;ol>
+&lt;li>从参数列表中推导（推导能力是有限制的，比如不能从 &lt;code>typename T::iterator&lt;/code> 参数中推出 &lt;code>T&lt;/code> 的类型）&lt;/li>
+&lt;li>函数模板被取地址时，可以从要求的返回值类型推导：&lt;/li>
+&lt;/ol>
+&lt;div class="highlight">&lt;pre tabindex="0" style="color:#93a1a1;background-color:#002b36;-moz-tab-size:2;-o-tab-size:2;tab-size:2;">&lt;code class="language-cpp" data-lang="cpp">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#719e07">template&lt;/span>&lt;span style="color:#719e07">&amp;lt;&lt;/span>&lt;span style="color:#719e07">typename&lt;/span> T&lt;span style="color:#719e07">&amp;gt;&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#dc322f">void&lt;/span> f(T, T);
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#dc322f">void&lt;/span> (&lt;span style="color:#719e07">*&lt;/span>pf)(&lt;span style="color:#dc322f">char&lt;/span>, &lt;span style="color:#dc322f">char&lt;/span>) &lt;span style="color:#719e07">=&lt;/span> &lt;span style="color:#719e07">&amp;amp;&lt;/span>f; &lt;span style="color:#586e75">// f的参数T由函数指针的类型确定
+&lt;/span>&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;ol>
+&lt;li>&lt;strong>隐式转换操作符模板&lt;/strong>的类型参数 T 由需要转换时所需的类型决定。&lt;/li>
+&lt;/ol>
+&lt;p>&lt;em>模板尝试匹配的时候不适用 common type。&lt;/em> 比如两个 T 类型分别被认为是 int 和 double 时，会导致模板替换失败，而不是把 T 认为是 double。比如&lt;/p></description></item><item><title>CTTCG 16 Specializations and Overloading</title><link>https://hxhue.github.io/cpp-templates-the-complete-guide/16-Specializations-and-Overloading/</link><pubDate>Sat, 12 Aug 2023 00:00:00 +0800</pubDate><guid>https://hxhue.github.io/cpp-templates-the-complete-guide/16-Specializations-and-Overloading/</guid><description>&lt;p>大部分都不需要专门总结，因此这一小节为空。&lt;/p></description></item><item><title>CTTCG 17 Future Directions</title><link>https://hxhue.github.io/cpp-templates-the-complete-guide/17-Future-Directions/</link><pubDate>Sat, 12 Aug 2023 00:00:00 +0800</pubDate><guid>https://hxhue.github.io/cpp-templates-the-complete-guide/17-Future-Directions/</guid><description>&lt;p>这一章讲的是对未来的展望。&lt;/p>
+&lt;h1 id="浮点数和字符串作为模板参数">浮点数和字符串作为模板参数
+&lt;a class="header-anchor" href="#%e6%b5%ae%e7%82%b9%e6%95%b0%e5%92%8c%e5%ad%97%e7%ac%a6%e4%b8%b2%e4%bd%9c%e4%b8%ba%e6%a8%a1%e6%9d%bf%e5%8f%82%e6%95%b0">&lt;/a>
+&lt;/h1>&lt;p>浮点数在 gcc C++20 是可以作为非类型模板参数（NTTP）的；clang 不支持。目前 &lt;a href="https://en.cppreference.com/w/cpp/compiler_support" title="C&amp;#43;&amp;#43; compiler support - cppreference.com" rel="noopener external nofollow noreferrer"
+ target="_blank" class=" exturl" >C++ compiler support - cppreference.com&lt;i class="fa fa-external-link-alt">&lt;/i>&lt;/a> 上也看不到相关的支持项目。&lt;/p></description></item><item><title>CTTCG 18 The Polymorphic Power of Templates</title><link>https://hxhue.github.io/cpp-templates-the-complete-guide/18-The-Polymorphic-Power-of-Templates/</link><pubDate>Sat, 12 Aug 2023 00:00:00 +0800</pubDate><guid>https://hxhue.github.io/cpp-templates-the-complete-guide/18-The-Polymorphic-Power-of-Templates/</guid><description>&lt;p>C++ 的多态有两类：bounded &lt;strong>dynamic&lt;/strong> polymorphism 和 unbounded &lt;strong>static&lt;/strong> polymorphism。前者 bounded 指的是虚函数有基类的接口，其行为有一定约束；后者 unbounded 指的是模板采用类型替换的方式生成代码。为了给静态多态提供约束，可以使用 enable_if 或 concept。&lt;/p></description></item><item><title>CTTCG 19 Implementing Traits</title><link>https://hxhue.github.io/cpp-templates-the-complete-guide/19-Implementing-Traits/</link><pubDate>Sat, 12 Aug 2023 00:00:00 +0800</pubDate><guid>https://hxhue.github.io/cpp-templates-the-complete-guide/19-Implementing-Traits/</guid><description>&lt;h1 id="trait-分类">Trait 分类
+&lt;a class="header-anchor" href="#trait-%e5%88%86%e7%b1%bb">&lt;/a>
+&lt;/h1>&lt;p>不一定大家都这么叫，但是为了方便，我规定下面的术语：&lt;/p>
+&lt;ul>
+&lt;li>Type Trait：包含一个 type alias。&lt;/li>
+&lt;li>Value Trait：包含一个 value 静态成员，可以是任何基本类型，含义和具体 Trait 相关。&lt;/li>
+&lt;li>Predicate Trait：包含一个 value 静态成员，类型为 bool，含义为条件是否被满足。&lt;/li>
+&lt;/ul>
+&lt;p>书中有分为 property trait 和 policy trait 两大类。前者包含我所称的 type trait 和 value trait，含义是类型本身的固有信息；后者表示根据一个特定类型选择某种映射，其含义和要实现的行为有关，文中的例子是对 size 小的参数选择原类型，对 size 大的参数选择引用类型。&lt;/p></description></item><item><title>CTTCG 19.1 用 SFINAE 实现 Traits</title><link>https://hxhue.github.io/cpp-templates-the-complete-guide/19.1-%E7%94%A8-SFINAE-%E5%AE%9E%E7%8E%B0-Traits/</link><pubDate>Sat, 12 Aug 2023 00:00:00 +0800</pubDate><guid>https://hxhue.github.io/cpp-templates-the-complete-guide/19.1-%E7%94%A8-SFINAE-%E5%AE%9E%E7%8E%B0-Traits/</guid><description>&lt;p>原理是用 SFINAE 机制安全地匹配几个函数或函数模板，然后再通过函数匹配信息将结果（true or false）嵌入 Trait 类中。Trait 约束条件被包含在函数模板的声明中。&lt;/p></description></item><item><title>CTTCG 20 Overloading on Type Properties</title><link>https://hxhue.github.io/cpp-templates-the-complete-guide/20-Overloading-on-Type-Properties/</link><pubDate>Sat, 12 Aug 2023 00:00:00 +0800</pubDate><guid>https://hxhue.github.io/cpp-templates-the-complete-guide/20-Overloading-on-Type-Properties/</guid><description>&lt;h1 id="tldr几种-sfinae-的模式">TLDR：几种 SFINAE 的模式
+&lt;a class="header-anchor" href="#tldr%e5%87%a0%e7%a7%8d-sfinae-%e7%9a%84%e6%a8%a1%e5%bc%8f">&lt;/a>
+&lt;/h1>&lt;ol>
+&lt;li>对于&lt;strong>函数参数列表非空&lt;/strong>的函数模板，可以用非 varargs 函数实现功能，varargs 作为 fallback。&lt;/li>
+&lt;li>类模板可以用偏特化实现功能重载，用带模板默认参数的原始模板作为 fallback。&lt;/li>
+&lt;li>模板用 tag dispatching 不会有重复定义的问题。&lt;/li>
+&lt;li>&lt;code>std::enable_if&lt;/code> 用在函数模板的模板默认参数上表达更简洁，但&lt;strong>用在返回值上可避免重复定义&lt;/strong>。对比起来，类模板虽然能支持偏特化，但是也没有用返回值 SFINAE 避免重复的好处。（不过 C++20 有了 requires 就无所谓了。）&lt;/li>
+&lt;li>concept、constexpr if 等。&lt;/li>
+&lt;/ol>
+&lt;p>1 和 2 其实分别适应了函数模板和类模板的特点：函数模板不能偏特化，类模板不是函数因而不能使用 varargs。&lt;/p></description></item><item><title>CTTCG 21 Templates and Inheritance</title><link>https://hxhue.github.io/cpp-templates-the-complete-guide/21-Templates-and-Inheritance/</link><pubDate>Sat, 12 Aug 2023 00:00:00 +0800</pubDate><guid>https://hxhue.github.io/cpp-templates-the-complete-guide/21-Templates-and-Inheritance/</guid><description>&lt;h1 id="零开销继承空基类优化ebco">零开销继承：空基类优化（EBCO）
+&lt;a class="header-anchor" href="#%e9%9b%b6%e5%bc%80%e9%94%80%e7%bb%a7%e6%89%bf%e7%a9%ba%e5%9f%ba%e7%b1%bb%e4%bc%98%e5%8c%96ebco">&lt;/a>
+&lt;/h1>&lt;p>The Empty Base Class Optimization (EBCO)&lt;/p>
+&lt;p>C++ 没有真正零大小的类，因为在数组等场景需要用地址区分元素。一般编译器上空类的大小是 1 个字节。不过，当基类为空时，EBCO 会使得基类在子类中不占空间。但是 EBCO 的适用有条件。下面的场景是从实践中观察出来的，可能并没有被标准定义，但它演示了 EBCO 失效：&lt;/p></description></item><item><title>CTTCG 22 Bridging Static and Dynamic Polymorphism</title><link>https://hxhue.github.io/cpp-templates-the-complete-guide/22-Bridging-Static-and-Dynamic-Polymorphism/</link><pubDate>Sat, 12 Aug 2023 00:00:00 +0800</pubDate><guid>https://hxhue.github.io/cpp-templates-the-complete-guide/22-Bridging-Static-and-Dynamic-Polymorphism/</guid><description>&lt;h1 id="类型擦除">类型擦除
+&lt;a class="header-anchor" href="#%e7%b1%bb%e5%9e%8b%e6%93%a6%e9%99%a4">&lt;/a>
+&lt;/h1>&lt;p>主要讲的是&lt;strong>类型擦除&lt;/strong>，例子是 &lt;code>std::function&lt;/code> 类模板。特殊情况：&lt;code>std::function&amp;lt;void(void)&amp;gt;&lt;/code> 和 &lt;code>std::function&amp;lt;void()&amp;gt;&lt;/code> 是同一个类型。&lt;/p>
+&lt;h1 id="实现思路">实现思路
+&lt;a class="header-anchor" href="#%e5%ae%9e%e7%8e%b0%e6%80%9d%e8%b7%af">&lt;/a>
+&lt;/h1>&lt;ol>
+&lt;li>&lt;code>std::function&lt;/code> 原始模板捕获了函数类型。&lt;/li>
+&lt;/ol>
+&lt;div class="highlight">&lt;pre tabindex="0" style="color:#93a1a1;background-color:#002b36;-moz-tab-size:2;-o-tab-size:2;tab-size:2;">&lt;code class="language-cpp" data-lang="cpp">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#719e07">template&lt;/span>&lt;span style="color:#719e07">&amp;lt;&lt;/span>&lt;span style="color:#719e07">typename&lt;/span> Signature&lt;span style="color:#719e07">&amp;gt;&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#719e07">class&lt;/span> &lt;span style="color:#268bd2">FunctionPtr&lt;/span>;
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;ol start="2">
+&lt;li>&lt;code>std::function&lt;/code> 的偏特化能够获得函数的返回值和函数参数包的类型。&lt;/li>
+&lt;/ol>
+&lt;div class="highlight">&lt;pre tabindex="0" style="color:#93a1a1;background-color:#002b36;-moz-tab-size:2;-o-tab-size:2;tab-size:2;">&lt;code class="language-cpp" data-lang="cpp">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#719e07">template&lt;/span>&lt;span style="color:#719e07">&amp;lt;&lt;/span>&lt;span style="color:#719e07">typename&lt;/span> R, &lt;span style="color:#719e07">typename&lt;/span>... Args&lt;span style="color:#719e07">&amp;gt;&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#719e07">class&lt;/span> &lt;span style="color:#268bd2">FunctionPtr&lt;/span>&lt;span style="color:#719e07">&amp;lt;&lt;/span>R(Args...)&lt;span style="color:#719e07">&amp;gt;&lt;/span> { ... }
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;ol start="3">
+&lt;li>&lt;code>std::function&lt;/code> 包含了一个&lt;strong>函数对象基类&lt;/strong>的指针，这个基类指针有一个 &lt;code>invoke&lt;/code> 虚函数，返回值和函数参数类型与模板参数对应。&lt;code>std::function&lt;/code> 被调用时，会将调用转发到这个函数对象上。&lt;/li>
+&lt;li>实现构造模板函数、赋值模板操作符时，捕获传入的&lt;strong>对象&lt;/strong>，生成一个继承于&lt;strong>函数对象基类&lt;/strong>（之前提到过）的子类对象，其 &lt;code>invoke&lt;/code> 虚函数的实现就是转而调用这个&lt;strong>对象&lt;/strong>的 &lt;code>()&lt;/code> 操作符。&lt;/li>
+&lt;/ol>
+&lt;div class="highlight">&lt;pre tabindex="0" style="color:#93a1a1;background-color:#002b36;-moz-tab-size:2;-o-tab-size:2;tab-size:2;">&lt;code class="language-cpp" data-lang="cpp">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#719e07">template&lt;/span>&lt;span style="color:#719e07">&amp;lt;&lt;/span>&lt;span style="color:#719e07">typename&lt;/span> Functor, &lt;span style="color:#719e07">typename&lt;/span> R, &lt;span style="color:#719e07">typename&lt;/span>... Args&lt;span style="color:#719e07">&amp;gt;&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#719e07">class&lt;/span> &lt;span style="color:#268bd2">SpecificFunctorBridge&lt;/span> &lt;span style="color:#719e07">:&lt;/span> &lt;span style="color:#719e07">public&lt;/span> FunctorBridge&lt;span style="color:#719e07">&amp;lt;&lt;/span>R, Args...&lt;span style="color:#719e07">&amp;gt;&lt;/span> {
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> Functor functor;
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> ...
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>}
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>子类对象就是通过上面的模板创建的。模板参数 &lt;code>Functor&lt;/code> 对应于捕获对象的存储类型，书中的定义为 &lt;code>using Functor = std::decay_t&amp;lt;F&amp;gt;&lt;/code>（&lt;code>F&lt;/code> 为捕获对象的真实类型）。&lt;/p></description></item><item><title>CTTCG 23 Metaprogramming</title><link>https://hxhue.github.io/cpp-templates-the-complete-guide/23-Metaprogramming/</link><pubDate>Sat, 12 Aug 2023 00:00:00 +0800</pubDate><guid>https://hxhue.github.io/cpp-templates-the-complete-guide/23-Metaprogramming/</guid><description>&lt;h1 id="分类">分类
+&lt;a class="header-anchor" href="#%e5%88%86%e7%b1%bb">&lt;/a>
+&lt;/h1>&lt;p>现在值元编程已经能够很好地被 &lt;code>constexpr&lt;/code> 函数取代。&lt;/p>
+&lt;p>类型元编程例子：&lt;code>std::chrono&lt;/code> 中的时间单位用分数表示，两个时间单位的加和的单位可以在运行时确定——尽管分母很可能会变化。&lt;/p></description></item><item><title>CTTCG 24 Typelists</title><link>https://hxhue.github.io/cpp-templates-the-complete-guide/24-Typelists/</link><pubDate>Sat, 12 Aug 2023 00:00:00 +0800</pubDate><guid>https://hxhue.github.io/cpp-templates-the-complete-guide/24-Typelists/</guid><description>&lt;p>本章介绍了构建类型列表的技巧。既然类型列表可以使用这类技巧，值列表当然也可以在编译期完成类似的计算。&lt;/p>
+&lt;p>类型列表一开始是用可变长参数列表定义的。&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" style="color:#93a1a1;background-color:#002b36;-moz-tab-size:2;-o-tab-size:2;tab-size:2;">&lt;code class="language-cpp" data-lang="cpp">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#719e07">template&lt;/span> &lt;span style="color:#719e07">&amp;lt;&lt;/span>&lt;span style="color:#719e07">typename&lt;/span>... Elements&lt;span style="color:#719e07">&amp;gt;&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#719e07">class&lt;/span> &lt;span style="color:#268bd2">Typelist&lt;/span> {};
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>很容易使用偏特化手段为 Typelist 定义 Front trait，以此获得列表的第一个元素。当然这要求类型列表非空，否则不能完成实例化。&lt;/p></description></item><item><title>CTTCG 25 Tuples</title><link>https://hxhue.github.io/cpp-templates-the-complete-guide/25-Tuples/</link><pubDate>Sat, 12 Aug 2023 00:00:00 +0800</pubDate><guid>https://hxhue.github.io/cpp-templates-the-complete-guide/25-Tuples/</guid><description>&lt;p>类型计算可以在编译期间完成，取值的部分仍然是运行时操作。在 &lt;code>libc++&lt;/code> 中被实现成多继承+反序构造，在 &lt;code>libstdc++&lt;/code> 中被实现成双继承+正序构造。&lt;/p>
+&lt;h1 id="base">Base
+&lt;a class="header-anchor" href="#base">&lt;/a>
+&lt;/h1>&lt;p>将元素包裹在 &lt;code>Base&lt;/code> 中再继承可以利用到 EBCO（可优化时继承元素，不可优化时将元素作为成员）。通过给 &lt;code>Base&lt;/code> 类模板添加下标作为参数，可以区分类型相同的元素。&lt;/p></description></item><item><title>CTTCG 26 Discriminated Unions</title><link>https://hxhue.github.io/cpp-templates-the-complete-guide/26-Discriminated-Unions/</link><pubDate>Sat, 12 Aug 2023 00:00:00 +0800</pubDate><guid>https://hxhue.github.io/cpp-templates-the-complete-guide/26-Discriminated-Unions/</guid><description>&lt;p>本章想要实现的类模板相当于 &lt;code>std::variant&lt;/code>。 可以用递归 union 模板，也可以用字符数组存储，本章选用的是后者。&lt;/p>
+&lt;p>使用字符数组存储未知元素，需要注意：&lt;/p></description></item><item><title>CTTCG 27 Expression Templates</title><link>https://hxhue.github.io/cpp-templates-the-complete-guide/27-Expression-Templates/</link><pubDate>Sat, 12 Aug 2023 00:00:00 +0800</pubDate><guid>https://hxhue.github.io/cpp-templates-the-complete-guide/27-Expression-Templates/</guid><description>&lt;h1 id="表达式模板解决了什么问题">表达式模板解决了什么问题
+&lt;a class="header-anchor" href="#%e8%a1%a8%e8%be%be%e5%bc%8f%e6%a8%a1%e6%9d%bf%e8%a7%a3%e5%86%b3%e4%ba%86%e4%bb%80%e4%b9%88%e9%97%ae%e9%a2%98">&lt;/a>
+&lt;/h1>&lt;p>表达式模板主要用在大数组的计算上。以相加为例，应该支持的操作有：同长度的数组相加、数组和标量的相加。有时候表达式比较复杂，会涉及多个操作，这种场景下，手工编写代码效率高，但是需要自己控制循环；使用模板编写代码则需要想办法把操作一次性完成，避免多次内存分配和内存访问。&lt;/p></description></item><item><title>CTTCG 28 Debugging Templates</title><link>https://hxhue.github.io/cpp-templates-the-complete-guide/28-Debugging-Templates/</link><pubDate>Sat, 12 Aug 2023 00:00:00 +0800</pubDate><guid>https://hxhue.github.io/cpp-templates-the-complete-guide/28-Debugging-Templates/</guid><description>&lt;h1 id="shallow-instantiation">Shallow Instantiation
+&lt;a class="header-anchor" href="#shallow-instantiation">&lt;/a>
+&lt;/h1>&lt;p>作用：早点暴露参数校验错误，避免在一堆模板实例化失败的信息中找错误。&lt;/p>
+&lt;p>可以用 &lt;code>static_assert&lt;/code> 或者定义无用类：&lt;/p>
+&lt;p>
+
+
+
+
+
+
+&lt;img src="https://hxhue.github.io/assets/6d63c902f6ee005bfe2b7348fa80e8dc.webp">&lt;/p>
+&lt;p>这样在实例化 shell 函数的时候还会实例化其中的 &lt;code>ShallowChecks&lt;/code> 类，从而确保参数能够解引用。&lt;/p></description></item><item><title>CTTCG 附录 B Value Categories</title><link>https://hxhue.github.io/cpp-templates-the-complete-guide/0-B-Value-Categories/</link><pubDate>Sat, 12 Aug 2023 00:00:00 +0800</pubDate><guid>https://hxhue.github.io/cpp-templates-the-complete-guide/0-B-Value-Categories/</guid><description>&lt;p>对于变量而言，其括号表达式的值类别是左值引用。但由于 &lt;code>decltype&lt;/code> 有特殊效果，直接对变量 &lt;code>x&lt;/code> 使用 &lt;code>decltype(x)&lt;/code> 并不遵循这一点，为此可以按照下面说的使用 &lt;code>decltype((x))&lt;/code>。&lt;/p>
+&lt;blockquote>
+ &lt;p>With the keyword decltype (introduced in C++11), it is possible to check the value category of any C++ expression. For any expression &lt;code>x&lt;/code>, &lt;code>decltype((x))&lt;/code> (note the double parentheses) yields:&lt;/p></description></item><item><title>CTTCG 附录 D Standard Type Utilities</title><link>https://hxhue.github.io/cpp-templates-the-complete-guide/0-D-Standard-Type-Utilities/</link><pubDate>Sat, 12 Aug 2023 00:00:00 +0800</pubDate><guid>https://hxhue.github.io/cpp-templates-the-complete-guide/0-D-Standard-Type-Utilities/</guid><description>&lt;p>这一章介绍的大都是用来查询类型属性的 type traits。还有一些其他的工具。&lt;/p>
+&lt;h1 id="按数据概念分类">按数据概念分类
+&lt;a class="header-anchor" href="#%e6%8c%89%e6%95%b0%e6%8d%ae%e6%a6%82%e5%bf%b5%e5%88%86%e7%b1%bb">&lt;/a>
+&lt;/h1>&lt;p>
+
+
+
+
+
+
+&lt;img src="https://hxhue.github.io/assets/d1144640c713ad4c260d6384745dfbfa.webp">&lt;/p>
+&lt;p>下面是基本（primary）类型，范围都是互斥的，而且任何一个类型必然使得下面中的一个且仅有一个评估为真：&lt;/p></description></item><item><title>CTTCG 附录 E Concept</title><link>https://hxhue.github.io/cpp-templates-the-complete-guide/0-E-Concept/</link><pubDate>Sat, 12 Aug 2023 00:00:00 +0800</pubDate><guid>https://hxhue.github.io/cpp-templates-the-complete-guide/0-E-Concept/</guid><description>&lt;h1 id="定义和使用-concept">定义和使用 concept
+&lt;a class="header-anchor" href="#%e5%ae%9a%e4%b9%89%e5%92%8c%e4%bd%bf%e7%94%a8-concept">&lt;/a>
+&lt;/h1>&lt;p>下面演示了几种 C++20 支持的定义 concept 的方式，每一条约束都是以下之一，然后用分号结尾：&lt;/p>
+&lt;ol>
+&lt;li>类型&lt;/li>
+&lt;li>表达式&lt;/li>
+&lt;li>{ 表达式 } noexcept -&amp;gt; 检查返回类型是否满足其他约束（这个 noexcept 可以不要）&lt;/li>
+&lt;li>引入其他 &lt;code>requires&lt;/code> 表达式&lt;/li>
+&lt;/ol>
+&lt;div class="highlight">&lt;pre tabindex="0" style="color:#93a1a1;background-color:#002b36;-moz-tab-size:2;-o-tab-size:2;tab-size:2;">&lt;code class="language-cpp" data-lang="cpp">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#719e07">template&lt;/span> &lt;span style="color:#719e07">&amp;lt;&lt;/span>&lt;span style="color:#719e07">typename&lt;/span> T&lt;span style="color:#719e07">&amp;gt;&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#719e07">concept&lt;/span> StringConcept &lt;span style="color:#719e07">=&lt;/span> &lt;span style="color:#719e07">requires&lt;/span>(T t) {
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#719e07">typename&lt;/span> T&lt;span style="color:#719e07">::&lt;/span>iterator; &lt;span style="color:#586e75">// 1. 检查类型存在性
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#586e75">&lt;/span> t.data(); &lt;span style="color:#586e75">// 2. 检查表达式合法性
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#586e75">&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#586e75">// 3. 将表达式作为 concept 的第一个参数，要求 concept 成立（额外参数从第二个参数起放置）
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#586e75">&lt;/span> { t.c_str() } &lt;span style="color:#719e07">-&amp;gt;&lt;/span> std&lt;span style="color:#719e07">::&lt;/span>same_as&lt;span style="color:#719e07">&amp;lt;&lt;/span>&lt;span style="color:#dc322f">char&lt;/span> &lt;span style="color:#719e07">const&lt;/span> &lt;span style="color:#719e07">*&amp;gt;&lt;/span>;
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#586e75">// 4. 用 requires 语句引入子条件
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#586e75">&lt;/span> &lt;span style="color:#719e07">requires&lt;/span> std&lt;span style="color:#719e07">::&lt;/span>is_pointer_v&lt;span style="color:#719e07">&amp;lt;&lt;/span>&lt;span style="color:#719e07">decltype&lt;/span>(t.data())&lt;span style="color:#719e07">&amp;gt;&lt;/span>;
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#586e75">// 5. 除了 requires 体之外还能用其他编译期常量表达式做约束
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#586e75">&lt;/span>} &lt;span style="color:#719e07">&amp;amp;&amp;amp;&lt;/span> (&lt;span style="color:#719e07">sizeof&lt;/span>(T) &lt;span style="color:#719e07">&amp;gt;&lt;/span> &lt;span style="color:#2aa198">8&lt;/span>) &lt;span style="color:#719e07">&amp;amp;&amp;amp;&lt;/span> &lt;span style="color:#719e07">!&lt;/span>std&lt;span style="color:#719e07">::&lt;/span>is_aggregate_v&lt;span style="color:#719e07">&amp;lt;&lt;/span>T&lt;span style="color:#719e07">&amp;gt;&lt;/span>;
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#719e07">template&lt;/span>&lt;span style="color:#719e07">&amp;lt;&lt;/span>StringConcept Str&lt;span style="color:#719e07">&amp;gt;&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#dc322f">void&lt;/span> takeString(Str &lt;span style="color:#719e07">const&lt;/span> &lt;span style="color:#719e07">&amp;amp;&lt;/span>s) { }
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#dc322f">int&lt;/span> &lt;span style="color:#268bd2">main&lt;/span>() {
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> takeString(std&lt;span style="color:#719e07">::&lt;/span>string{&lt;span style="color:#2aa198">&amp;#34;hello&amp;#34;&lt;/span>});
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>}
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>在模板中加上 &lt;code>requires&lt;/code> 条件则相对比较简单。只需要在 &lt;strong>模板参数后，函数返回值前面&lt;/strong>，或者 &lt;strong>函数体前面&lt;/strong> 加上 &lt;code>requires&lt;/code> 约束。&lt;code>requires&lt;/code> 约束能使用一般的条件表达式，也能把 concept 当成 type trait 使用。比如：&lt;/p></description></item></channel></rss>

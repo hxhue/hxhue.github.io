@@ -1,0 +1,645 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>The-Linux-Programming-Interfaces on Bluegill</title><link>https://hxhue.github.io/the-linux-programming-interface/</link><description>Recent content in The-Linux-Programming-Interfaces on Bluegill</description><generator>Hugo</generator><language>zh-CN</language><lastBuildDate>Sat, 17 May 2025 00:00:00 +0800</lastBuildDate><atom:link href="https://hxhue.github.io/the-linux-programming-interface/rss.xml" rel="self" type="application/rss+xml"/><item><title>45.1 简单总结 Linux IPC 机制</title><link>https://hxhue.github.io/the-linux-programming-interface/45.1-%E7%AE%80%E5%8D%95%E6%80%BB%E7%BB%93-Linux-IPC-%E6%9C%BA%E5%88%B6/</link><pubDate>Sat, 08 Mar 2025 00:00:00 +0800</pubDate><guid>https://hxhue.github.io/the-linux-programming-interface/45.1-%E7%AE%80%E5%8D%95%E6%80%BB%E7%BB%93-Linux-IPC-%E6%9C%BA%E5%88%B6/</guid><description>&lt;p>2025/3/8 个人理解：&lt;/p>
+&lt;ul>
+&lt;li>socket：UNIX 域套接字还是网络套接字，这取决于通信进程是否属于同一个主机。&lt;/li>
+&lt;li>管道：包括匿名管道（&lt;code>pipe&lt;/code> 系统调用）和命名管道（fifo 文件）。&lt;/li>
+&lt;li>System V IPC 三大件（POSIX 中也能找到这几个组件的替代物）
+&lt;ul>
+&lt;li>信号量&lt;/li>
+&lt;li>共享内存&lt;/li>
+&lt;li>消息队列&lt;/li>
+&lt;li>System V IPC 用 key 来访问，本质是命名的，&lt;code>IPC_PRIVATE&lt;/code> 只是生成独一无二的名字而已；除了消息队列必须命名之外，POSIX 中其他两个既可以命名也可以匿名。&lt;/li>
+&lt;li>其他区别见 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ &lt;a href="https://hxhue.github.io/the-linux-programming-interface/51-POSIX-IPC-%E4%BB%8B%E7%BB%8D/" title="51 POSIX IPC 介绍" >51 POSIX IPC 介绍&lt;/a>。&lt;/li>
+&lt;/ul>
+&lt;/li>
+&lt;li>mmap：单独用 mmap 可以实现匿名共享内存，但不能解决命名共享内存的问题。POSIX 共享内存可以解决命名共享内存的问题，但是要配合 mmap 才能附加到进程地址空间。mmap 因为很特殊所以单独放出来，没合并到共享内存里面去。&lt;/li>
+&lt;li>文件锁&lt;/li>
+&lt;li>futex&lt;/li>
+&lt;li>信号：信息传输效率低，一般用于操作系统给进程通知信息，或者用户交互式干预进程运行。&lt;/li>
+&lt;/ul></description></item><item><title>64 伪终端</title><link>https://hxhue.github.io/the-linux-programming-interface/64-%E4%BC%AA%E7%BB%88%E7%AB%AF/</link><pubDate>Mon, 02 Sep 2024 00:00:00 +0800</pubDate><guid>https://hxhue.github.io/the-linux-programming-interface/64-%E4%BC%AA%E7%BB%88%E7%AB%AF/</guid><description>&lt;h1 id="基本认识">基本认识
+&lt;a class="header-anchor" href="#%e5%9f%ba%e6%9c%ac%e8%ae%a4%e8%af%86">&lt;/a>
+&lt;/h1>&lt;p>伪终端解决这样的问题：远程登录等场合，用户并不能和真正的终端进行交互，而且信息也不能简单通过 socket 转发，因为很多（面向终端的）应用程序是假设了有控制终端的。应用了伪终端的程序包括：script(1)（能录制本次交互程序的全部用户输入和用户能看到的输出）、screen(1)、expect(1)（在 一个可以用来测试某交互程序的是否如期运行的工具，在 Debian 上需要额外安装）、&lt;strong>xterm 等终端模拟器&lt;/strong>。&lt;/p></description></item><item><title>63.1 验证单个进程能使用的最大文件描述符个数</title><link>https://hxhue.github.io/the-linux-programming-interface/63.1-%E9%AA%8C%E8%AF%81%E5%8D%95%E4%B8%AA%E8%BF%9B%E7%A8%8B%E8%83%BD%E4%BD%BF%E7%94%A8%E7%9A%84%E6%9C%80%E5%A4%A7%E6%96%87%E4%BB%B6%E6%8F%8F%E8%BF%B0%E7%AC%A6%E4%B8%AA%E6%95%B0/</link><pubDate>Sun, 01 Sep 2024 00:00:00 +0800</pubDate><guid>https://hxhue.github.io/the-linux-programming-interface/63.1-%E9%AA%8C%E8%AF%81%E5%8D%95%E4%B8%AA%E8%BF%9B%E7%A8%8B%E8%83%BD%E4%BD%BF%E7%94%A8%E7%9A%84%E6%9C%80%E5%A4%A7%E6%96%87%E4%BB%B6%E6%8F%8F%E8%BF%B0%E7%AC%A6%E4%B8%AA%E6%95%B0/</guid><description>&lt;h1 id="实验设计">实验设计
+&lt;a class="header-anchor" href="#%e5%ae%9e%e9%aa%8c%e8%ae%be%e8%ae%a1">&lt;/a>
+&lt;/h1>&lt;p>以下实验都是在 wsl 中进行的。&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" style="color:#93a1a1;background-color:#002b36;-moz-tab-size:2;-o-tab-size:2;tab-size:2;">&lt;code class="language-bash" data-lang="bash">&lt;span style="display:flex;">&lt;span>$ cat /proc/sys/fs/file-max &lt;span style="color:#586e75"># 整个系统中能使用的最大文件描述数量&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#2aa198">9223372036854775807&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>$ cat /proc/sys/fs/nr_open &lt;span style="color:#586e75"># 单个进程中能使用的最大文件描述符个数&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#2aa198">1048576&lt;/span>
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>编译运行以下测试代码（不要用 Release 模式、不要增加 &lt;code>-DNDEBUG&lt;/code>；这份代码还假设了 0、1、2 号文件描述符已经被打开）：&lt;/p></description></item><item><title>62 终端</title><link>https://hxhue.github.io/the-linux-programming-interface/62-%E7%BB%88%E7%AB%AF/</link><pubDate>Fri, 30 Aug 2024 00:00:00 +0800</pubDate><guid>https://hxhue.github.io/the-linux-programming-interface/62-%E7%BB%88%E7%AB%AF/</guid><description>&lt;h1 id="整体概览">整体概览
+&lt;a class="header-anchor" href="#%e6%95%b4%e4%bd%93%e6%a6%82%e8%a7%88">&lt;/a>
+&lt;/h1>&lt;p>终端可以分成两种工作模式：1. 规范模式（输入按照行来处理）；2. 非规范模式，比如 vim、less 等程序中。&lt;/p>
+&lt;p>终端驱动程序的作用是：操作两个队列，一个用于从终端设备把输入字符传送到读取进程上，另外一个用于将输出字符从进程传输到终端上。如果开启了&lt;strong>终端回显&lt;/strong>功能，那么终端输入队列上面的新字符也会自动被追加到输出队列的尾部。终端驱动程序还能识别终端输入中的特殊字符，并根据字符含义做出相应的行为（比如 ctrl + d 和 ctrl + c）。&lt;/p></description></item><item><title>63 其他 I/O 模型</title><link>https://hxhue.github.io/the-linux-programming-interface/63-%E5%85%B6%E4%BB%96-IO-%E6%A8%A1%E5%9E%8B/</link><pubDate>Fri, 30 Aug 2024 00:00:00 +0800</pubDate><guid>https://hxhue.github.io/the-linux-programming-interface/63-%E5%85%B6%E4%BB%96-IO-%E6%A8%A1%E5%9E%8B/</guid><description>&lt;h1 id="概览">概览
+&lt;a class="header-anchor" href="#%e6%a6%82%e8%a7%88">&lt;/a>
+&lt;/h1>&lt;ul>
+&lt;li>I/O 多路复用，&lt;code>select()&lt;/code> 和 &lt;code>poll()&lt;/code>，检查大量文件描述符时性能不好&lt;/li>
+&lt;li>信号驱动 I/O&lt;/li>
+&lt;li>Linux 特有的 &lt;code>epoll()&lt;/code>&lt;/li>
+&lt;li>POSIX 异步 I/O（AIO），在本书不讲（应该也不是一种通知模型）&lt;/li>
+&lt;/ul>
+&lt;div class="markdown-alert markdown-alert-tip">
+ &lt;p class="markdown-alert-title">
+ &lt;svg class="octicon octicon-light-bulb mr-2" viewBox="0 0 16 16" width="16" height="16" aria-hidden="true">
+ &lt;path
+ d="M8 1.5c-2.363 0-4 1.69-4 3.75 0 .984.424 1.625.984 2.304l.214.253c.223.264.47.556.673.848.284.411.537.896.621 1.49a.75.75 0 0 1-1.484.211c-.04-.282-.163-.547-.37-.847a8.456 8.456 0 0 0-.542-.68c-.084-.1-.173-.205-.268-.32C3.201 7.75 2.5 6.766 2.5 5.25 2.5 2.31 4.863 0 8 0s5.5 2.31 5.5 5.25c0 1.516-.701 2.5-1.328 3.259-.095.115-.184.22-.268.319-.207.245-.383.453-.541.681-.208.3-.33.565-.37.847a.751.751 0 0 1-1.485-.212c.084-.593.337-1.078.621-1.489.203-.292.45-.584.673-.848.075-.088.147-.173.213-.253.561-.679.985-1.32.985-2.304 0-2.06-1.637-3.75-4-3.75ZM5.75 12h4.5a.75.75 0 0 1 0 1.5h-4.5a.75.75 0 0 1 0-1.5ZM6 15.25a.75.75 0 0 1 .75-.75h2.5a.75.75 0 0 1 0 1.5h-2.5a.75.75 0 0 1-.75-.75Z">
+ &lt;/path>
+ &lt;/svg>Tip&lt;/p></description></item><item><title>61 Socket：高级主题</title><link>https://hxhue.github.io/the-linux-programming-interface/61-Socket%E9%AB%98%E7%BA%A7%E4%B8%BB%E9%A2%98/</link><pubDate>Thu, 29 Aug 2024 00:00:00 +0800</pubDate><guid>https://hxhue.github.io/the-linux-programming-interface/61-Socket%E9%AB%98%E7%BA%A7%E4%B8%BB%E9%A2%98/</guid><description>&lt;h1 id="部分读和部分写">部分读和部分写
+&lt;a class="header-anchor" href="#%e9%83%a8%e5%88%86%e8%af%bb%e5%92%8c%e9%83%a8%e5%88%86%e5%86%99">&lt;/a>
+&lt;/h1>&lt;p>套接字上面可能发生部分读和部分写，书中提供了 writen() 和 readn() 函数来保证读写完数据，接口和 write() / read() 一样，可以借鉴一下这种思路。&lt;/p>
+&lt;h1 id="shutdown-函数">&lt;code>shutdown()&lt;/code> 函数
+&lt;a class="header-anchor" href="#shutdown-%e5%87%bd%e6%95%b0">&lt;/a>
+&lt;/h1>&lt;p>可以指定关闭 socket 的读 / 写 / 读写。如果不用 &lt;code>shutdown()&lt;/code>，打开的 socket（文件描述）只会在所有指向它的文件描述符都关闭了之后才会被关闭。&lt;/p></description></item><item><title>60 Socket 服务器设计</title><link>https://hxhue.github.io/the-linux-programming-interface/60-Socket-%E6%9C%8D%E5%8A%A1%E5%99%A8%E8%AE%BE%E8%AE%A1/</link><pubDate>Fri, 23 Aug 2024 00:00:00 +0800</pubDate><guid>https://hxhue.github.io/the-linux-programming-interface/60-Socket-%E6%9C%8D%E5%8A%A1%E5%99%A8%E8%AE%BE%E8%AE%A1/</guid><description>&lt;h1 id="迭代型服务器和并发型服务器">迭代型服务器和并发型服务器
+&lt;a class="header-anchor" href="#%e8%bf%ad%e4%bb%a3%e5%9e%8b%e6%9c%8d%e5%8a%a1%e5%99%a8%e5%92%8c%e5%b9%b6%e5%8f%91%e5%9e%8b%e6%9c%8d%e5%8a%a1%e5%99%a8">&lt;/a>
+&lt;/h1>&lt;p>迭代型服务器每次只处理一个客户端，在处理客户端请求时无法响应其他客户端；并发型服务器每次接受新的请求后，就会创建新的线程或者进程去专门处理这个请求。&lt;/p></description></item><item><title>58 TCP/IP 网络基础</title><link>https://hxhue.github.io/the-linux-programming-interface/58-TCP-IP-%E7%BD%91%E7%BB%9C%E5%9F%BA%E7%A1%80/</link><pubDate>Sun, 18 Aug 2024 00:00:00 +0800</pubDate><guid>https://hxhue.github.io/the-linux-programming-interface/58-TCP-IP-%E7%BD%91%E7%BB%9C%E5%9F%BA%E7%A1%80/</guid><description>&lt;p>多宿主机（Multihomed host）指拥有多个网络接口的主机（可以是个人计算机，也可以是路由器）。&lt;/p>
+&lt;p>在网络层中，IPv4 为 IP 头提供了校验和，这样就能检测出头中的错误，但是 IPv4 并没有为包的内容提供校验。IPv6 则没有为 IP 头提供校验和。在传输层中，UDP 校验和在 IPv4 上可选、在 IPv6 上强制；TCP 校验和总是强制的。&lt;/p></description></item><item><title>56 Socket</title><link>https://hxhue.github.io/the-linux-programming-interface/56-Socket/</link><pubDate>Sat, 17 Aug 2024 00:00:00 +0800</pubDate><guid>https://hxhue.github.io/the-linux-programming-interface/56-Socket/</guid><description>&lt;h1 id="socket-基础">Socket 基础
+&lt;a class="header-anchor" href="#socket-%e5%9f%ba%e7%a1%80">&lt;/a>
+&lt;/h1>&lt;p>Socket 分为 UNIX Domain Socket 和 Internet Domain Socket，两者都有数据报和字节流两种工作模式。前者（UNIX Domain Socket）是同一台主机不同进程之间通信的方式，是可靠的通信（包括数据报通信方式）。&lt;/p></description></item><item><title>57 UNIX domain socket</title><link>https://hxhue.github.io/the-linux-programming-interface/57-UNIX-domain-socket/</link><pubDate>Sat, 17 Aug 2024 00:00:00 +0800</pubDate><guid>https://hxhue.github.io/the-linux-programming-interface/57-UNIX-domain-socket/</guid><description>&lt;h1 id="unix-域套接字-bind-时会在文件系统上面创建文件">UNIX 域套接字 &lt;code>bind()&lt;/code> 时会在文件系统上面创建文件
+&lt;a class="header-anchor" href="#unix-%e5%9f%9f%e5%a5%97%e6%8e%a5%e5%ad%97-bind-%e6%97%b6%e4%bc%9a%e5%9c%a8%e6%96%87%e4%bb%b6%e7%b3%bb%e7%bb%9f%e4%b8%8a%e9%9d%a2%e5%88%9b%e5%bb%ba%e6%96%87%e4%bb%b6">&lt;/a>
+&lt;/h1>&lt;p>UNIX domain socket 在 bind 的时候会在文件系统上面创建一个 socket 文件。&lt;/p>
+&lt;p>&lt;strong>如果文件系统上面已经有该路径，则会绑定失败&lt;/strong>。往往是服务器在 &lt;code>bind()&lt;/code> 之前调用 &lt;code>remove()&lt;/code> 来尝试删除旧文件（&lt;code>remove()&lt;/code> 既可以删除文件夹又可以删除普通文件），在不再需要 socket 时也会立即调用 &lt;code>unlink()&lt;/code> 来删除 socket，等所有使用该 socket 的进程退出之后文件就会被文件系统自动清理。&lt;/p></description></item><item><title>53 POSIX 信号量</title><link>https://hxhue.github.io/the-linux-programming-interface/53-POSIX-%E4%BF%A1%E5%8F%B7%E9%87%8F/</link><pubDate>Mon, 05 Aug 2024 00:00:00 +0800</pubDate><guid>https://hxhue.github.io/the-linux-programming-interface/53-POSIX-%E4%BF%A1%E5%8F%B7%E9%87%8F/</guid><description>&lt;h1 id="大概特点">大概特点
+&lt;a class="header-anchor" href="#%e5%a4%a7%e6%a6%82%e7%89%b9%e7%82%b9">&lt;/a>
+&lt;/h1>&lt;p>POSIX 信号量有两种：命名信号量和匿名信号量，前者和 System V 信号量比较相似（System V 的 IPC 都用 key 来标识，因此相当于是命名的）。&lt;/p>
+&lt;p>POSIX 信号量使用了 futex(2) 来实现，在没有争抢的情况下，不会发生系统调用，因此效率比 System V 实现更高。在争抢频繁的情况下，两者性能差不多。&lt;/p></description></item><item><title>54 POSIX 共享内存</title><link>https://hxhue.github.io/the-linux-programming-interface/54-POSIX-%E5%85%B1%E4%BA%AB%E5%86%85%E5%AD%98/</link><pubDate>Mon, 05 Aug 2024 00:00:00 +0800</pubDate><guid>https://hxhue.github.io/the-linux-programming-interface/54-POSIX-%E5%85%B1%E4%BA%AB%E5%86%85%E5%AD%98/</guid><description>&lt;p>POSIX 共享内存对应虚拟文件系统 /dev/shm，这是一个 tmpfs 文件系统，具有内核持久性。如果不满意默认的大小（书上说默认大小是 256M，但是我测试默认大小是内存的一半——在服务器、虚拟机、wsl 上都是这样；docker 容器共享内存的默认大小则是 64M），可以使用 &lt;code>mount -o remount,size=&amp;lt;num_bytes&amp;gt; ...&lt;/code> 重新挂载。&lt;/p></description></item><item><title>55 文件锁：flock() 和 fcntl() 加锁</title><link>https://hxhue.github.io/the-linux-programming-interface/55-%E6%96%87%E4%BB%B6%E9%94%81flock-%E5%92%8C-fcntl-%E5%8A%A0%E9%94%81/</link><pubDate>Mon, 05 Aug 2024 00:00:00 +0800</pubDate><guid>https://hxhue.github.io/the-linux-programming-interface/55-%E6%96%87%E4%BB%B6%E9%94%81flock-%E5%92%8C-fcntl-%E5%8A%A0%E9%94%81/</guid><description>&lt;h1 id="要点">要点
+&lt;a class="header-anchor" href="#%e8%a6%81%e7%82%b9">&lt;/a>
+&lt;/h1>&lt;p>Linux 提供了两种文件加锁系统调用：从 BSD 衍生出来的 &lt;code>flock()&lt;/code> 和从 System V 衍生出来的 &lt;code>fcntl()&lt;/code>。尽管这两组系统调用在大多数 UNIX 实现上都是可用的，但只有 fcntl() 加锁在 SUSv3 中进行了标准化。&lt;/p></description></item><item><title>50 虚拟内存操作</title><link>https://hxhue.github.io/the-linux-programming-interface/50-%E8%99%9A%E6%8B%9F%E5%86%85%E5%AD%98%E6%93%8D%E4%BD%9C/</link><pubDate>Sun, 04 Aug 2024 00:00:00 +0800</pubDate><guid>https://hxhue.github.io/the-linux-programming-interface/50-%E8%99%9A%E6%8B%9F%E5%86%85%E5%AD%98%E6%93%8D%E4%BD%9C/</guid><description>&lt;blockquote>
+ &lt;p>本章介绍在进程的虚拟地址空间上执行操作的各个系统调用。&lt;/p>
+&lt;ol>
+&lt;li>&lt;code>mprotect()&lt;/code> 系统调用修改一块虚拟内存区域上的保护信息。&lt;/li>
+&lt;li>&lt;code>mlock()&lt;/code> 和 &lt;code>mlockall()&lt;/code> 系统调用将一块虚拟内存区域锁进物理内存，从而防止它被交换出去。&lt;/li>
+&lt;li>&lt;code>mincore()&lt;/code> 系统调用让一个进程能够确定一块虚拟内存区域中的分页是否驻留在物理内存中。&lt;/li>
+&lt;li>&lt;code>madvise()&lt;/code> 系统调用让一个进程能够将其对虚拟内存区域的使用模式报告给内核。&lt;/li>
+&lt;/ol>
+&lt;/blockquote>&lt;h1 id="mprotect">&lt;code>mprotect()&lt;/code>
+&lt;a class="header-anchor" href="#mprotect">&lt;/a>
+&lt;/h1>&lt;p>同 &lt;code>mmap()&lt;/code> 的 &lt;code>prot&lt;/code> 参数。&lt;/p></description></item><item><title>51 POSIX IPC 介绍</title><link>https://hxhue.github.io/the-linux-programming-interface/51-POSIX-IPC-%E4%BB%8B%E7%BB%8D/</link><pubDate>Sun, 04 Aug 2024 00:00:00 +0800</pubDate><guid>https://hxhue.github.io/the-linux-programming-interface/51-POSIX-IPC-%E4%BB%8B%E7%BB%8D/</guid><description>&lt;p>总体来说，POSIX IPC 的接口比 System V IPC 更简单，而且使用方式也更贴近文件。&lt;/p>
+&lt;ol>
+&lt;li>&lt;u>POSIX IPC 对象名字需要是类似于 /myobject 的&lt;/u>、以斜线开头后面跟非斜线字符的字符串。字符串长度受到 NAME_MAX 限制（255 个字符）。信号量的名字还要少 4 个，因为会增加前缀 &lt;code>sem.&lt;/code>。如果不以 / 开头，则是实现定义。&lt;em>IPC 对象名字很像一个根目录下的文件的绝对路径，在有些实现上，IPC 对象真的被放在文件系统上&lt;/em>。&lt;/li>
+&lt;li>创建和打开 IPC 对象很像创建或打开文件。&lt;/li>
+&lt;li>&lt;u>POSIX IPC 对象有引用计数&lt;/u>，进程退出或者关闭 IPC 对象后引用计数就会减少。&lt;strong>进程调用 &lt;code>exec()&lt;/code> 后 POSIX IPC 对象也会被关闭（很像文件有 close-on-exec 标记）&lt;/strong>。&lt;code>{mq,sem,shm}_unlink()&lt;/code> 可以用来删除 POSIX IPC 对象，已经打开了 IPC 对象的进程仍能继续使用它们。而 System V 的删除（除了共享内存）是立即生效的，进程的后续访问会出错。&lt;/li>
+&lt;li>&lt;u>持久性&lt;/u>：和 System V IPC 一样，POSIX IPC 对象也有&lt;strong>内核持久性&lt;/strong>（&lt;strong>如果不显式删除，将会持续到系统关机&lt;/strong>）。&lt;/li>
+&lt;li>&lt;u>IPC 对象管理&lt;/u>：System V IPC 可以用 &lt;code>ipcs&lt;/code> 来列出 IPC 对象，用 &lt;code>ipcrm&lt;/code> 来删除 IPC 对象。POSIX IPC 没有这样标准化的命令。&lt;em>Linux 上的 POSIX IPC 对象被挂载在虚拟文件系统上，其所在目录有粘滞位，可以用 ls(1) 和 rm(1) 这样的标准命令来操作 Linux 的 POSIX IPC 对象。&lt;/em>&lt;/li>
+&lt;li>System V IPC 更古老，可移植性更强。&lt;/li>
+&lt;li>System V IPC 用 key 来访问，本质都是命名的；POSIX 信号量可以匿名也可以命名；POSIX 用 &lt;code>shm_open&lt;/code> 创建共享内存是命名的，但用 mmap 也可以创建匿名共享内存（mmap 也是 POSIX 标准）；POSIX 消息队列是命名的。&lt;/li>
+&lt;/ol></description></item><item><title>52 POSIX 消息队列</title><link>https://hxhue.github.io/the-linux-programming-interface/52-POSIX-%E6%B6%88%E6%81%AF%E9%98%9F%E5%88%97/</link><pubDate>Sun, 04 Aug 2024 00:00:00 +0800</pubDate><guid>https://hxhue.github.io/the-linux-programming-interface/52-POSIX-%E6%B6%88%E6%81%AF%E9%98%9F%E5%88%97/</guid><description>&lt;p>和 System V 不同点：&lt;/p>
+&lt;h1 id="消息按照优先级排序">消息按照优先级排序
+&lt;a class="header-anchor" href="#%e6%b6%88%e6%81%af%e6%8c%89%e7%85%a7%e4%bc%98%e5%85%88%e7%ba%a7%e6%8e%92%e5%ba%8f">&lt;/a>
+&lt;/h1>&lt;p>消息按照优先级排序（数值越小越靠前）。每次接收都只能拿到开头的消息，不像 SysV 消息队列那样不按照优先级排序、且可以选择性获取中间的消息。&lt;/p></description></item><item><title>49 内存映射 mmap()</title><link>https://hxhue.github.io/the-linux-programming-interface/49-%E5%86%85%E5%AD%98%E6%98%A0%E5%B0%84-mmap/</link><pubDate>Fri, 02 Aug 2024 00:00:00 +0800</pubDate><guid>https://hxhue.github.io/the-linux-programming-interface/49-%E5%86%85%E5%AD%98%E6%98%A0%E5%B0%84-mmap/</guid><description>&lt;h1 id="内存映射分类">内存映射分类
+&lt;a class="header-anchor" href="#%e5%86%85%e5%ad%98%e6%98%a0%e5%b0%84%e5%88%86%e7%b1%bb">&lt;/a>
+&lt;/h1>&lt;p>内存映射可以通过 &lt;code>mmap()&lt;/code> 函数来完成。&lt;/p>
+&lt;ol>
+&lt;li>内存映射从可见性来讲可以分成私有（&lt;code>MAP_PRIVATE&lt;/code>）和共享（&lt;code>MAP_SHARED&lt;/code>）。
+&lt;ol>
+&lt;li>私有内存映射有写时复制语义。&lt;/li>
+&lt;li>共享映射页面上的内容变化对所有共享者都可见。共享文件映射的页面变化还会同步回文件。&lt;/li>
+&lt;/ol>
+&lt;/li>
+&lt;li>内存映射从映射类型上可以分成文件映射和匿名映射。
+&lt;ol>
+&lt;li>文件映射页面被初始化为文件对应位置的内容。&lt;/li>
+&lt;li>匿名映射页面被初始化为 0。&lt;/li>
+&lt;/ol>
+&lt;/li>
+&lt;/ol>
+&lt;p>因此，它们可以有以下 4 种组合方式：&lt;/p></description></item><item><title>48 System V 共享内存</title><link>https://hxhue.github.io/the-linux-programming-interface/48-System-V-%E5%85%B1%E4%BA%AB%E5%86%85%E5%AD%98/</link><pubDate>Thu, 01 Aug 2024 00:00:00 +0800</pubDate><guid>https://hxhue.github.io/the-linux-programming-interface/48-System-V-%E5%85%B1%E4%BA%AB%E5%86%85%E5%AD%98/</guid><description>&lt;p>共享内存是 IPC 机制中最快的一种，因为共享内存段会成为进程用户空间内存的一部分，因此在申请完成之后无需内核介入便可通信。作为对比，管道数据生产者需要将数据从用户缓冲区（如果使用 stdio）写入到内核缓冲区，管道数据的消费者也需要从内核缓冲区读取信息。&lt;/p></description></item><item><title>47 System V 信号量</title><link>https://hxhue.github.io/the-linux-programming-interface/47-System-V-%E4%BF%A1%E5%8F%B7%E9%87%8F/</link><pubDate>Sun, 28 Jul 2024 00:00:00 +0800</pubDate><guid>https://hxhue.github.io/the-linux-programming-interface/47-System-V-%E4%BF%A1%E5%8F%B7%E9%87%8F/</guid><description>&lt;p>SysV 信号量是以信号量集的形式出现的。&lt;/p>
+&lt;h1 id="创建-sysv-信号量后需要显式初始化">创建 SysV 信号量后需要显式初始化
+&lt;a class="header-anchor" href="#%e5%88%9b%e5%bb%ba-sysv-%e4%bf%a1%e5%8f%b7%e9%87%8f%e5%90%8e%e9%9c%80%e8%a6%81%e6%98%be%e5%bc%8f%e5%88%9d%e5%a7%8b%e5%8c%96">&lt;/a>
+&lt;/h1>&lt;p>在 Linux 中，创建的 SysV 信号量的 &lt;code>semval&lt;/code> 会被初始化为 0，但是这个行为是不可以移植的。在其他系统中，需要手动创建，再跟着初始化，这两部分可能会出现同步错误。&lt;/p></description></item><item><title>45 System V IPC</title><link>https://hxhue.github.io/the-linux-programming-interface/45-System-V-IPC/</link><pubDate>Wed, 24 Jul 2024 00:00:00 +0800</pubDate><guid>https://hxhue.github.io/the-linux-programming-interface/45-System-V-IPC/</guid><description>&lt;p>System V IPC 对象 &lt;code>xxx_get&lt;/code> 来打开（含创建）、&lt;code>xxx_ctl&lt;/code> 来控制（含删除）。&lt;/p>
+&lt;p>操作 System V IPC 对象需要 key，key 可以用 &lt;code>IPC_PRIVATE&lt;/code> 来让系统创建一个独一无二的，也可以从 &lt;code>ftok()&lt;/code> 按照文件的 inode 号生成。&lt;strong>System V IPC 其实都是命名的，&lt;code>IPC_PRIVATE&lt;/code> 并不能真正实现匿名，只是生成一个不重复的名字罢了&lt;/strong>。&lt;/p></description></item><item><title>44 管道和 FIFO</title><link>https://hxhue.github.io/the-linux-programming-interface/44-%E7%AE%A1%E9%81%93%E5%92%8C-FIFO/</link><pubDate>Tue, 23 Jul 2024 00:00:00 +0800</pubDate><guid>https://hxhue.github.io/the-linux-programming-interface/44-%E7%AE%A1%E9%81%93%E5%92%8C-FIFO/</guid><description>&lt;h1 id="管道">管道
+&lt;a class="header-anchor" href="#%e7%ae%a1%e9%81%93">&lt;/a>
+&lt;/h1>&lt;p>&lt;u>管道：一般指的是匿名管道&lt;/u>。&lt;/p>
+&lt;p>创建方式：&lt;/p>
+&lt;ol>
+&lt;li>可以用 &lt;code>pipe()&lt;/code> 创建，通过 &lt;code>fork()&lt;/code> 或者 UNIX 域套接字共享给其他进程。&lt;/li>
+&lt;li>也可以通过 &lt;code>popen()&lt;/code> 创建子进程。&lt;/li>
+&lt;/ol>
+&lt;p>&lt;code>popen()&lt;/code> 和 &lt;code>system()&lt;/code> 有一些差异：&lt;/p>
+&lt;ol>
+&lt;li>&lt;code>system()&lt;/code> 会为调用进程忽略 SIGINT 和 SIGTERM，但是 &lt;code>popen()&lt;/code> 不会忽略这些信号，因为调用进程没有阻塞等待子进程。&lt;/li>
+&lt;li>&lt;code>popen()&lt;/code> 不会阻塞 SIGCHLD。如果阻塞了，那么在对应的 &lt;code>pclose()&lt;/code> 之前就不能正常接受子进程退出的消息了。但这也有个问题：&lt;code>wait()&lt;/code> 可能会接收到 &lt;code>popen()&lt;/code> 创建的子进程的消息，这样调用 &lt;code>pclose()&lt;/code> 的时候就会返回 -1 并设置 &lt;code>errno&lt;/code> 为 ECHLD。&lt;/li>
+&lt;li>&lt;code>popen()&lt;/code> 和 &lt;code>pclose()&lt;/code> 配套。除了关闭文件描述符之外，&lt;code>pclose()&lt;/code> 还会回收子进程，所以不能用 &lt;code>fclose()&lt;/code> 代替 &lt;code>pclose()&lt;/code>。&lt;/li>
+&lt;/ol>
+&lt;h1 id="管道的一些性质">管道的一些性质
+&lt;a class="header-anchor" href="#%e7%ae%a1%e9%81%93%e7%9a%84%e4%b8%80%e4%ba%9b%e6%80%a7%e8%b4%a8">&lt;/a>
+&lt;/h1>&lt;p>这些性质都是匿名 / 命名管道都有的。&lt;/p></description></item><item><title>42.1 几个搜索顺序</title><link>https://hxhue.github.io/the-linux-programming-interface/42.1-%E5%87%A0%E4%B8%AA%E6%90%9C%E7%B4%A2%E9%A1%BA%E5%BA%8F/</link><pubDate>Sun, 21 Jul 2024 00:00:00 +0800</pubDate><guid>https://hxhue.github.io/the-linux-programming-interface/42.1-%E5%87%A0%E4%B8%AA%E6%90%9C%E7%B4%A2%E9%A1%BA%E5%BA%8F/</guid><description>&lt;p>要区分找依赖 / 共享库和找符号。&lt;/p>
+&lt;p>找共享库：
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ &lt;a href="https://hxhue.github.io/the-linux-programming-interface/41-%E5%85%B1%E4%BA%AB%E5%BA%93%E5%9F%BA%E7%A1%80/#%e5%85%b1%e4%ba%ab%e5%ba%93%e7%9a%84%e6%90%9c%e7%b4%a2%e9%a1%ba%e5%ba%8f%e9%87%8d%e8%a6%81" title="动态链接器在 ELF 文件中见到一个依赖名，查找此依赖的搜索顺序" >动态链接器在 ELF 文件中见到一个依赖名，查找此依赖的搜索顺序&lt;/a>。&lt;/p></description></item><item><title>42 共享库高级特性</title><link>https://hxhue.github.io/the-linux-programming-interface/42-%E5%85%B1%E4%BA%AB%E5%BA%93%E9%AB%98%E7%BA%A7%E7%89%B9%E6%80%A7/</link><pubDate>Sat, 20 Jul 2024 00:00:00 +0800</pubDate><guid>https://hxhue.github.io/the-linux-programming-interface/42-%E5%85%B1%E4%BA%AB%E5%BA%93%E9%AB%98%E7%BA%A7%E7%89%B9%E6%80%A7/</guid><description>&lt;h1 id="动态加载库dlopen-api">动态加载库：dlopen API
+&lt;a class="header-anchor" href="#%e5%8a%a8%e6%80%81%e5%8a%a0%e8%bd%bd%e5%ba%93dlopen-api">&lt;/a>
+&lt;/h1>&lt;div class="highlight">&lt;pre tabindex="0" style="color:#93a1a1;background-color:#002b36;-moz-tab-size:2;-o-tab-size:2;tab-size:2;">&lt;code class="language-c" data-lang="c">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#719e07">#include&lt;/span> &lt;span style="color:#719e07">&amp;lt;dlfcn.h&amp;gt;&lt;/span>&lt;span style="color:#719e07">
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#719e07">&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#dc322f">void&lt;/span> &lt;span style="color:#719e07">*&lt;/span>&lt;span style="color:#268bd2">dlopen&lt;/span>(&lt;span style="color:#719e07">const&lt;/span> &lt;span style="color:#dc322f">char&lt;/span> &lt;span style="color:#719e07">*&lt;/span>filename, &lt;span style="color:#dc322f">int&lt;/span> flags);
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#dc322f">int&lt;/span> &lt;span style="color:#268bd2">dlclose&lt;/span>(&lt;span style="color:#dc322f">void&lt;/span> &lt;span style="color:#719e07">*&lt;/span>handle);
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>使用 dlopen API 要给 gcc 传递 &lt;code>-ldl&lt;/code> 参数使其链接到 libdl.so。&lt;/p>
+&lt;h2 id="dlopen">&lt;code>dlopen()&lt;/code>
+&lt;a class="header-anchor" href="#dlopen">&lt;/a>
+&lt;/h2>&lt;p>每个被加载的库会有一个引用计数，一个库被加载时，它依赖的其他库（被称为依赖树）会被自动加载，它们的引用计数增加；卸载时引用计数又会减少，归零时才真正意义上卸载共享库。&lt;/p></description></item><item><title>40 登录记账</title><link>https://hxhue.github.io/the-linux-programming-interface/40-%E7%99%BB%E5%BD%95%E8%AE%B0%E8%B4%A6/</link><pubDate>Fri, 19 Jul 2024 00:00:00 +0800</pubDate><guid>https://hxhue.github.io/the-linux-programming-interface/40-%E7%99%BB%E5%BD%95%E8%AE%B0%E8%B4%A6/</guid><description>&lt;h1 id="两个标准文件">两个标准文件
+&lt;a class="header-anchor" href="#%e4%b8%a4%e4%b8%aa%e6%a0%87%e5%87%86%e6%96%87%e4%bb%b6">&lt;/a>
+&lt;/h1>&lt;p>utmp（/var/run/utmp）、wtmp（/var/log/wtmp）。utmp 维护当前登录进系统的用户的状态（登出后信息就被删除），后者维护每条和登录相关的信息，也就是说 who(1) 可以用前者实现，last(1) 可以用后者实现。&lt;/p></description></item><item><title>41 共享库基础</title><link>https://hxhue.github.io/the-linux-programming-interface/41-%E5%85%B1%E4%BA%AB%E5%BA%93%E5%9F%BA%E7%A1%80/</link><pubDate>Fri, 19 Jul 2024 00:00:00 +0800</pubDate><guid>https://hxhue.github.io/the-linux-programming-interface/41-%E5%85%B1%E4%BA%AB%E5%BA%93%E5%9F%BA%E7%A1%80/</guid><description>&lt;h1 id="操作静态库">操作静态库
+&lt;a class="header-anchor" href="#%e6%93%8d%e4%bd%9c%e9%9d%99%e6%80%81%e5%ba%93">&lt;/a>
+&lt;/h1>&lt;p>静态库可以使用 &lt;code>ar&lt;/code> 命令创建和管理（尽管一般不需要我们自己调用 &lt;code>ar&lt;/code> 命令）。&lt;/p>
+&lt;p>创建归档：&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" style="color:#93a1a1;background-color:#002b36;-moz-tab-size:2;-o-tab-size:2;tab-size:2;">&lt;code class="language-bash" data-lang="bash">&lt;span style="display:flex;">&lt;span>ar r libdemo.a mod1.o mod2.o mod3.o
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>列出归档：&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" style="color:#93a1a1;background-color:#002b36;-moz-tab-size:2;-o-tab-size:2;tab-size:2;">&lt;code class="language-txt" data-lang="txt">&lt;span style="display:flex;">&lt;span>$ ar tv libdemo.a
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>rw-r--r-- 1000/100 1001016 Nov 15 12:26 2009 mod1.o
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>rw-r--r-- 1000/100 406668 Nov 15 12:21 2009 mod2.o
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>rw-r--r-- 1000/100 46672 Nov 15 12:21 2009 mod3.o
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>从归档中删除内容：&lt;/p></description></item><item><title>37 Daemon</title><link>https://hxhue.github.io/the-linux-programming-interface/37-Daemon/</link><pubDate>Thu, 18 Jul 2024 00:00:00 +0800</pubDate><guid>https://hxhue.github.io/the-linux-programming-interface/37-Daemon/</guid><description>&lt;h1 id="在概述小节的疑惑">在概述小节的疑惑
+&lt;a class="header-anchor" href="#%e5%9c%a8%e6%a6%82%e8%bf%b0%e5%b0%8f%e8%8a%82%e7%9a%84%e7%96%91%e6%83%91">&lt;/a>
+&lt;/h1>&lt;p>书上说：在 Linux 上，特定的 daemon 会作为内核线程运行，比如 pdflush，用 ps(1) 列出线程时，这些 daemon 的名字会用花括号括起来。但可能因为书太老了，很多内容已经变化了。我在服务器上查出来的情况是（用我的 wsl 查不出来什么，可能内核修改太多了）：&lt;/p></description></item><item><title>38 编写安全的特权程序</title><link>https://hxhue.github.io/the-linux-programming-interface/38-%E7%BC%96%E5%86%99%E5%AE%89%E5%85%A8%E7%9A%84%E7%89%B9%E6%9D%83%E7%A8%8B%E5%BA%8F/</link><pubDate>Thu, 18 Jul 2024 00:00:00 +0800</pubDate><guid>https://hxhue.github.io/the-linux-programming-interface/38-%E7%BC%96%E5%86%99%E5%AE%89%E5%85%A8%E7%9A%84%E7%89%B9%E6%9D%83%E7%A8%8B%E5%BA%8F/</guid><description>&lt;p>本文讲的很多东西是适用于 set-user/group-ID 的。&lt;/p>
+&lt;h1 id="避免使用-set-user-id-和-set-group-id-程序">避免使用 set-user-ID 和 set-group-ID 程序
+&lt;a class="header-anchor" href="#%e9%81%bf%e5%85%8d%e4%bd%bf%e7%94%a8-set-user-id-%e5%92%8c-set-group-id-%e7%a8%8b%e5%ba%8f">&lt;/a>
+&lt;/h1>&lt;p>如题。&lt;/p>
+&lt;h1 id="使用尽可能少的权限">使用尽可能少的权限
+&lt;a class="header-anchor" href="#%e4%bd%bf%e7%94%a8%e5%b0%bd%e5%8f%af%e8%83%bd%e5%b0%91%e7%9a%84%e6%9d%83%e9%99%90">&lt;/a>
+&lt;/h1>&lt;p>这里的权限指的是用户的身份，即 user ID。组 ID 可以类比过来，操作方式相似。&lt;/p>
+&lt;h2 id="只在需要权限的时候暂时改变权限">只在需要权限的时候暂时改变权限
+&lt;a class="header-anchor" href="#%e5%8f%aa%e5%9c%a8%e9%9c%80%e8%a6%81%e6%9d%83%e9%99%90%e7%9a%84%e6%97%b6%e5%80%99%e6%9a%82%e6%97%b6%e6%94%b9%e5%8f%98%e6%9d%83%e9%99%90">&lt;/a>
+&lt;/h2>&lt;ol>
+&lt;li>一个 set-user-ID 的进程启动时保存其有效用户 ID。&lt;/li>
+&lt;li>用 &lt;code>seteuid(getuid())&lt;/code> 更换有效用户 ID 为真实用户 ID 以执行其他程序。&lt;/li>
+&lt;li>在需要权限的时候暂时设置有效用户 ID，之后切换回来。&lt;/li>
+&lt;/ol>
+&lt;h2 id="永久放弃权限">永久放弃权限
+&lt;a class="header-anchor" href="#%e6%b0%b8%e4%b9%85%e6%94%be%e5%bc%83%e6%9d%83%e9%99%90">&lt;/a>
+&lt;/h2>&lt;p>为了保证进程以后不再能获取权限，出了恢复有效用户 ID 之外，也应该恢复保存的用户 ID。但是只有进程有特权时，&lt;code>setuid()&lt;/code> 才能设置真实用户 ID 和保存的用户 ID。因此，如果一个 root 用户的 set-user-ID 程序想要永久放弃权限，需要：&lt;/p></description></item><item><title>39 Capabilities</title><link>https://hxhue.github.io/the-linux-programming-interface/39-Capabilities/</link><pubDate>Thu, 18 Jul 2024 00:00:00 +0800</pubDate><guid>https://hxhue.github.io/the-linux-programming-interface/39-Capabilities/</guid><description>&lt;h1 id="简介">简介
+&lt;a class="header-anchor" href="#%e7%ae%80%e4%bb%8b">&lt;/a>
+&lt;/h1>&lt;p>和进程凭证相似，Linux 的能力也有区分进程和文件的，它们都有许可集、有效集和继承集（内核 2.6.24 才实现了文件能力，老内核只有进程能力）。&lt;/p>
+&lt;p>进程能力集合：&lt;/p></description></item><item><title>35 进程优先级与实时调度</title><link>https://hxhue.github.io/the-linux-programming-interface/35-%E8%BF%9B%E7%A8%8B%E4%BC%98%E5%85%88%E7%BA%A7%E4%B8%8E%E5%AE%9E%E6%97%B6%E8%B0%83%E5%BA%A6/</link><pubDate>Wed, 17 Jul 2024 00:00:00 +0800</pubDate><guid>https://hxhue.github.io/the-linux-programming-interface/35-%E8%BF%9B%E7%A8%8B%E4%BC%98%E5%85%88%E7%BA%A7%E4%B8%8E%E5%AE%9E%E6%97%B6%E8%B0%83%E5%BA%A6/</guid><description>&lt;h1 id="nice-值">Nice 值
+&lt;a class="header-anchor" href="#nice-%e5%80%bc">&lt;/a>
+&lt;/h1>&lt;p>范围是 +19~-20，越低优先级越高，默认值为 0。它会影响时间片轮转算法下进程分到的时间长度。&lt;/p>
+&lt;ol>
+&lt;li>资源限制参数、系统调用的返回值等场景可能会对 nice 值做一些简单的变换，而不是直接使用 +19~-20 这个范围。&lt;/li>
+&lt;li>Nice 值可以通过系统调用设置、也有相关的命令。&lt;/li>
+&lt;/ol>
+&lt;h1 id="实时优先级">实时优先级
+&lt;a class="header-anchor" href="#%e5%ae%9e%e6%97%b6%e4%bc%98%e5%85%88%e7%ba%a7">&lt;/a>
+&lt;/h1>&lt;p>调度策略如下：&lt;/p></description></item><item><title>34 进程组、会话和作业控制</title><link>https://hxhue.github.io/the-linux-programming-interface/34-%E8%BF%9B%E7%A8%8B%E7%BB%84%E4%BC%9A%E8%AF%9D%E5%92%8C%E4%BD%9C%E4%B8%9A%E6%8E%A7%E5%88%B6/</link><pubDate>Sat, 13 Jul 2024 00:00:00 +0800</pubDate><guid>https://hxhue.github.io/the-linux-programming-interface/34-%E8%BF%9B%E7%A8%8B%E7%BB%84%E4%BC%9A%E8%AF%9D%E5%92%8C%E4%BD%9C%E4%B8%9A%E6%8E%A7%E5%88%B6/</guid><description>&lt;h1 id="进程组">进程组
+&lt;a class="header-anchor" href="#%e8%bf%9b%e7%a8%8b%e7%bb%84">&lt;/a>
+&lt;/h1>&lt;h2 id="进程组和会话的作用">进程组和会话的作用
+&lt;a class="header-anchor" href="#%e8%bf%9b%e7%a8%8b%e7%bb%84%e5%92%8c%e4%bc%9a%e8%af%9d%e7%9a%84%e4%bd%9c%e7%94%a8">&lt;/a>
+&lt;/h2>&lt;p>进程组和会话的主要作用是 shell 的作业控制。一个以 &lt;code>;&lt;/code>（或者什么都没有）结尾的命令会启用一个前台进程组，一个以 &lt;code>&amp;amp;&lt;/code> 结尾的命令会启用一个后台进程组。在终端（窗口环境中的控制终端实际上是一个伪终端）中键入特殊字符发送信号时，信号会发给前台进程组的中的所有进程。&lt;/p></description></item><item><title>29.3 用 `kill` 发送信号给特定线程的尝试</title><link>https://hxhue.github.io/the-linux-programming-interface/29.3-%E7%94%A8-kill-%E5%8F%91%E9%80%81%E4%BF%A1%E5%8F%B7%E7%BB%99%E7%89%B9%E5%AE%9A%E7%BA%BF%E7%A8%8B%E7%9A%84%E5%B0%9D%E8%AF%95/</link><pubDate>Fri, 12 Jul 2024 00:00:00 +0800</pubDate><guid>https://hxhue.github.io/the-linux-programming-interface/29.3-%E7%94%A8-kill-%E5%8F%91%E9%80%81%E4%BF%A1%E5%8F%B7%E7%BB%99%E7%89%B9%E5%AE%9A%E7%BA%BF%E7%A8%8B%E7%9A%84%E5%B0%9D%E8%AF%95/</guid><description>&lt;p>线程号在整个系统是唯一的，而 &lt;code>kill&lt;/code> 命令也疑似可以精准发送信号给目标线程（见下方代码的测试 1；测试时只保留测试 1 和 2 其中一个，注释掉另外一个）。特殊情况：&lt;/p></description></item><item><title>32 线程取消</title><link>https://hxhue.github.io/the-linux-programming-interface/32-%E7%BA%BF%E7%A8%8B%E5%8F%96%E6%B6%88/</link><pubDate>Fri, 12 Jul 2024 00:00:00 +0800</pubDate><guid>https://hxhue.github.io/the-linux-programming-interface/32-%E7%BA%BF%E7%A8%8B%E5%8F%96%E6%B6%88/</guid><description>&lt;h1 id="api">API
+&lt;a class="header-anchor" href="#api">&lt;/a>
+&lt;/h1>&lt;div class="highlight">&lt;pre tabindex="0" style="color:#93a1a1;background-color:#002b36;-moz-tab-size:2;-o-tab-size:2;tab-size:2;">&lt;code class="language-c" data-lang="c">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#719e07">#include&lt;/span> &lt;span style="color:#719e07">&amp;lt;pthread.h&amp;gt;&lt;/span>&lt;span style="color:#719e07">
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#719e07">&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#dc322f">int&lt;/span> &lt;span style="color:#268bd2">pthread_cancel&lt;/span>(&lt;span style="color:#dc322f">pthread_t&lt;/span> &lt;span style="color:#268bd2">thread&lt;/span>);
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;h1 id="线程取消状态和线程取消类型">线程取消状态和线程取消类型
+&lt;a class="header-anchor" href="#%e7%ba%bf%e7%a8%8b%e5%8f%96%e6%b6%88%e7%8a%b6%e6%80%81%e5%92%8c%e7%ba%bf%e7%a8%8b%e5%8f%96%e6%b6%88%e7%b1%bb%e5%9e%8b">&lt;/a>
+&lt;/h1>&lt;p>它们分别可以用 &lt;code>pthread_setcancelstate&lt;/code> 和 &lt;code>pthread_setcanceltype&lt;/code> 来设置。&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" style="color:#93a1a1;background-color:#002b36;-moz-tab-size:2;-o-tab-size:2;tab-size:2;">&lt;code class="language-c" data-lang="c">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#719e07">#include&lt;/span> &lt;span style="color:#719e07">&amp;lt;pthread.h&amp;gt;&lt;/span>&lt;span style="color:#719e07">
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#719e07">&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#dc322f">int&lt;/span> &lt;span style="color:#268bd2">pthread_setcancelstate&lt;/span>(&lt;span style="color:#dc322f">int&lt;/span> state, &lt;span style="color:#dc322f">int&lt;/span> &lt;span style="color:#719e07">*&lt;/span>oldstate);
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#dc322f">int&lt;/span> &lt;span style="color:#268bd2">pthread_setcanceltype&lt;/span>(&lt;span style="color:#dc322f">int&lt;/span> type, &lt;span style="color:#dc322f">int&lt;/span> &lt;span style="color:#719e07">*&lt;/span>oldtype);
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;h2 id="调用-fork-或者-exec-时线程的行为">调用 &lt;code>fork()&lt;/code> 或者 &lt;code>exec()&lt;/code> 时线程的行为
+&lt;a class="header-anchor" href="#%e8%b0%83%e7%94%a8-fork-%e6%88%96%e8%80%85-exec-%e6%97%b6%e7%ba%bf%e7%a8%8b%e7%9a%84%e8%a1%8c%e4%b8%ba">&lt;/a>
+&lt;/h2>&lt;p>某线程调用 &lt;code>fork()&lt;/code> 时，子进程会继承&lt;strong>当前线程&lt;/strong>的取消类型和状态。某线程调用 &lt;code>exec()&lt;/code> 时，新程序主线程的取消类型和取消状态都会被重置。解释：&lt;/p></description></item><item><title>33 线程的更多细节</title><link>https://hxhue.github.io/the-linux-programming-interface/33-%E7%BA%BF%E7%A8%8B%E7%9A%84%E6%9B%B4%E5%A4%9A%E7%BB%86%E8%8A%82/</link><pubDate>Fri, 12 Jul 2024 00:00:00 +0800</pubDate><guid>https://hxhue.github.io/the-linux-programming-interface/33-%E7%BA%BF%E7%A8%8B%E7%9A%84%E6%9B%B4%E5%A4%9A%E7%BB%86%E8%8A%82/</guid><description>&lt;h1 id="主要内容">主要内容
+&lt;a class="header-anchor" href="#%e4%b8%bb%e8%a6%81%e5%86%85%e5%ae%b9">&lt;/a>
+&lt;/h1>&lt;ul>
+&lt;li>线程和传统 UNIX API 之间的交互（信号、进程控制原语）&lt;/li>
+&lt;li>Linux 上的两个线程实现&lt;/li>
+&lt;/ul>
+&lt;h1 id="线程栈的大小">线程栈的大小
+&lt;a class="header-anchor" href="#%e7%ba%bf%e7%a8%8b%e6%a0%88%e7%9a%84%e5%a4%a7%e5%b0%8f">&lt;/a>
+&lt;/h1>&lt;p>在 x86_64-linux-gnu 上，除了主线程，其他线程的缺省大小都是 2MB。&lt;/p>
+&lt;div class="markdown-alert markdown-alert-tip">
+ &lt;p class="markdown-alert-title">
+ &lt;svg class="octicon octicon-light-bulb mr-2" viewBox="0 0 16 16" width="16" height="16" aria-hidden="true">
+ &lt;path
+ d="M8 1.5c-2.363 0-4 1.69-4 3.75 0 .984.424 1.625.984 2.304l.214.253c.223.264.47.556.673.848.284.411.537.896.621 1.49a.75.75 0 0 1-1.484.211c-.04-.282-.163-.547-.37-.847a8.456 8.456 0 0 0-.542-.68c-.084-.1-.173-.205-.268-.32C3.201 7.75 2.5 6.766 2.5 5.25 2.5 2.31 4.863 0 8 0s5.5 2.31 5.5 5.25c0 1.516-.701 2.5-1.328 3.259-.095.115-.184.22-.268.319-.207.245-.383.453-.541.681-.208.3-.33.565-.37.847a.751.751 0 0 1-1.485-.212c.084-.593.337-1.078.621-1.489.203-.292.45-.584.673-.848.075-.088.147-.173.213-.253.561-.679.985-1.32.985-2.304 0-2.06-1.637-3.75-4-3.75ZM5.75 12h4.5a.75.75 0 0 1 0 1.5h-4.5a.75.75 0 0 1 0-1.5ZM6 15.25a.75.75 0 0 1 .75-.75h2.5a.75.75 0 0 1 0 1.5h-2.5a.75.75 0 0 1-.75-.75Z">
+ &lt;/path>
+ &lt;/svg>Tip&lt;/p></description></item><item><title>33.1 能不能用 kill(1) 给特定线程发送信号呢？</title><link>https://hxhue.github.io/the-linux-programming-interface/33.1-%E8%83%BD%E4%B8%8D%E8%83%BD%E7%94%A8-kill1-%E7%BB%99%E7%89%B9%E5%AE%9A%E7%BA%BF%E7%A8%8B%E5%8F%91%E9%80%81%E4%BF%A1%E5%8F%B7%E5%91%A2/</link><pubDate>Fri, 12 Jul 2024 00:00:00 +0800</pubDate><guid>https://hxhue.github.io/the-linux-programming-interface/33.1-%E8%83%BD%E4%B8%8D%E8%83%BD%E7%94%A8-kill1-%E7%BB%99%E7%89%B9%E5%AE%9A%E7%BA%BF%E7%A8%8B%E5%8F%91%E9%80%81%E4%BF%A1%E5%8F%B7%E5%91%A2/</guid><description>&lt;p>
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ &lt;a href="https://hxhue.github.io/the-linux-programming-interface/29.2-%E7%BA%BF%E7%A8%8B%E5%88%9B%E5%BB%BA/#%e7%94%a8-kill-%e5%8f%91%e9%80%81%e4%bf%a1%e5%8f%b7%e7%bb%99%e7%89%b9%e5%ae%9a%e7%ba%bf%e7%a8%8b%e7%9a%84%e5%b0%9d%e8%af%95" title="用 kill 发送信号给特定线程的尝试" >用 &lt;code>kill&lt;/code> 发送信号给特定线程的尝试&lt;/a> 这篇文章提到了用 kill(1) 给特定的线程发送信号，但是标准上没有说这样是可行的。因此这篇文章探讨一下为什么 kill(1) 会具有这样的行为。&lt;strong>以下阅读的代码都是在 2024 年 7 月 12 日 的主分支上的最新代码&lt;/strong>。&lt;/p></description></item><item><title>31 线程特有数据（TSD）和线程局部存储（TLS）</title><link>https://hxhue.github.io/the-linux-programming-interface/31-%E7%BA%BF%E7%A8%8B%E7%89%B9%E6%9C%89%E6%95%B0%E6%8D%AETSD%E5%92%8C%E7%BA%BF%E7%A8%8B%E5%B1%80%E9%83%A8%E5%AD%98%E5%82%A8TLS/</link><pubDate>Thu, 11 Jul 2024 00:00:00 +0800</pubDate><guid>https://hxhue.github.io/the-linux-programming-interface/31-%E7%BA%BF%E7%A8%8B%E7%89%B9%E6%9C%89%E6%95%B0%E6%8D%AETSD%E5%92%8C%E7%BA%BF%E7%A8%8B%E5%B1%80%E9%83%A8%E5%AD%98%E5%82%A8TLS/</guid><description>&lt;p>TSD 和 TLS 都属于每线程存储（Per-Thread Storage）。&lt;/p>
+&lt;h1 id="仅初始化一次">仅初始化一次
+&lt;a class="header-anchor" href="#%e4%bb%85%e5%88%9d%e5%a7%8b%e5%8c%96%e4%b8%80%e6%ac%a1">&lt;/a>
+&lt;/h1>&lt;div class="highlight">&lt;pre tabindex="0" style="color:#93a1a1;background-color:#002b36;-moz-tab-size:2;-o-tab-size:2;tab-size:2;">&lt;code class="language-c" data-lang="c">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#719e07">#include&lt;/span> &lt;span style="color:#719e07">&amp;lt;pthread.h&amp;gt;&lt;/span>&lt;span style="color:#719e07">
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#719e07">&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#dc322f">pthread_once_t&lt;/span> once_control &lt;span style="color:#719e07">=&lt;/span> PTHREAD_ONCE_INIT;
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#dc322f">int&lt;/span> &lt;span style="color:#268bd2">pthread_once&lt;/span>(&lt;span style="color:#dc322f">pthread_once_t&lt;/span> &lt;span style="color:#719e07">*&lt;/span>once_control, &lt;span style="color:#dc322f">void&lt;/span> (&lt;span style="color:#719e07">*&lt;/span>init_routine) (&lt;span style="color:#dc322f">void&lt;/span>));
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;h1 id="线程特有数据thread-specific-data">线程特有数据（Thread-Specific Data）
+&lt;a class="header-anchor" href="#%e7%ba%bf%e7%a8%8b%e7%89%b9%e6%9c%89%e6%95%b0%e6%8d%aethread-specific-data">&lt;/a>
+&lt;/h1>&lt;p>在 C11 之前，&lt;code>thread_local&lt;/code> 变量是不受到语言支持的，因此为了创建线程特有数据就只能用相关的 API。&lt;/p></description></item><item><title>30 线程同步</title><link>https://hxhue.github.io/the-linux-programming-interface/30-%E7%BA%BF%E7%A8%8B%E5%90%8C%E6%AD%A5/</link><pubDate>Tue, 09 Jul 2024 00:00:00 +0800</pubDate><guid>https://hxhue.github.io/the-linux-programming-interface/30-%E7%BA%BF%E7%A8%8B%E5%90%8C%E6%AD%A5/</guid><description>&lt;h1 id="互斥量">互斥量
+&lt;a class="header-anchor" href="#%e4%ba%92%e6%96%a5%e9%87%8f">&lt;/a>
+&lt;/h1>&lt;h2 id="互斥量-api">互斥量 API
+&lt;a class="header-anchor" href="#%e4%ba%92%e6%96%a5%e9%87%8f-api">&lt;/a>
+&lt;/h2>&lt;p>为了在 man 手册中看到这些内容，Debian 系统应该安装 glibc-doc 包。&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" style="color:#93a1a1;background-color:#002b36;-moz-tab-size:2;-o-tab-size:2;tab-size:2;">&lt;code class="language-c" data-lang="c">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#719e07">#include&lt;/span> &lt;span style="color:#719e07">&amp;lt;pthread.h&amp;gt;&lt;/span>&lt;span style="color:#719e07">
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#719e07">&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#dc322f">pthread_mutex_t&lt;/span> fastmutex &lt;span style="color:#719e07">=&lt;/span> PTHREAD_MUTEX_INITIALIZER;
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#dc322f">pthread_mutex_t&lt;/span> recmutex &lt;span style="color:#719e07">=&lt;/span> PTHREAD_RECURSIVE_MUTEX_INITIALIZER_NP;
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#dc322f">pthread_mutex_t&lt;/span> errchkmutex &lt;span style="color:#719e07">=&lt;/span> PTHREAD_ERRORCHECK_MUTEX_INITIALIZER_NP;
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#dc322f">int&lt;/span> &lt;span style="color:#268bd2">pthread_mutex_init&lt;/span>(&lt;span style="color:#dc322f">pthread_mutex_t&lt;/span> &lt;span style="color:#719e07">*&lt;/span>mutex, &lt;span style="color:#719e07">const&lt;/span> &lt;span style="color:#dc322f">pthread_mutexattr_t&lt;/span> &lt;span style="color:#719e07">*&lt;/span>mutexattr);
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#dc322f">int&lt;/span> &lt;span style="color:#268bd2">pthread_mutex_lock&lt;/span>(&lt;span style="color:#dc322f">pthread_mutex_t&lt;/span> &lt;span style="color:#719e07">*&lt;/span>mutex);
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#dc322f">int&lt;/span> &lt;span style="color:#268bd2">pthread_mutex_trylock&lt;/span>(&lt;span style="color:#dc322f">pthread_mutex_t&lt;/span> &lt;span style="color:#719e07">*&lt;/span>mutex);
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#dc322f">int&lt;/span> &lt;span style="color:#268bd2">pthread_mutex_unlock&lt;/span>(&lt;span style="color:#dc322f">pthread_mutex_t&lt;/span> &lt;span style="color:#719e07">*&lt;/span>mutex);
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#dc322f">int&lt;/span> &lt;span style="color:#268bd2">pthread_mutex_destroy&lt;/span>(&lt;span style="color:#dc322f">pthread_mutex_t&lt;/span> &lt;span style="color:#719e07">*&lt;/span>mutex);
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>应该使用 &lt;code>PTHREAD_MUTEX_INITIALIZER&lt;/code>、&lt;code>PTHREAD_RECURSIVE_MUTEX_INITIALIZER_NP&lt;/code>、&lt;code>PTHREAD_ERRORCHECK_MUTEX_INITIALIZER_NP&lt;/code> 之一，或者 &lt;code>pthread_mutex_init()&lt;/code> 来初始化一个互斥量。只有 &lt;code>PTHREAD_MUTEX_INITIALIZER&lt;/code> 是标准的，另外两个都是 Linux 提供的非标准的宏。&lt;/p></description></item><item><title>29.1 线程共享了什么、私有数据是什么？</title><link>https://hxhue.github.io/the-linux-programming-interface/29.1-%E7%BA%BF%E7%A8%8B%E5%85%B1%E4%BA%AB%E4%BA%86%E4%BB%80%E4%B9%88%E7%A7%81%E6%9C%89%E6%95%B0%E6%8D%AE%E6%98%AF%E4%BB%80%E4%B9%88/</link><pubDate>Mon, 08 Jul 2024 00:00:00 +0800</pubDate><guid>https://hxhue.github.io/the-linux-programming-interface/29.1-%E7%BA%BF%E7%A8%8B%E5%85%B1%E4%BA%AB%E4%BA%86%E4%BB%80%E4%B9%88%E7%A7%81%E6%9C%89%E6%95%B0%E6%8D%AE%E6%98%AF%E4%BB%80%E4%B9%88/</guid><description>&lt;h1 id="线程共享了什么">线程共享了什么？
+&lt;a class="header-anchor" href="#%e7%ba%bf%e7%a8%8b%e5%85%b1%e4%ba%ab%e4%ba%86%e4%bb%80%e4%b9%88">&lt;/a>
+&lt;/h1>&lt;p>实际上就是 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ &lt;a href="https://hxhue.github.io/the-linux-programming-interface/28-%E8%BF%9B%E7%A8%8B%E7%9A%84%E5%88%9B%E5%BB%BA%E5%92%8C%E6%89%A7%E8%A1%8C%E8%BF%87%E7%A8%8B/#clone-%e7%94%a8%e4%ba%8e%e6%94%af%e6%8c%81%e7%ba%bf%e7%a8%8b%e7%9a%84%e6%a0%87%e5%bf%97" title="clone() 用于支持线程的标志" >&lt;code>clone()&lt;/code> 用于支持线程的标志&lt;/a> 中的那些标志提到的内容。以下抄书：&lt;/p>
+&lt;p>除了全局内存之外，线程还共享了一些其他属性（这些属性对于进程而言是全局性的， 而并非针对某个特定线程），包括以下内容。&lt;/p></description></item><item><title>29.2 线程创建</title><link>https://hxhue.github.io/the-linux-programming-interface/29.2-%E7%BA%BF%E7%A8%8B%E5%88%9B%E5%BB%BA/</link><pubDate>Mon, 08 Jul 2024 00:00:00 +0800</pubDate><guid>https://hxhue.github.io/the-linux-programming-interface/29.2-%E7%BA%BF%E7%A8%8B%E5%88%9B%E5%BB%BA/</guid><description>&lt;h1 id="pthread_t-类型">&lt;code>pthread_t&lt;/code> 类型
+&lt;a class="header-anchor" href="#pthread_t-%e7%b1%bb%e5%9e%8b">&lt;/a>
+&lt;/h1>&lt;p>在 Linux 中是个整数（&lt;code>unsigned long&lt;/code>），NPTL 将其强制转换成指针。将其解释为整数或指针是不可移植的，在其他平台上，此类型可能是某个结构体。&lt;/p></description></item><item><title>28 进程的创建和执行过程</title><link>https://hxhue.github.io/the-linux-programming-interface/28-%E8%BF%9B%E7%A8%8B%E7%9A%84%E5%88%9B%E5%BB%BA%E5%92%8C%E6%89%A7%E8%A1%8C%E8%BF%87%E7%A8%8B/</link><pubDate>Sun, 07 Jul 2024 00:00:00 +0800</pubDate><guid>https://hxhue.github.io/the-linux-programming-interface/28-%E8%BF%9B%E7%A8%8B%E7%9A%84%E5%88%9B%E5%BB%BA%E5%92%8C%E6%89%A7%E8%A1%8C%E8%BF%87%E7%A8%8B/</guid><description>&lt;h1 id="记账">记账
+&lt;a class="header-anchor" href="#%e8%ae%b0%e8%b4%a6">&lt;/a>
+&lt;/h1>&lt;p>记账功能打开后，系统会在每个进程结束后记录一条账单信息。标准工具 sa(8) 对账单文件进行汇总，lastcomm(1) 则就先前执行的命令列出相关信息。&lt;/p></description></item><item><title>27 进程的执行 exec()</title><link>https://hxhue.github.io/the-linux-programming-interface/27-%E8%BF%9B%E7%A8%8B%E7%9A%84%E6%89%A7%E8%A1%8C-exec/</link><pubDate>Thu, 04 Jul 2024 00:00:00 +0800</pubDate><guid>https://hxhue.github.io/the-linux-programming-interface/27-%E8%BF%9B%E7%A8%8B%E7%9A%84%E6%89%A7%E8%A1%8C-exec/</guid><description>&lt;h1 id="exec-函数">&lt;code>exec()&lt;/code> 函数
+&lt;a class="header-anchor" href="#exec-%e5%87%bd%e6%95%b0">&lt;/a>
+&lt;/h1>&lt;div class="highlight">&lt;pre tabindex="0" style="color:#93a1a1;background-color:#002b36;-moz-tab-size:2;-o-tab-size:2;tab-size:2;">&lt;code class="language-c" data-lang="c">&lt;span style="display:flex;">&lt;span>SYNOPSIS
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#719e07">#include&lt;/span> &lt;span style="color:#719e07">&amp;lt;unistd.h&amp;gt;&lt;/span>&lt;span style="color:#719e07">
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#719e07">&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#719e07">extern&lt;/span> &lt;span style="color:#dc322f">char&lt;/span> &lt;span style="color:#719e07">**&lt;/span>environ;
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#dc322f">int&lt;/span> &lt;span style="color:#268bd2">execl&lt;/span>(&lt;span style="color:#719e07">const&lt;/span> &lt;span style="color:#dc322f">char&lt;/span> &lt;span style="color:#719e07">*&lt;/span>pathname, &lt;span style="color:#719e07">const&lt;/span> &lt;span style="color:#dc322f">char&lt;/span> &lt;span style="color:#719e07">*&lt;/span>arg, ...
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#586e75">/*, (char *)&lt;/span> &lt;span style="color:#b58900">NULL&lt;/span> */);
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#dc322f">int&lt;/span> &lt;span style="color:#268bd2">execlp&lt;/span>(&lt;span style="color:#719e07">const&lt;/span> &lt;span style="color:#dc322f">char&lt;/span> &lt;span style="color:#719e07">*&lt;/span>file, &lt;span style="color:#719e07">const&lt;/span> &lt;span style="color:#dc322f">char&lt;/span> &lt;span style="color:#719e07">*&lt;/span>arg, ...
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#586e75">/*, (char *)&lt;/span> &lt;span style="color:#b58900">NULL&lt;/span> */);
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#dc322f">int&lt;/span> &lt;span style="color:#268bd2">execle&lt;/span>(&lt;span style="color:#719e07">const&lt;/span> &lt;span style="color:#dc322f">char&lt;/span> &lt;span style="color:#719e07">*&lt;/span>pathname, &lt;span style="color:#719e07">const&lt;/span> &lt;span style="color:#dc322f">char&lt;/span> &lt;span style="color:#719e07">*&lt;/span>arg, ...
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#586e75">/*, (char *)&lt;/span> &lt;span style="color:#b58900">NULL&lt;/span>, &lt;span style="color:#dc322f">char&lt;/span> &lt;span style="color:#719e07">*&lt;/span>&lt;span style="color:#719e07">const&lt;/span> envp[] */);
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#dc322f">int&lt;/span> &lt;span style="color:#268bd2">execv&lt;/span>(&lt;span style="color:#719e07">const&lt;/span> &lt;span style="color:#dc322f">char&lt;/span> &lt;span style="color:#719e07">*&lt;/span>pathname, &lt;span style="color:#dc322f">char&lt;/span> &lt;span style="color:#719e07">*&lt;/span>&lt;span style="color:#719e07">const&lt;/span> argv[]);
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#dc322f">int&lt;/span> &lt;span style="color:#268bd2">execvp&lt;/span>(&lt;span style="color:#719e07">const&lt;/span> &lt;span style="color:#dc322f">char&lt;/span> &lt;span style="color:#719e07">*&lt;/span>file, &lt;span style="color:#dc322f">char&lt;/span> &lt;span style="color:#719e07">*&lt;/span>&lt;span style="color:#719e07">const&lt;/span> argv[]);
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#dc322f">int&lt;/span> &lt;span style="color:#268bd2">execvpe&lt;/span>(&lt;span style="color:#719e07">const&lt;/span> &lt;span style="color:#dc322f">char&lt;/span> &lt;span style="color:#719e07">*&lt;/span>file, &lt;span style="color:#dc322f">char&lt;/span> &lt;span style="color:#719e07">*&lt;/span>&lt;span style="color:#719e07">const&lt;/span> argv[], &lt;span style="color:#dc322f">char&lt;/span> &lt;span style="color:#719e07">*&lt;/span>&lt;span style="color:#719e07">const&lt;/span> envp[]); &lt;span style="color:#586e75">/* GNU 扩展 */&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#586e75">/* 不知道为什么单独出来一个手册页，和上面没有放在一起？ */&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#dc322f">int&lt;/span> &lt;span style="color:#268bd2">execve&lt;/span>(&lt;span style="color:#719e07">const&lt;/span> &lt;span style="color:#dc322f">char&lt;/span> &lt;span style="color:#719e07">*&lt;/span>pathname, &lt;span style="color:#dc322f">char&lt;/span> &lt;span style="color:#719e07">*&lt;/span>&lt;span style="color:#719e07">const&lt;/span> _Nullable argv[],
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#dc322f">char&lt;/span> &lt;span style="color:#719e07">*&lt;/span>&lt;span style="color:#719e07">const&lt;/span> _Nullable envp[]);
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>函数命名规则：&lt;/p></description></item><item><title>25 进程的终止 exit()、_exit()</title><link>https://hxhue.github.io/the-linux-programming-interface/25-%E8%BF%9B%E7%A8%8B%E7%9A%84%E7%BB%88%E6%AD%A2-exit_exit/</link><pubDate>Wed, 03 Jul 2024 00:00:00 +0800</pubDate><guid>https://hxhue.github.io/the-linux-programming-interface/25-%E8%BF%9B%E7%A8%8B%E7%9A%84%E7%BB%88%E6%AD%A2-exit_exit/</guid><description>&lt;h1 id="_exit-系统调用">&lt;code>_exit()&lt;/code> 系统调用
+&lt;a class="header-anchor" href="#_exit-%e7%b3%bb%e7%bb%9f%e8%b0%83%e7%94%a8">&lt;/a>
+&lt;/h1>&lt;p>虽然参数是 int 类型，但是只有低 8 位可用。而且由于终端中用信号值 + 128 表示进程因信号退出的状态码（&lt;code>$?&lt;/code>），所以最好也不要使用超过 127 的退出值。&lt;/p></description></item><item><title>26 监控子进程 wait()</title><link>https://hxhue.github.io/the-linux-programming-interface/26-%E7%9B%91%E6%8E%A7%E5%AD%90%E8%BF%9B%E7%A8%8B-wait/</link><pubDate>Wed, 03 Jul 2024 00:00:00 +0800</pubDate><guid>https://hxhue.github.io/the-linux-programming-interface/26-%E7%9B%91%E6%8E%A7%E5%AD%90%E8%BF%9B%E7%A8%8B-wait/</guid><description>&lt;h1 id="子进程的状态">子进程的状态
+&lt;a class="header-anchor" href="#%e5%ad%90%e8%bf%9b%e7%a8%8b%e7%9a%84%e7%8a%b6%e6%80%81">&lt;/a>
+&lt;/h1>&lt;h2 id="1-状态的分类">1. 状态的分类
+&lt;a class="header-anchor" href="#1-%e7%8a%b6%e6%80%81%e7%9a%84%e5%88%86%e7%b1%bb">&lt;/a>
+&lt;/h2>&lt;ul>
+&lt;li>调用 &lt;code>_exit()&lt;/code> 正常退出（无论是手动调用还是运行时在 &lt;code>main()&lt;/code> 函数退出后自动调用）。&lt;/li>
+&lt;li>收到信号而终止。&lt;/li>
+&lt;li>收到信号而暂停执行。&lt;/li>
+&lt;li>收到信号而恢复执行。&lt;/li>
+&lt;/ul>
+&lt;h2 id="2-如何在父进程中区分子进程状态">2. 如何在父进程中区分子进程状态
+&lt;a class="header-anchor" href="#2-%e5%a6%82%e4%bd%95%e5%9c%a8%e7%88%b6%e8%bf%9b%e7%a8%8b%e4%b8%ad%e5%8c%ba%e5%88%86%e5%ad%90%e8%bf%9b%e7%a8%8b%e7%8a%b6%e6%80%81">&lt;/a>
+&lt;/h2>&lt;p>为了区分这 4 种状态，等待函数中 int 类型的输出参数实际上会有低 2 个字节被使用（虽然实际上返回状态只需要用 1 个字节表示）：&lt;/p></description></item><item><title>24 进程的创建 fork()</title><link>https://hxhue.github.io/the-linux-programming-interface/24-%E8%BF%9B%E7%A8%8B%E7%9A%84%E5%88%9B%E5%BB%BA-fork/</link><pubDate>Mon, 01 Jul 2024 00:00:00 +0800</pubDate><guid>https://hxhue.github.io/the-linux-programming-interface/24-%E8%BF%9B%E7%A8%8B%E7%9A%84%E5%88%9B%E5%BB%BA-fork/</guid><description>&lt;h1 id="几个系统调用--库函数的介绍">几个系统调用 / 库函数的介绍
+&lt;a class="header-anchor" href="#%e5%87%a0%e4%b8%aa%e7%b3%bb%e7%bb%9f%e8%b0%83%e7%94%a8--%e5%ba%93%e5%87%bd%e6%95%b0%e7%9a%84%e4%bb%8b%e7%bb%8d">&lt;/a>
+&lt;/h1>&lt;ul>
+&lt;li>&lt;code>fork()&lt;/code>：创建子进程。&lt;/li>
+&lt;li>&lt;code>exit(status)&lt;/code>：库函数，退出当前进程，是 &lt;code>_exit&lt;/code> 的包装。&lt;/li>
+&lt;li>&lt;code>wait(&amp;amp;status)&lt;/code>：挂起当前进程并等待一个子进程。&lt;/li>
+&lt;li>&lt;code>execve(pathname, argv, envp)&lt;/code>：加载一个新的程序。&lt;/li>
+&lt;/ul>
+&lt;div class="markdown-alert markdown-alert-tip">
+ &lt;p class="markdown-alert-title">
+ &lt;svg class="octicon octicon-light-bulb mr-2" viewBox="0 0 16 16" width="16" height="16" aria-hidden="true">
+ &lt;path
+ d="M8 1.5c-2.363 0-4 1.69-4 3.75 0 .984.424 1.625.984 2.304l.214.253c.223.264.47.556.673.848.284.411.537.896.621 1.49a.75.75 0 0 1-1.484.211c-.04-.282-.163-.547-.37-.847a8.456 8.456 0 0 0-.542-.68c-.084-.1-.173-.205-.268-.32C3.201 7.75 2.5 6.766 2.5 5.25 2.5 2.31 4.863 0 8 0s5.5 2.31 5.5 5.25c0 1.516-.701 2.5-1.328 3.259-.095.115-.184.22-.268.319-.207.245-.383.453-.541.681-.208.3-.33.565-.37.847a.751.751 0 0 1-1.485-.212c.084-.593.337-1.078.621-1.489.203-.292.45-.584.673-.848.075-.088.147-.173.213-.253.561-.679.985-1.32.985-2.304 0-2.06-1.637-3.75-4-3.75ZM5.75 12h4.5a.75.75 0 0 1 0 1.5h-4.5a.75.75 0 0 1 0-1.5ZM6 15.25a.75.75 0 0 1 .75-.75h2.5a.75.75 0 0 1 0 1.5h-2.5a.75.75 0 0 1-.75-.75Z">
+ &lt;/path>
+ &lt;/svg>Tip&lt;/p></description></item><item><title>23 定时器与休眠</title><link>https://hxhue.github.io/the-linux-programming-interface/23-%E5%AE%9A%E6%97%B6%E5%99%A8%E4%B8%8E%E4%BC%91%E7%9C%A0/</link><pubDate>Fri, 28 Jun 2024 00:00:00 +0800</pubDate><guid>https://hxhue.github.io/the-linux-programming-interface/23-%E5%AE%9A%E6%97%B6%E5%99%A8%E4%B8%8E%E4%BC%91%E7%9C%A0/</guid><description>&lt;h1 id="定时器-api">定时器 API
+&lt;a class="header-anchor" href="#%e5%ae%9a%e6%97%b6%e5%99%a8-api">&lt;/a>
+&lt;/h1>&lt;h2 id="1-setitimer-和-getitimer不建议">1. &lt;code>setitimer&lt;/code> 和 &lt;code>getitimer&lt;/code>（不建议）
+&lt;a class="header-anchor" href="#1-setitimer-%e5%92%8c-getitimer%e4%b8%8d%e5%bb%ba%e8%ae%ae">&lt;/a>
+&lt;/h2>&lt;div class="highlight">&lt;pre tabindex="0" style="color:#93a1a1;background-color:#002b36;-moz-tab-size:2;-o-tab-size:2;tab-size:2;">&lt;code class="language-c" data-lang="c">&lt;span style="display:flex;">&lt;span>SYNOPSIS
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#719e07">#include&lt;/span> &lt;span style="color:#719e07">&amp;lt;sys/time.h&amp;gt;&lt;/span>&lt;span style="color:#719e07">
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#719e07">&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#dc322f">int&lt;/span> &lt;span style="color:#268bd2">getitimer&lt;/span>(&lt;span style="color:#dc322f">int&lt;/span> which, &lt;span style="color:#719e07">struct&lt;/span> itimerval &lt;span style="color:#719e07">*&lt;/span>curr_value);
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#dc322f">int&lt;/span> &lt;span style="color:#268bd2">setitimer&lt;/span>(&lt;span style="color:#dc322f">int&lt;/span> which, &lt;span style="color:#719e07">const&lt;/span> &lt;span style="color:#719e07">struct&lt;/span> itimerval &lt;span style="color:#719e07">*&lt;/span>&lt;span style="color:#268bd2">restrict&lt;/span> new_value,
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#719e07">struct&lt;/span> itimerval &lt;span style="color:#719e07">*&lt;/span>_Nullable &lt;span style="color:#268bd2">restrict&lt;/span> old_value);
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;h3 id="which-参数指定创建的定时器的类型">&lt;code>which&lt;/code> 参数指定创建的定时器的类型
+&lt;a class="header-anchor" href="#which-%e5%8f%82%e6%95%b0%e6%8c%87%e5%ae%9a%e5%88%9b%e5%bb%ba%e7%9a%84%e5%ae%9a%e6%97%b6%e5%99%a8%e7%9a%84%e7%b1%bb%e5%9e%8b">&lt;/a>
+&lt;/h3>&lt;ul>
+&lt;li>可以是真实时间，到期的信号是 SIGALARM。&lt;/li>
+&lt;li>可以是用户 CPU 时间（进程虚拟时间），到期的信号为 SIGVTALRM。&lt;/li>
+&lt;li>可以是内核 + 用户 CPU 时间（profiling 定时器），到期的信号是 SIGPROF。&lt;/li>
+&lt;/ul>
+&lt;p>以上三种信号默认行为是终止进程，所以定时器要结合信号处理函数使用。&lt;/p></description></item><item><title>22 信号高级特性</title><link>https://hxhue.github.io/the-linux-programming-interface/22-%E4%BF%A1%E5%8F%B7%E9%AB%98%E7%BA%A7%E7%89%B9%E6%80%A7/</link><pubDate>Mon, 10 Jun 2024 00:00:00 +0800</pubDate><guid>https://hxhue.github.io/the-linux-programming-interface/22-%E4%BF%A1%E5%8F%B7%E9%AB%98%E7%BA%A7%E7%89%B9%E6%80%A7/</guid><description>&lt;h1 id="核心转储">核心转储
+&lt;a class="header-anchor" href="#%e6%a0%b8%e5%bf%83%e8%bd%ac%e5%82%a8">&lt;/a>
+&lt;/h1>&lt;h2 id="核心转储的产生">核心转储的产生
+&lt;a class="header-anchor" href="#%e6%a0%b8%e5%bf%83%e8%bd%ac%e5%82%a8%e7%9a%84%e4%ba%a7%e7%94%9f">&lt;/a>
+&lt;/h2>&lt;p>有非常多的原因会导致核心转储不发生，最容易出现的是没有用 &lt;code>ulimit&lt;/code> 对进程设置核心转储大小上限（默认是 0）。此外，对核心转储路径没有写权限、set-group-ID 或 set-user-ID 程序由非属组 / 主执行、对可执行文件没有读权限等原因都会导致核心转储不发生。&lt;/p></description></item><item><title>20.9 信号集和信号的处理</title><link>https://hxhue.github.io/the-linux-programming-interface/20.9-%E4%BF%A1%E5%8F%B7%E9%9B%86%E5%92%8C%E4%BF%A1%E5%8F%B7%E7%9A%84%E5%A4%84%E7%90%86/</link><pubDate>Sun, 09 Jun 2024 00:00:00 +0800</pubDate><guid>https://hxhue.github.io/the-linux-programming-interface/20.9-%E4%BF%A1%E5%8F%B7%E9%9B%86%E5%92%8C%E4%BF%A1%E5%8F%B7%E7%9A%84%E5%A4%84%E7%90%86/</guid><description>&lt;h1 id="说明">说明
+&lt;a class="header-anchor" href="#%e8%af%b4%e6%98%8e">&lt;/a>
+&lt;/h1>&lt;p>
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ &lt;a href="https://hxhue.github.io/the-linux-programming-interface/20-%E4%BF%A1%E5%8F%B7/" title="20 信号" >20 信号&lt;/a> 讲了信号的基本概念、列举了一部分信号，并且说明了发送信号的方式。这一节主要是讲和信号处理相关的 API。&lt;/p>
+&lt;h1 id="信号集">信号集
+&lt;a class="header-anchor" href="#%e4%bf%a1%e5%8f%b7%e9%9b%86">&lt;/a>
+&lt;/h1>&lt;p>信号集对应类型 &lt;code>sigset_t&lt;/code>，操作它的函数都是以其指针为参数的。相关的函数有：&lt;/p></description></item><item><title>21 如何正确处理信号？</title><link>https://hxhue.github.io/the-linux-programming-interface/21-%E5%A6%82%E4%BD%95%E6%AD%A3%E7%A1%AE%E5%A4%84%E7%90%86%E4%BF%A1%E5%8F%B7/</link><pubDate>Sun, 09 Jun 2024 00:00:00 +0800</pubDate><guid>https://hxhue.github.io/the-linux-programming-interface/21-%E5%A6%82%E4%BD%95%E6%AD%A3%E7%A1%AE%E5%A4%84%E7%90%86%E4%BF%A1%E5%8F%B7/</guid><description>&lt;h1 id="设计处理器函数">设计处理器函数
+&lt;a class="header-anchor" href="#%e8%ae%be%e8%ae%a1%e5%a4%84%e7%90%86%e5%99%a8%e5%87%bd%e6%95%b0">&lt;/a>
+&lt;/h1>&lt;p>处理器函数应该尽可能简单，尤其是不要调用 stdio 库函数（因为它们一般不是异步信号安全的）。以下是几种处理方式：&lt;/p>
+&lt;ol>
+&lt;li>修改全局数据结构。程序周期性检查这些结构。&lt;/li>
+&lt;li>清理资源并终止程序，或者使用非本地跳转返回到主程序中的预定位置。&lt;/li>
+&lt;/ol>
+&lt;h1 id="两个概念">两个概念
+&lt;a class="header-anchor" href="#%e4%b8%a4%e4%b8%aa%e6%a6%82%e5%bf%b5">&lt;/a>
+&lt;/h1>&lt;h2 id="可重入reentrant函数">可重入（Reentrant）函数
+&lt;a class="header-anchor" href="#%e5%8f%af%e9%87%8d%e5%85%a5reentrant%e5%87%bd%e6%95%b0">&lt;/a>
+&lt;/h2>&lt;blockquote>
+ &lt;p>SUSv3 对可重入函数的定义是：函数由两条或多条线程调用时，即便是交叉执行，其效果也与各线程以未定义顺序依次调用时一致。&lt;/p></description></item><item><title>20 信号</title><link>https://hxhue.github.io/the-linux-programming-interface/20-%E4%BF%A1%E5%8F%B7/</link><pubDate>Wed, 05 Jun 2024 00:00:00 +0800</pubDate><guid>https://hxhue.github.io/the-linux-programming-interface/20-%E4%BF%A1%E5%8F%B7/</guid><description>&lt;h1 id="信号">信号
+&lt;a class="header-anchor" href="#%e4%bf%a1%e5%8f%b7">&lt;/a>
+&lt;/h1>&lt;p>信号是对进程的通知机制，也被称为软中断，分成标准信号（传统信号，编号范围是 1~31）和实时信号。&lt;/p>
+&lt;p>部分信号：&lt;/p>
+&lt;ol>
+&lt;li>SIGINT：&lt;kbd>ctrl&lt;/kbd> + &lt;kbd>c&lt;/kbd>。&lt;/li>
+&lt;li>SIGQUIT：&lt;kbd>ctrl&lt;/kbd> + &lt;kbd>&amp;lt;/kbd&amp;gt;，和 SIGINT 比多了核心转储。&lt;/li>
+&lt;li>SIGTERM：&lt;code>kill&lt;/code> 命令默认发送的信号，程序可以注册处理这个信号，因此可以实现优雅退出。&lt;/li>
+&lt;li>SIGKILL：必杀信号。&lt;/li>
+&lt;li>SIGSTOP：必停信号。&lt;/li>
+&lt;li>SIGPIPE：写管道有错，可能是读的进程把管道关了。&lt;/li>
+&lt;li>SIGFPE：名字是浮点数错误，实际上泛指除 0 错误。而且 x86-64 上浮点数除 0 默认不出错，需要用 &lt;code>feenableexcept()&lt;/code> 启用异常。&lt;/li>
+&lt;li>SIGALRM：实时计时器过期。&lt;/li>
+&lt;li>SIGVTALRM:：虚拟计时器过期。&lt;/li>
+&lt;li>SIGHUP：会话结束（终端断开）时发送给程序的信号，默认行为为杀死程序。在一些守护程序上还有重载配置的作用。&lt;/li>
+&lt;li>SIGTSTP：&lt;kbd>ctrl&lt;/kbd> + &lt;kbd>z&lt;/kbd>。&lt;/li>
+&lt;li>SIGUSR1 和 SIGUSR2：留给程序员自己用的，系统绝对不会发送的信号。&lt;/li>
+&lt;li>SIGWINCH：终端环境的窗口尺寸发生变化。&lt;/li>
+&lt;/ol>
+&lt;p>一个信号默认的处理行为是三者之一：1. 忽略；2. 终止；3. 内核转储。&lt;/p></description></item><item><title>20.1 使用 SIGTERM 和核心转储</title><link>https://hxhue.github.io/the-linux-programming-interface/20.1-%E4%BD%BF%E7%94%A8-SIGTERM-%E5%92%8C%E6%A0%B8%E5%BF%83%E8%BD%AC%E5%82%A8/</link><pubDate>Wed, 05 Jun 2024 00:00:00 +0800</pubDate><guid>https://hxhue.github.io/the-linux-programming-interface/20.1-%E4%BD%BF%E7%94%A8-SIGTERM-%E5%92%8C%E6%A0%B8%E5%BF%83%E8%BD%AC%E5%82%A8/</guid><description>&lt;h1 id="核心转储介绍">核心转储介绍
+&lt;a class="header-anchor" href="#%e6%a0%b8%e5%bf%83%e8%bd%ac%e5%82%a8%e4%bb%8b%e7%bb%8d">&lt;/a>
+&lt;/h1>&lt;p>GDB 可以加载核心转储以复现程序终止时的内存，也可以为给定的进程创建核心转储。&lt;/p>
+&lt;p>核心转储是可以通过发送信号实现的。调用 &lt;code>abort()&lt;/code> 时，会向进程自身发送 SIGABRT 信号，该信号的默认行为是终止进程并为其生成核心转储。在终端中，SIGQUIT（&lt;kbd>ctrl&lt;/kbd> + &lt;kbd>/&lt;/kbd>）和 SIGINT（&lt;kbd>ctrl&lt;/kbd> + &lt;kbd>c&lt;/kbd>）相比，也多出来了生成核心转储的行为。可以从以下尝试中体会出两个信号的差异：&lt;/p></description></item><item><title>19 inotify 监控文件事件</title><link>https://hxhue.github.io/the-linux-programming-interface/19-inotify-%E7%9B%91%E6%8E%A7%E6%96%87%E4%BB%B6%E4%BA%8B%E4%BB%B6/</link><pubDate>Tue, 04 Jun 2024 00:00:00 +0800</pubDate><guid>https://hxhue.github.io/the-linux-programming-interface/19-inotify-%E7%9B%91%E6%8E%A7%E6%96%87%E4%BB%B6%E4%BA%8B%E4%BB%B6/</guid><description>&lt;h1 id="基本流程">基本流程
+&lt;a class="header-anchor" href="#%e5%9f%ba%e6%9c%ac%e6%b5%81%e7%a8%8b">&lt;/a>
+&lt;/h1>&lt;ol>
+&lt;li>使用 &lt;code>inotify_init&lt;/code> 创建一个 inotify 实例，返回值是文件描述符，用来读取 inotify 监控项信息。&lt;/li>
+&lt;li>使用 &lt;code>inotify_add_watch&lt;/code> 对 inotify 实例创建或者修改监控项目。参数 fd 指代 inotify 实例，参数 pathname 表示要监控的文件或者目录，用户必须有其读取权限（只检查一次，创建监控项目成功之后即便权限发生变化监控也不会被移除）。函数的返回值是一个监控描述符（watch descriptor，wd）。&lt;/li>
+&lt;li>不断使用 &lt;code>read&lt;/code> 系统调用去读取 fd 关联文件的信息，然后将字节流中的地址转换成 &lt;code>struct inotify_event *&lt;/code> 类型，然后判断其信息。给 &lt;code>read&lt;/code> 提供的缓冲区需要足够大，至少需要容纳 &lt;code>sizeof(struct inotify_event) + NAME_MAX + 1&lt;/code> 个字节，不过 &lt;code>read&lt;/code> 缓冲区越大读取的效率越高。&lt;/li>
+&lt;/ol>
+&lt;div class="highlight">&lt;pre tabindex="0" style="color:#93a1a1;background-color:#002b36;-moz-tab-size:2;-o-tab-size:2;tab-size:2;">&lt;code class="language-c" data-lang="c">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#719e07">struct&lt;/span> inotify_event {
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#dc322f">int&lt;/span> wd; &lt;span style="color:#586e75">/* Watch descriptor */&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#dc322f">uint32_t&lt;/span> mask; &lt;span style="color:#586e75">/* Mask describing event */&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#dc322f">uint32_t&lt;/span> cookie; &lt;span style="color:#586e75">/* Unique cookie associating related
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#586e75"> events (for rename(2)) */&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#dc322f">uint32_t&lt;/span> len; &lt;span style="color:#586e75">/* Size of name field */&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#dc322f">char&lt;/span> name[]; &lt;span style="color:#586e75">/* Optional null-terminated name */&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>};
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;ol start="4">
+&lt;li>使用 &lt;code>inotify_rm_watch&lt;/code> 移除监控事件。&lt;/li>
+&lt;li>使用 &lt;code>close&lt;/code> 关闭 &lt;code>inotify_init&lt;/code> 创建的 fd。&lt;/li>
+&lt;/ol>
+&lt;h1 id="inotify_init1">&lt;code>inotify_init1&lt;/code>
+&lt;a class="header-anchor" href="#inotify_init1">&lt;/a>
+&lt;/h1>&lt;p>Linux 还有一个系统调用 &lt;code>inotify_init1&lt;/code>，它比 inotify_init 多出来一个 flags 参数，可以用来指定 &lt;code>IN_CLOEXEC&lt;/code> 或者 &lt;code>IN_NONBLOCK&lt;/code>。这避免了稍后用 &lt;code>fcntl&lt;/code> 设置 flags 的繁琐操作。&lt;/p></description></item><item><title>18.1-2 i-node 和链接</title><link>https://hxhue.github.io/the-linux-programming-interface/18-%E7%9B%AE%E5%BD%95%E5%92%8C%E9%93%BE%E6%8E%A5/</link><pubDate>Sun, 02 Jun 2024 00:00:00 +0800</pubDate><guid>https://hxhue.github.io/the-linux-programming-interface/18-%E7%9B%AE%E5%BD%95%E5%92%8C%E9%93%BE%E6%8E%A5/</guid><description>&lt;h1 id="i-node">i-node
+&lt;a class="header-anchor" href="#i-node">&lt;/a>
+&lt;/h1>&lt;p>i 节点一般写作 i-node，中间有个短横线。i-node 表的编号开始于 1，因为 &lt;strong>0 用来表示未使用的条目，然后 i-node 1 用来记录文件系统的坏块，i-node 2 用来记录根目录，即 /&lt;/strong>。由于可能有多个路径不同、名称不同的文件（通过硬链接）指向同一个 i-node，因此 i-node 中并不记录&lt;strong>本文件&lt;/strong>的名称。&lt;/p></description></item><item><title>17 ACL setfacl getfacl</title><link>https://hxhue.github.io/the-linux-programming-interface/17-ACL-setfacl-getfacl/</link><pubDate>Wed, 29 May 2024 00:00:00 +0800</pubDate><guid>https://hxhue.github.io/the-linux-programming-interface/17-ACL-setfacl-getfacl/</guid><description>&lt;h1 id="acl-介绍">ACL 介绍
+&lt;a class="header-anchor" href="#acl-%e4%bb%8b%e7%bb%8d">&lt;/a>
+&lt;/h1>&lt;p>ACL 在 Linux 内核 2.6 被支持，是用文件的 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ &lt;a href="https://hxhue.github.io/the-linux-programming-interface/16.01-%E6%96%87%E4%BB%B6%E6%89%A9%E5%B1%95%E5%B1%9E%E6%80%A7-EA-getfattr-setfattr/" title="扩展属性" >扩展属性&lt;/a> 实现的，扩展属性名为 &lt;code>system.posix_acl_access&lt;/code>。&lt;/p>
+&lt;blockquote>
+ &lt;p>要想在 ext2、ext3、ext4 或 reiserfs 文件系统上创建 ACL，装配相应的文件系统时需要带 &lt;code>mount –o acl&lt;/code> 选项。&lt;/p></description></item><item><title>16.01 文件扩展属性 EA getfattr setfattr</title><link>https://hxhue.github.io/the-linux-programming-interface/16.01-%E6%96%87%E4%BB%B6%E6%89%A9%E5%B1%95%E5%B1%9E%E6%80%A7-EA-getfattr-setfattr/</link><pubDate>Sun, 26 May 2024 00:00:00 +0800</pubDate><guid>https://hxhue.github.io/the-linux-programming-interface/16.01-%E6%96%87%E4%BB%B6%E6%89%A9%E5%B1%95%E5%B1%9E%E6%80%A7-EA-getfattr-setfattr/</guid><description>&lt;h1 id="什么是扩展属性">什么是扩展属性
+&lt;a class="header-anchor" href="#%e4%bb%80%e4%b9%88%e6%98%af%e6%89%a9%e5%b1%95%e5%b1%9e%e6%80%a7">&lt;/a>
+&lt;/h1>&lt;p>扩展属性（Extended Attributes）可以将任何字符串键和&lt;strong>任何数据值&lt;/strong>的信息和文件 inode 关联起来，值可以不是零结尾的字符串。其键的命名方式是 &lt;code>namespace.name&lt;/code>，其中 &lt;code>namespace&lt;/code> 只能是以下四种之一：&lt;/p></description></item><item><title>15.01-02 文件时间戳</title><link>https://hxhue.github.io/the-linux-programming-interface/15.01-02-utime-%E6%9B%B4%E6%96%B0%E6%96%87%E4%BB%B6%E6%97%B6%E9%97%B4%E6%88%B3/</link><pubDate>Thu, 23 May 2024 00:00:00 +0800</pubDate><guid>https://hxhue.github.io/the-linux-programming-interface/15.01-02-utime-%E6%9B%B4%E6%96%B0%E6%96%87%E4%BB%B6%E6%97%B6%E9%97%B4%E6%88%B3/</guid><description>&lt;h1 id="stat">&lt;code>stat&lt;/code>
+&lt;a class="header-anchor" href="#stat">&lt;/a>
+&lt;/h1>&lt;p>可以用 &lt;code>stat&lt;/code> 族系统调用来获取文件的属性。&lt;/p>
+&lt;h1 id="utime-秒级时间戳更新">&lt;code>utime&lt;/code> 秒级时间戳更新
+&lt;a class="header-anchor" href="#utime-%e7%a7%92%e7%ba%a7%e6%97%b6%e9%97%b4%e6%88%b3%e6%9b%b4%e6%96%b0">&lt;/a>
+&lt;/h1>&lt;p>用 &lt;code>utime&lt;/code> 族系统调用来设置文件的时间信息。修改时需要有相应的权限，以 &lt;code>utime&lt;/code> 为例，其签名为：&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" style="color:#93a1a1;background-color:#002b36;-moz-tab-size:2;-o-tab-size:2;tab-size:2;">&lt;code class="language-c" data-lang="c">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#dc322f">int&lt;/span> &lt;span style="color:#268bd2">utime&lt;/span>(&lt;span style="color:#719e07">const&lt;/span> &lt;span style="color:#dc322f">char&lt;/span> &lt;span style="color:#719e07">*&lt;/span>filename,
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#719e07">const&lt;/span> &lt;span style="color:#719e07">struct&lt;/span> utimbuf &lt;span style="color:#719e07">*&lt;/span>_Nullable times);
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>如果 &lt;code>times&lt;/code> 参数为 &lt;code>NULL&lt;/code>，则会将文件的 atime 和 mtime 修改为当前的时间。这需要进程的文件系统用户 ID 和文件匹配，且有写权限，或者是带有 &lt;code>CAP_FOWNER&lt;/code> 或者 &lt;code>CAP_DAC_OVERRIDE&lt;/code> 的特权级程序。&lt;/p></description></item><item><title>15.03 新建文件的属主是谁？</title><link>https://hxhue.github.io/the-linux-programming-interface/15.03-%E6%96%B0%E5%BB%BA%E6%96%87%E4%BB%B6%E7%9A%84%E5%B1%9E%E4%B8%BB%E6%98%AF%E8%B0%81/</link><pubDate>Thu, 23 May 2024 00:00:00 +0800</pubDate><guid>https://hxhue.github.io/the-linux-programming-interface/15.03-%E6%96%B0%E5%BB%BA%E6%96%87%E4%BB%B6%E7%9A%84%E5%B1%9E%E4%B8%BB%E6%98%AF%E8%B0%81/</guid><description>&lt;p>新建文件对应用户 ID 是进程（文件系统）有效用户 ID。&lt;/p>
+&lt;p>新建文件对应组 ID 在父目录 set-group-ID 未设置的情况下，是进程（文件系统）有效组 ID，否则是父目录的组 ID。除了显式设置父目录 set-group-ID 之外，使用 &lt;code>–o grpid&lt;/code> 或者 &lt;code>–o bsdgroups&lt;/code> 挂载也会将父目录的这一位置位。（挂载的默认行为是 &lt;code>–o nogrpid / –o sysvgroups&lt;/code>，也就是 System V 行为。）&lt;/p></description></item><item><title>15.04 st_mode 组成和每一位的解释</title><link>https://hxhue.github.io/the-linux-programming-interface/15.04-st_mode-%E7%BB%84%E6%88%90%E5%92%8C%E6%AF%8F%E4%B8%80%E4%BD%8D%E7%9A%84%E8%A7%A3%E9%87%8A/</link><pubDate>Thu, 23 May 2024 00:00:00 +0800</pubDate><guid>https://hxhue.github.io/the-linux-programming-interface/15.04-st_mode-%E7%BB%84%E6%88%90%E5%92%8C%E6%AF%8F%E4%B8%80%E4%BD%8D%E7%9A%84%E8%A7%A3%E9%87%8A/</guid><description>&lt;h1 id="st_mode-的组成">&lt;code>st_mode&lt;/code> 的组成
+&lt;a class="header-anchor" href="#st_mode-%e7%9a%84%e7%bb%84%e6%88%90">&lt;/a>
+&lt;/h1>&lt;p>&lt;code>st_mode&lt;/code> 在 inode(7) 手册中的说明是 file type and mode，其组成是：文件类型 4 位 + 特殊 3 位 + 权限 9 位。&lt;/p>
+&lt;p>高 4 位是用来表示文件类型的（以下内容出自 &lt;code>man 7 inode&lt;/code>），目前是有 7 种类型：&lt;/p></description></item><item><title>15.04 目录读权限和执行权限</title><link>https://hxhue.github.io/the-linux-programming-interface/15.04-%E7%9B%AE%E5%BD%95%E8%AF%BB%E6%9D%83%E9%99%90%E5%92%8C%E6%89%A7%E8%A1%8C%E6%9D%83%E9%99%90/</link><pubDate>Thu, 23 May 2024 00:00:00 +0800</pubDate><guid>https://hxhue.github.io/the-linux-programming-interface/15.04-%E7%9B%AE%E5%BD%95%E8%AF%BB%E6%9D%83%E9%99%90%E5%92%8C%E6%89%A7%E8%A1%8C%E6%9D%83%E9%99%90/</guid><description>&lt;p>访问文件时，需要拥有对路径名所列所有目录的执行权限。例如，想读取文件 /home/mtk/x，则需拥有对目录 /、/home 以及 /home/mtk 的执行权限（还要有对文件 x 自身的读权限）。若当前的工作目录为 /home/mtk/sub1 ，访问相对路径名 ../sub2/x 时，需握有 /home/mtk 和 /home/mtk/sub2 这两个目录的可执行权限（不必有对 / 或 /home 的执行权限）。&lt;/p></description></item><item><title>15.04 其他文件系统函数</title><link>https://hxhue.github.io/the-linux-programming-interface/15.04-%E5%85%B6%E4%BB%96%E6%96%87%E4%BB%B6%E7%B3%BB%E7%BB%9F%E5%87%BD%E6%95%B0/</link><pubDate>Thu, 23 May 2024 00:00:00 +0800</pubDate><guid>https://hxhue.github.io/the-linux-programming-interface/15.04-%E5%85%B6%E4%BB%96%E6%96%87%E4%BB%B6%E7%B3%BB%E7%BB%9F%E5%87%BD%E6%95%B0/</guid><description>&lt;h1 id="umask">&lt;code>umask&lt;/code>
+&lt;a class="header-anchor" href="#umask">&lt;/a>
+&lt;/h1>&lt;p>用来限制当前进程（和它将来的子进程）创建文件的访问权限。大多数 shell 的初始化文件会将 umask 默认置为八进制值 022 (&amp;mdash;-w&amp;ndash;w-)，也就是说即便给了组和其他的写权限，实际创建出来的文件也是没有这两项权限的。&lt;/p></description></item><item><title>15.05 inode 标志：命令 lsattr chattr + 系统调用 ioctl</title><link>https://hxhue.github.io/the-linux-programming-interface/15.05-inode-%E6%A0%87%E5%BF%97%E5%91%BD%E4%BB%A4-lsattr-chattr-+-%E7%B3%BB%E7%BB%9F%E8%B0%83%E7%94%A8-ioctl/</link><pubDate>Thu, 23 May 2024 00:00:00 +0800</pubDate><guid>https://hxhue.github.io/the-linux-programming-interface/15.05-inode-%E6%A0%87%E5%BF%97%E5%91%BD%E4%BB%A4-lsattr-chattr-+-%E7%B3%BB%E7%BB%9F%E8%B0%83%E7%94%A8-ioctl/</guid><description>&lt;h1 id="简要介绍">简要介绍
+&lt;a class="header-anchor" href="#%e7%ae%80%e8%a6%81%e4%bb%8b%e7%bb%8d">&lt;/a>
+&lt;/h1>&lt;p>这是一种 Linux 相对于 UNIX 上扩展的非标准功能，只在部分文件系统上支持。不过现代 BSD 上也有 &lt;code>chflags&lt;/code> 命令和系统调用，功能有类似之处。&lt;/p>
+&lt;p>&lt;strong>在程序中可利用 &lt;code>ioctl()&lt;/code> 系统调用来获取并修改 i 节点标志&lt;/strong>；在终端则可以使用 &lt;code>lsattr&lt;/code> 和 &lt;code>chattr&lt;/code> 命令操作文件属性。&lt;/p></description></item><item><title>14.01 系统编程概念</title><link>https://hxhue.github.io/the-linux-programming-interface/14.01-%E7%B3%BB%E7%BB%9F%E7%BC%96%E7%A8%8B%E6%A6%82%E5%BF%B5/</link><pubDate>Wed, 22 May 2024 00:00:00 +0800</pubDate><guid>https://hxhue.github.io/the-linux-programming-interface/14.01-%E7%B3%BB%E7%BB%9F%E7%BC%96%E7%A8%8B%E6%A6%82%E5%BF%B5/</guid><description>&lt;h1 id="设备">设备
+&lt;a class="header-anchor" href="#%e8%ae%be%e5%a4%87">&lt;/a>
+&lt;/h1>&lt;p>设备分为两种：字符设备和块设备。每个设备都有主 ID 和辅 ID。&lt;strong>主 ID 表示设备的一般等级&lt;/strong>，辅 ID 在主 ID 相同的设备中标识自己。&lt;strong>每个设备驱动程序都是按照自己和主设备号的关联关系向内核注册的&lt;/strong>。&lt;/p></description></item><item><title>14.10 文件系统挂载</title><link>https://hxhue.github.io/the-linux-programming-interface/14.10-%E6%96%87%E4%BB%B6%E7%B3%BB%E7%BB%9F%E6%8C%82%E8%BD%BD/</link><pubDate>Wed, 22 May 2024 00:00:00 +0800</pubDate><guid>https://hxhue.github.io/the-linux-programming-interface/14.10-%E6%96%87%E4%BB%B6%E7%B3%BB%E7%BB%9F%E6%8C%82%E8%BD%BD/</guid><description>&lt;h1 id="挂载基础">挂载基础
+&lt;a class="header-anchor" href="#%e6%8c%82%e8%bd%bd%e5%9f%ba%e7%a1%80">&lt;/a>
+&lt;/h1>&lt;p>挂载首先是需要管理员权限的，而且必须是目标已经存在才能挂载并覆盖它。然后 &lt;code>mount&lt;/code> 命令是挂载，&lt;code>umount&lt;/code> 是解除挂载。&lt;/p>
+&lt;p>Linux 中有三个文件包含了挂载信息：&lt;/p>
+&lt;ol>
+&lt;li>/proc/mounts 包含了文件系统的挂载信息。因为 Linux 现在支持了每个进程有不同于系统的文件系统，所以 /proc/mounts 被实现为指向 /proc/self/mounts 的一个符号链接。&lt;/li>
+&lt;li>/etc/mtab 文件由 mount(8) 和 umount(8) 来维护。&lt;/li>
+&lt;li>&lt;mark>/etc/fstab 由系统管理员来维护&lt;/mark>，其中指定的挂载项目会在 systemd 启动其他服务前执行。&lt;/li>
+&lt;/ol>
+&lt;h1 id="创建-tmpfs-文件系统">创建 tmpfs 文件系统
+&lt;a class="header-anchor" href="#%e5%88%9b%e5%bb%ba-tmpfs-%e6%96%87%e4%bb%b6%e7%b3%bb%e7%bb%9f">&lt;/a>
+&lt;/h1>&lt;p>tmpfs 并不只是把数据写到内存那么简单，它也是一个虚拟文件系统，因而在内存不足时，依然可以将文件写到交换中。tmpfs 除了用来把内存作为硬盘加速计算之外，也被用于 System V 共享内存和共享匿名内存映射、POSIX 共享内存和 POSIX 信号量。&lt;/p></description></item><item><title>10.01 时间类型 tm time_t timeval timespec</title><link>https://hxhue.github.io/the-linux-programming-interface/10.01-%E6%97%B6%E9%97%B4%E7%B1%BB%E5%9E%8B-tm-time_t-timeval-timespec/</link><pubDate>Tue, 21 May 2024 00:00:00 +0800</pubDate><guid>https://hxhue.github.io/the-linux-programming-interface/10.01-%E6%97%B6%E9%97%B4%E7%B1%BB%E5%9E%8B-tm-time_t-timeval-timespec/</guid><description>&lt;h1 id="总览">总览
+&lt;a class="header-anchor" href="#%e6%80%bb%e8%a7%88">&lt;/a>
+&lt;/h1>&lt;p>
+
+
+
+
+
+
+&lt;img alt="700" src="https://hxhue.github.io/the-linux-programming-interface/tlpi-assets/Pasted%20image%2020240729002533.webp">&lt;/p>
+&lt;p>和时间相关的很多函数都是不可重入的。它们修改同一块静态分配的内存区域并返回，因此不是线程安全的。在新版本已经有 &lt;code>*_r&lt;/code> 这样的可重入函数来替代它们。&lt;/p></description></item><item><title>10.05 更新时钟</title><link>https://hxhue.github.io/the-linux-programming-interface/10.05-%E6%9B%B4%E6%96%B0%E6%97%B6%E9%92%9F/</link><pubDate>Tue, 21 May 2024 00:00:00 +0800</pubDate><guid>https://hxhue.github.io/the-linux-programming-interface/10.05-%E6%9B%B4%E6%96%B0%E6%97%B6%E9%92%9F/</guid><description>&lt;p>首先，更新系统时间要求程序具有相应的权限，即 &lt;code>CAP_SYS_TIME&lt;/code>。&lt;/p>
+&lt;p>&lt;code>settimeofday&lt;/code> 允许我们以 &lt;code>timeval&lt;/code> 结构体表示的时间设置系统时间，不过，虽然它的精度很高，但是我们的计时器不一定能够达到这么高的精度，因此在微秒级设定的时间也可能是不准确的。&lt;/p></description></item><item><title>10.06 系统软件时钟</title><link>https://hxhue.github.io/the-linux-programming-interface/10.06-%E7%B3%BB%E7%BB%9F%E8%BD%AF%E4%BB%B6%E6%97%B6%E9%92%9F/</link><pubDate>Tue, 21 May 2024 00:00:00 +0800</pubDate><guid>https://hxhue.github.io/the-linux-programming-interface/10.06-%E7%B3%BB%E7%BB%9F%E8%BD%AF%E4%BB%B6%E6%97%B6%E9%92%9F/</guid><description>&lt;p>系统软件时钟的单位是 jiffies，这是时间片轮转的单位。经过多年的发展，现在时钟频率可以设置到 100 / 250（默认）/ 300 / 1000 Hz。&lt;/p>
+&lt;p>(2025.2.13) &lt;a href="https://www.bilibili.com/video/BV1KcKHe5ERu/?share_source=copy_web&amp;amp;vd_source=2772e196cf84bbcdd0033756d77bfcce" title="Linux 6.13 在 250Hz 与 1000Hz 计时器频率之间的性能对比" rel="noopener external nofollow noreferrer"
+ target="_blank" class=" exturl" >Linux 6.13 在 250Hz 与 1000Hz 计时器频率之间的性能对比&lt;i class="fa fa-external-link-alt">&lt;/i>&lt;/a> 近日，社区有讨论将默认始终频率从 250Hz 调整到 1000Hz。&lt;/p></description></item><item><title>10.07 进程时间 tms</title><link>https://hxhue.github.io/the-linux-programming-interface/10.07-%E8%BF%9B%E7%A8%8B%E6%97%B6%E9%97%B4-tms/</link><pubDate>Tue, 21 May 2024 00:00:00 +0800</pubDate><guid>https://hxhue.github.io/the-linux-programming-interface/10.07-%E8%BF%9B%E7%A8%8B%E6%97%B6%E9%97%B4-tms/</guid><description>&lt;h1 id="什么是进程时间">什么是进程时间
+&lt;a class="header-anchor" href="#%e4%bb%80%e4%b9%88%e6%98%af%e8%bf%9b%e7%a8%8b%e6%97%b6%e9%97%b4">&lt;/a>
+&lt;/h1>&lt;p>进程时间包含：&lt;/p>
+&lt;ol>
+&lt;li>CPU 在用户模式下消耗的时间。&lt;/li>
+&lt;li>CPU 在内核模式下消耗的时间（比如 I/O、页错误处理）。&lt;/li>
+&lt;/ol>
+&lt;h1 id="times-系统调用">&lt;code>times&lt;/code> 系统调用
+&lt;a class="header-anchor" href="#times-%e7%b3%bb%e7%bb%9f%e8%b0%83%e7%94%a8">&lt;/a>
+&lt;/h1>&lt;div class="highlight">&lt;pre tabindex="0" style="color:#93a1a1;background-color:#002b36;-moz-tab-size:2;-o-tab-size:2;tab-size:2;">&lt;code class="language-c" data-lang="c">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#719e07">#include&lt;/span> &lt;span style="color:#719e07">&amp;lt;sys/times.h&amp;gt;&lt;/span>&lt;span style="color:#719e07">
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#719e07">&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#dc322f">clock_t&lt;/span> &lt;span style="color:#268bd2">times&lt;/span>(&lt;span style="color:#719e07">struct&lt;/span> tms &lt;span style="color:#719e07">*&lt;/span>buf);
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>其中 &lt;code>tms&lt;/code> 结构体包含了当前进程和&lt;strong>等待的子进程&lt;/strong>的时间信息。“等待的子进程”含义是：只有调用 &lt;code>wait&lt;/code> 或者 &lt;code>waitpid&lt;/code> 回收了一个子进程，子进程的时间才会累加到当前进程的 &lt;code>tms_cutime&lt;/code> 和 &lt;code>tms_cstime&lt;/code> 上。&lt;/p></description></item><item><title>11.01-03 系统限制</title><link>https://hxhue.github.io/the-linux-programming-interface/11.01-03-%E7%B3%BB%E7%BB%9F%E9%99%90%E5%88%B6/</link><pubDate>Tue, 21 May 2024 00:00:00 +0800</pubDate><guid>https://hxhue.github.io/the-linux-programming-interface/11.01-03-%E7%B3%BB%E7%BB%9F%E9%99%90%E5%88%B6/</guid><description>&lt;h1 id="可以从哪些地方获取系统限制信息">可以从哪些地方获取系统限制信息？
+&lt;a class="header-anchor" href="#%e5%8f%af%e4%bb%a5%e4%bb%8e%e5%93%aa%e4%ba%9b%e5%9c%b0%e6%96%b9%e8%8e%b7%e5%8f%96%e7%b3%bb%e7%bb%9f%e9%99%90%e5%88%b6%e4%bf%a1%e6%81%af">&lt;/a>
+&lt;/h1>&lt;ol>
+&lt;li>limits.h 头文件中定义的限制。&lt;/li>
+&lt;li>&lt;code>sysconf&lt;/code> 获取的限制，这些限制在进程运行期间保持恒定。获取限制一般使用 &lt;code>_SC&lt;/code> 开头的宏作为参数。&lt;/li>
+&lt;li>&lt;code>pathconf&lt;/code> 和 &lt;code>fpathconf&lt;/code> 获取的限制，这些限制在进程运行期间是可以改变的。获取限制一般使用 &lt;code>_PC&lt;/code> 开头的宏作为参数。&lt;/li>
+&lt;/ol>
+&lt;h1 id="pid_t-类型的表示上限">&lt;code>pid_t&lt;/code> 类型的表示上限
+&lt;a class="header-anchor" href="#pid_t-%e7%b1%bb%e5%9e%8b%e7%9a%84%e8%a1%a8%e7%a4%ba%e4%b8%8a%e9%99%90">&lt;/a>
+&lt;/h1>&lt;p>在我的 wsl 中来看，&lt;code>pid_t&lt;/code> 这个数据类型占用 4 个字节，是一个有符号整数（实际上是 &lt;code>int&lt;/code>），我这里 /proc/sys/kernel/pid_max 显示可用的最大 pid 号为 4194304，即 $2^{22}$。这其实和 &lt;code>PID_MAX_LIMIT&lt;/code> 相等，不可能将 pid_max 调整得更大，但是可以小于这个值。在 32 位机器上，这个系统限制最大是 32768，即 $2^{15}$。&lt;strong>最大可用的 pid 值比文件中的值小 1&lt;/strong>，见后文。&lt;/p></description></item><item><title>11.03 将目录重定向到标准输入</title><link>https://hxhue.github.io/the-linux-programming-interface/11.03-%E5%B0%86%E7%9B%AE%E5%BD%95%E9%87%8D%E5%AE%9A%E5%90%91%E5%88%B0%E6%A0%87%E5%87%86%E8%BE%93%E5%85%A5/</link><pubDate>Tue, 21 May 2024 00:00:00 +0800</pubDate><guid>https://hxhue.github.io/the-linux-programming-interface/11.03-%E5%B0%86%E7%9B%AE%E5%BD%95%E9%87%8D%E5%AE%9A%E5%90%91%E5%88%B0%E6%A0%87%E5%87%86%E8%BE%93%E5%85%A5/</guid><description>&lt;p>在 Linux/UNIX 系统编程手册中看到这样的一段代码：&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" style="color:#93a1a1;background-color:#002b36;-moz-tab-size:2;-o-tab-size:2;tab-size:2;">&lt;code class="language-bash" data-lang="bash">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#719e07">(&lt;/span>py310&lt;span style="color:#719e07">)&lt;/span> xxx /data/apue $ file /proc/self/fd/0
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>/proc/self/fd/0: symbolic link to /dev/pts/2
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#719e07">(&lt;/span>py310&lt;span style="color:#719e07">)&lt;/span> xxx /data/apue $ file /proc/self/fd/0 &amp;lt; .
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>/proc/self/fd/0: symbolic link to /data/apue
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>这说明目录也是能够被重定向并使用 0 号 fd 打开的，只要程序支持标准输入流不是普通文件就行。&lt;/p></description></item><item><title>12.01 /proc 文件系统</title><link>https://hxhue.github.io/the-linux-programming-interface/12.01-proc-%E6%96%87%E4%BB%B6%E7%B3%BB%E7%BB%9F/</link><pubDate>Tue, 21 May 2024 00:00:00 +0800</pubDate><guid>https://hxhue.github.io/the-linux-programming-interface/12.01-proc-%E6%96%87%E4%BB%B6%E7%B3%BB%E7%BB%9F/</guid><description>&lt;h1 id="proc-下的进程信息">/proc 下的进程信息
+&lt;a class="header-anchor" href="#proc-%e4%b8%8b%e7%9a%84%e8%bf%9b%e7%a8%8b%e4%bf%a1%e6%81%af">&lt;/a>
+&lt;/h1>&lt;p>这些信息都是以 /proc/PID 开头的，其中 PID 为进程自己的进程号。用 /proc/self 可以表示进程本身。&lt;/p>
+&lt;p>
+
+
+
+
+
+
+&lt;img src="https://hxhue.github.io/the-linux-programming-interface/tlpi-assets/12.01%20proc%20%E6%96%87%E4%BB%B6%E7%B3%BB%E7%BB%9F-20240521142901636.webp">&lt;/p>
+&lt;p>在内核 2.4 之后，Linux 增加了线程组概念，正式支持了 POSIX 线程模型。/proc/PID/task/TID 是进程号为 PID 的进程中线程号为 TID 的线程的信息文件夹。&lt;/p></description></item><item><title>12.02 用 uname 获取系统标识信息</title><link>https://hxhue.github.io/the-linux-programming-interface/12.02-%E7%94%A8-uname-%E8%8E%B7%E5%8F%96%E7%B3%BB%E7%BB%9F%E6%A0%87%E8%AF%86%E4%BF%A1%E6%81%AF/</link><pubDate>Tue, 21 May 2024 00:00:00 +0800</pubDate><guid>https://hxhue.github.io/the-linux-programming-interface/12.02-%E7%94%A8-uname-%E8%8E%B7%E5%8F%96%E7%B3%BB%E7%BB%9F%E6%A0%87%E8%AF%86%E4%BF%A1%E6%81%AF/</guid><description>&lt;p>&lt;code>uname&lt;/code> 是个系统调用，同时也对应于命令 /usr/bin/uname。&lt;/p></description></item><item><title>13 文件 I/O 缓冲</title><link>https://hxhue.github.io/the-linux-programming-interface/13-%E6%96%87%E4%BB%B6%E8%BE%93%E5%85%A5%E8%BE%93%E5%87%BA%E7%BC%93%E5%86%B2/</link><pubDate>Tue, 21 May 2024 00:00:00 +0800</pubDate><guid>https://hxhue.github.io/the-linux-programming-interface/13-%E6%96%87%E4%BB%B6%E8%BE%93%E5%85%A5%E8%BE%93%E5%87%BA%E7%BC%93%E5%86%B2/</guid><description>&lt;h1 id="c-语言标准库的缓冲">C 语言标准库的缓冲
+&lt;a class="header-anchor" href="#c-%e8%af%ad%e8%a8%80%e6%a0%87%e5%87%86%e5%ba%93%e7%9a%84%e7%bc%93%e5%86%b2">&lt;/a>
+&lt;/h1>&lt;p>C 语言输入输出函数会将数据缓冲到用户区域，&lt;strong>从而减少了系统调用次数&lt;/strong>。&lt;/p>
+&lt;p>可以用函数 &lt;code>setvbuf&lt;/code> 来改变一个 &lt;code>FILE *&lt;/code> 的缓冲方式：&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" style="color:#93a1a1;background-color:#002b36;-moz-tab-size:2;-o-tab-size:2;tab-size:2;">&lt;code class="language-c" data-lang="c">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#dc322f">int&lt;/span> &lt;span style="color:#268bd2">setvbuf&lt;/span>(FILE &lt;span style="color:#719e07">*&lt;/span>&lt;span style="color:#268bd2">restrict&lt;/span> stream, &lt;span style="color:#dc322f">char&lt;/span> buf[&lt;span style="color:#268bd2">restrict&lt;/span> .size],
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#dc322f">int&lt;/span> mode, &lt;span style="color:#dc322f">size_t&lt;/span> size);
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>其中 &lt;code>mode&lt;/code> 有三种：&lt;/p></description></item><item><title>09.01 Linux 进程凭证（Credentials）</title><link>https://hxhue.github.io/the-linux-programming-interface/09.01-Linux-%E8%BF%9B%E7%A8%8B%E5%87%AD%E8%AF%81Credentials/</link><pubDate>Sun, 19 May 2024 00:00:00 +0800</pubDate><guid>https://hxhue.github.io/the-linux-programming-interface/09.01-Linux-%E8%BF%9B%E7%A8%8B%E5%87%AD%E8%AF%81Credentials/</guid><description>&lt;h1 id="linux-进程凭证">Linux 进程凭证
+&lt;a class="header-anchor" href="#linux-%e8%bf%9b%e7%a8%8b%e5%87%ad%e8%af%81">&lt;/a>
+&lt;/h1>&lt;p>进程凭证包括以下内容：&lt;/p>
+&lt;ul>
+&lt;li>实际用户 ID（real user ID）和实际组 ID（real group ID）。&lt;/li>
+&lt;li>有效用户 ID（effective user ID）和有效组 ID（effective group ID）。&lt;/li>
+&lt;li>保存的 set-user-ID（saved set-user-ID）和保存的 set-group-ID（saved set-group-ID）。&lt;/li>
+&lt;li>文件系统用户 ID（file-system user ID）和文件系统组 ID（file-system group ID）（&lt;strong>Linux 专有&lt;/strong>）。&lt;/li>
+&lt;li>辅助组 ID。&lt;/li>
+&lt;/ul>
+&lt;h2 id="保存的设置用户组-id">保存的设置用户/组 ID
+&lt;a class="header-anchor" href="#%e4%bf%9d%e5%ad%98%e7%9a%84%e8%ae%be%e7%bd%ae%e7%94%a8%e6%88%b7%e7%bb%84-id">&lt;/a>
+&lt;/h2>&lt;p>文件系统中每个非目录文件有设置用户/组 ID 位，启动这样的文件会使得有效用户/组 ID 按照文件的所有者来设置。出于安全考虑，&lt;mark>在 Linux 中可执行文件的设置用户/组 ID 权限对于 shell 脚本无效&lt;/mark>。&lt;/p></description></item><item><title>05.12 用 tmpfile 创建临时文件</title><link>https://hxhue.github.io/the-linux-programming-interface/05.12-%E7%94%A8-tmpfile-%E5%88%9B%E5%BB%BA%E4%B8%B4%E6%97%B6%E6%96%87%E4%BB%B6/</link><pubDate>Sat, 18 May 2024 00:00:00 +0800</pubDate><guid>https://hxhue.github.io/the-linux-programming-interface/05.12-%E7%94%A8-tmpfile-%E5%88%9B%E5%BB%BA%E4%B8%B4%E6%97%B6%E6%96%87%E4%BB%B6/</guid><description>&lt;p>&lt;mark>在 Linux 上推荐使用的创建临时文件的方法只有 &lt;code>mkstemp&lt;/code> 和 &lt;code>tmpfile&lt;/code>&lt;/mark>。前者是系统调用，用起来更复杂一点，后者是 C 标准库函数。其他的函数多多少少有自己的问题。&lt;/p></description></item><item><title>06.06 用 /proc/self/cmdline 获取命令行参数</title><link>https://hxhue.github.io/the-linux-programming-interface/06.06-%E7%94%A8-proc-%E6%96%87%E4%BB%B6%E5%A4%B9%E8%8E%B7%E5%8F%96%E5%91%BD%E4%BB%A4%E8%A1%8C%E5%8F%82%E6%95%B0/</link><pubDate>Sat, 18 May 2024 00:00:00 +0800</pubDate><guid>https://hxhue.github.io/the-linux-programming-interface/06.06-%E7%94%A8-proc-%E6%96%87%E4%BB%B6%E5%A4%B9%E8%8E%B7%E5%8F%96%E5%91%BD%E4%BB%A4%E8%A1%8C%E5%8F%82%E6%95%B0/</guid><description>&lt;p>/proc/self/cmdline 是一个以 &lt;code>\0&lt;/code> 结尾的文件，我尝试过用 &lt;code>fgets&lt;/code> 读取，但是失败了；转而使用 &lt;code>fgetc&lt;/code> 逐字符读文件。&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" style="color:#93a1a1;background-color:#002b36;-moz-tab-size:2;-o-tab-size:2;tab-size:2;">&lt;code class="language-c" data-lang="c">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#719e07">#include&lt;/span> &lt;span style="color:#719e07">&amp;lt;fcntl.h&amp;gt;&lt;/span>&lt;span style="color:#719e07">
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#719e07">#include&lt;/span> &lt;span style="color:#719e07">&amp;lt;stdio.h&amp;gt;&lt;/span>&lt;span style="color:#719e07">
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#719e07">#include&lt;/span> &lt;span style="color:#719e07">&amp;lt;unistd.h&amp;gt;&lt;/span>&lt;span style="color:#719e07">
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#719e07">&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#dc322f">int&lt;/span> &lt;span style="color:#268bd2">main&lt;/span>() {
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> FILE &lt;span style="color:#719e07">*&lt;/span>f &lt;span style="color:#719e07">=&lt;/span> &lt;span style="color:#268bd2">fopen&lt;/span>(&lt;span style="color:#2aa198">&amp;#34;/proc/self/cmdline&amp;#34;&lt;/span>, &lt;span style="color:#2aa198">&amp;#34;r&amp;#34;&lt;/span>);
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#719e07">if&lt;/span> (&lt;span style="color:#719e07">!&lt;/span>f) {
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#268bd2">perror&lt;/span>(&lt;span style="color:#2aa198">&amp;#34;fopen&amp;#34;&lt;/span>);
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#719e07">return&lt;/span> &lt;span style="color:#2aa198">1&lt;/span>;
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> }
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> 
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#dc322f">int&lt;/span> i &lt;span style="color:#719e07">=&lt;/span> &lt;span style="color:#2aa198">0&lt;/span>, j &lt;span style="color:#719e07">=&lt;/span> &lt;span style="color:#2aa198">0&lt;/span>;
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#dc322f">int&lt;/span> ch;
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#dc322f">char&lt;/span> buf[&lt;span style="color:#2aa198">128&lt;/span>];
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#719e07">while&lt;/span> ((ch &lt;span style="color:#719e07">=&lt;/span> &lt;span style="color:#268bd2">fgetc&lt;/span>(f)) &lt;span style="color:#719e07">!=&lt;/span> EOF) {
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#719e07">if&lt;/span> (ch &lt;span style="color:#719e07">==&lt;/span> &lt;span style="color:#2aa198">&amp;#39;\0&amp;#39;&lt;/span>) {
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> buf[j] &lt;span style="color:#719e07">=&lt;/span> &lt;span style="color:#2aa198">&amp;#39;\0&amp;#39;&lt;/span>;
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#268bd2">printf&lt;/span>(&lt;span style="color:#2aa198">&amp;#34;argv[%d]: %s&lt;/span>&lt;span style="color:#cb4b16">\n&lt;/span>&lt;span style="color:#2aa198">&amp;#34;&lt;/span>, i&lt;span style="color:#719e07">++&lt;/span>, buf);
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> j &lt;span style="color:#719e07">=&lt;/span> &lt;span style="color:#2aa198">0&lt;/span>;
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> } &lt;span style="color:#719e07">else&lt;/span> {
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> buf[j&lt;span style="color:#719e07">++&lt;/span>] &lt;span style="color:#719e07">=&lt;/span> ch;
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> }
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> }
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#268bd2">fclose&lt;/span>(f);
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>}
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>例子：&lt;/p></description></item><item><title>05.07 readv 和 writev</title><link>https://hxhue.github.io/the-linux-programming-interface/05.07-readv-%E5%92%8C-writev/</link><pubDate>Fri, 17 May 2024 00:00:00 +0800</pubDate><guid>https://hxhue.github.io/the-linux-programming-interface/05.07-readv-%E5%92%8C-writev/</guid><description>&lt;p>这被称为 Scatter-Gather I/O。&lt;/p>
+&lt;p>
+
+
+
+
+
+
+&lt;img src="https://hxhue.github.io/the-linux-programming-interface/tlpi-assets/05.07%20readv%20%E5%92%8C%20writev-20240517004528783.webp" width="700">&lt;/p>
+&lt;p>其中，&lt;code>struct iovec&lt;/code> 的定义如下：&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" style="color:#93a1a1;background-color:#002b36;-moz-tab-size:2;-o-tab-size:2;tab-size:2;">&lt;code class="language-c" data-lang="c">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#719e07">struct&lt;/span> iovec {
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#dc322f">void&lt;/span> &lt;span style="color:#719e07">*&lt;/span>iov_base; &lt;span style="color:#586e75">/* Start address of the buffer */&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#dc322f">size_t&lt;/span> iov_len; &lt;span style="color:#586e75">/* Number of bytes to transfer to/from buffer */&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>};
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>这样 &lt;code>readv&lt;/code> 和 &lt;code>writev&lt;/code> 就能一次完成多个缓冲区的读取/写入。最重要的特征是：和多次调用 &lt;code>read&lt;/code>/&lt;code>write&lt;/code> 相比， &lt;code>readv&lt;/code>/&lt;code>writev&lt;/code> 操作具有原子性！&lt;/p></description></item><item><title>00 说明</title><link>https://hxhue.github.io/the-linux-programming-interface/00-%E8%AF%B4%E6%98%8E/</link><pubDate>Thu, 16 May 2024 00:00:00 +0800</pubDate><guid>https://hxhue.github.io/the-linux-programming-interface/00-%E8%AF%B4%E6%98%8E/</guid><description>&lt;h1 id="对书的介绍">对书的介绍
+&lt;a class="header-anchor" href="#%e5%af%b9%e4%b9%a6%e7%9a%84%e4%bb%8b%e7%bb%8d">&lt;/a>
+&lt;/h1>&lt;p>Linux/UNIX 系统编程手册原名 The Linux Programming Interface，副标题是 A Linux and UNIX System Programming Handbook，这也是其翻译名的由来。&lt;/p>
+&lt;p>这本书经常被简称为 TLPI。&lt;/p>
+&lt;h1 id="笔记的编号方式">笔记的编号方式
+&lt;a class="header-anchor" href="#%e7%ac%94%e8%ae%b0%e7%9a%84%e7%bc%96%e5%8f%b7%e6%96%b9%e5%bc%8f">&lt;/a>
+&lt;/h1>&lt;p>有些笔记的编号是在章内简单排序（在书上没有对应或者不能直接对应），有些笔记的编号是和书的章节对应的。这点确实做的不好，看书的时间太长了，写笔记的方式也发生了变化。&lt;/p></description></item><item><title>05.04 Shell 启动的程序的三大标准文件是同一个文件</title><link>https://hxhue.github.io/the-linux-programming-interface/05.04-Shell-%E5%90%AF%E5%8A%A8%E7%9A%84%E7%A8%8B%E5%BA%8F%E7%9A%84%E4%B8%89%E5%A4%A7%E6%A0%87%E5%87%86%E6%96%87%E4%BB%B6%E6%98%AF%E5%90%8C%E4%B8%80%E4%B8%AA%E6%96%87%E4%BB%B6/</link><pubDate>Thu, 16 May 2024 00:00:00 +0800</pubDate><guid>https://hxhue.github.io/the-linux-programming-interface/05.04-Shell-%E5%90%AF%E5%8A%A8%E7%9A%84%E7%A8%8B%E5%BA%8F%E7%9A%84%E4%B8%89%E5%A4%A7%E6%A0%87%E5%87%86%E6%96%87%E4%BB%B6%E6%98%AF%E5%90%8C%E4%B8%80%E4%B8%AA%E6%96%87%E4%BB%B6/</guid><description>&lt;div class="highlight">&lt;pre tabindex="0" style="color:#93a1a1;background-color:#002b36;-moz-tab-size:2;-o-tab-size:2;tab-size:2;">&lt;code class="language-c" data-lang="c">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#719e07">#include&lt;/span> &lt;span style="color:#719e07">&amp;lt;errno.h&amp;gt;&lt;/span>&lt;span style="color:#719e07">
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#719e07">#include&lt;/span> &lt;span style="color:#719e07">&amp;lt;fcntl.h&amp;gt;&lt;/span>&lt;span style="color:#719e07">
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#719e07">#include&lt;/span> &lt;span style="color:#719e07">&amp;lt;linux/kcmp.h&amp;gt;&lt;/span>&lt;span style="color:#719e07">
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#719e07">#include&lt;/span> &lt;span style="color:#719e07">&amp;lt;stdio.h&amp;gt;&lt;/span>&lt;span style="color:#719e07">
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#719e07">#include&lt;/span> &lt;span style="color:#719e07">&amp;lt;sys/syscall.h&amp;gt;&lt;/span>&lt;span style="color:#719e07">
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#719e07">#include&lt;/span> &lt;span style="color:#719e07">&amp;lt;unistd.h&amp;gt;&lt;/span>&lt;span style="color:#719e07">
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#719e07">&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#dc322f">int&lt;/span> &lt;span style="color:#268bd2">main&lt;/span>() {
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#dc322f">pid_t&lt;/span> pid &lt;span style="color:#719e07">=&lt;/span> &lt;span style="color:#268bd2">getpid&lt;/span>(); &lt;span style="color:#586e75">/* always successful */&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#dc322f">int&lt;/span> ret &lt;span style="color:#719e07">=&lt;/span> &lt;span style="color:#268bd2">syscall&lt;/span>(SYS_kcmp, pid, pid, KCMP_FILE, &lt;span style="color:#2aa198">0&lt;/span>, &lt;span style="color:#2aa198">1&lt;/span>);
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#dc322f">int&lt;/span> ec &lt;span style="color:#719e07">=&lt;/span> errno;
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#719e07">if&lt;/span> (ec) {
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#268bd2">perror&lt;/span>(&lt;span style="color:#2aa198">&amp;#34;kcmp&amp;#34;&lt;/span>);
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#719e07">return&lt;/span> &lt;span style="color:#2aa198">1&lt;/span>;
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> }
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#268bd2">printf&lt;/span>(&lt;span style="color:#2aa198">&amp;#34;kcmp returns %d&lt;/span>&lt;span style="color:#cb4b16">\n&lt;/span>&lt;span style="color:#2aa198">&amp;#34;&lt;/span>, ret);
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>}
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>其中，kcmp 系统调用可以用来比较两个进程的资源大小（0 等于，1 小于，2 等于，3 不相等但无法确定大小）。输出：&lt;/p></description></item><item><title>05.05 dup 文件描述符为什么要共享文件打开项？</title><link>https://hxhue.github.io/the-linux-programming-interface/05.05-dup-%E6%96%87%E4%BB%B6%E6%8F%8F%E8%BF%B0%E7%AC%A6%E4%B8%BA%E4%BB%80%E4%B9%88%E8%A6%81%E5%85%B1%E4%BA%AB%E6%96%87%E4%BB%B6%E6%89%93%E5%BC%80%E9%A1%B9/</link><pubDate>Thu, 16 May 2024 00:00:00 +0800</pubDate><guid>https://hxhue.github.io/the-linux-programming-interface/05.05-dup-%E6%96%87%E4%BB%B6%E6%8F%8F%E8%BF%B0%E7%AC%A6%E4%B8%BA%E4%BB%80%E4%B9%88%E8%A6%81%E5%85%B1%E4%BA%AB%E6%96%87%E4%BB%B6%E6%89%93%E5%BC%80%E9%A1%B9/</guid><description>&lt;p>书上的例子是：&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" style="color:#93a1a1;background-color:#002b36;-moz-tab-size:2;-o-tab-size:2;tab-size:2;">&lt;code class="language-bash" data-lang="bash">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#586e75"># 在 bash 中&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>./myscript &amp;gt; results.log 2&amp;gt;&amp;amp;&lt;span style="color:#2aa198">1&lt;/span>
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>这样能够将标准输出流和错误流都重定向到日志文件中去。我们希望标准输出流和标准错误流能共享文件偏移量等信息，否则两者写入同一个文件中时就会相互覆盖。&lt;/p></description></item><item><title>05.06 pwrite 不会改变文件的偏移量</title><link>https://hxhue.github.io/the-linux-programming-interface/05.06-pwrite-%E4%B8%8D%E4%BC%9A%E6%94%B9%E5%8F%98%E6%96%87%E4%BB%B6%E7%9A%84%E5%81%8F%E7%A7%BB%E9%87%8F/</link><pubDate>Thu, 16 May 2024 00:00:00 +0800</pubDate><guid>https://hxhue.github.io/the-linux-programming-interface/05.06-pwrite-%E4%B8%8D%E4%BC%9A%E6%94%B9%E5%8F%98%E6%96%87%E4%BB%B6%E7%9A%84%E5%81%8F%E7%A7%BB%E9%87%8F/</guid><description>&lt;div class="highlight">&lt;pre tabindex="0" style="color:#93a1a1;background-color:#002b36;-moz-tab-size:2;-o-tab-size:2;tab-size:2;">&lt;code class="language-c" data-lang="c">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#719e07">#include&lt;/span> &lt;span style="color:#719e07">&amp;lt;assert.h&amp;gt;&lt;/span>&lt;span style="color:#719e07">
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#719e07">#include&lt;/span> &lt;span style="color:#719e07">&amp;lt;fcntl.h&amp;gt;&lt;/span>&lt;span style="color:#719e07">
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#719e07">#include&lt;/span> &lt;span style="color:#719e07">&amp;lt;unistd.h&amp;gt;&lt;/span>&lt;span style="color:#719e07">
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#719e07">#include&lt;/span> &lt;span style="color:#719e07">&amp;lt;stdio.h&amp;gt;&lt;/span>&lt;span style="color:#719e07">
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#719e07">&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#dc322f">int&lt;/span> &lt;span style="color:#268bd2">main&lt;/span>() {
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#dc322f">int&lt;/span> fd;
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#268bd2">assert&lt;/span>((fd &lt;span style="color:#719e07">=&lt;/span> &lt;span style="color:#268bd2">open&lt;/span>(&lt;span style="color:#2aa198">&amp;#34;A.txt&amp;#34;&lt;/span>, O_WRONLY &lt;span style="color:#719e07">|&lt;/span> O_TRUNC &lt;span style="color:#719e07">|&lt;/span> O_CREAT,
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> S_IRUSR &lt;span style="color:#719e07">|&lt;/span> S_IWUSR &lt;span style="color:#719e07">|&lt;/span> S_IRGRP &lt;span style="color:#719e07">|&lt;/span> S_IROTH)) &lt;span style="color:#719e07">!=&lt;/span> &lt;span style="color:#719e07">-&lt;/span>&lt;span style="color:#2aa198">1&lt;/span>);
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#268bd2">assert&lt;/span>(&lt;span style="color:#268bd2">pwrite&lt;/span>(fd, &lt;span style="color:#2aa198">&amp;#34;pwrite&amp;#34;&lt;/span>, &lt;span style="color:#2aa198">6&lt;/span>, &lt;span style="color:#2aa198">0&lt;/span>) &lt;span style="color:#719e07">==&lt;/span> &lt;span style="color:#2aa198">6&lt;/span>);
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#268bd2">assert&lt;/span>(&lt;span style="color:#268bd2">write&lt;/span>(fd, &lt;span style="color:#2aa198">&amp;#34;WRITE&amp;#34;&lt;/span>, &lt;span style="color:#2aa198">5&lt;/span>) &lt;span style="color:#719e07">==&lt;/span> &lt;span style="color:#2aa198">5&lt;/span>);
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>}
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>最后 A.txt 的文件内容为：&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" style="color:#93a1a1;background-color:#002b36;-moz-tab-size:2;-o-tab-size:2;tab-size:2;">&lt;code class="language-txt" data-lang="txt">&lt;span style="display:flex;">&lt;span>WRITEe
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>这说明第一次用 &lt;code>pwrite&lt;/code> 读写完成之后，文件偏移量并没有被更新，还是在 0 的位置。&lt;/p></description></item></channel></rss>

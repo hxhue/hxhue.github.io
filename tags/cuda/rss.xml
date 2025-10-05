@@ -1,0 +1,92 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Cuda on Bluegill</title><link>https://hxhue.github.io/tags/cuda/</link><description>Recent content in Cuda on Bluegill</description><generator>Hugo</generator><language>zh-CN</language><lastBuildDate>Sat, 26 Apr 2025 00:00:00 +0800</lastBuildDate><atom:link href="https://hxhue.github.io/tags/cuda/rss.xml" rel="self" type="application/rss+xml"/><item><title>用特定的 CUDA 版本构建 PyTorch</title><link>https://hxhue.github.io/posts/programming/python/%E7%94%A8%E7%89%B9%E5%AE%9A%E7%9A%84-CUDA-%E7%89%88%E6%9C%AC%E6%9E%84%E5%BB%BA-PyTorch-%E5%B9%B6%E6%89%93%E5%8C%85-Conda-%E7%8E%AF%E5%A2%83/</link><pubDate>Tue, 15 Oct 2024 00:00:00 +0800</pubDate><guid>https://hxhue.github.io/posts/programming/python/%E7%94%A8%E7%89%B9%E5%AE%9A%E7%9A%84-CUDA-%E7%89%88%E6%9C%AC%E6%9E%84%E5%BB%BA-PyTorch-%E5%B9%B6%E6%89%93%E5%8C%85-Conda-%E7%8E%AF%E5%A2%83/</guid><description>&lt;h1 id="说明">说明
+&lt;a class="header-anchor" href="#%e8%af%b4%e6%98%8e">&lt;/a>
+&lt;/h1>&lt;p>文章是按照我解决问题的过程来写的，不是一个一步式的教程，所以显得有点凌乱。如果要操作请务必先看完全文，以免跟着中间过程走了同样的弯路。&lt;strong>如果不想看前面的内容可以直接跳到 conda 打包这一节&lt;/strong>。&lt;/p></description></item><item><title>读英伟达博客：CUDA Wrap 级原语</title><link>https://hxhue.github.io/posts/programming/cuda/%E8%AF%BB%E8%8B%B1%E4%BC%9F%E8%BE%BE%E5%8D%9A%E5%AE%A2CUDA-Wrap-%E7%BA%A7%E5%8E%9F%E8%AF%AD/</link><pubDate>Thu, 05 Sep 2024 00:00:00 +0800</pubDate><guid>https://hxhue.github.io/posts/programming/cuda/%E8%AF%BB%E8%8B%B1%E4%BC%9F%E8%BE%BE%E5%8D%9A%E5%AE%A2CUDA-Wrap-%E7%BA%A7%E5%8E%9F%E8%AF%AD/</guid><description>&lt;h1 id="原文">原文
+&lt;a class="header-anchor" href="#%e5%8e%9f%e6%96%87">&lt;/a>
+&lt;/h1>&lt;p>&lt;a href="https://developer.nvidia.com/blog/using-cuda-warp-level-primitives/" title="https://developer.nvidia.com/blog/using-cuda-warp-level-primitives/" rel="noopener external nofollow noreferrer"
+ target="_blank" class=" exturl" >https://developer.nvidia.com/blog/using-cuda-warp-level-primitives/&lt;i class="fa fa-external-link-alt">&lt;/i>&lt;/a>&lt;/p>
+&lt;h1 id="笔记">笔记
+&lt;a class="header-anchor" href="#%e7%ac%94%e8%ae%b0">&lt;/a>
+&lt;/h1>&lt;h2 id="warp-内规约">Warp 内规约
+&lt;a class="header-anchor" href="#warp-%e5%86%85%e8%a7%84%e7%ba%a6">&lt;/a>
+&lt;/h2>&lt;p>
+
+
+
+
+
+
+&lt;img src="https://hxhue.github.io/assets/Pasted%20image%2020240905103728.webp">&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" style="color:#93a1a1;background-color:#002b36;-moz-tab-size:2;-o-tab-size:2;tab-size:2;">&lt;code class="language-c" data-lang="c">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#719e07">#define FULL_MASK 0xffffffff
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#719e07">&lt;/span>&lt;span style="color:#719e07">for&lt;/span> (&lt;span style="color:#dc322f">int&lt;/span> offset &lt;span style="color:#719e07">=&lt;/span> &lt;span style="color:#2aa198">16&lt;/span>; offset &lt;span style="color:#719e07">&amp;gt;&lt;/span> &lt;span style="color:#2aa198">0&lt;/span>; offset &lt;span style="color:#719e07">/=&lt;/span> &lt;span style="color:#2aa198">2&lt;/span>)
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> val &lt;span style="color:#719e07">+=&lt;/span> &lt;span style="color:#268bd2">__shfl_down_sync&lt;/span>(FULL_MASK, val, offset);
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>先在 warp 内用原语规约，比在 block 级别用共享内存规约快很多。（虽然也有 &lt;code>__reduce_add_sync()&lt;/code> 函数，但是截至 2024 年 9 月 5 日只支持 unsigned 和 int 类型，给浮点数做规约就要用 &lt;code>__shfl_xx_sync()&lt;/code> 系列。）&lt;/p></description></item><item><title>读英伟达博客：Warp 聚合原子操作 —— 以过滤为例</title><link>https://hxhue.github.io/posts/programming/cuda/%E8%AF%BB%E8%8B%B1%E4%BC%9F%E8%BE%BE%E5%8D%9A%E5%AE%A2Warp-%E8%81%9A%E5%90%88%E5%8E%9F%E5%AD%90%E6%93%8D%E4%BD%9C-%E4%BB%A5%E8%BF%87%E6%BB%A4%E4%B8%BA%E4%BE%8B/</link><pubDate>Thu, 05 Sep 2024 00:00:00 +0800</pubDate><guid>https://hxhue.github.io/posts/programming/cuda/%E8%AF%BB%E8%8B%B1%E4%BC%9F%E8%BE%BE%E5%8D%9A%E5%AE%A2Warp-%E8%81%9A%E5%90%88%E5%8E%9F%E5%AD%90%E6%93%8D%E4%BD%9C-%E4%BB%A5%E8%BF%87%E6%BB%A4%E4%B8%BA%E4%BE%8B/</guid><description>&lt;h1 id="原文链接">原文链接
+&lt;a class="header-anchor" href="#%e5%8e%9f%e6%96%87%e9%93%be%e6%8e%a5">&lt;/a>
+&lt;/h1>&lt;p>&lt;a href="https://developer.nvidia.com/blog/cuda-pro-tip-optimized-filtering-warp-aggregated-atomics/" title="https://developer.nvidia.com/blog/cuda-pro-tip-optimized-filtering-warp-aggregated-atomics/" rel="noopener external nofollow noreferrer"
+ target="_blank" class=" exturl" >https://developer.nvidia.com/blog/cuda-pro-tip-optimized-filtering-warp-aggregated-atomics/&lt;i class="fa fa-external-link-alt">&lt;/i>&lt;/a>&lt;/p>
+&lt;h1 id="场景">场景
+&lt;a class="header-anchor" href="#%e5%9c%ba%e6%99%af">&lt;/a>
+&lt;/h1>&lt;p>将 &lt;code>src&lt;/code> 中大于 0 的数字移动到 &lt;code>dst&lt;/code> 中去，并返回新数组的元素数量。和 C++ 的 &lt;code>std::copy_if&lt;/code> 相似。&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" style="color:#93a1a1;background-color:#002b36;-moz-tab-size:2;-o-tab-size:2;tab-size:2;">&lt;code class="language-c" data-lang="c">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#dc322f">int&lt;/span> &lt;span style="color:#268bd2">filter&lt;/span>(&lt;span style="color:#dc322f">int&lt;/span> &lt;span style="color:#719e07">*&lt;/span>dst, &lt;span style="color:#719e07">const&lt;/span> &lt;span style="color:#dc322f">int&lt;/span> &lt;span style="color:#719e07">*&lt;/span>src, &lt;span style="color:#dc322f">int&lt;/span> n) {
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#dc322f">int&lt;/span> nres &lt;span style="color:#719e07">=&lt;/span> &lt;span style="color:#2aa198">0&lt;/span>;
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#719e07">for&lt;/span> (&lt;span style="color:#dc322f">int&lt;/span> i &lt;span style="color:#719e07">=&lt;/span> &lt;span style="color:#2aa198">0&lt;/span>; i &lt;span style="color:#719e07">&amp;lt;&lt;/span> n; i&lt;span style="color:#719e07">++&lt;/span>)
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#719e07">if&lt;/span> (src[i] &lt;span style="color:#719e07">&amp;gt;&lt;/span> &lt;span style="color:#2aa198">0&lt;/span>)
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> dst[nres&lt;span style="color:#719e07">++&lt;/span>] &lt;span style="color:#719e07">=&lt;/span> src[i];
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#586e75">// return the number of elements copied
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#586e75">&lt;/span> &lt;span style="color:#719e07">return&lt;/span> nres;
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>}
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>如果用全局内存实现：&lt;/p></description></item><item><title>CUDA Kernel 常用 float 类型这件事</title><link>https://hxhue.github.io/posts/programming/cuda/CUDA-Kernel-%E5%B8%B8%E7%94%A8-float-%E7%B1%BB%E5%9E%8B%E8%BF%99%E4%BB%B6%E4%BA%8B/</link><pubDate>Fri, 09 Aug 2024 00:00:00 +0800</pubDate><guid>https://hxhue.github.io/posts/programming/cuda/CUDA-Kernel-%E5%B8%B8%E7%94%A8-float-%E7%B1%BB%E5%9E%8B%E8%BF%99%E4%BB%B6%E4%BA%8B/</guid><description>&lt;p>本文分别讨论双精度、单精度、半精度的浮点数计算，最后提及混合精度。在 CPU 方面，仅考虑 x86-64 CPU 和 GNU/Linux 上的 GCC 编译器；GPU 方面仅考虑 NVIDIA GPU。&lt;/p>
+&lt;h1 id="gpu-上双精度计算慢在哪里">GPU 上双精度计算慢在哪里？
+&lt;a class="header-anchor" href="#gpu-%e4%b8%8a%e5%8f%8c%e7%b2%be%e5%ba%a6%e8%ae%a1%e7%ae%97%e6%85%a2%e5%9c%a8%e5%93%aa%e9%87%8c">&lt;/a>
+&lt;/h1>&lt;p>&lt;a href="https://docs.nvidia.com/cuda/cuda-c-programming-guide/index.html#arithmetic-instructions" title="https://docs.nvidia.com/cuda/cuda-c-programming-guide/index.html#arithmetic-instructions" rel="noopener external nofollow noreferrer"
+ target="_blank" class=" exturl" >https://docs.nvidia.com/cuda/cuda-c-programming-guide/index.html#arithmetic-instructions&lt;i class="fa fa-external-link-alt">&lt;/i>&lt;/a> 以上链接说明：GPU 双精度浮点数运算比单精度浮点数慢，在有些架构（很多 $x.y~(y \ne 0)$ 运算能力的 GPU 都是游戏卡）上甚至慢得多。除了指令慢之外，double 类型也不利于 cache 和全局内存带宽。&lt;/p></description></item><item><title>cudaLaunchKernel 非常耗时？</title><link>https://hxhue.github.io/posts/programming/cuda/cudaLaunchKernel-%E9%9D%9E%E5%B8%B8%E8%80%97%E6%97%B6/</link><pubDate>Sun, 12 May 2024 00:00:00 +0800</pubDate><guid>https://hxhue.github.io/posts/programming/cuda/cudaLaunchKernel-%E9%9D%9E%E5%B8%B8%E8%80%97%E6%97%B6/</guid><description>&lt;h1 id="事情起因">事情起因
+&lt;a class="header-anchor" href="#%e4%ba%8b%e6%83%85%e8%b5%b7%e5%9b%a0">&lt;/a>
+&lt;/h1>&lt;p>在第一次使用 nsys 的时候发现 &lt;code>cudaLaunchKernel&lt;/code> 非常耗时。网友觉得 &lt;code>cudaLaunchKernel&lt;/code> 超过了 50ms 就觉得很大了，但我在服务器上测是 400~500ms！&lt;/p>
+&lt;p>
+
+
+
+
+
+
+&lt;img src="https://hxhue.github.io/assets/cudaLaunchKernel%20%E8%80%97%E6%97%B6%EF%BC%9F-20240512005128828.webp">&lt;/p>
+&lt;p>我想到的可能原因：&lt;/p>
+&lt;ul>
+&lt;li>服务器的 CPU 和 GPU 负载太高。用环境变量 &lt;code>CUDA_VISIBLE_DEVICES&lt;/code> 换到同一台服务器上相对比较空闲的卡，发现 kernel 启动时间从平均 440 ms 减少到了 372 ms，因此可以排除 GPU 负载高的影响。&lt;/li>
+&lt;li>启动 kernel 时申请的资源太多。我们自己写的 kernel 每个 block 都是固定 512 线程数，GPU 为 3090，每个 SM 上最大能容纳 1024 个线程；对 cudnn 的调用（比如卷积核）看了一下是用满了 1024 线程数。&lt;/li>
+&lt;li>GPU 在 warmup 阶段。&lt;/li>
+&lt;/ul>
+&lt;h1 id="真正原因">真正原因
+&lt;a class="header-anchor" href="#%e7%9c%9f%e6%ad%a3%e5%8e%9f%e5%9b%a0">&lt;/a>
+&lt;/h1>&lt;p>&lt;strong>GPU 在 warmup 阶段&lt;/strong>。&lt;/p></description></item><item><title>在 Ubuntu 上安装和使用 nsys</title><link>https://hxhue.github.io/posts/programming/cuda/%E5%9C%A8-Ubuntu-%E4%B8%8A%E5%AE%89%E8%A3%85%E5%92%8C%E4%BD%BF%E7%94%A8-nsys/</link><pubDate>Sat, 11 May 2024 00:00:00 +0800</pubDate><guid>https://hxhue.github.io/posts/programming/cuda/%E5%9C%A8-Ubuntu-%E4%B8%8A%E5%AE%89%E8%A3%85%E5%92%8C%E4%BD%BF%E7%94%A8-nsys/</guid><description>&lt;h1 id="安装">安装
+&lt;a class="header-anchor" href="#%e5%ae%89%e8%a3%85">&lt;/a>
+&lt;/h1>&lt;p>&lt;code>nsys&lt;/code> 来自包 &lt;code>cuda-nsight-systems-11-7&lt;/code>（和自己的 CUDA 版本对应一下）。&lt;/p>
+&lt;p>在网上一直都没有搜到安装方式，官网也说的不明不白。尝试过两个错误的包：&lt;/p></description></item><item><title>cudaDeviceSynchronize 和 cudaStreamSynchronize</title><link>https://hxhue.github.io/posts/programming/cuda/cudaDeviceSynchronize-%E5%92%8C-cudaStreamSynchronize/</link><pubDate>Thu, 25 Apr 2024 00:00:00 +0800</pubDate><guid>https://hxhue.github.io/posts/programming/cuda/cudaDeviceSynchronize-%E5%92%8C-cudaStreamSynchronize/</guid><description>&lt;h1 id="我的理解">我的理解
+&lt;a class="header-anchor" href="#%e6%88%91%e7%9a%84%e7%90%86%e8%a7%a3">&lt;/a>
+&lt;/h1>&lt;p>CUDA 的 API 都是和 device 相关的，调用前要先确保已经调用过 &lt;code>cudaSetDevice&lt;/code> 将 context 关联到相关的设备上（据 Stackoverflow 的&lt;a href="https://stackoverflow.com/q/64854862/" title="老提问" rel="noopener external nofollow noreferrer"
+ target="_blank" class=" exturl" >老提问&lt;i class="fa fa-external-link-alt">&lt;/i>&lt;/a>，这个 context 会占用 &lt;del>150 MB 显存；从我这边来看，这个显存占用量还更大一些，有 200&lt;/del>300 MB）。创建流是不需要提供设备号的，所以它肯定使用的是 thread_local 的 device。&lt;/p></description></item><item><title>VS Code 无法使用 cuda-gdb 调试</title><link>https://hxhue.github.io/posts/developer/vscode/VS-Code-%E6%97%A0%E6%B3%95%E4%BD%BF%E7%94%A8-cuda-gdb-%E8%B0%83%E8%AF%95/</link><pubDate>Mon, 22 Apr 2024 00:00:00 +0800</pubDate><guid>https://hxhue.github.io/posts/developer/vscode/VS-Code-%E6%97%A0%E6%B3%95%E4%BD%BF%E7%94%A8-cuda-gdb-%E8%B0%83%E8%AF%95/</guid><description>&lt;p>创建 &lt;code>launch.json&lt;/code> 的时候找不到 &lt;code>cuda-gdb&lt;/code> 这个 type：需要安装 Nsight Visual Studio Code Edition：&lt;/p>
+&lt;p>
+
+
+
+
+
+
+&lt;img src="https://hxhue.github.io/assets/VS%20Code%20%E6%97%A0%E6%B3%95%E4%BD%BF%E7%94%A8%20cuda-gdb%20%E8%B0%83%E8%AF%95-20240422190718604.webp">&lt;/p></description></item><item><title>CUDA 程序第一次运行很慢</title><link>https://hxhue.github.io/posts/programming/cuda/CUDA-%E7%A8%8B%E5%BA%8F%E7%AC%AC%E4%B8%80%E6%AC%A1%E8%BF%90%E8%A1%8C%E5%BE%88%E6%85%A2/</link><pubDate>Mon, 12 Feb 2024 00:00:00 +0800</pubDate><guid>https://hxhue.github.io/posts/programming/cuda/CUDA-%E7%A8%8B%E5%BA%8F%E7%AC%AC%E4%B8%80%E6%AC%A1%E8%BF%90%E8%A1%8C%E5%BE%88%E6%85%A2/</guid><description>&lt;p>&lt;a href="https://developer.nvidia.com/blog/cuda-pro-tip-understand-fat-binaries-jit-caching/" title="https://developer.nvidia.com/blog/cuda-pro-tip-understand-fat-binaries-jit-caching/" rel="noopener external nofollow noreferrer"
+ target="_blank" class=" exturl" >https://developer.nvidia.com/blog/cuda-pro-tip-understand-fat-binaries-jit-caching/&lt;i class="fa fa-external-link-alt">&lt;/i>&lt;/a>&lt;/p>
+&lt;p>CUDA 程序有两种代码：一是设备无关的 PTX，二是设备有关的二进制代码。在运行之前将 PTX 编译成二进制代码就是 JIT 过程。（当然，nvcc 会在文件系统里面存储 cache。）用 &lt;code>-arch=sm_xx&lt;/code> 可以只为给定的架构编译，从而运行时不需要 JIT 这一步。&lt;/p></description></item><item><title>CUDA by Example: Appendex</title><link>https://hxhue.github.io/cuda-by-example/CUDA-by-Example-%E9%99%84%E5%BD%95/</link><pubDate>Tue, 06 Feb 2024 00:00:00 +0800</pubDate><guid>https://hxhue.github.io/cuda-by-example/CUDA-by-Example-%E9%99%84%E5%BD%95/</guid><description>&lt;h1 id="再次考虑-dot-计算">再次考虑 dot 计算
+&lt;a class="header-anchor" href="#%e5%86%8d%e6%ac%a1%e8%80%83%e8%99%91-dot-%e8%ae%a1%e7%ae%97">&lt;/a>
+&lt;/h1>&lt;p>在第 5 章的 dot 计算中，我们在每个块上做完 reduction 之后就将数据拷贝回到 CPU 了，然后让 CPU 做最后的加法。&lt;/p>
+&lt;p>为什么在 compute capability 2.0 之前，&lt;code>atomicAdd&lt;/code> 只支持整数？因为原子加法是不能指定计算的发生顺序的，因而每个计算都必须遵守结合律，也就是 $(A+B)+C$ 必须等于 $A+(B+C)$。&lt;strong>但是浮点数因为中间结果的舍入问题，并不能保证这一点&lt;/strong>！！&lt;/p></description></item><item><title>CUDA by Example: Chapter 01-05</title><link>https://hxhue.github.io/cuda-by-example/CUDA-by-Example-chapter01-05/</link><pubDate>Tue, 06 Feb 2024 00:00:00 +0800</pubDate><guid>https://hxhue.github.io/cuda-by-example/CUDA-by-Example-chapter01-05/</guid><description>&lt;p>源码可以参考 &lt;a href="https://github.com/yottaawesome/cuda-by-example/" title="https://github.com/yottaawesome/cuda-by-example/" rel="noopener external nofollow noreferrer"
+ target="_blank" class=" exturl" >https://github.com/yottaawesome/cuda-by-example/&lt;i class="fa fa-external-link-alt">&lt;/i>&lt;/a> ，官网的源码链接挂了。&lt;/p>
+&lt;p>书中的代码有些需要用 opengl 来跑。安装了 &lt;code>freeglut3-dev&lt;/code> 和 &lt;code>mesa-utils&lt;/code>。（不确定 &lt;code>libgl1-mesa-dev&lt;/code> 是否是必要的。）然后 cmake 规则中要 link 对应的库：&lt;/p></description></item><item><title>CUDA by Example: Chapter 06-08</title><link>https://hxhue.github.io/cuda-by-example/CUDA-by-Example-chapter06-08/</link><pubDate>Tue, 06 Feb 2024 00:00:00 +0800</pubDate><guid>https://hxhue.github.io/cuda-by-example/CUDA-by-Example-chapter06-08/</guid><description>&lt;h1 id="第-6-章-constant-memory-and-events">第 6 章 Constant Memory and Events
+&lt;a class="header-anchor" href="#%e7%ac%ac-6-%e7%ab%a0-constant-memory-and-events">&lt;/a>
+&lt;/h1>&lt;h2 id="常量内存">常量内存
+&lt;a class="header-anchor" href="#%e5%b8%b8%e9%87%8f%e5%86%85%e5%ad%98">&lt;/a>
+&lt;/h2>&lt;p>常量内存是在全局区域声明的。如果漏掉了 &lt;code>__constant__&lt;/code> 关键字，就会将其定义在全局内存区域，尽管存储方式、分配的时机和用 &lt;code>cudaMalloc&lt;/code> 申请的内存有一些差异。&lt;/p></description></item><item><title>CUDA by Example: Chapter 09-12</title><link>https://hxhue.github.io/cuda-by-example/CUDA-by-Example-chapter09-12/</link><pubDate>Fri, 02 Feb 2024 00:00:00 +0800</pubDate><guid>https://hxhue.github.io/cuda-by-example/CUDA-by-Example-chapter09-12/</guid><description>&lt;h1 id="第-9-章-原子操作">第 9 章 原子操作
+&lt;a class="header-anchor" href="#%e7%ac%ac-9-%e7%ab%a0-%e5%8e%9f%e5%ad%90%e6%93%8d%e4%bd%9c">&lt;/a>
+&lt;/h1>&lt;blockquote>
+ &lt;p>You should know that atomic operations on &lt;strong>global memory&lt;/strong> are supported only on GPUs of compute capability 1.1 or higher. Furthermore, atomic operations on &lt;strong>shared memory&lt;/strong> require a GPU of compute capability 1.2 or higher.&lt;/p>
+&lt;/blockquote>&lt;p>指定计算能力：&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" style="color:#93a1a1;background-color:#002b36;-moz-tab-size:2;-o-tab-size:2;tab-size:2;">&lt;code class="language-bash" data-lang="bash">&lt;span style="display:flex;">&lt;span>nvcc -arch&lt;span style="color:#719e07">=&lt;/span>sm_11
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>这样就指定了计算能力是 1.1，当有些指令是只有 1.1 才能编译时加这个参数可以确保编译。同时，有了更加精确的生成目标，nvcc 可以执行一些和硬件相关的优化手段，这些优化手段在更早的架构上可能没有。&lt;/p></description></item><item><title>CUDA 调试</title><link>https://hxhue.github.io/posts/programming/cuda/CUDA-%E8%B0%83%E8%AF%95/</link><pubDate>Mon, 06 Nov 2023 00:00:00 +0800</pubDate><guid>https://hxhue.github.io/posts/programming/cuda/CUDA-%E8%B0%83%E8%AF%95/</guid><description>&lt;p>cuda-gdb 是 cuda 的调试工具，执行非常慢。&lt;/p>
+&lt;p>如果需要符号信息，nvcc 的编译选项需要加上 &lt;code>-g -G&lt;/code>，其中 &lt;code>-g&lt;/code> 是给 host 代码添加符号信息，而 &lt;code>-G&lt;/code> 是给 device 侧代码添加符号信息。&lt;/p></description></item></channel></rss>

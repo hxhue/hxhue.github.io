@@ -1,0 +1,346 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Apues on Bluegill</title><link>https://hxhue.github.io/apue/</link><description>Recent content in Apues on Bluegill</description><generator>Hugo</generator><language>zh-CN</language><lastBuildDate>Sat, 26 Apr 2025 00:00:00 +0800</lastBuildDate><atom:link href="https://hxhue.github.io/apue/rss.xml" rel="self" type="application/rss+xml"/><item><title>04.14 文件系统</title><link>https://hxhue.github.io/apue/04.14-15-%E6%96%87%E4%BB%B6%E7%B3%BB%E7%BB%9F/</link><pubDate>Tue, 14 May 2024 00:00:00 +0800</pubDate><guid>https://hxhue.github.io/apue/04.14-15-%E6%96%87%E4%BB%B6%E7%B3%BB%E7%BB%9F/</guid><description>&lt;h1 id="软链接符号链接">软链接（符号链接）
+&lt;a class="header-anchor" href="#%e8%bd%af%e9%93%be%e6%8e%a5%e7%ac%a6%e5%8f%b7%e9%93%be%e6%8e%a5">&lt;/a>
+&lt;/h1>&lt;p>软链接本质上存储了目标文件名，但因为是特殊的文件，我们不能直接用 &lt;code>openat&lt;/code> 打开软链接文件并用 &lt;code>read&lt;/code> 读取其内容。想要跟踪符号链接，可以向 &lt;code>readlink&lt;/code> 系统调用传入软链接文件路径。&lt;/p></description></item><item><title>04.10 Linux 中只有超级用户可以修改文件 owner</title><link>https://hxhue.github.io/apue/04.10-Linux-%E4%B8%AD%E5%8F%AA%E6%9C%89%E8%B6%85%E7%BA%A7%E7%94%A8%E6%88%B7%E5%8F%AF%E4%BB%A5%E4%BF%AE%E6%94%B9%E6%96%87%E4%BB%B6-owner/</link><pubDate>Mon, 13 May 2024 00:00:00 +0800</pubDate><guid>https://hxhue.github.io/apue/04.10-Linux-%E4%B8%AD%E5%8F%AA%E6%9C%89%E8%B6%85%E7%BA%A7%E7%94%A8%E6%88%B7%E5%8F%AF%E4%BB%A5%E4%BF%AE%E6%94%B9%E6%96%87%E4%BB%B6-owner/</guid><description>&lt;h1 id="用-chown-修改-owner">用 chown 修改 owner
+&lt;a class="header-anchor" href="#%e7%94%a8-chown-%e4%bf%ae%e6%94%b9-owner">&lt;/a>
+&lt;/h1>&lt;p>Linux 和 BSD 下只有 root 才可以。有些系统允许用户修改自己文件的所有者完成&lt;strong>文件转让&lt;/strong>。&lt;/p>
+&lt;p>
+
+
+
+
+
+
+&lt;img src="https://hxhue.github.io/apue/assets/04.10%20Linux%20%E4%B8%AD%E5%8F%AA%E6%9C%89%E8%B6%85%E7%BA%A7%E7%94%A8%E6%88%B7%E5%8F%AF%E4%BB%A5%E4%BF%AE%E6%94%B9%E6%96%87%E4%BB%B6%20owner-20240513105325984.webp">&lt;/p>
+&lt;h1 id="用-chown-修改-group">用 chown 修改 group
+&lt;a class="header-anchor" href="#%e7%94%a8-chown-%e4%bf%ae%e6%94%b9-group">&lt;/a>
+&lt;/h1>&lt;p>超级用户肯定是可以的。&lt;/p>
+&lt;p>或者，进程拥有此文件（看有效用户 ID），参数 owner 等于 -1 或者文件所有者的 ID，参数 group 等于进程的有效组 ID 或者附属组 ID 中的一个。&lt;/p></description></item><item><title>04.11 文件截断和空洞</title><link>https://hxhue.github.io/apue/04.11-%E6%96%87%E4%BB%B6%E6%88%AA%E6%96%AD%E5%92%8C%E7%A9%BA%E6%B4%9E/</link><pubDate>Mon, 13 May 2024 00:00:00 +0800</pubDate><guid>https://hxhue.github.io/apue/04.11-%E6%96%87%E4%BB%B6%E6%88%AA%E6%96%AD%E5%92%8C%E7%A9%BA%E6%B4%9E/</guid><description>&lt;div class="highlight">&lt;pre tabindex="0" style="color:#93a1a1;background-color:#002b36;-moz-tab-size:2;-o-tab-size:2;tab-size:2;">&lt;code class="language-c" data-lang="c">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#dc322f">int&lt;/span> &lt;span style="color:#268bd2">truncate&lt;/span>(&lt;span style="color:#719e07">const&lt;/span> &lt;span style="color:#dc322f">char&lt;/span> &lt;span style="color:#719e07">*&lt;/span>path, &lt;span style="color:#dc322f">off_t&lt;/span> length);
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#dc322f">int&lt;/span> &lt;span style="color:#268bd2">ftruncate&lt;/span>(&lt;span style="color:#dc322f">int&lt;/span> fd, &lt;span style="color:#dc322f">off_t&lt;/span> length);
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>这两个函数能够设置文件长度，如果新的长度比原来更短，则旧的内容被截断。如果新的长度比原来更长，则中间的部分会形成空洞。形成空洞的部分在被其他程序读取的时候，得到的是 0；全 0 的块可以不实际分配给文件，因此不会增加文件体积。&lt;/p></description></item><item><title>04.08 umask 设置屏蔽字</title><link>https://hxhue.github.io/apue/04.08-umask-%E8%AE%BE%E7%BD%AE%E5%B1%8F%E8%94%BD%E5%AD%97/</link><pubDate>Sun, 12 May 2024 00:00:00 +0800</pubDate><guid>https://hxhue.github.io/apue/04.08-umask-%E8%AE%BE%E7%BD%AE%E5%B1%8F%E8%94%BD%E5%AD%97/</guid><description>&lt;h1 id="umask-系统调用">&lt;code>umask&lt;/code> 系统调用
+&lt;a class="header-anchor" href="#umask-%e7%b3%bb%e7%bb%9f%e8%b0%83%e7%94%a8">&lt;/a>
+&lt;/h1>&lt;p>这样理解&lt;strong>屏蔽&lt;/strong>字：当某一位被设置为 1，这一位就不起作用。&lt;code>umask&lt;/code> 把当前进程的文件创建屏蔽字设置为 &lt;code>mask &amp;amp; 0777&lt;/code>，也就是只有文件权限位是受到屏蔽的。&lt;code>umask&lt;/code> 能影响 &lt;code>open&lt;/code> 和 &lt;code>mkdir&lt;/code> 等系统调用，这相当于每次传入它们的 &lt;code>mode_t&lt;/code> 参数都用 umask 屏蔽了给定的位。&lt;/p></description></item><item><title>04.09 chmod</title><link>https://hxhue.github.io/apue/04.09-chmod/</link><pubDate>Sun, 12 May 2024 00:00:00 +0800</pubDate><guid>https://hxhue.github.io/apue/04.09-chmod/</guid><description>&lt;p>区别于 &lt;code>umask&lt;/code> 的操作只作用于文件的读写执行相关的 9 位，&lt;code>chmod&lt;/code> 是字如其名的操作 &lt;code>struct stat&lt;/code> 类型 &lt;code>st_mode&lt;/code> 字段的系统调用。&lt;/p>
+&lt;p>&lt;code>chmod&lt;/code> 系统调用只会改变文件 inode 结点的上次修改时间，不会改变文件内容的上次修改时间。因此，用 &lt;code>ls&lt;/code> 列出 &lt;code>chmod&lt;/code> 修改过权限的文件属性时，我们不会看到文件的上次修改时间有变化。&lt;/p></description></item><item><title>04.09.2 验证文件粘着位的作用</title><link>https://hxhue.github.io/apue/04.09.2-%E9%AA%8C%E8%AF%81%E6%96%87%E4%BB%B6%E7%B2%98%E7%9D%80%E4%BD%8D%E7%9A%84%E4%BD%9C%E7%94%A8/</link><pubDate>Sun, 12 May 2024 00:00:00 +0800</pubDate><guid>https://hxhue.github.io/apue/04.09.2-%E9%AA%8C%E8%AF%81%E6%96%87%E4%BB%B6%E7%B2%98%E7%9D%80%E4%BD%8D%E7%9A%84%E4%BD%9C%E7%94%A8/</guid><description>&lt;div class="highlight">&lt;pre tabindex="0" style="color:#93a1a1;background-color:#002b36;-moz-tab-size:2;-o-tab-size:2;tab-size:2;">&lt;code class="language-c" data-lang="c">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#719e07">#include&lt;/span> &lt;span style="color:#719e07">&amp;lt;errno.h&amp;gt;&lt;/span>&lt;span style="color:#719e07">
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#719e07">#include&lt;/span> &lt;span style="color:#719e07">&amp;lt;fcntl.h&amp;gt;&lt;/span>&lt;span style="color:#719e07">
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#719e07">#include&lt;/span> &lt;span style="color:#719e07">&amp;lt;stdio.h&amp;gt;&lt;/span>&lt;span style="color:#719e07">
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#719e07">#include&lt;/span> &lt;span style="color:#719e07">&amp;lt;stdlib.h&amp;gt;&lt;/span>&lt;span style="color:#719e07">
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#719e07">#include&lt;/span> &lt;span style="color:#719e07">&amp;lt;string.h&amp;gt;&lt;/span>&lt;span style="color:#719e07">
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#719e07">#include&lt;/span> &lt;span style="color:#719e07">&amp;lt;sys/stat.h&amp;gt;&lt;/span>&lt;span style="color:#719e07">
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#719e07">#include&lt;/span> &lt;span style="color:#719e07">&amp;lt;unistd.h&amp;gt;&lt;/span>&lt;span style="color:#719e07">
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#719e07">&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#dc322f">void&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#268bd2">perror_and_exit&lt;/span> (&lt;span style="color:#719e07">const&lt;/span> &lt;span style="color:#dc322f">char&lt;/span> &lt;span style="color:#719e07">*&lt;/span>msg)
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>{
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#dc322f">int&lt;/span> err &lt;span style="color:#719e07">=&lt;/span> errno;
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#268bd2">fflush&lt;/span> (stdout);
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#268bd2">fprintf&lt;/span> (stderr, &lt;span style="color:#2aa198">&amp;#34;%s: %s&lt;/span>&lt;span style="color:#cb4b16">\n&lt;/span>&lt;span style="color:#2aa198">&amp;#34;&lt;/span>, msg, &lt;span style="color:#268bd2">strerror&lt;/span> (err));
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#268bd2">exit&lt;/span> (errno);
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>}
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#dc322f">int&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#268bd2">main&lt;/span> (&lt;span style="color:#dc322f">int&lt;/span> argc, &lt;span style="color:#dc322f">char&lt;/span> &lt;span style="color:#719e07">**&lt;/span>argv)
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>{
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#719e07">if&lt;/span> (argc &lt;span style="color:#719e07">!=&lt;/span> &lt;span style="color:#2aa198">2&lt;/span>)
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> {
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#268bd2">fprintf&lt;/span> (stderr, &lt;span style="color:#2aa198">&amp;#34;Usage: %s &amp;lt;path&amp;gt;&lt;/span>&lt;span style="color:#cb4b16">\n&lt;/span>&lt;span style="color:#2aa198">&amp;#34;&lt;/span>, argv[&lt;span style="color:#2aa198">0&lt;/span>]);
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#268bd2">exit&lt;/span> (&lt;span style="color:#2aa198">1&lt;/span>);
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> }
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#719e07">struct&lt;/span> stat buf;
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#719e07">if&lt;/span> (&lt;span style="color:#268bd2">stat&lt;/span> (argv[&lt;span style="color:#2aa198">1&lt;/span>], &lt;span style="color:#719e07">&amp;amp;&lt;/span>buf) &lt;span style="color:#719e07">==&lt;/span> &lt;span style="color:#719e07">-&lt;/span>&lt;span style="color:#2aa198">1&lt;/span>)
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#268bd2">perror_and_exit&lt;/span> (&lt;span style="color:#2aa198">&amp;#34;stat&amp;#34;&lt;/span>);
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#719e07">if&lt;/span> (buf.st_mode &lt;span style="color:#719e07">&amp;amp;&lt;/span> S_ISVTX)
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#268bd2">printf&lt;/span> (&lt;span style="color:#2aa198">&amp;#34;S_ISVTX is set&lt;/span>&lt;span style="color:#cb4b16">\n&lt;/span>&lt;span style="color:#2aa198">&amp;#34;&lt;/span>);
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#719e07">else&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#268bd2">printf&lt;/span> (&lt;span style="color:#2aa198">&amp;#34;The bit is not set&lt;/span>&lt;span style="color:#cb4b16">\n&lt;/span>&lt;span style="color:#2aa198">&amp;#34;&lt;/span>);
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>}
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>编译运行：&lt;/p></description></item><item><title>04.04-07 设置用户 id 和设置组 id</title><link>https://hxhue.github.io/apue/04.04-07-%E8%AE%BE%E7%BD%AE%E7%94%A8%E6%88%B7-id-%E5%92%8C%E8%AE%BE%E7%BD%AE%E7%BB%84-id/</link><pubDate>Sat, 11 May 2024 00:00:00 +0800</pubDate><guid>https://hxhue.github.io/apue/04.04-07-%E8%AE%BE%E7%BD%AE%E7%94%A8%E6%88%B7-id-%E5%92%8C%E8%AE%BE%E7%BD%AE%E7%BB%84-id/</guid><description>&lt;h1 id="进程有哪些用户或组-id">进程有哪些用户或组 id？
+&lt;a class="header-anchor" href="#%e8%bf%9b%e7%a8%8b%e6%9c%89%e5%93%aa%e4%ba%9b%e7%94%a8%e6%88%b7%e6%88%96%e7%bb%84-id">&lt;/a>
+&lt;/h1>&lt;p>和一个进程关联的 id 有 6 个或者更多：&lt;/p>
+&lt;ul>
+&lt;li>实际用户 id 和实际组 id&lt;/li>
+&lt;li>有效用户 id、有效组 id 和附属组 id&lt;/li>
+&lt;li>保存的设置用户 id 和保存的设置组 id（由 &lt;code>exec&lt;/code> 函数保存）&lt;/li>
+&lt;/ul>
+&lt;h1 id="有效用户组决定实际访问权限">有效用户（组）决定实际访问权限
+&lt;a class="header-anchor" href="#%e6%9c%89%e6%95%88%e7%94%a8%e6%88%b7%e7%bb%84%e5%86%b3%e5%ae%9a%e5%ae%9e%e9%99%85%e8%ae%bf%e9%97%ae%e6%9d%83%e9%99%90">&lt;/a>
+&lt;/h1>&lt;h2 id="什么是有效用户-id">什么是有效用户 id？
+&lt;a class="header-anchor" href="#%e4%bb%80%e4%b9%88%e6%98%af%e6%9c%89%e6%95%88%e7%94%a8%e6%88%b7-id">&lt;/a>
+&lt;/h2>&lt;p>一个进程在启动时可以以别人的身份启动，从而拥有别人的权限，这个时候真正生效的是有效用户 id。有效组 id 也是类似的。&lt;/p></description></item><item><title>04.05 判断文件访问权限</title><link>https://hxhue.github.io/apue/04.05-%E5%88%A4%E6%96%AD%E6%96%87%E4%BB%B6%E8%AE%BF%E9%97%AE%E6%9D%83%E9%99%90/</link><pubDate>Sat, 11 May 2024 00:00:00 +0800</pubDate><guid>https://hxhue.github.io/apue/04.05-%E5%88%A4%E6%96%AD%E6%96%87%E4%BB%B6%E8%AE%BF%E9%97%AE%E6%9D%83%E9%99%90/</guid><description>&lt;div class="highlight">&lt;pre tabindex="0" style="color:#93a1a1;background-color:#002b36;-moz-tab-size:2;-o-tab-size:2;tab-size:2;">&lt;code class="language-c" data-lang="c">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#719e07">#include&lt;/span> &lt;span style="color:#719e07">&amp;lt;errno.h&amp;gt;&lt;/span>&lt;span style="color:#719e07">
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#719e07">#include&lt;/span> &lt;span style="color:#719e07">&amp;lt;fcntl.h&amp;gt;&lt;/span>&lt;span style="color:#719e07">
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#719e07">#include&lt;/span> &lt;span style="color:#719e07">&amp;lt;stdio.h&amp;gt;&lt;/span>&lt;span style="color:#719e07">
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#719e07">#include&lt;/span> &lt;span style="color:#719e07">&amp;lt;stdlib.h&amp;gt;&lt;/span>&lt;span style="color:#719e07">
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#719e07">#include&lt;/span> &lt;span style="color:#719e07">&amp;lt;string.h&amp;gt;&lt;/span>&lt;span style="color:#719e07">
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#719e07">#include&lt;/span> &lt;span style="color:#719e07">&amp;lt;sys/stat.h&amp;gt;&lt;/span>&lt;span style="color:#719e07">
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#719e07">#include&lt;/span> &lt;span style="color:#719e07">&amp;lt;unistd.h&amp;gt;&lt;/span>&lt;span style="color:#719e07">
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#719e07">&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#dc322f">void&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#268bd2">perror_and_exit&lt;/span> (&lt;span style="color:#719e07">const&lt;/span> &lt;span style="color:#dc322f">char&lt;/span> &lt;span style="color:#719e07">*&lt;/span>msg)
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>{
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#dc322f">int&lt;/span> err &lt;span style="color:#719e07">=&lt;/span> errno;
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#268bd2">fflush&lt;/span> (stdout);
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#268bd2">fprintf&lt;/span> (stderr, &lt;span style="color:#2aa198">&amp;#34;%s: %s&lt;/span>&lt;span style="color:#cb4b16">\n&lt;/span>&lt;span style="color:#2aa198">&amp;#34;&lt;/span>, msg, &lt;span style="color:#268bd2">strerror&lt;/span> (err));
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#268bd2">exit&lt;/span> (errno);
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>}
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#dc322f">int&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#268bd2">main&lt;/span> (&lt;span style="color:#dc322f">int&lt;/span> argc, &lt;span style="color:#dc322f">char&lt;/span> &lt;span style="color:#719e07">**&lt;/span>argv)
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>{
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#719e07">struct&lt;/span> stat buf;
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#719e07">const&lt;/span> &lt;span style="color:#dc322f">char&lt;/span> &lt;span style="color:#719e07">*&lt;/span>ptr;
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#719e07">for&lt;/span> (&lt;span style="color:#dc322f">int&lt;/span> i &lt;span style="color:#719e07">=&lt;/span> &lt;span style="color:#2aa198">1&lt;/span>; i &lt;span style="color:#719e07">&amp;lt;&lt;/span> argc; &lt;span style="color:#719e07">++&lt;/span>i)
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> {
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#268bd2">printf&lt;/span> (&lt;span style="color:#2aa198">&amp;#34;%s &amp;#34;&lt;/span>, argv[i]);
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#719e07">if&lt;/span> (&lt;span style="color:#268bd2">lstat&lt;/span> (argv[i], &lt;span style="color:#719e07">&amp;amp;&lt;/span>buf) &lt;span style="color:#719e07">&amp;lt;&lt;/span> &lt;span style="color:#2aa198">0&lt;/span>)
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#268bd2">perror_and_exit&lt;/span> (&lt;span style="color:#2aa198">&amp;#34;lstat&amp;#34;&lt;/span>);
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#719e07">if&lt;/span> (&lt;span style="color:#268bd2">S_ISREG&lt;/span> (buf.st_mode))
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> ptr &lt;span style="color:#719e07">=&lt;/span> &lt;span style="color:#2aa198">&amp;#34;regular&amp;#34;&lt;/span>;
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#719e07">else&lt;/span> &lt;span style="color:#719e07">if&lt;/span> (&lt;span style="color:#268bd2">S_ISDIR&lt;/span> (buf.st_mode))
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> ptr &lt;span style="color:#719e07">=&lt;/span> &lt;span style="color:#2aa198">&amp;#34;directory&amp;#34;&lt;/span>;
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#719e07">else&lt;/span> &lt;span style="color:#719e07">if&lt;/span> (&lt;span style="color:#268bd2">S_ISCHR&lt;/span> (buf.st_mode))
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> ptr &lt;span style="color:#719e07">=&lt;/span> &lt;span style="color:#2aa198">&amp;#34;character special&amp;#34;&lt;/span>;
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#719e07">else&lt;/span> &lt;span style="color:#719e07">if&lt;/span> (&lt;span style="color:#268bd2">S_ISBLK&lt;/span> (buf.st_mode))
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> ptr &lt;span style="color:#719e07">=&lt;/span> &lt;span style="color:#2aa198">&amp;#34;block&amp;#34;&lt;/span>;
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#719e07">else&lt;/span> &lt;span style="color:#719e07">if&lt;/span> (&lt;span style="color:#268bd2">S_ISFIFO&lt;/span> (buf.st_mode))
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> ptr &lt;span style="color:#719e07">=&lt;/span> &lt;span style="color:#2aa198">&amp;#34;fifo&amp;#34;&lt;/span>;
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#719e07">else&lt;/span> &lt;span style="color:#719e07">if&lt;/span> (&lt;span style="color:#268bd2">S_ISLNK&lt;/span> (buf.st_mode))
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> ptr &lt;span style="color:#719e07">=&lt;/span> &lt;span style="color:#2aa198">&amp;#34;symbolic link&amp;#34;&lt;/span>;
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#719e07">else&lt;/span> &lt;span style="color:#719e07">if&lt;/span> (&lt;span style="color:#268bd2">S_ISSOCK&lt;/span> (buf.st_mode))
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> ptr &lt;span style="color:#719e07">=&lt;/span> &lt;span style="color:#2aa198">&amp;#34;socket&amp;#34;&lt;/span>;
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#719e07">else&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> ptr &lt;span style="color:#719e07">=&lt;/span> &lt;span style="color:#2aa198">&amp;#34;** unknown mode **&amp;#34;&lt;/span>;
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#268bd2">printf&lt;/span> (&lt;span style="color:#2aa198">&amp;#34;%s&lt;/span>&lt;span style="color:#cb4b16">\n&lt;/span>&lt;span style="color:#2aa198">&amp;#34;&lt;/span>, ptr);
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> }
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>}
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>例子：&lt;/p></description></item><item><title>03.12 dup 等效于 fcntl 的 F_DUPFD 选项</title><link>https://hxhue.github.io/apue/03.12-dup-%E7%AD%89%E6%95%88%E4%BA%8E-fcntl-%E7%9A%84-F_DUPFD-%E9%80%89%E9%A1%B9/</link><pubDate>Wed, 08 May 2024 00:00:00 +0800</pubDate><guid>https://hxhue.github.io/apue/03.12-dup-%E7%AD%89%E6%95%88%E4%BA%8E-fcntl-%E7%9A%84-F_DUPFD-%E9%80%89%E9%A1%B9/</guid><description>&lt;div class="highlight">&lt;pre tabindex="0" style="color:#93a1a1;background-color:#002b36;-moz-tab-size:2;-o-tab-size:2;tab-size:2;">&lt;code class="language-c" data-lang="c">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#268bd2">fcntl&lt;/span>(fd, F_DUPFD, &lt;span style="color:#2aa198">0&lt;/span>)
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>相当于
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#268bd2">dup&lt;/span>(fd)
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>在两次调用间没有其他线程、信号量处理等可能再次打开 fd2 的情况下：
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#268bd2">close&lt;/span>(fd2)
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#268bd2">fcntl&lt;/span>(fd, F_DUPFD, fd2)
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>相当于
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#268bd2">dup2&lt;/span>(fd, fd2)
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>但是没有原子性，而且 errno 有差异。
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div></description></item><item><title>03.14 用 fcntl 检查文件属性</title><link>https://hxhue.github.io/apue/03.14-%E7%94%A8-fcntl-%E6%A3%80%E6%9F%A5%E6%96%87%E4%BB%B6%E5%B1%9E%E6%80%A7/</link><pubDate>Wed, 08 May 2024 00:00:00 +0800</pubDate><guid>https://hxhue.github.io/apue/03.14-%E7%94%A8-fcntl-%E6%A3%80%E6%9F%A5%E6%96%87%E4%BB%B6%E5%B1%9E%E6%80%A7/</guid><description>&lt;p>抄的书上的代码。&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" style="color:#93a1a1;background-color:#002b36;-moz-tab-size:2;-o-tab-size:2;tab-size:2;">&lt;code class="language-c" data-lang="c">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#719e07">#include&lt;/span> &lt;span style="color:#719e07">&amp;lt;errno.h&amp;gt;&lt;/span>&lt;span style="color:#719e07">
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#719e07">#include&lt;/span> &lt;span style="color:#719e07">&amp;lt;fcntl.h&amp;gt;&lt;/span>&lt;span style="color:#719e07">
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#719e07">#include&lt;/span> &lt;span style="color:#719e07">&amp;lt;stdio.h&amp;gt;&lt;/span>&lt;span style="color:#719e07">
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#719e07">#include&lt;/span> &lt;span style="color:#719e07">&amp;lt;stdlib.h&amp;gt;&lt;/span>&lt;span style="color:#719e07">
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#719e07">#include&lt;/span> &lt;span style="color:#719e07">&amp;lt;string.h&amp;gt;&lt;/span>&lt;span style="color:#719e07">
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#719e07">#include&lt;/span> &lt;span style="color:#719e07">&amp;lt;sys/param.h&amp;gt;&lt;/span>&lt;span style="color:#719e07">
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#719e07">#include&lt;/span> &lt;span style="color:#719e07">&amp;lt;sys/syscall.h&amp;gt;&lt;/span>&lt;span style="color:#719e07">
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#719e07">#include&lt;/span> &lt;span style="color:#719e07">&amp;lt;sys/times.h&amp;gt;&lt;/span>&lt;span style="color:#719e07">
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#719e07">#include&lt;/span> &lt;span style="color:#719e07">&amp;lt;unistd.h&amp;gt;&lt;/span>&lt;span style="color:#719e07">
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#719e07">&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#719e07">extern&lt;/span> &lt;span style="color:#dc322f">int&lt;/span> errno;
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#dc322f">void&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#268bd2">perror_and_exit&lt;/span> (&lt;span style="color:#719e07">const&lt;/span> &lt;span style="color:#dc322f">char&lt;/span> &lt;span style="color:#719e07">*&lt;/span>msg)
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>{
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#268bd2">perror&lt;/span> (msg);
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#268bd2">exit&lt;/span> (errno);
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>}
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#dc322f">int&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#268bd2">main&lt;/span> (&lt;span style="color:#dc322f">int&lt;/span> argc, &lt;span style="color:#dc322f">char&lt;/span> &lt;span style="color:#719e07">**&lt;/span>argv)
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>{
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#dc322f">int&lt;/span> val;
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#719e07">if&lt;/span> (argc &lt;span style="color:#719e07">!=&lt;/span> &lt;span style="color:#2aa198">2&lt;/span>)
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> {
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#268bd2">fputs&lt;/span> (&lt;span style="color:#2aa198">&amp;#34;usage: a.out &amp;lt;descriptor#&amp;gt;&lt;/span>&lt;span style="color:#cb4b16">\n&lt;/span>&lt;span style="color:#2aa198">&amp;#34;&lt;/span>, stderr);
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#268bd2">exit&lt;/span> (&lt;span style="color:#2aa198">1&lt;/span>);
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> }
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#719e07">if&lt;/span> ((val &lt;span style="color:#719e07">=&lt;/span> &lt;span style="color:#268bd2">fcntl&lt;/span> (&lt;span style="color:#268bd2">atoi&lt;/span> (argv[&lt;span style="color:#2aa198">1&lt;/span>]), F_GETFL, &lt;span style="color:#2aa198">0&lt;/span>)) &lt;span style="color:#719e07">&amp;lt;&lt;/span> &lt;span style="color:#2aa198">0&lt;/span>)
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> {
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#dc322f">int&lt;/span> ec &lt;span style="color:#719e07">=&lt;/span> errno;
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#268bd2">fprintf&lt;/span> (stderr, &lt;span style="color:#2aa198">&amp;#34;fcntl error for fd %d: %s&amp;#34;&lt;/span>, &lt;span style="color:#268bd2">atoi&lt;/span> (argv[&lt;span style="color:#2aa198">1&lt;/span>]),
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#268bd2">strerror&lt;/span> (ec));
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#268bd2">exit&lt;/span> (ec);
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> }
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#719e07">switch&lt;/span> (val &lt;span style="color:#719e07">&amp;amp;&lt;/span> O_ACCMODE)
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> {
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#719e07">case&lt;/span> O_RDONLY:
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#268bd2">printf&lt;/span> (&lt;span style="color:#2aa198">&amp;#34;read only&amp;#34;&lt;/span>);
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#719e07">break&lt;/span>;
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#719e07">case&lt;/span> O_WRONLY:
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#268bd2">printf&lt;/span> (&lt;span style="color:#2aa198">&amp;#34;write only&amp;#34;&lt;/span>);
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#719e07">break&lt;/span>;
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#719e07">case&lt;/span> O_RDWR:
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#268bd2">printf&lt;/span> (&lt;span style="color:#2aa198">&amp;#34;read write&amp;#34;&lt;/span>);
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#719e07">break&lt;/span>;
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#719e07">default&lt;/span>&lt;span style="color:#719e07">:&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#268bd2">perror_and_exit&lt;/span> (&lt;span style="color:#2aa198">&amp;#34;unknown access mode&amp;#34;&lt;/span>);
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> }
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#719e07">if&lt;/span> (val &lt;span style="color:#719e07">&amp;amp;&lt;/span> O_APPEND)
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#268bd2">printf&lt;/span> (&lt;span style="color:#2aa198">&amp;#34;, append&amp;#34;&lt;/span>);
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#719e07">if&lt;/span> (val &lt;span style="color:#719e07">&amp;amp;&lt;/span> O_NONBLOCK)
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#268bd2">printf&lt;/span> (&lt;span style="color:#2aa198">&amp;#34;, nonblocking&amp;#34;&lt;/span>);
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#719e07">if&lt;/span> (val &lt;span style="color:#719e07">&amp;amp;&lt;/span> O_SYNC)
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#268bd2">printf&lt;/span> (&lt;span style="color:#2aa198">&amp;#34;, synchronous writes&amp;#34;&lt;/span>);
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#719e07">#if !defined(_POSIX_C_SOURCE) &amp;amp;&amp;amp; defined(O_FSYNC) &amp;amp;&amp;amp; (O_FSYNC != O_SYNC)
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#719e07">&lt;/span> &lt;span style="color:#719e07">if&lt;/span> (val &lt;span style="color:#719e07">&amp;amp;&lt;/span> O_FSYNC)
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#268bd2">printf&lt;/span> (&lt;span style="color:#2aa198">&amp;#34;, synchronous writes&amp;#34;&lt;/span>);
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#719e07">#endif
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#719e07">&lt;/span> &lt;span style="color:#268bd2">putchar&lt;/span> (&lt;span style="color:#2aa198">&amp;#39;\n&amp;#39;&lt;/span>);
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#268bd2">exit&lt;/span> (&lt;span style="color:#2aa198">0&lt;/span>);
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>}
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>非常惊讶的是，Linux 上 Bash 给应用程序分配的标准输入、输出、错误流都是可读可写的。似乎 Bash 是把当前的打字机设备（tty）打开并分配给了应用程序的三个标准流，因为 &lt;code>/proc/&amp;lt;pid&amp;gt;/fd/0&lt;/code> （和其他两个）都是链接到了 &lt;code>/dev/pts/5&lt;/code> 上，而这个设备是我当前的终端。&lt;/p></description></item><item><title>03.xx write 有 O_APPEND 标志也会修改文件偏移量</title><link>https://hxhue.github.io/apue/03.xx-write-%E6%9C%89-O_APPEND-%E6%A0%87%E5%BF%97%E4%B9%9F%E4%BC%9A%E4%BF%AE%E6%94%B9%E6%96%87%E4%BB%B6%E5%81%8F%E7%A7%BB%E9%87%8F/</link><pubDate>Wed, 08 May 2024 00:00:00 +0800</pubDate><guid>https://hxhue.github.io/apue/03.xx-write-%E6%9C%89-O_APPEND-%E6%A0%87%E5%BF%97%E4%B9%9F%E4%BC%9A%E4%BF%AE%E6%94%B9%E6%96%87%E4%BB%B6%E5%81%8F%E7%A7%BB%E9%87%8F/</guid><description>&lt;p>首先保证 A.txt 文件是空的。然后编译运行：&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" style="color:#93a1a1;background-color:#002b36;-moz-tab-size:2;-o-tab-size:2;tab-size:2;">&lt;code class="language-c" data-lang="c">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#719e07">#include&lt;/span> &lt;span style="color:#719e07">&amp;lt;errno.h&amp;gt;&lt;/span>&lt;span style="color:#719e07">
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#719e07">#include&lt;/span> &lt;span style="color:#719e07">&amp;lt;fcntl.h&amp;gt;&lt;/span>&lt;span style="color:#719e07">
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#719e07">#include&lt;/span> &lt;span style="color:#719e07">&amp;lt;stdio.h&amp;gt;&lt;/span>&lt;span style="color:#719e07">
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#719e07">#include&lt;/span> &lt;span style="color:#719e07">&amp;lt;stdlib.h&amp;gt;&lt;/span>&lt;span style="color:#719e07">
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#719e07">#include&lt;/span> &lt;span style="color:#719e07">&amp;lt;unistd.h&amp;gt;&lt;/span>&lt;span style="color:#719e07">
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#719e07">&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#dc322f">void&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#268bd2">perror_and_exit&lt;/span> (&lt;span style="color:#719e07">const&lt;/span> &lt;span style="color:#dc322f">char&lt;/span> &lt;span style="color:#719e07">*&lt;/span>msg)
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>{
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#268bd2">perror&lt;/span> (msg);
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#268bd2">exit&lt;/span> (errno);
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>}
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#dc322f">int&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#268bd2">main&lt;/span> (&lt;span style="color:#dc322f">int&lt;/span> argc, &lt;span style="color:#dc322f">char&lt;/span> &lt;span style="color:#719e07">**&lt;/span>argv)
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>{
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#dc322f">int&lt;/span> fd;
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#dc322f">char&lt;/span> buf[&lt;span style="color:#2aa198">64&lt;/span>];
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#586e75">/* 完成截断 */&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#719e07">if&lt;/span> ((fd &lt;span style="color:#719e07">=&lt;/span> &lt;span style="color:#268bd2">open&lt;/span> (&lt;span style="color:#2aa198">&amp;#34;A.txt&amp;#34;&lt;/span>, O_CREAT &lt;span style="color:#719e07">|&lt;/span> O_WRONLY &lt;span style="color:#719e07">|&lt;/span> O_TRUNC)) &lt;span style="color:#719e07">==&lt;/span> &lt;span style="color:#719e07">-&lt;/span>&lt;span style="color:#2aa198">1&lt;/span>)
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#268bd2">perror_and_exit&lt;/span> (&lt;span style="color:#2aa198">&amp;#34;open for truncation&amp;#34;&lt;/span>);
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#719e07">if&lt;/span> (&lt;span style="color:#268bd2">close&lt;/span> (fd) &lt;span style="color:#719e07">==&lt;/span> &lt;span style="color:#719e07">-&lt;/span>&lt;span style="color:#2aa198">1&lt;/span>)
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#268bd2">perror_and_exit&lt;/span> (&lt;span style="color:#2aa198">&amp;#34;close for truncation&amp;#34;&lt;/span>);
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#719e07">if&lt;/span> ((fd &lt;span style="color:#719e07">=&lt;/span> &lt;span style="color:#268bd2">open&lt;/span> (&lt;span style="color:#2aa198">&amp;#34;A.txt&amp;#34;&lt;/span>, O_APPEND &lt;span style="color:#719e07">|&lt;/span> O_RDWR)) &lt;span style="color:#719e07">==&lt;/span> &lt;span style="color:#719e07">-&lt;/span>&lt;span style="color:#2aa198">1&lt;/span>)
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#268bd2">perror_and_exit&lt;/span> (&lt;span style="color:#2aa198">&amp;#34;open&amp;#34;&lt;/span>);
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#586e75">/* 第一次写入 */&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#719e07">if&lt;/span> (&lt;span style="color:#268bd2">write&lt;/span> (fd, &lt;span style="color:#2aa198">&amp;#34;nodoubtnodoubt&amp;#34;&lt;/span>, &lt;span style="color:#2aa198">14&lt;/span>) &lt;span style="color:#719e07">==&lt;/span> &lt;span style="color:#719e07">-&lt;/span>&lt;span style="color:#2aa198">1&lt;/span>)
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#268bd2">perror_and_exit&lt;/span> (&lt;span style="color:#2aa198">&amp;#34;write nodoubtnodoubt&amp;#34;&lt;/span>);
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#586e75">/* 第二次写入只能写入到末尾，是因为 O_APPEND 存在 */&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#719e07">if&lt;/span> (&lt;span style="color:#268bd2">lseek&lt;/span> (fd, &lt;span style="color:#2aa198">0&lt;/span>, SEEK_SET) &lt;span style="color:#719e07">==&lt;/span> &lt;span style="color:#719e07">-&lt;/span>&lt;span style="color:#2aa198">1&lt;/span>)
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#268bd2">perror_and_exit&lt;/span> (&lt;span style="color:#2aa198">&amp;#34;lseek 64&amp;#34;&lt;/span>);
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#719e07">if&lt;/span> (&lt;span style="color:#268bd2">write&lt;/span> (fd, &lt;span style="color:#2aa198">&amp;#34;lalala&amp;#34;&lt;/span>, &lt;span style="color:#2aa198">6&lt;/span>) &lt;span style="color:#719e07">==&lt;/span> &lt;span style="color:#719e07">-&lt;/span>&lt;span style="color:#2aa198">1&lt;/span>)
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#268bd2">perror_and_exit&lt;/span> (&lt;span style="color:#2aa198">&amp;#34;write lalala&amp;#34;&lt;/span>);
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#586e75">/*
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#586e75"> * 尽管之前调用过 lseek，但还是无法读出字符，说明 O_APPEND 模式下的 write
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#586e75"> * 也会更新文件偏移量
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#586e75"> */&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#719e07">if&lt;/span> (&lt;span style="color:#268bd2">read&lt;/span> (fd, buf, &lt;span style="color:#2aa198">16&lt;/span>) &lt;span style="color:#719e07">==&lt;/span> &lt;span style="color:#719e07">-&lt;/span>&lt;span style="color:#2aa198">1&lt;/span>)
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#268bd2">perror_and_exit&lt;/span> (&lt;span style="color:#2aa198">&amp;#34;read&amp;#34;&lt;/span>);
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#268bd2">printf&lt;/span> (&lt;span style="color:#2aa198">&amp;#34;read: %s&lt;/span>&lt;span style="color:#cb4b16">\n&lt;/span>&lt;span style="color:#2aa198">&amp;#34;&lt;/span>, buf);
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#586e75">/* 再次 lseek 就能读出开头的字符 */&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#719e07">if&lt;/span> (&lt;span style="color:#268bd2">lseek&lt;/span> (fd, &lt;span style="color:#2aa198">0&lt;/span>, SEEK_SET) &lt;span style="color:#719e07">==&lt;/span> &lt;span style="color:#719e07">-&lt;/span>&lt;span style="color:#2aa198">1&lt;/span>)
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#268bd2">perror_and_exit&lt;/span> (&lt;span style="color:#2aa198">&amp;#34;lseek 0&amp;#34;&lt;/span>);
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#719e07">if&lt;/span> (&lt;span style="color:#268bd2">read&lt;/span> (fd, buf, &lt;span style="color:#2aa198">16&lt;/span>) &lt;span style="color:#719e07">==&lt;/span> &lt;span style="color:#719e07">-&lt;/span>&lt;span style="color:#2aa198">1&lt;/span>)
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#268bd2">perror_and_exit&lt;/span> (&lt;span style="color:#2aa198">&amp;#34;read&amp;#34;&lt;/span>);
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#268bd2">printf&lt;/span> (&lt;span style="color:#2aa198">&amp;#34;read: %s&lt;/span>&lt;span style="color:#cb4b16">\n&lt;/span>&lt;span style="color:#2aa198">&amp;#34;&lt;/span>, buf);
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>}
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>最后 A.txt 文件的内容：&lt;/p></description></item><item><title>3.12 dup 不共享文件描述符属性</title><link>https://hxhue.github.io/apue/03.12-dup-%E4%B8%8D%E5%85%B1%E4%BA%AB%E6%96%87%E4%BB%B6%E6%8F%8F%E8%BF%B0%E7%AC%A6%E5%B1%9E%E6%80%A7/</link><pubDate>Wed, 08 May 2024 00:00:00 +0800</pubDate><guid>https://hxhue.github.io/apue/03.12-dup-%E4%B8%8D%E5%85%B1%E4%BA%AB%E6%96%87%E4%BB%B6%E6%8F%8F%E8%BF%B0%E7%AC%A6%E5%B1%9E%E6%80%A7/</guid><description>&lt;div class="highlight">&lt;pre tabindex="0" style="color:#93a1a1;background-color:#002b36;-moz-tab-size:2;-o-tab-size:2;tab-size:2;">&lt;code class="language-c" data-lang="c">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#719e07">#include&lt;/span> &lt;span style="color:#719e07">&amp;lt;errno.h&amp;gt;&lt;/span>&lt;span style="color:#719e07">
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#719e07">#include&lt;/span> &lt;span style="color:#719e07">&amp;lt;fcntl.h&amp;gt;&lt;/span>&lt;span style="color:#719e07">
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#719e07">#include&lt;/span> &lt;span style="color:#719e07">&amp;lt;stdio.h&amp;gt;&lt;/span>&lt;span style="color:#719e07">
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#719e07">#include&lt;/span> &lt;span style="color:#719e07">&amp;lt;stdlib.h&amp;gt;&lt;/span>&lt;span style="color:#719e07">
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#719e07">#include&lt;/span> &lt;span style="color:#719e07">&amp;lt;string.h&amp;gt;&lt;/span>&lt;span style="color:#719e07">
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#719e07">#include&lt;/span> &lt;span style="color:#719e07">&amp;lt;sys/param.h&amp;gt;&lt;/span>&lt;span style="color:#719e07">
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#719e07">#include&lt;/span> &lt;span style="color:#719e07">&amp;lt;sys/syscall.h&amp;gt;&lt;/span>&lt;span style="color:#719e07">
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#719e07">#include&lt;/span> &lt;span style="color:#719e07">&amp;lt;sys/times.h&amp;gt;&lt;/span>&lt;span style="color:#719e07">
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#719e07">#include&lt;/span> &lt;span style="color:#719e07">&amp;lt;unistd.h&amp;gt;&lt;/span>&lt;span style="color:#719e07">
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#719e07">&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#719e07">extern&lt;/span> &lt;span style="color:#dc322f">int&lt;/span> errno;
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#dc322f">void&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#268bd2">err_sys&lt;/span> (&lt;span style="color:#719e07">const&lt;/span> &lt;span style="color:#dc322f">char&lt;/span> &lt;span style="color:#719e07">*&lt;/span>msg)
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>{
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#268bd2">perror&lt;/span> (msg);
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#268bd2">exit&lt;/span> (errno);
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>}
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#dc322f">int&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#268bd2">main&lt;/span> (&lt;span style="color:#dc322f">int&lt;/span> argc, &lt;span style="color:#dc322f">char&lt;/span> &lt;span style="color:#719e07">**&lt;/span>argv)
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>{
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#dc322f">int&lt;/span> fd &lt;span style="color:#719e07">=&lt;/span> &lt;span style="color:#268bd2">open&lt;/span> (&lt;span style="color:#2aa198">&amp;#34;A.txt&amp;#34;&lt;/span>, O_WRONLY &lt;span style="color:#719e07">|&lt;/span> O_CREAT &lt;span style="color:#719e07">|&lt;/span> O_TRUNC,
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> S_IRUSR &lt;span style="color:#719e07">|&lt;/span> S_IWUSR &lt;span style="color:#719e07">|&lt;/span> S_IRGRP &lt;span style="color:#719e07">|&lt;/span> S_IWGRP &lt;span style="color:#719e07">|&lt;/span> S_IROTH);
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#719e07">if&lt;/span> (fd &lt;span style="color:#719e07">==&lt;/span> &lt;span style="color:#719e07">-&lt;/span>&lt;span style="color:#2aa198">1&lt;/span>)
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#268bd2">err_sys&lt;/span> (&lt;span style="color:#2aa198">&amp;#34;open&amp;#34;&lt;/span>);
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> 
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#dc322f">int&lt;/span> ret, fd2;
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#719e07">if&lt;/span> ((ret &lt;span style="color:#719e07">=&lt;/span> &lt;span style="color:#268bd2">fcntl&lt;/span> (fd, F_SETFD, FD_CLOEXEC)) &lt;span style="color:#719e07">==&lt;/span> &lt;span style="color:#719e07">-&lt;/span>&lt;span style="color:#2aa198">1&lt;/span>)
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#268bd2">err_sys&lt;/span> (&lt;span style="color:#2aa198">&amp;#34;fcntl set fd failed&amp;#34;&lt;/span>);
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> fd2 &lt;span style="color:#719e07">=&lt;/span> &lt;span style="color:#268bd2">dup&lt;/span> (fd);
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#719e07">if&lt;/span> (fd2 &lt;span style="color:#719e07">==&lt;/span> &lt;span style="color:#719e07">-&lt;/span>&lt;span style="color:#2aa198">1&lt;/span>)
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#268bd2">err_sys&lt;/span> (&lt;span style="color:#2aa198">&amp;#34;dup&amp;#34;&lt;/span>);
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#719e07">if&lt;/span> ((ret &lt;span style="color:#719e07">=&lt;/span> &lt;span style="color:#268bd2">fcntl&lt;/span> (fd, F_GETFD, FD_CLOEXEC)) &lt;span style="color:#719e07">==&lt;/span> &lt;span style="color:#719e07">-&lt;/span>&lt;span style="color:#2aa198">1&lt;/span>)
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#268bd2">err_sys&lt;/span> (&lt;span style="color:#2aa198">&amp;#34;fcntl get fd failed&amp;#34;&lt;/span>);
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#268bd2">printf&lt;/span> (&lt;span style="color:#2aa198">&amp;#34;ret=%d&lt;/span>&lt;span style="color:#cb4b16">\n&lt;/span>&lt;span style="color:#2aa198">&amp;#34;&lt;/span>, ret);
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#719e07">if&lt;/span> ((ret &lt;span style="color:#719e07">=&lt;/span> &lt;span style="color:#268bd2">fcntl&lt;/span> (fd2, F_GETFD, FD_CLOEXEC)) &lt;span style="color:#719e07">==&lt;/span> &lt;span style="color:#719e07">-&lt;/span>&lt;span style="color:#2aa198">1&lt;/span>)
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#268bd2">err_sys&lt;/span> (&lt;span style="color:#2aa198">&amp;#34;fcntl get fd2 failed&amp;#34;&lt;/span>);
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#268bd2">printf&lt;/span> (&lt;span style="color:#2aa198">&amp;#34;ret=%d&lt;/span>&lt;span style="color:#cb4b16">\n&lt;/span>&lt;span style="color:#2aa198">&amp;#34;&lt;/span>, ret);
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>}
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>结果：&lt;/p></description></item><item><title>3.12 dup 会共享文件属性</title><link>https://hxhue.github.io/apue/03.12-dup-%E4%BC%9A%E5%85%B1%E4%BA%AB%E6%96%87%E4%BB%B6%E5%B1%9E%E6%80%A7/</link><pubDate>Wed, 08 May 2024 00:00:00 +0800</pubDate><guid>https://hxhue.github.io/apue/03.12-dup-%E4%BC%9A%E5%85%B1%E4%BA%AB%E6%96%87%E4%BB%B6%E5%B1%9E%E6%80%A7/</guid><description>&lt;div class="highlight">&lt;pre tabindex="0" style="color:#93a1a1;background-color:#002b36;-moz-tab-size:2;-o-tab-size:2;tab-size:2;">&lt;code class="language-c" data-lang="c">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#719e07">#include&lt;/span> &lt;span style="color:#719e07">&amp;lt;errno.h&amp;gt;&lt;/span>&lt;span style="color:#719e07">
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#719e07">#include&lt;/span> &lt;span style="color:#719e07">&amp;lt;stdio.h&amp;gt;&lt;/span>&lt;span style="color:#719e07">
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#719e07">#include&lt;/span> &lt;span style="color:#719e07">&amp;lt;stdlib.h&amp;gt;&lt;/span>&lt;span style="color:#719e07">
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#719e07">#include&lt;/span> &lt;span style="color:#719e07">&amp;lt;sys/syscall.h&amp;gt;&lt;/span>&lt;span style="color:#719e07">
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#719e07">#include&lt;/span> &lt;span style="color:#719e07">&amp;lt;sys/times.h&amp;gt;&lt;/span>&lt;span style="color:#719e07">
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#719e07">#include&lt;/span> &lt;span style="color:#719e07">&amp;lt;unistd.h&amp;gt;&lt;/span>&lt;span style="color:#719e07">
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#719e07">#include&lt;/span> &lt;span style="color:#719e07">&amp;lt;sys/param.h&amp;gt;&lt;/span>&lt;span style="color:#719e07">
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#719e07">#include&lt;/span> &lt;span style="color:#719e07">&amp;lt;fcntl.h&amp;gt;&lt;/span>&lt;span style="color:#719e07">
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#719e07">#include&lt;/span> &lt;span style="color:#719e07">&amp;lt;string.h&amp;gt;&lt;/span>&lt;span style="color:#719e07">
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#719e07">&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#719e07">extern&lt;/span> &lt;span style="color:#dc322f">int&lt;/span> errno;
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#dc322f">void&lt;/span> &lt;span style="color:#268bd2">err_sys&lt;/span>(&lt;span style="color:#719e07">const&lt;/span> &lt;span style="color:#dc322f">char&lt;/span> &lt;span style="color:#719e07">*&lt;/span>msg) {
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#268bd2">perror&lt;/span>(msg);
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#268bd2">exit&lt;/span>(errno);
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>}
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#dc322f">int&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#268bd2">main&lt;/span> (&lt;span style="color:#dc322f">int&lt;/span> argc, &lt;span style="color:#dc322f">char&lt;/span> &lt;span style="color:#719e07">**&lt;/span>argv)
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>{
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#dc322f">int&lt;/span> fd &lt;span style="color:#719e07">=&lt;/span> &lt;span style="color:#268bd2">open&lt;/span>(&lt;span style="color:#2aa198">&amp;#34;A.txt&amp;#34;&lt;/span>, 
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> O_WRONLY &lt;span style="color:#719e07">|&lt;/span> O_CREAT &lt;span style="color:#719e07">|&lt;/span> O_TRUNC, 
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> S_IRUSR &lt;span style="color:#719e07">|&lt;/span> S_IWUSR &lt;span style="color:#719e07">|&lt;/span> S_IRGRP &lt;span style="color:#719e07">|&lt;/span> S_IWGRP &lt;span style="color:#719e07">|&lt;/span> S_IROTH);
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#719e07">if&lt;/span> (fd &lt;span style="color:#719e07">==&lt;/span> &lt;span style="color:#719e07">-&lt;/span>&lt;span style="color:#2aa198">1&lt;/span>) {
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#268bd2">err_sys&lt;/span>(&lt;span style="color:#2aa198">&amp;#34;open&amp;#34;&lt;/span>);
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> }
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#dc322f">int&lt;/span> fd2 &lt;span style="color:#719e07">=&lt;/span> &lt;span style="color:#268bd2">dup&lt;/span>(fd);
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#719e07">if&lt;/span> (fd2 &lt;span style="color:#719e07">==&lt;/span> &lt;span style="color:#719e07">-&lt;/span>&lt;span style="color:#2aa198">1&lt;/span>) {
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#268bd2">err_sys&lt;/span>(&lt;span style="color:#2aa198">&amp;#34;dup&amp;#34;&lt;/span>);
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> }
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#719e07">const&lt;/span> &lt;span style="color:#dc322f">char&lt;/span> &lt;span style="color:#719e07">*&lt;/span>msg;
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#dc322f">size_t&lt;/span> n;
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> 
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> msg &lt;span style="color:#719e07">=&lt;/span> &lt;span style="color:#2aa198">&amp;#34;first message&amp;#34;&lt;/span>;
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> n &lt;span style="color:#719e07">=&lt;/span> &lt;span style="color:#268bd2">strlen&lt;/span>(msg);
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#719e07">if&lt;/span> (&lt;span style="color:#268bd2">write&lt;/span>(fd, msg, n) &lt;span style="color:#719e07">!=&lt;/span> n) {
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#268bd2">err_sys&lt;/span>(&lt;span style="color:#2aa198">&amp;#34;write fd&amp;#34;&lt;/span>);
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> }
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> msg &lt;span style="color:#719e07">=&lt;/span> &lt;span style="color:#2aa198">&amp;#34;second message&amp;#34;&lt;/span>;
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> n &lt;span style="color:#719e07">=&lt;/span> &lt;span style="color:#268bd2">strlen&lt;/span>(msg);
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#719e07">if&lt;/span> (&lt;span style="color:#268bd2">write&lt;/span>(fd2, msg, n) &lt;span style="color:#719e07">!=&lt;/span> n) {
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#268bd2">err_sys&lt;/span>(&lt;span style="color:#2aa198">&amp;#34;write fd2&amp;#34;&lt;/span>);
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> }
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>}
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>结果：两条消息按顺序写入了文件，后者并没有覆盖前者。&lt;/p></description></item><item><title>3.13 sync 族函数的区别</title><link>https://hxhue.github.io/apue/03.13-sync-%E6%97%8F%E5%87%BD%E6%95%B0%E7%9A%84%E5%8C%BA%E5%88%AB/</link><pubDate>Wed, 08 May 2024 00:00:00 +0800</pubDate><guid>https://hxhue.github.io/apue/03.13-sync-%E6%97%8F%E5%87%BD%E6%95%B0%E7%9A%84%E5%8C%BA%E5%88%AB/</guid><description>&lt;div class="markdown-alert markdown-alert-caution">
+ &lt;p class="markdown-alert-title">&lt;svg class="octicon octicon-stop mr-2" viewBox="0 0 16 16" width="16" height="16"
+ aria-hidden="true">
+ &lt;path
+ d="M4.47.22A.749.749 0 0 1 5 0h6c.199 0 .389.079.53.22l4.25 4.25c.141.14.22.331.22.53v6a.749.749 0 0 1-.22.53l-4.25 4.25A.749.749 0 0 1 11 16H5a.749.749 0 0 1-.53-.22L.22 11.53A.749.749 0 0 1 0 11V5c0-.199.079-.389.22-.53Zm.84 1.28L1.5 5.31v5.38l3.81 3.81h5.38l3.81-3.81V5.31L10.69 1.5ZM8 4a.75.75 0 0 1 .75.75v3.5a.75.75 0 0 1-1.5 0v-3.5A.75.75 0 0 1 8 4Zm0 8a1 1 0 1 1 0-2 1 1 0 0 1 0 2Z">
+ &lt;/path>
+ &lt;/svg>Caution&lt;/p>
+ &lt;p>应当参考 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ &lt;a href="https://hxhue.github.io/the-linux-programming-interface/13-%E6%96%87%E4%BB%B6%E8%BE%93%E5%85%A5%E8%BE%93%E5%87%BA%E7%BC%93%E5%86%B2/" title="13 文件输入输出缓冲" >13 文件输入输出缓冲&lt;/a>，当前文件中有些内容可能是有错误的。&lt;/p></description></item></channel></rss>

@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Ssh on Bluegill</title><link>https://hxhue.github.io/tags/ssh/</link><description>Recent content in Ssh on Bluegill</description><generator>Hugo</generator><language>zh-CN</language><lastBuildDate>Thu, 01 May 2025 00:00:00 +0800</lastBuildDate><atom:link href="https://hxhue.github.io/tags/ssh/rss.xml" rel="self" type="application/rss+xml"/><item><title>2025-04-19 Microsoft Copilot 和 Windsurf 体验</title><link>https://hxhue.github.io/daily/2025-04-19-Microsoft-Copilot-%E5%92%8C-Windsurf-%E4%BD%93%E9%AA%8C/</link><pubDate>Sat, 19 Apr 2025 00:00:00 +0800</pubDate><guid>https://hxhue.github.io/daily/2025-04-19-Microsoft-Copilot-%E5%92%8C-Windsurf-%E4%BD%93%E9%AA%8C/</guid><description>&lt;h1 id="开头">开头
+&lt;a class="header-anchor" href="#%e5%bc%80%e5%a4%b4">&lt;/a>
+&lt;/h1>&lt;p>今天在尝试 Microsoft Copilot 和 Windsurf。&lt;/p>
+&lt;h1 id="microsoft-copilot-体验">Microsoft Copilot 体验
+&lt;a class="header-anchor" href="#microsoft-copilot-%e4%bd%93%e9%aa%8c">&lt;/a>
+&lt;/h1>&lt;p>参考 &lt;a href="https://linux.do/t/topic/480869/" title="https://linux.do/t/topic/480869/" rel="noopener external nofollow noreferrer"
+ target="_blank" class=" exturl" >https://linux.do/t/topic/480869/&lt;i class="fa fa-external-link-alt">&lt;/i>&lt;/a> ，解读大模型官网和 IDE 的各种额度限制。里面提到了 Microsoft Copilot 使用了 GPT-4o 和 GPT-o3 mini，之前对 Microsoft Copilot 的感受是比较负面的，看到这个新消息后我也查找了对应的资料（有一说一，Microsoft Copilot 查资料还不如 Grok 做的好）：&lt;/p></description></item><item><title>VS Code 远程文件传输慢，寻找替代方案</title><link>https://hxhue.github.io/posts/cli/ssh/VS-Code-%E8%BF%9C%E7%A8%8B%E6%96%87%E4%BB%B6%E4%BC%A0%E8%BE%93%E6%85%A2%E5%AF%BB%E6%89%BE%E6%9B%BF%E4%BB%A3%E6%96%B9%E6%A1%88/</link><pubDate>Mon, 14 Apr 2025 00:00:00 +0800</pubDate><guid>https://hxhue.github.io/posts/cli/ssh/VS-Code-%E8%BF%9C%E7%A8%8B%E6%96%87%E4%BB%B6%E4%BC%A0%E8%BE%93%E6%85%A2%E5%AF%BB%E6%89%BE%E6%9B%BF%E4%BB%A3%E6%96%B9%E6%A1%88/</guid><description>&lt;h1 id="说明">说明
+&lt;a class="header-anchor" href="#%e8%af%b4%e6%98%8e">&lt;/a>
+&lt;/h1>&lt;p>从 Windows 的资源管理器拖动文件到连接到远程服务器的 VS Code 窗口，或者从 VS Code 文件目录下载文件，速度都比 scp 慢得多（3M/s VS 20M/s）。此文章尝试寻求其他替代方案。&lt;/p></description></item><item><title>获取 ssh 中已知公钥的指纹</title><link>https://hxhue.github.io/posts/systems/Linux/%E8%8E%B7%E5%8F%96-ssh-%E4%B8%AD%E6%AF%8F%E4%B8%AA%E5%85%AC%E9%92%A5%E7%9A%84%E6%8C%87%E7%BA%B9/</link><pubDate>Thu, 28 Nov 2024 00:00:00 +0800</pubDate><guid>https://hxhue.github.io/posts/systems/Linux/%E8%8E%B7%E5%8F%96-ssh-%E4%B8%AD%E6%AF%8F%E4%B8%AA%E5%85%AC%E9%92%A5%E7%9A%84%E6%8C%87%E7%BA%B9/</guid><description>&lt;h1 id="原因">原因
+&lt;a class="header-anchor" href="#%e5%8e%9f%e5%9b%a0">&lt;/a>
+&lt;/h1>&lt;p>服务器上有异常登录现象，通过 /var/log/auth.log 找到了登录记录和公钥的指纹，但是不知道和哪个公钥对应，想要把这个公钥找出来。&lt;/p>
+&lt;h1 id="步骤">步骤
+&lt;a class="header-anchor" href="#%e6%ad%a5%e9%aa%a4">&lt;/a>
+&lt;/h1>&lt;p>参考 &lt;a href="https://serverfault.com/questions/291763/is-it-possible-to-get-openssh-to-log-the-public-key-that-was-used-in-authenticat" title="https://serverfault.com/questions/291763/is-it-possible-to-get-openssh-to-log-the-public-key-that-was-used-in-authenticat" rel="noopener external nofollow noreferrer"
+ target="_blank" class=" exturl" >https://serverfault.com/questions/291763/is-it-possible-to-get-openssh-to-log-the-public-key-that-was-used-in-authenticat&lt;i class="fa fa-external-link-alt">&lt;/i>&lt;/a> 。&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" style="color:#93a1a1;background-color:#002b36;-moz-tab-size:2;-o-tab-size:2;tab-size:2;">&lt;code class="language-bash" data-lang="bash">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#719e07">while&lt;/span> &lt;span style="color:#268bd2">IFS&lt;/span>&lt;span style="color:#719e07">=&lt;/span>&lt;span style="color:#2aa198">$&amp;#39;\n&amp;#39;&lt;/span> &lt;span style="color:#b58900">read&lt;/span> key; &lt;span style="color:#719e07">do&lt;/span> ssh-keygen -lf &amp;lt;&lt;span style="color:#719e07">(&lt;/span>&lt;span style="color:#b58900">echo&lt;/span> &lt;span style="color:#268bd2">$key&lt;/span>&lt;span style="color:#719e07">)&lt;/span>; &lt;span style="color:#719e07">done&lt;/span> &amp;lt; ~/.ssh/authorized_keys
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>或者&lt;/p></description></item><item><title>利用 ssh-agent 在两个服务器之间传输文件</title><link>https://hxhue.github.io/posts/cli/ssh/%E5%88%A9%E7%94%A8-ssh-agent-%E5%9C%A8%E4%B8%A4%E4%B8%AA%E6%9C%8D%E5%8A%A1%E5%99%A8%E4%B9%8B%E9%97%B4%E4%BC%A0%E8%BE%93%E6%96%87%E4%BB%B6/</link><pubDate>Sat, 06 Jul 2024 00:00:00 +0800</pubDate><guid>https://hxhue.github.io/posts/cli/ssh/%E5%88%A9%E7%94%A8-ssh-agent-%E5%9C%A8%E4%B8%A4%E4%B8%AA%E6%9C%8D%E5%8A%A1%E5%99%A8%E4%B9%8B%E9%97%B4%E4%BC%A0%E8%BE%93%E6%96%87%E4%BB%B6/</guid><description>&lt;div class="highlight">&lt;pre tabindex="0" style="color:#93a1a1;background-color:#002b36;-moz-tab-size:2;-o-tab-size:2;tab-size:2;">&lt;code class="language-bash" data-lang="bash">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#b58900">eval&lt;/span> &lt;span style="color:#719e07">$(&lt;/span>ssh-agent -s&lt;span style="color:#719e07">)&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>ssh-add ~/.ssh/id_ed25519 &lt;span style="color:#586e75"># 根据实际情况操作&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>ssh -A server1
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>scp server2:/data /data
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>由于 sever1 可能没有把 server2 作为主机存储，在 &lt;code>scp&lt;/code> 的时候需要输入一长串的用户名、主机、端口。&lt;/p></description></item><item><title>ssh 配置</title><link>https://hxhue.github.io/posts/cli/ssh/ssh-%E9%85%8D%E7%BD%AE/</link><pubDate>Sun, 21 Jan 2024 00:00:00 +0800</pubDate><guid>https://hxhue.github.io/posts/cli/ssh/ssh-%E9%85%8D%E7%BD%AE/</guid><description>&lt;h1 id="样例">样例
+&lt;a class="header-anchor" href="#%e6%a0%b7%e4%be%8b">&lt;/a>
+&lt;/h1>&lt;p>Windows 下是 &lt;code>%userprofile%\.ssh\config&lt;/code>。Linux 下自己对应一下。&lt;/p>
+&lt;ul>
+&lt;li>含有 &lt;code>ForwardAgent&lt;/code> 选项表示启用代理转发，相当于在连接它时自动添加了参数 &lt;code>-A&lt;/code>。&lt;/li>
+&lt;li>含有 &lt;code>ProxyJump&lt;/code> 表示先通过跳板机再连接到此主机，相当于在连接它时自动添加了参数 &lt;code>-J&lt;/code>。&lt;/li>
+&lt;/ul>
+&lt;p>样例：&lt;/p></description></item><item><title>ssh 代理转发，让服务器上外网</title><link>https://hxhue.github.io/posts/cli/ssh/ssh-%E4%BB%A3%E7%90%86%E8%BD%AC%E5%8F%91%E8%AE%A9%E6%9C%8D%E5%8A%A1%E5%99%A8%E4%B8%8A%E5%A4%96%E7%BD%91/</link><pubDate>Fri, 19 Jan 2024 00:00:00 +0800</pubDate><guid>https://hxhue.github.io/posts/cli/ssh/ssh-%E4%BB%A3%E7%90%86%E8%BD%AC%E5%8F%91%E8%AE%A9%E6%9C%8D%E5%8A%A1%E5%99%A8%E4%B8%8A%E5%A4%96%E7%BD%91/</guid><description>&lt;p>由于是自己的电脑充当代理，所以需要用 &lt;code>-R&lt;/code> 选项。&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" style="color:#93a1a1;background-color:#002b36;-moz-tab-size:2;-o-tab-size:2;tab-size:2;">&lt;code class="language-bash" data-lang="bash">&lt;span style="display:flex;">&lt;span>ssh -N -n -R 0.0.0.0:11625:127.0.0.1:12341 服务器
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>这是将远程的一个端口连到本地的端口。&lt;code>-N&lt;/code> 表示不要执行命令，仅仅转发端口。&lt;code>-n&lt;/code> 表示将 stdin 重定向到 /dev/null。&lt;/p></description></item><item><title>ssh 命令的代理功能</title><link>https://hxhue.github.io/posts/cli/ssh/ssh-%E5%91%BD%E4%BB%A4%E7%9A%84%E4%BB%A3%E7%90%86%E5%8A%9F%E8%83%BD/</link><pubDate>Sun, 29 Oct 2023 00:00:00 +0800</pubDate><guid>https://hxhue.github.io/posts/cli/ssh/ssh-%E5%91%BD%E4%BB%A4%E7%9A%84%E4%BB%A3%E7%90%86%E5%8A%9F%E8%83%BD/</guid><description>&lt;h1 id="几种模式">几种模式
+&lt;a class="header-anchor" href="#%e5%87%a0%e7%a7%8d%e6%a8%a1%e5%bc%8f">&lt;/a>
+&lt;/h1>&lt;p>模式有三种：&lt;/p>
+&lt;ol>
+&lt;li>&lt;code>-L&lt;/code> 将本地端口映射到远程（将客户端请求&lt;strong>转&lt;/strong>给远程服务器）&lt;/li>
+&lt;li>&lt;code>-R&lt;/code> 将远程端口映射到本地（客户端和远程服务器&lt;strong>抢&lt;/strong>请求）&lt;/li>
+&lt;li>&lt;code>-D&lt;/code> 动态代理，生成一个 socks 代理，支持 socks(4)/socks5 协议&lt;/li>
+&lt;/ol>
+&lt;h1 id="-r-代理">&lt;code>-R&lt;/code> 代理
+&lt;a class="header-anchor" href="#-r-%e4%bb%a3%e7%90%86">&lt;/a>
+&lt;/h1>&lt;p>服务器连不上外网的时候常用这个。见 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ &lt;a href="https://hxhue.github.io/posts/cli/ssh/ssh-%E4%BB%A3%E7%90%86%E8%BD%AC%E5%8F%91%E8%AE%A9%E6%9C%8D%E5%8A%A1%E5%99%A8%E4%B8%8A%E5%A4%96%E7%BD%91/" title="ssh 代理转发，让服务器上外网" >ssh 代理转发，让服务器上外网&lt;/a>&lt;/p></description></item></channel></rss>

@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Java on Bluegill</title><link>https://hxhue.github.io/tags/java/</link><description>Recent content in Java on Bluegill</description><generator>Hugo</generator><language>zh-CN</language><lastBuildDate>Sun, 05 Jan 2025 00:00:00 +0800</lastBuildDate><atom:link href="https://hxhue.github.io/tags/java/rss.xml" rel="self" type="application/rss+xml"/><item><title>UNIX 中 printf 指定参数绑定顺序</title><link>https://hxhue.github.io/posts/programming/cpp/UNIX-%E4%B8%AD-printf-%E6%8C%87%E5%AE%9A%E5%8F%82%E6%95%B0%E7%BB%91%E5%AE%9A%E9%A1%BA%E5%BA%8F/</link><pubDate>Thu, 16 May 2024 00:00:00 +0800</pubDate><guid>https://hxhue.github.io/posts/programming/cpp/UNIX-%E4%B8%AD-printf-%E6%8C%87%E5%AE%9A%E5%8F%82%E6%95%B0%E7%BB%91%E5%AE%9A%E9%A1%BA%E5%BA%8F/</guid><description>&lt;h1 id="unix-中的-printf">UNIX 中的 &lt;code>printf&lt;/code>
+&lt;a class="header-anchor" href="#unix-%e4%b8%ad%e7%9a%84-printf">&lt;/a>
+&lt;/h1>&lt;p>Single UNIX Specification 中允许 &lt;code>printf&lt;/code> 使用 &lt;code>%m$&lt;/code> 和 &lt;code>*m$&lt;/code> 的形式来绑定第 m 个参数，其中 m 从 1 开始计数。如果使用了这种表达方式，则所有参数都要指定序号，而且不能遗漏参数。这样做的好处是：可以多次使用同一个参数。&lt;/p></description></item><item><title>不同语言闭包的捕获方式</title><link>https://hxhue.github.io/posts/unsorted/%E4%B8%8D%E5%90%8C%E8%AF%AD%E8%A8%80%E9%97%AD%E5%8C%85%E7%9A%84%E6%8D%95%E8%8E%B7%E6%96%B9%E5%BC%8F/</link><pubDate>Thu, 12 Oct 2023 00:00:00 +0800</pubDate><guid>https://hxhue.github.io/posts/unsorted/%E4%B8%8D%E5%90%8C%E8%AF%AD%E8%A8%80%E9%97%AD%E5%8C%85%E7%9A%84%E6%8D%95%E8%8E%B7%E6%96%B9%E5%BC%8F/</guid><description>&lt;h1 id="总览">总览
+&lt;a class="header-anchor" href="#%e6%80%bb%e8%a7%88">&lt;/a>
+&lt;/h1>&lt;ul>
+&lt;li>C++ 根据在捕获列表中标注的方式进行捕获。&lt;/li>
+&lt;li>Java 按照值捕获（而且 Java 在某些情况下还要求显式的 final 修饰符）。&lt;/li>
+&lt;li>JavaScript：见 
+ 
+ &lt;a href="https://hxhue.github.io/posts/unsorted/%E4%B8%8D%E5%90%8C%E8%AF%AD%E8%A8%80%E9%97%AD%E5%8C%85%E7%9A%84%E6%8D%95%E8%8E%B7%E6%96%B9%E5%BC%8F#javascript-%e6%8d%95%e8%8e%b7" title="JavaScript 捕获" >JavaScript 捕获&lt;/a>。
+&lt;ul>
+&lt;li>注意：捕获和传值是不同的！例如：JavaScript 在函数参数传递时仍然时按照值传递。&lt;/li>
+&lt;/ul>
+&lt;/li>
+&lt;li>Python/Go 按照引用捕获，for 循环不会创造新的作用域。&lt;/li>
+&lt;/ul>
+&lt;h1 id="javascript-捕获">JavaScript 捕获
+&lt;a class="header-anchor" href="#javascript-%e6%8d%95%e8%8e%b7">&lt;/a>
+&lt;/h1>&lt;p>看上去是引用捕获，但是 for 循环的 let 和 const 绑定会创造新的作用域。&lt;/p></description></item><item><title>OpenJDK: ConcurrentHashMap</title><link>https://hxhue.github.io/posts/programming/java/ConcurrentHashMap/</link><pubDate>Sat, 12 Aug 2023 00:00:00 +0800</pubDate><guid>https://hxhue.github.io/posts/programming/java/ConcurrentHashMap/</guid><description>&lt;p>现在已经没有 Segment 概念，并发系数不生效。能支持高效的并发：&lt;/p>
+&lt;ol>
+&lt;li>支持懒初始化，第一次写的时候发生，可能需要自旋但不需要加锁。&lt;/li>
+&lt;li>读的时候可能需要自旋，不需要加锁。&lt;/li>
+&lt;li>写的时候如果遇到正在扩容，则加入一起扩容；如果写时槽位为空，则只需要原子操作；写时操作非空，且不处在特殊状态，则需要加对象锁。因而读写互不阻塞、不同槽位的写不会阻塞、扩容不会阻塞（因为扩容时其他竞争线程也会被分配任务）、仅有单个槽位的多写需要阻塞。&lt;/li>
+&lt;/ol>
+&lt;p>为了节省空间，在 &lt;code>Node[]&lt;/code> 中用 hash 为负的头结点来表示该拉链处于特殊状态：树结点、转移中、预留等。&lt;/p></description></item><item><title>OpenJDK: CopyOnWriteArrayList</title><link>https://hxhue.github.io/posts/programming/java/CopyOnWriteArrayList/</link><pubDate>Sat, 12 Aug 2023 00:00:00 +0800</pubDate><guid>https://hxhue.github.io/posts/programming/java/CopyOnWriteArrayList/</guid><description>&lt;p>写的时候加锁（因为要替换 array 数组的引用，而且复制的过程比较耗时，不宜自旋），读的时候不用加锁。替换的安全性由 Java volatile 保证。&lt;/p></description></item><item><title>OpenJDK: Java Memory Order</title><link>https://hxhue.github.io/posts/programming/java/Java-Memory-Order/</link><pubDate>Sat, 12 Aug 2023 00:00:00 +0800</pubDate><guid>https://hxhue.github.io/posts/programming/java/Java-Memory-Order/</guid><description>&lt;p>CPU 内存屏障：&lt;a href="https://sf-zhou.github.io/programming/memory_barrier.html" title="https://sf-zhou.github.io/programming/memory_barrier.html" rel="noopener external nofollow noreferrer"
+ target="_blank" class=" exturl" >https://sf-zhou.github.io/programming/memory_barrier.html&lt;i class="fa fa-external-link-alt">&lt;/i>&lt;/a>&lt;/p>
+&lt;p>volatile 与内存屏障总结： &lt;a href="https://zhuanlan.zhihu.com/p/43526907" title="https://zhuanlan.zhihu.com/p/43526907" rel="noopener external nofollow noreferrer"
+ target="_blank" class=" exturl" >https://zhuanlan.zhihu.com/p/43526907&lt;i class="fa fa-external-link-alt">&lt;/i>&lt;/a>&lt;/p>
+&lt;blockquote>
+ &lt;p>X86-64 下仅支持一种指令重排：Store-Load ，即读操作可能会重排到写操作前面，同时不同线程的写操作并没有保证全局可见，例子见《Intel® 64 and IA-32 Architectures Software Developer’s Manual》手册 8.6.1、8.2.3.7 节。要注意的是这个问题只能用 mfence 解决，不能靠组合 sfence 和 lfence 解决。（用 sfence+lfence 组合仅可以解决重排问题，但不能解决全局可见性问题，简单理解不如视为 &lt;code>sfence&lt;/code> 和 &lt;code>lfence&lt;/code> 本身也能乱序重排）&lt;/p></description></item><item><title>OpenJDK: JUC locks</title><link>https://hxhue.github.io/posts/programming/java/JUC-locks/</link><pubDate>Sat, 12 Aug 2023 00:00:00 +0800</pubDate><guid>https://hxhue.github.io/posts/programming/java/JUC-locks/</guid><description>&lt;h1 id="reentrantlock-公平锁和非公平锁的实现">ReentrantLock 公平锁和非公平锁的实现
+&lt;a class="header-anchor" href="#reentrantlock-%e5%85%ac%e5%b9%b3%e9%94%81%e5%92%8c%e9%9d%9e%e5%85%ac%e5%b9%b3%e9%94%81%e7%9a%84%e5%ae%9e%e7%8e%b0">&lt;/a>
+&lt;/h1>&lt;p>
+
+
+
+
+
+
+&lt;img src="https://hxhue.github.io/assets/d6745452123368b4ec805513d2ac0e8a.svg">&lt;/p>
+&lt;p>如果需要长时间等待，AQS 总是会将等待线程加入到队列尾部，唤醒时总是唤醒队首线程。这样做能够保证已经被睡眠的线程必定按照顺序唤醒。这样做难道不是永远都是公平锁？&lt;/p></description></item><item><title>OpenJDK: Project Loom</title><link>https://hxhue.github.io/posts/programming/java/Project-Loom/</link><pubDate>Sat, 12 Aug 2023 00:00:00 +0800</pubDate><guid>https://hxhue.github.io/posts/programming/java/Project-Loom/</guid><description>&lt;h1 id="互斥锁">互斥：锁
+&lt;a class="header-anchor" href="#%e4%ba%92%e6%96%a5%e9%94%81">&lt;/a>
+&lt;/h1>&lt;p>现在对象锁不尊重虚拟线程，但是 JUC 下的锁是尊重虚拟线程的。&lt;/p>
+&lt;h1 id="共享scopedvalue">共享：ScopedValue
+&lt;a class="header-anchor" href="#%e5%85%b1%e4%ba%abscopedvalue">&lt;/a>
+&lt;/h1>&lt;p>ThreadLocal 和虚拟线程配合的不是很好，尽管功能上 ThreadLocal 是支持虚拟线程的，但是由于虚拟线程数量众多、生命周期短，使用 ThreadLocal 时虽然保证了线程安全，却创建了大量对象——这个问题在平台线程上就不明显。JEP 429 ScopedValues (Java 20) 是为了解决这个问题的。&lt;/p></description></item><item><title>读 On Java 8</title><link>https://hxhue.github.io/posts/programming/java/%E8%AF%BB-On-Java-8/</link><pubDate>Sat, 12 Aug 2023 00:00:00 +0800</pubDate><guid>https://hxhue.github.io/posts/programming/java/%E8%AF%BB-On-Java-8/</guid><description>&lt;h1 id="chapter-00-11">Chapter 00-11
+&lt;a class="header-anchor" href="#chapter-00-11">&lt;/a>
+&lt;/h1>&lt;p>Java 对象构造顺序：1、基类 2、所有域 3、初始化块 4、自身的构造函数&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" style="color:#93a1a1;background-color:#002b36;-moz-tab-size:2;-o-tab-size:2;tab-size:2;">&lt;code class="language-jsx" data-lang="jsx">&lt;span style="display:flex;">&lt;span>jshell&lt;span style="color:#719e07">&amp;gt;&lt;/span> a &lt;span style="color:#719e07">=&lt;/span> &lt;span style="color:#719e07">new&lt;/span> Foo()
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>Value initialization
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>Initialization block
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>Constructor
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>为接口提供默认实现：&lt;/p>
+&lt;p>
+
+
+
+
+
+
+&lt;img src="https://hxhue.github.io/assets/630546bf2b71cdf127d9f96b76c05aa1.webp">&lt;/p>
+&lt;p>逆变、协变、不变的关系：&lt;/p>
+&lt;p>
+
+
+
+
+
+
+&lt;img src="https://hxhue.github.io/assets/3e7c37a37ad6d2386c55e8ac2a421164.webp">&lt;/p>
+&lt;p>在 Java 的子类中 override 了父类的方法，返回一个协变类型也是可以的。比如基类规定的是返回 Object，重写的方法里面是可以写返回任意对象的。&lt;/p></description></item></channel></rss>

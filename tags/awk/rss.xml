@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Awk on Bluegill</title><link>https://hxhue.github.io/tags/awk/</link><description>Recent content in Awk on Bluegill</description><generator>Hugo</generator><language>zh-CN</language><lastBuildDate>Tue, 27 Aug 2024 00:00:00 +0800</lastBuildDate><atom:link href="https://hxhue.github.io/tags/awk/rss.xml" rel="self" type="application/rss+xml"/><item><title>查找 malloc 和 free 是否配对</title><link>https://hxhue.github.io/posts/cli/bash/bash-%E6%9F%A5%E6%89%BE-malloc-%E5%92%8C-free-%E6%98%AF%E5%90%A6%E9%85%8D%E5%AF%B9/</link><pubDate>Tue, 27 Aug 2024 00:00:00 +0800</pubDate><guid>https://hxhue.github.io/posts/cli/bash/bash-%E6%9F%A5%E6%89%BE-malloc-%E5%92%8C-free-%E6%98%AF%E5%90%A6%E9%85%8D%E5%AF%B9/</guid><description>&lt;h1 id="说明">说明
+&lt;a class="header-anchor" href="#%e8%af%b4%e6%98%8e">&lt;/a>
+&lt;/h1>&lt;p>因为项目有老代码所以才需要这样处理，一般建议用 RAII 等技术避免裸露资源。&lt;/p>
+&lt;h1 id="find_mallocsh">find_malloc.sh
+&lt;a class="header-anchor" href="#find_mallocsh">&lt;/a>
+&lt;/h1>&lt;p>要点：&lt;/p>
+&lt;ol>
+&lt;li>用 gcc 去除代码注释。&lt;/li>
+&lt;li>用 awk 对正则表达式计数。&lt;/li>
+&lt;/ol>
+&lt;div class="highlight">&lt;pre tabindex="0" style="color:#93a1a1;background-color:#002b36;-moz-tab-size:2;-o-tab-size:2;tab-size:2;">&lt;code class="language-bash" data-lang="bash">&lt;span style="display:flex;">&lt;span>check&lt;span style="color:#719e07">()&lt;/span> &lt;span style="color:#719e07">{&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> gcc -fpreprocessed -dD -E -P &lt;span style="color:#2aa198">&amp;#34;&lt;/span>&lt;span style="color:#268bd2">$1&lt;/span>&lt;span style="color:#2aa198">&amp;#34;&lt;/span> 2&amp;gt;/dev/null | awk -v &lt;span style="color:#268bd2">file&lt;/span>&lt;span style="color:#719e07">=&lt;/span>&lt;span style="color:#2aa198">&amp;#34;&lt;/span>&lt;span style="color:#268bd2">$1&lt;/span>&lt;span style="color:#2aa198">&amp;#34;&lt;/span> &lt;span style="color:#2aa198">&amp;#39;
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#2aa198"> BEGIN {
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#2aa198"> malloc=0;
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#2aa198"> free=0;
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#2aa198"> queueCreate=0;
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#2aa198"> queueDestroy=0;
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#2aa198"> notifierCreate=0;
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#2aa198"> notifierDestroy=0;
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#2aa198"> handleCreate=0;
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#2aa198"> handleDestroy=0;
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#2aa198"> }
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#2aa198"> /cnrtMalloc\(/ { malloc++; }
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#2aa198"> /cnrtFree\(/ { free++; }
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#2aa198"> /cnrtQueueCreate\(/ { queueCreate++; }
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#2aa198"> /cnrtCreateQueue\(/ { queueCreate++; }
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#2aa198"> /cnrtDestroyQueue\(/ { queueDestroy++; }
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#2aa198"> /cnrtQueueDestroy\(/ { queueDestroy++; }
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#2aa198"> /cnrtCreateNotifier\(/ { notifierCreate++; }
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#2aa198"> /cnrtDestroyNotifier\(/ { notifierDestroy++; }
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#2aa198"> /cnnlCreate\(/ { handleCreate++; }
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#2aa198"> /cnnlDestroy\(/ { handleDestroy++; }
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#2aa198"> END {
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#2aa198"> if (malloc != free) {
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#2aa198"> print &amp;#34;file: &amp;#34; file &amp;#34;, malloc: &amp;#34; malloc &amp;#34;, free: &amp;#34; free
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#2aa198"> }
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#2aa198"> if (queueCreate != queueDestroy) {
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#2aa198"> print &amp;#34;file: &amp;#34; file &amp;#34;, queueCreate: &amp;#34; queueCreate &amp;#34;, queueDestroy: &amp;#34; queueDestroy
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#2aa198"> }
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#2aa198"> if (notifierCreate != notifierDestroy) {
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#2aa198"> print &amp;#34;file: &amp;#34; file &amp;#34;, notifierCreate: &amp;#34; notifierCreate &amp;#34;, notifierDestroy: &amp;#34; notifierDestroy
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#2aa198"> }
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#2aa198"> if (handleCreate != handleDestroy) {
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#2aa198"> print &amp;#34;file: &amp;#34; file &amp;#34;, handleCreate: &amp;#34; handleCreate &amp;#34;, handleDestroy: &amp;#34; handleDestroy
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#2aa198"> }
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#2aa198"> }&amp;#39;&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#719e07">}&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>check &lt;span style="color:#268bd2">$1&lt;/span>
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;h1 id="find_malloc_allsh">find_malloc_all.sh
+&lt;a class="header-anchor" href="#find_malloc_allsh">&lt;/a>
+&lt;/h1>&lt;p>要点：使用 &lt;code>find&lt;/code> 匹配时应该选择正则表达式类型，同时和 Python 的 &lt;code>re&lt;/code> 模块一样要全字符串匹配（不能匹配只部分字符，因此想只匹配中间部分的时候，就要在两边加上 &lt;code>.*&lt;/code>）。&lt;/p></description></item></channel></rss>

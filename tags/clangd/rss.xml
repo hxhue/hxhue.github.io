@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Clangd on Bluegill</title><link>https://hxhue.github.io/tags/clangd/</link><description>Recent content in Clangd on Bluegill</description><generator>Hugo</generator><language>zh-CN</language><lastBuildDate>Sat, 26 Apr 2025 00:00:00 +0800</lastBuildDate><atom:link href="https://hxhue.github.io/tags/clangd/rss.xml" rel="self" type="application/rss+xml"/><item><title>在 VS Code 中使用 clangd</title><link>https://hxhue.github.io/posts/developer/vscode/%E5%9C%A8-VS-Code-%E4%B8%AD%E4%BD%BF%E7%94%A8-clangd/</link><pubDate>Sun, 19 Nov 2023 00:00:00 +0800</pubDate><guid>https://hxhue.github.io/posts/developer/vscode/%E5%9C%A8-VS-Code-%E4%B8%AD%E4%BD%BF%E7%94%A8-clangd/</guid><description>&lt;h1 id="设置-vs-code-clangd-检查的语言标准为-c17">设置 VS Code clangd 检查的语言标准为 C++17
+&lt;a class="header-anchor" href="#%e8%ae%be%e7%bd%ae-vs-code-clangd-%e6%a3%80%e6%9f%a5%e7%9a%84%e8%af%ad%e8%a8%80%e6%a0%87%e5%87%86%e4%b8%ba-c17">&lt;/a>
+&lt;/h1>&lt;p>
+
+
+
+
+
+
+&lt;img src="https://hxhue.github.io/assets/75a1c84faccb284ac8b51a1f07d3fc57.webp">&lt;/p>
+&lt;p>Set &lt;code>-std&lt;/code> in the &lt;code>.yaml&lt;/code> file and then reload window of VS Code.&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" style="color:#93a1a1;background-color:#002b36;-moz-tab-size:2;-o-tab-size:2;tab-size:2;">&lt;code class="language-yaml" data-lang="yaml">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#268bd2">CompileFlags&lt;/span>:
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#268bd2">Add&lt;/span>:
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> [
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> --std=c++17,
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> -Wno-documentation,
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> -Wno-missing-prototypes,
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> ]
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#268bd2">Diagnostics&lt;/span>:
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#268bd2">ClangTidy&lt;/span>:
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#268bd2">Add&lt;/span>:
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> [
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> performance-*,
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> bugprone-*,
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> modernize-*,
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> clang-analyzer-*,
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> readability-identifier*,
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> ]
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#268bd2">CheckOptions&lt;/span>:
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#268bd2">readability-identifier-naming.VariableCase&lt;/span>: camelCase
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;h1 id="clangd-找不到头文件">Clangd 找不到头文件
+&lt;a class="header-anchor" href="#clangd-%e6%89%be%e4%b8%8d%e5%88%b0%e5%a4%b4%e6%96%87%e4%bb%b6">&lt;/a>
+&lt;/h1>&lt;p>macOS 自带的 &lt;code>/usr/local/bin&lt;/code> 中的 clang 不能提供查询路径。要么把绝对路径改成 &lt;code>PATH&lt;/code> 中的命令，要么添加 &lt;code>&amp;quot;--query-driver=/usr/bin/clang++&amp;quot;&lt;/code> 在参数中。&lt;/p></description></item><item><title>VS Code CMake 工程中 C++ 提示不正常</title><link>https://hxhue.github.io/posts/developer/vscode/VS-Code-CMake-%E5%B7%A5%E7%A8%8B%E4%B8%AD-C++-%E6%8F%90%E7%A4%BA%E4%B8%8D%E6%AD%A3%E5%B8%B8/</link><pubDate>Thu, 26 Oct 2023 00:00:00 +0800</pubDate><guid>https://hxhue.github.io/posts/developer/vscode/VS-Code-CMake-%E5%B7%A5%E7%A8%8B%E4%B8%AD-C++-%E6%8F%90%E7%A4%BA%E4%B8%8D%E6%AD%A3%E5%B8%B8/</guid><description>&lt;h1 id="如果用-intellisense">如果用 Intellisense
+&lt;a class="header-anchor" href="#%e5%a6%82%e6%9e%9c%e7%94%a8-intellisense">&lt;/a>
+&lt;/h1>&lt;p>以文件 &lt;code>.vscode/c_cpp_properties.json&lt;/code> 中 &lt;code>configuration&lt;/code> 的 &lt;code>configurationProvider&lt;/code> 的值来分类。&lt;/p>
+&lt;h2 id="ms-vscodecmake-tools">ms-vscode.cmake-tools
+&lt;a class="header-anchor" href="#ms-vscodecmake-tools">&lt;/a>
+&lt;/h2>&lt;p>&lt;strong>缺点：文件不在编译数据库中时 include 路径不正确（对新文件不友好）&lt;/strong>。&lt;/p>
+&lt;p>&lt;strong>&lt;code>configurationProvider&lt;/code> 是 &lt;code>ms-vscode.cmake-tools&lt;/code> 时&lt;/strong>，&lt;code>compileCommands&lt;/code> 和 &lt;code>includePath&lt;/code> 设置是无效的。这个时候如果 &lt;code>compile_commands.json&lt;/code> （编译数据库）中没有这个文件（尤其是 &lt;code>CMakeLists.txt&lt;/code> 中可能尚未加入新编写的文件的情况），或者编译数据库尚未配置（需要先编译生成一次)，include 路径就不正确。&lt;/p></description></item></channel></rss>

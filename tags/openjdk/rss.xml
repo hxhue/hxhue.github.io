@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Openjdk on Bluegill</title><link>https://hxhue.github.io/tags/openjdk/</link><description>Recent content in Openjdk on Bluegill</description><generator>Hugo</generator><language>zh-CN</language><lastBuildDate>Tue, 31 Dec 2024 00:00:00 +0800</lastBuildDate><atom:link href="https://hxhue.github.io/tags/openjdk/rss.xml" rel="self" type="application/rss+xml"/><item><title>OpenJDK: ConcurrentHashMap</title><link>https://hxhue.github.io/posts/programming/java/ConcurrentHashMap/</link><pubDate>Sat, 12 Aug 2023 00:00:00 +0800</pubDate><guid>https://hxhue.github.io/posts/programming/java/ConcurrentHashMap/</guid><description>&lt;p>现在已经没有 Segment 概念，并发系数不生效。能支持高效的并发：&lt;/p>
+&lt;ol>
+&lt;li>支持懒初始化，第一次写的时候发生，可能需要自旋但不需要加锁。&lt;/li>
+&lt;li>读的时候可能需要自旋，不需要加锁。&lt;/li>
+&lt;li>写的时候如果遇到正在扩容，则加入一起扩容；如果写时槽位为空，则只需要原子操作；写时操作非空，且不处在特殊状态，则需要加对象锁。因而读写互不阻塞、不同槽位的写不会阻塞、扩容不会阻塞（因为扩容时其他竞争线程也会被分配任务）、仅有单个槽位的多写需要阻塞。&lt;/li>
+&lt;/ol>
+&lt;p>为了节省空间，在 &lt;code>Node[]&lt;/code> 中用 hash 为负的头结点来表示该拉链处于特殊状态：树结点、转移中、预留等。&lt;/p></description></item><item><title>OpenJDK: CopyOnWriteArrayList</title><link>https://hxhue.github.io/posts/programming/java/CopyOnWriteArrayList/</link><pubDate>Sat, 12 Aug 2023 00:00:00 +0800</pubDate><guid>https://hxhue.github.io/posts/programming/java/CopyOnWriteArrayList/</guid><description>&lt;p>写的时候加锁（因为要替换 array 数组的引用，而且复制的过程比较耗时，不宜自旋），读的时候不用加锁。替换的安全性由 Java volatile 保证。&lt;/p></description></item><item><title>OpenJDK: Java Memory Order</title><link>https://hxhue.github.io/posts/programming/java/Java-Memory-Order/</link><pubDate>Sat, 12 Aug 2023 00:00:00 +0800</pubDate><guid>https://hxhue.github.io/posts/programming/java/Java-Memory-Order/</guid><description>&lt;p>CPU 内存屏障：&lt;a href="https://sf-zhou.github.io/programming/memory_barrier.html" title="https://sf-zhou.github.io/programming/memory_barrier.html" rel="noopener external nofollow noreferrer"
+ target="_blank" class=" exturl" >https://sf-zhou.github.io/programming/memory_barrier.html&lt;i class="fa fa-external-link-alt">&lt;/i>&lt;/a>&lt;/p>
+&lt;p>volatile 与内存屏障总结： &lt;a href="https://zhuanlan.zhihu.com/p/43526907" title="https://zhuanlan.zhihu.com/p/43526907" rel="noopener external nofollow noreferrer"
+ target="_blank" class=" exturl" >https://zhuanlan.zhihu.com/p/43526907&lt;i class="fa fa-external-link-alt">&lt;/i>&lt;/a>&lt;/p>
+&lt;blockquote>
+ &lt;p>X86-64 下仅支持一种指令重排：Store-Load ，即读操作可能会重排到写操作前面，同时不同线程的写操作并没有保证全局可见，例子见《Intel® 64 and IA-32 Architectures Software Developer’s Manual》手册 8.6.1、8.2.3.7 节。要注意的是这个问题只能用 mfence 解决，不能靠组合 sfence 和 lfence 解决。（用 sfence+lfence 组合仅可以解决重排问题，但不能解决全局可见性问题，简单理解不如视为 &lt;code>sfence&lt;/code> 和 &lt;code>lfence&lt;/code> 本身也能乱序重排）&lt;/p></description></item><item><title>OpenJDK: JUC locks</title><link>https://hxhue.github.io/posts/programming/java/JUC-locks/</link><pubDate>Sat, 12 Aug 2023 00:00:00 +0800</pubDate><guid>https://hxhue.github.io/posts/programming/java/JUC-locks/</guid><description>&lt;h1 id="reentrantlock-公平锁和非公平锁的实现">ReentrantLock 公平锁和非公平锁的实现
+&lt;a class="header-anchor" href="#reentrantlock-%e5%85%ac%e5%b9%b3%e9%94%81%e5%92%8c%e9%9d%9e%e5%85%ac%e5%b9%b3%e9%94%81%e7%9a%84%e5%ae%9e%e7%8e%b0">&lt;/a>
+&lt;/h1>&lt;p>
+
+
+
+
+
+
+&lt;img src="https://hxhue.github.io/assets/d6745452123368b4ec805513d2ac0e8a.svg">&lt;/p>
+&lt;p>如果需要长时间等待，AQS 总是会将等待线程加入到队列尾部，唤醒时总是唤醒队首线程。这样做能够保证已经被睡眠的线程必定按照顺序唤醒。这样做难道不是永远都是公平锁？&lt;/p></description></item><item><title>OpenJDK: Project Loom</title><link>https://hxhue.github.io/posts/programming/java/Project-Loom/</link><pubDate>Sat, 12 Aug 2023 00:00:00 +0800</pubDate><guid>https://hxhue.github.io/posts/programming/java/Project-Loom/</guid><description>&lt;h1 id="互斥锁">互斥：锁
+&lt;a class="header-anchor" href="#%e4%ba%92%e6%96%a5%e9%94%81">&lt;/a>
+&lt;/h1>&lt;p>现在对象锁不尊重虚拟线程，但是 JUC 下的锁是尊重虚拟线程的。&lt;/p>
+&lt;h1 id="共享scopedvalue">共享：ScopedValue
+&lt;a class="header-anchor" href="#%e5%85%b1%e4%ba%abscopedvalue">&lt;/a>
+&lt;/h1>&lt;p>ThreadLocal 和虚拟线程配合的不是很好，尽管功能上 ThreadLocal 是支持虚拟线程的，但是由于虚拟线程数量众多、生命周期短，使用 ThreadLocal 时虽然保证了线程安全，却创建了大量对象——这个问题在平台线程上就不明显。JEP 429 ScopedValues (Java 20) 是为了解决这个问题的。&lt;/p></description></item></channel></rss>

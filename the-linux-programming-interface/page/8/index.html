@@ -1,0 +1,307 @@
+<!doctype html><html lang=zh-CN data-theme=light><head><meta charset=UTF-8><meta name=viewport content="width=device-width"><meta name=theme-color content="#222" media="(prefers-color-scheme: light)"><meta name=generator content="Hugo 0.143.1"><link rel="shortcut icon" type=image/x-icon href=/imgs/icons/favicon.ico><link rel=icon type=image/x-icon href=/imgs/icons/favicon.ico><link rel=icon type=image/png sizes=16x16 href=/imgs/icons/favicon_16x16_next.png><link rel=icon type=image/png sizes=32x32 href=/imgs/icons/favicon_32_32_next.png><link rel=apple-touch-icon sizes=180x180 href=/imgs/icons/apple_touch_icon_next.png><meta itemprop=name content="The-Linux-Programming-Interfaces"><meta itemprop=description content="个人博客，主要是零散的笔记。"><meta itemprop=image content="https://hxhue.github.io/imgs/371907.jpg"><meta itemprop=keywords content><link type=text/css rel=stylesheet href=https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.1.2/css/all.min.css><link type=text/css rel=stylesheet href=https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.1.1/animate.min.css><link rel=stylesheet href=/css/main.min.bea76f574a755574e17d42bea39502a74ca3ca4db65807b8c82d3e26dcec8420.css><style type=text/css>.post-footer,.flinks-list-footer hr:after{content:"~ 我可是有底线的哟 ~"}</style><link rel=stylesheet type=text/css href=/css/style.css><link rel=preconnect href=https://fonts.googleapis.com><link rel=preconnect href=https://fonts.gstatic.com crossorigin><link rel=stylesheet href=https://cdn.jsdelivr.net/npm/github-markdown-css@5.3.0/github-markdown-dark.css><script type=text/javascript id=MathJax-script async src=https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-svg.js></script><script>MathJax={tex:{displayMath:[["$$","$$"],["\\[","\\]"]],inlineMath:[["$","$"],["\\(","\\)"]]},svg:{fontCache:"global"}}</script><script type=module>
+  import mermaid from 'https://cdn.jsdelivr.net/npm/mermaid/dist/mermaid.esm.min.mjs';
+  mermaid.initialize({ startOnLoad: false });
+  mermaid.mermaidAPI.initialize();
+  window.mermaid = mermaid;
+</script><script type=text/javascript>(function(){localDB={set:function(e,t,n){if(n===0)return;const s=new Date,o=n*864e5,i={value:t,expiry:s.getTime()+o};localStorage.setItem(e,JSON.stringify(i))},get:function(e){const t=localStorage.getItem(e);if(!t)return void 0;const n=JSON.parse(t),s=new Date;return s.getTime()>n.expiry?(localStorage.removeItem(e),void 0):n.value}},theme={active:function(){const e=localDB.get("theme");if(e==null)return;theme.toggle(e),window.matchMedia("(prefers-color-scheme: dark)").addListener(function(e){theme.toggle(e.matches?"dark":"light")})},toggle:function(e){document.documentElement.setAttribute("data-theme",e),localDB.set("theme",e,2);const t=document.querySelector("iframe.giscus-frame");if(t){const n={setConfig:{theme:e}};t.contentWindow.postMessage({giscus:n},"https://giscus.app")}}},theme.active()})(window)</script><script class=next-config data-name=page type=application/json>{"comments":false,"isHome":false,"isPage":false,"path":"the-linux-programming-interface","permalink":"https://hxhue.github.io/the-linux-programming-interface/","title":"The-Linux-Programming-Interfaces","waline":{"js":[{"alias":"waline","alias_name":"@waline/client","file":"dist/pageview.js","name":"pageview","version":"2.13.0"},{"alias":"waline","alias_name":"@waline/client","file":"dist/comment.js","name":"comment","version":"2.13.0"}]}}</script><script type=text/javascript>document.addEventListener("DOMContentLoaded",()=>{var e=document.createElement("script");e.charset="UTF-8",e.src="",e.async=!1,e.defer=!0,document.head.appendChild(e),e.onload=function(){NexT.utils.fmtBusuanzi()}})</script><title>the-linux-programming-interface - Bluegill</title><noscript><link rel=stylesheet href=/css/noscript.css></noscript></head><body itemscope itemtype=http://schema.org/WebPage><div class=headband></div><main class=main><header class=header itemscope itemtype=http://schema.org/WPHeader><div class=header-inner><div class=site-brand-container><div class=site-nav-toggle><div class=toggle aria-label role=button><span class=toggle-line></span>
+<span class=toggle-line></span>
+<span class=toggle-line></span></div></div><div class=site-meta><a href=/ class=brand rel=start><i class=logo-line></i><h1 class=site-title>Bluegill</h1><i class=logo-line></i></a><p class=site-subtitle itemprop=description></p></div><div class=site-nav-right><div class="toggle popup-trigger"><i class="fa fa-search fa-fw fa-lg"></i></div></div></div><nav class=site-nav><ul class="main-menu menu"><li class="menu-item menu-item-home"><a href=/ class=hvr-icon-pulse rel=section><i class="fa fa-home hvr-icon"></i>首页</a></li><li class="menu-item menu-item-about"><a href=/about/ class=hvr-icon-pulse rel=section><i class="fa fa-user hvr-icon"></i>关于</a></li><li class="menu-item menu-item-archives"><a href=/archives/ class=hvr-icon-pulse rel=section><i class="fa fa-archive hvr-icon"></i>归档</a></li><li class="menu-item menu-item-categories"><a href=/categories/ class=hvr-icon-pulse rel=section><i class="fa fa-th hvr-icon"></i>分类</a></li><li class="menu-item menu-item-tags"><a href=/tags/ class=hvr-icon-pulse rel=section><i class="fa fa-hashtag hvr-icon"></i>标签</a></li><li class="menu-item menu-item-daily"><a href=/daily/ class=hvr-icon-pulse rel=section><i class="fa fa-newspaper hvr-icon"></i>随笔</a></li><li class="menu-item menu-item-discovery"><a href=https://rift-fear-f2c.notion.site/2025-1e354a33cfb1802c841bdf29f2f3dab3 class=hvr-icon-pulse rel=section><i class="fa fa-compass hvr-icon"></i>发现</a></li><li class="menu-item menu-item-search"><a role=button class="popup-trigger hvr-icon-pulse"><i class="fa fa-search fa-fw hvr-icon"></i>搜索</a></li></ul></nav><div class=search-pop-overlay><div class="popup search-popup"><div class=search-header><span class=search-icon><i class="fa fa-search"></i></span><div class=search-input-container><input autocomplete=off autocapitalize=off maxlength=80 placeholder=搜索... spellcheck=false type=search class=search-input></div><span class=popup-btn-close role=button><i class="fa fa-times-circle"></i></span></div><div class="search-result-container no-result"><div class=search-result-icon><i class="fa fa-spinner fa-pulse fa-5x"></i></div></div></div></div></div><div class="toggle sidebar-toggle" role=button><span class=toggle-line></span>
+<span class=toggle-line></span>
+<span class=toggle-line></span></div><aside class=sidebar><div class="sidebar-inner sidebar-overview-active"><ul class=sidebar-nav><li class=sidebar-nav-toc>文章目录</li><li class=sidebar-nav-overview>站点概览</li></ul><div class=sidebar-panel-container><div class="post-toc-wrap sidebar-panel"><div class="post-toc animated"><nav id=TableOfContents></nav></div></div><div class="site-overview-wrap sidebar-panel"><div class="site-author site-overview-item animated" itemprop=author itemscope itemtype=http://schema.org/Person><img class=site-author-image itemprop=image alt=🤖 src=/imgs/371907.jpg><p class=site-author-name itemprop=name>🤖</p><div class=site-description itemprop=description>个人博客，主要是零散的笔记。</div></div><div class="site-state-wrap site-overview-item animated"><nav class=site-state><div class="site-state-item site-state-posts"><a href=/archives/><span class=site-state-item-count>433</span>
+<span class=site-state-item-name>日志</span></a></div><div class="site-state-item site-state-categories"><a href=/categories/><span class=site-state-item-count>12</span>
+<span class=site-state-item-name>分类</span></a></div><div class="site-state-item site-state-tags"><a href=/tags/><span class=site-state-item-count>86</span>
+<span class=site-state-item-name>标签</span></a></div></nav></div><div class="links-of-social site-overview-item animated"><span class=links-of-social-item><a href=https://github.com/hxhue title="Github → https://github.com/hxhue" rel=noopener target=_blank><i class="fab fa-github fa-fw"></i>
+Github
+</a></span><span class=links-of-social-item><a href=/rss.xml title="RSS 订阅 → /rss.xml" rel=noopener target=_blank><i class="fa fa-rss fa-fw"></i>
+RSS 订阅</a></span></div><div class="cc-license animated" itemprop=license><a href=https://creativecommons.org/licenses/by-nc-sa/4.0/deed.zh class=cc-opacity rel=noopener target=_blank title=共享知识><img src=/imgs/cc/big/by_nc_sa.svg alt=共享知识></a></div><div class="links-of-blogroll site-overview-item animated"><div class=links-of-blogroll-title><i class="fa fa-globe fa-fw"></i>
+友情链接</div><ul class=links-of-blogroll-list><li class=links-of-blogroll-item><a href=https://shuai.guru/ title=https://shuai.guru/ target=_blank>shuai.guru</a></li></ul></div></div></div></div></aside><div class=sidebar-dimmer></div></header><div class=tool-buttons><div id=toggle-theme class=button title=深浅模式切换><i class="fas fa-adjust"></i></div><div class=back-to-top role=button title=返回顶部><i class="fa fa-arrow-up"></i>
+<span>0%</span></div></div><div class=reading-progress-bar></div><noscript><div class=noscript-warning>Theme NexT works best with JavaScript enabled</div></noscript><div class="main-inner index posts-expand"><div class=post-block><article itemscope itemtype=http://schema.org/Article class=post-content lang><link itemprop=mainEntityOfPage href=https://hxhue.github.io/the-linux-programming-interface/09.01-Linux-%E8%BF%9B%E7%A8%8B%E5%87%AD%E8%AF%81Credentials/><span hidden itemprop=author itemscope itemtype=http://schema.org/Person><meta itemprop=image content="/imgs/371907.jpg"><meta itemprop=name content="🤖"></span><span hidden itemprop=publisher itemscope itemtype=http://schema.org/Organization><meta itemprop=name content="🤖"><meta itemprop=description content="个人博客，主要是零散的笔记。"></span><span hidden itemprop=post itemscope itemtype=http://schema.org/CreativeWork><meta itemprop=name content="09.01 Linux 进程凭证（Credentials）"><meta itemprop=description content="Linux 进程凭证
+
+进程凭证包括以下内容：
+
+实际用户 ID（real user ID）和实际组 ID（real group ID）。
+有效用户 ID（effective user ID）和有效组 ID（effective group ID）。
+保存的 set-user-ID（saved set-user-ID）和保存的 set-group-ID（saved set-group-ID）。
+文件系统用户 ID（file-system user ID）和文件系统组 ID（file-system group ID）（Linux 专有）。
+辅助组 ID。
+
+保存的设置用户/组 ID
+
+文件系统中每个非目录文件有设置用户/组 ID 位，启动这样的文件会使得有效用户/组 ID 按照文件的所有者来设置。出于安全考虑，在 Linux 中可执行文件的设置用户/组 ID 权限对于 shell 脚本无效。"></span><header class=post-header><h2 class=post-title itemprop="name headline"><a href=/the-linux-programming-interface/09.01-Linux-%E8%BF%9B%E7%A8%8B%E5%87%AD%E8%AF%81Credentials/ itemprop=url class=post-title-link>09.01 Linux 进程凭证（Credentials）</a></h2><div class=post-meta-container><div class=post-meta-items><span class=post-meta-item><span class=post-meta-item-icon><i class="far fa-calendar"></i>
+</span><span class=post-meta-item-text title=发表于>发表于：
+</span><time title="创建时间：2024-05-19 00:00:00 +0800 CST" itemprop="dateCreated datePublished" datetime="2024-05-19 00:00:00 +0800 CST">2024-05-19
+</time></span><span class=post-meta-item><span class=post-meta-item-icon><i class="far fa-calendar-check"></i>
+</span><span class=post-meta-item-text title=更新于>更新于：
+</span><time title=修改时间：2024-09-10T00:00:00+08:00 itemprop=dateModified datetime=2024-09-10T00:00:00+08:00>2024-09-10</time>
+</span><span class=post-meta-item><span class=post-meta-item-icon><i class="far fa-folder-open"></i>
+</span><span class=post-meta-item-text title=分类于>分类于：
+</span><span itemprop=about itemscope itemtype=http://schema.org/Thing><a href=/categories/the-linux-programming-interface itemprop=url rel=index><span itemprop=name>the-linux-programming-interface</span></a></span></span></div></div></header><div class=post-body itemprop=articleBody><h1 id=linux-进程凭证>Linux 进程凭证
+<a class=header-anchor href=#linux-%e8%bf%9b%e7%a8%8b%e5%87%ad%e8%af%81></a></h1><p>进程凭证包括以下内容：</p><ul><li>实际用户 ID（real user ID）和实际组 ID（real group ID）。</li><li>有效用户 ID（effective user ID）和有效组 ID（effective group ID）。</li><li>保存的 set-user-ID（saved set-user-ID）和保存的 set-group-ID（saved set-group-ID）。</li><li>文件系统用户 ID（file-system user ID）和文件系统组 ID（file-system group ID）（<strong>Linux 专有</strong>）。</li><li>辅助组 ID。</li></ul><h2 id=保存的设置用户组-id>保存的设置用户/组 ID
+<a class=header-anchor href=#%e4%bf%9d%e5%ad%98%e7%9a%84%e8%ae%be%e7%bd%ae%e7%94%a8%e6%88%b7%e7%bb%84-id></a></h2><p>文件系统中每个非目录文件有设置用户/组 ID 位，启动这样的文件会使得有效用户/组 ID 按照文件的所有者来设置。出于安全考虑，<mark>在 Linux 中可执行文件的设置用户/组 ID 权限对于 shell 脚本无效</mark>。</p><p>设计<strong>保存的设置用户 ID</strong>（保存的设置组 ID 同，为了表述方便略去）是为了让程序的<strong>有效用户 ID</strong> 能够在<strong>实际用户 ID</strong> 和<strong>保存的设置用户 ID</strong> 之间切换。这样程序在不需要使用其他用户（尤其是 root）的权限时可以将有效用户 ID 转回实际用户 ID，需要权限时再转回来。程序启动时，保存的设置用户 ID 从有效用户 ID 复制过来。</p><h2 id=文件系统用户组-id>文件系统用户/组 ID
+<a class=header-anchor href=#%e6%96%87%e4%bb%b6%e7%b3%bb%e7%bb%9f%e7%94%a8%e6%88%b7%e7%bb%84-id></a></h2><p>文件系统用户/组 ID 管辖和文件系统操作相关的权限问题，是由 Linux 专有的。一般情况下它们和有效用户/组 ID 相同，除非调用了 <code>setfsuid</code> / <code>setfsgid</code>。</p></div><footer class=post-footer><div readmore=true><div class=readmore-overlay><div class=readmore-overlay-center><div class=post-button><a class=btn href=/the-linux-programming-interface/09.01-Linux-%E8%BF%9B%E7%A8%8B%E5%87%AD%E8%AF%81Credentials/#more rel=contents>阅读全文 &#187;</a></div></div></div><div class=no-more-to-read><hr><center>没有啦~</center></div></div><div class=post-eof></div></footer></article></div><div class=post-block><article itemscope itemtype=http://schema.org/Article class=post-content lang><link itemprop=mainEntityOfPage href=https://hxhue.github.io/the-linux-programming-interface/05.12-%E7%94%A8-tmpfile-%E5%88%9B%E5%BB%BA%E4%B8%B4%E6%97%B6%E6%96%87%E4%BB%B6/><span hidden itemprop=author itemscope itemtype=http://schema.org/Person><meta itemprop=image content="/imgs/371907.jpg"><meta itemprop=name content="🤖"></span><span hidden itemprop=publisher itemscope itemtype=http://schema.org/Organization><meta itemprop=name content="🤖"><meta itemprop=description content="个人博客，主要是零散的笔记。"></span><span hidden itemprop=post itemscope itemtype=http://schema.org/CreativeWork><meta itemprop=name content="05.12 用 tmpfile 创建临时文件"><meta itemprop=description content="在 Linux 上推荐使用的创建临时文件的方法只有 mkstemp 和 tmpfile。前者是系统调用，用起来更复杂一点，后者是 C 标准库函数。其他的函数多多少少有自己的问题。"></span><header class=post-header><h2 class=post-title itemprop="name headline"><a href=/the-linux-programming-interface/05.12-%E7%94%A8-tmpfile-%E5%88%9B%E5%BB%BA%E4%B8%B4%E6%97%B6%E6%96%87%E4%BB%B6/ itemprop=url class=post-title-link>05.12 用 tmpfile 创建临时文件</a></h2><div class=post-meta-container><div class=post-meta-items><span class=post-meta-item><span class=post-meta-item-icon><i class="far fa-calendar"></i>
+</span><span class=post-meta-item-text title=发表于>发表于：
+</span><time title="创建时间：2024-05-18 00:00:00 +0800 CST" itemprop="dateCreated datePublished" datetime="2024-05-18 00:00:00 +0800 CST">2024-05-18
+</time></span><span class=post-meta-item><span class=post-meta-item-icon><i class="far fa-calendar-check"></i>
+</span><span class=post-meta-item-text title=更新于>更新于：
+</span><time title=修改时间：2024-09-10T00:00:00+08:00 itemprop=dateModified datetime=2024-09-10T00:00:00+08:00>2024-09-10</time>
+</span><span class=post-meta-item><span class=post-meta-item-icon><i class="far fa-folder-open"></i>
+</span><span class=post-meta-item-text title=分类于>分类于：
+</span><span itemprop=about itemscope itemtype=http://schema.org/Thing><a href=/categories/the-linux-programming-interface itemprop=url rel=index><span itemprop=name>the-linux-programming-interface</span></a></span></span></div></div></header><div class=post-body itemprop=articleBody><p><mark>在 Linux 上推荐使用的创建临时文件的方法只有 <code>mkstemp</code> 和 <code>tmpfile</code></mark>。前者是系统调用，用起来更复杂一点，后者是 C 标准库函数。其他的函数多多少少有自己的问题。</p><p><code>tmpfile</code> 不再需要我们提供字符数组来存储文件名，返回的是 <code>FILE*</code> 而不是 fd。此外还在刚创建文件之后就使用了 <code>unlink</code> 来删除文件，这样就只有当前进程可以访问到这个文件了（除非 <code>fork</code>）。</p><div class=highlight><pre tabindex=0 style=color:#93a1a1;background-color:#002b36;-moz-tab-size:2;-o-tab-size:2;tab-size:2><code class=language-c data-lang=c><span style=display:flex><span><span style=color:#719e07>#include</span> <span style=color:#719e07>&lt;assert.h&gt;</span><span style=color:#719e07>
+</span></span></span><span style=display:flex><span><span style=color:#719e07>#include</span> <span style=color:#719e07>&lt;fcntl.h&gt;</span><span style=color:#719e07>
+</span></span></span><span style=display:flex><span><span style=color:#719e07>#include</span> <span style=color:#719e07>&lt;stdio.h&gt;</span><span style=color:#719e07>
+</span></span></span><span style=display:flex><span><span style=color:#719e07>#include</span> <span style=color:#719e07>&lt;unistd.h&gt;</span><span style=color:#719e07>
+</span></span></span><span style=display:flex><span><span style=color:#719e07></span>
+</span></span><span style=display:flex><span><span style=color:#dc322f>int</span> <span style=color:#268bd2>main</span>() {
+</span></span><span style=display:flex><span>    <span style=color:#586e75>// 创建文件，记得关闭。
+</span></span></span><span style=display:flex><span><span style=color:#586e75></span>    FILE <span style=color:#719e07>*</span>fp;
+</span></span><span style=display:flex><span>    <span style=color:#268bd2>assert</span>((fp <span style=color:#719e07>=</span> <span style=color:#268bd2>tmpfile</span>()) <span style=color:#719e07>!=</span> <span style=color:#b58900>NULL</span>);
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>    <span style=color:#586e75>// 查询文件路径并打印。
+</span></span></span><span style=display:flex><span><span style=color:#586e75></span>    <span style=color:#dc322f>char</span> path[<span style=color:#2aa198>128</span>];
+</span></span><span style=display:flex><span>    <span style=color:#dc322f>char</span> link_path[<span style=color:#2aa198>128</span>];
+</span></span><span style=display:flex><span>    <span style=color:#dc322f>int</span> fd <span style=color:#719e07>=</span> <span style=color:#268bd2>fileno</span>(fp);
+</span></span><span style=display:flex><span>    <span style=color:#268bd2>assert</span>(fd <span style=color:#719e07>!=</span> <span style=color:#719e07>-</span><span style=color:#2aa198>1</span>);    
+</span></span><span style=display:flex><span>    <span style=color:#268bd2>sprintf</span>(link_path, <span style=color:#2aa198>&#34;/proc/self/fd/%d&#34;</span>, fd);
+</span></span><span style=display:flex><span>    <span style=color:#268bd2>assert</span>(<span style=color:#268bd2>readlink</span>(link_path, path, <span style=color:#719e07>sizeof</span>(path)) <span style=color:#719e07>!=</span> <span style=color:#719e07>-</span><span style=color:#2aa198>1</span>);
+</span></span><span style=display:flex><span>    <span style=color:#268bd2>printf</span>(<span style=color:#2aa198>&#34;tmpfile: %s</span><span style=color:#cb4b16>\n</span><span style=color:#2aa198>&#34;</span>, path);
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>    <span style=color:#268bd2>fprintf</span>(fp, <span style=color:#2aa198>&#34;write something</span><span style=color:#cb4b16>\n</span><span style=color:#2aa198>&#34;</span>);
+</span></span><span style=display:flex><span>    <span style=color:#268bd2>fflush</span>(fp);
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>    <span style=color:#586e75>// 在这里停顿。由于已经 unlink 了这个文件，文件系统上看不到它。
+</span></span></span><span style=display:flex><span><span style=color:#586e75></span>    <span style=color:#268bd2>getchar</span>();
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>    <span style=color:#268bd2>fclose</span>(fp);
+</span></span><span style=display:flex><span>}
+</span></span></code></pre></div><p>运行结果：</p><div class=highlight><pre tabindex=0 style=color:#93a1a1;background-color:#002b36;-moz-tab-size:2;-o-tab-size:2;tab-size:2><code class=language-txt data-lang=txt><span style=display:flex><span>(py310) xxx /data/apue $ /data/apue/build/apue
+</span></span><span style=display:flex><span>tmpfile: /tmp/#943520 (deleted)
+</span></span></code></pre></div></div><footer class=post-footer><div readmore=true><div class=readmore-overlay><div class=readmore-overlay-center><div class=post-button><a class=btn href=/the-linux-programming-interface/05.12-%E7%94%A8-tmpfile-%E5%88%9B%E5%BB%BA%E4%B8%B4%E6%97%B6%E6%96%87%E4%BB%B6/#more rel=contents>阅读全文 &#187;</a></div></div></div><div class=no-more-to-read><hr><center>没有啦~</center></div></div><div class=post-eof></div></footer></article></div><div class=post-block><article itemscope itemtype=http://schema.org/Article class=post-content lang><link itemprop=mainEntityOfPage href=https://hxhue.github.io/the-linux-programming-interface/06.06-%E7%94%A8-proc-%E6%96%87%E4%BB%B6%E5%A4%B9%E8%8E%B7%E5%8F%96%E5%91%BD%E4%BB%A4%E8%A1%8C%E5%8F%82%E6%95%B0/><span hidden itemprop=author itemscope itemtype=http://schema.org/Person><meta itemprop=image content="/imgs/371907.jpg"><meta itemprop=name content="🤖"></span><span hidden itemprop=publisher itemscope itemtype=http://schema.org/Organization><meta itemprop=name content="🤖"><meta itemprop=description content="个人博客，主要是零散的笔记。"></span><span hidden itemprop=post itemscope itemtype=http://schema.org/CreativeWork><meta itemprop=name content="06.06 用 /proc/self/cmdline 获取命令行参数"><meta itemprop=description content='/proc/self/cmdline 是一个以 \0 结尾的文件，我尝试过用 fgets 读取，但是失败了；转而使用 fgetc 逐字符读文件。
+#include <fcntl.h>
+#include <stdio.h>
+#include <unistd.h>
+
+int main() {
+    FILE *f = fopen("/proc/self/cmdline", "r");
+    if (!f) {
+        perror("fopen");
+        return 1;
+    }
+    
+    int i = 0, j = 0;
+    int ch;
+    char buf[128];
+    while ((ch = fgetc(f)) != EOF) {
+        if (ch == &#39;\0&#39;) {
+            buf[j] = &#39;\0&#39;;
+            printf("argv[%d]: %s\n", i++, buf);
+            j = 0;
+        } else {
+            buf[j++] = ch;
+        }
+    }
+
+    fclose(f);
+}
+例子：'></span><header class=post-header><h2 class=post-title itemprop="name headline"><a href=/the-linux-programming-interface/06.06-%E7%94%A8-proc-%E6%96%87%E4%BB%B6%E5%A4%B9%E8%8E%B7%E5%8F%96%E5%91%BD%E4%BB%A4%E8%A1%8C%E5%8F%82%E6%95%B0/ itemprop=url class=post-title-link>06.06 用 /proc/self/cmdline 获取命令行参数</a></h2><div class=post-meta-container><div class=post-meta-items><span class=post-meta-item><span class=post-meta-item-icon><i class="far fa-calendar"></i>
+</span><span class=post-meta-item-text title=发表于>发表于：
+</span><time title="创建时间：2024-05-18 00:00:00 +0800 CST" itemprop="dateCreated datePublished" datetime="2024-05-18 00:00:00 +0800 CST">2024-05-18
+</time></span><span class=post-meta-item><span class=post-meta-item-icon><i class="far fa-calendar-check"></i>
+</span><span class=post-meta-item-text title=更新于>更新于：
+</span><time title=修改时间：2024-09-10T00:00:00+08:00 itemprop=dateModified datetime=2024-09-10T00:00:00+08:00>2024-09-10</time>
+</span><span class=post-meta-item><span class=post-meta-item-icon><i class="far fa-folder-open"></i>
+</span><span class=post-meta-item-text title=分类于>分类于：
+</span><span itemprop=about itemscope itemtype=http://schema.org/Thing><a href=/categories/the-linux-programming-interface itemprop=url rel=index><span itemprop=name>the-linux-programming-interface</span></a></span></span></div></div></header><div class=post-body itemprop=articleBody><p>/proc/self/cmdline 是一个以 <code>\0</code> 结尾的文件，我尝试过用 <code>fgets</code> 读取，但是失败了；转而使用 <code>fgetc</code> 逐字符读文件。</p><div class=highlight><pre tabindex=0 style=color:#93a1a1;background-color:#002b36;-moz-tab-size:2;-o-tab-size:2;tab-size:2><code class=language-c data-lang=c><span style=display:flex><span><span style=color:#719e07>#include</span> <span style=color:#719e07>&lt;fcntl.h&gt;</span><span style=color:#719e07>
+</span></span></span><span style=display:flex><span><span style=color:#719e07>#include</span> <span style=color:#719e07>&lt;stdio.h&gt;</span><span style=color:#719e07>
+</span></span></span><span style=display:flex><span><span style=color:#719e07>#include</span> <span style=color:#719e07>&lt;unistd.h&gt;</span><span style=color:#719e07>
+</span></span></span><span style=display:flex><span><span style=color:#719e07></span>
+</span></span><span style=display:flex><span><span style=color:#dc322f>int</span> <span style=color:#268bd2>main</span>() {
+</span></span><span style=display:flex><span>    FILE <span style=color:#719e07>*</span>f <span style=color:#719e07>=</span> <span style=color:#268bd2>fopen</span>(<span style=color:#2aa198>&#34;/proc/self/cmdline&#34;</span>, <span style=color:#2aa198>&#34;r&#34;</span>);
+</span></span><span style=display:flex><span>    <span style=color:#719e07>if</span> (<span style=color:#719e07>!</span>f) {
+</span></span><span style=display:flex><span>        <span style=color:#268bd2>perror</span>(<span style=color:#2aa198>&#34;fopen&#34;</span>);
+</span></span><span style=display:flex><span>        <span style=color:#719e07>return</span> <span style=color:#2aa198>1</span>;
+</span></span><span style=display:flex><span>    }
+</span></span><span style=display:flex><span>    
+</span></span><span style=display:flex><span>    <span style=color:#dc322f>int</span> i <span style=color:#719e07>=</span> <span style=color:#2aa198>0</span>, j <span style=color:#719e07>=</span> <span style=color:#2aa198>0</span>;
+</span></span><span style=display:flex><span>    <span style=color:#dc322f>int</span> ch;
+</span></span><span style=display:flex><span>    <span style=color:#dc322f>char</span> buf[<span style=color:#2aa198>128</span>];
+</span></span><span style=display:flex><span>    <span style=color:#719e07>while</span> ((ch <span style=color:#719e07>=</span> <span style=color:#268bd2>fgetc</span>(f)) <span style=color:#719e07>!=</span> EOF) {
+</span></span><span style=display:flex><span>        <span style=color:#719e07>if</span> (ch <span style=color:#719e07>==</span> <span style=color:#2aa198>&#39;\0&#39;</span>) {
+</span></span><span style=display:flex><span>            buf[j] <span style=color:#719e07>=</span> <span style=color:#2aa198>&#39;\0&#39;</span>;
+</span></span><span style=display:flex><span>            <span style=color:#268bd2>printf</span>(<span style=color:#2aa198>&#34;argv[%d]: %s</span><span style=color:#cb4b16>\n</span><span style=color:#2aa198>&#34;</span>, i<span style=color:#719e07>++</span>, buf);
+</span></span><span style=display:flex><span>            j <span style=color:#719e07>=</span> <span style=color:#2aa198>0</span>;
+</span></span><span style=display:flex><span>        } <span style=color:#719e07>else</span> {
+</span></span><span style=display:flex><span>            buf[j<span style=color:#719e07>++</span>] <span style=color:#719e07>=</span> ch;
+</span></span><span style=display:flex><span>        }
+</span></span><span style=display:flex><span>    }
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>    <span style=color:#268bd2>fclose</span>(f);
+</span></span><span style=display:flex><span>}
+</span></span></code></pre></div><p>例子：</p><div class=highlight><pre tabindex=0 style=color:#93a1a1;background-color:#002b36;-moz-tab-size:2;-o-tab-size:2;tab-size:2><code class=language-txt data-lang=txt><span style=display:flex><span>(py310) xxx /data/apue $ /data/apue/build/apue 5 265
+</span></span><span style=display:flex><span>argv[0]: /data/apue/build/apue
+</span></span><span style=display:flex><span>argv[1]: 5
+</span></span><span style=display:flex><span>argv[2]: 265
+</span></span></code></pre></div></div><footer class=post-footer><div readmore=false><div class=readmore-overlay><div class=readmore-overlay-center><div class=post-button><a class=btn href=/the-linux-programming-interface/06.06-%E7%94%A8-proc-%E6%96%87%E4%BB%B6%E5%A4%B9%E8%8E%B7%E5%8F%96%E5%91%BD%E4%BB%A4%E8%A1%8C%E5%8F%82%E6%95%B0/#more rel=contents>阅读全文 &#187;</a></div></div></div><div class=no-more-to-read><hr><center>没有啦~</center></div></div><div class=post-eof></div></footer></article></div><div class=post-block><article itemscope itemtype=http://schema.org/Article class=post-content lang><link itemprop=mainEntityOfPage href=https://hxhue.github.io/the-linux-programming-interface/05.07-readv-%E5%92%8C-writev/><span hidden itemprop=author itemscope itemtype=http://schema.org/Person><meta itemprop=image content="/imgs/371907.jpg"><meta itemprop=name content="🤖"></span><span hidden itemprop=publisher itemscope itemtype=http://schema.org/Organization><meta itemprop=name content="🤖"><meta itemprop=description content="个人博客，主要是零散的笔记。"></span><span hidden itemprop=post itemscope itemtype=http://schema.org/CreativeWork><meta itemprop=name content="05.07 readv 和 writev"><meta itemprop=description content="这被称为 Scatter-Gather I/O。
+
+
+
+
+
+
+
+
+其中，struct iovec 的定义如下：
+struct iovec {
+  void  *iov_base; /* Start address of the buffer */
+  size_t iov_len;  /* Number of bytes to transfer to/from buffer */
+};
+这样 readv 和 writev 就能一次完成多个缓冲区的读取/写入。最重要的特征是：和多次调用 read/write 相比， readv/writev 操作具有原子性！"></span><header class=post-header><h2 class=post-title itemprop="name headline"><a href=/the-linux-programming-interface/05.07-readv-%E5%92%8C-writev/ itemprop=url class=post-title-link>05.07 readv 和 writev</a></h2><div class=post-meta-container><div class=post-meta-items><span class=post-meta-item><span class=post-meta-item-icon><i class="far fa-calendar"></i>
+</span><span class=post-meta-item-text title=发表于>发表于：
+</span><time title="创建时间：2024-05-17 00:00:00 +0800 CST" itemprop="dateCreated datePublished" datetime="2024-05-17 00:00:00 +0800 CST">2024-05-17
+</time></span><span class=post-meta-item><span class=post-meta-item-icon><i class="far fa-calendar-check"></i>
+</span><span class=post-meta-item-text title=更新于>更新于：
+</span><time title=修改时间：2024-09-10T00:00:00+08:00 itemprop=dateModified datetime=2024-09-10T00:00:00+08:00>2024-09-10</time>
+</span><span class=post-meta-item><span class=post-meta-item-icon><i class="far fa-folder-open"></i>
+</span><span class=post-meta-item-text title=分类于>分类于：
+</span><span itemprop=about itemscope itemtype=http://schema.org/Thing><a href=/categories/the-linux-programming-interface itemprop=url rel=index><span itemprop=name>the-linux-programming-interface</span></a></span></span></div></div></header><div class=post-body itemprop=articleBody><p>这被称为 Scatter-Gather I/O。</p><p><img src=/the-linux-programming-interface/tlpi-assets/05.07%20readv%20%E5%92%8C%20writev-20240517004528783.webp width=700></p><p>其中，<code>struct iovec</code> 的定义如下：</p><div class=highlight><pre tabindex=0 style=color:#93a1a1;background-color:#002b36;-moz-tab-size:2;-o-tab-size:2;tab-size:2><code class=language-c data-lang=c><span style=display:flex><span><span style=color:#719e07>struct</span> iovec {
+</span></span><span style=display:flex><span>  <span style=color:#dc322f>void</span>  <span style=color:#719e07>*</span>iov_base; <span style=color:#586e75>/* Start address of the buffer */</span>
+</span></span><span style=display:flex><span>  <span style=color:#dc322f>size_t</span> iov_len;  <span style=color:#586e75>/* Number of bytes to transfer to/from buffer */</span>
+</span></span><span style=display:flex><span>};
+</span></span></code></pre></div><p>这样 <code>readv</code> 和 <code>writev</code> 就能一次完成多个缓冲区的读取/写入。最重要的特征是：和多次调用 <code>read</code>/<code>write</code> 相比， <code>readv</code>/<code>writev</code> 操作具有原子性！</p></div><footer class=post-footer><div readmore=true><div class=readmore-overlay><div class=readmore-overlay-center><div class=post-button><a class=btn href=/the-linux-programming-interface/05.07-readv-%E5%92%8C-writev/#more rel=contents>阅读全文 &#187;</a></div></div></div><div class=no-more-to-read><hr><center>没有啦~</center></div></div><div class=post-eof></div></footer></article></div><div class=post-block><article itemscope itemtype=http://schema.org/Article class=post-content lang><link itemprop=mainEntityOfPage href=https://hxhue.github.io/the-linux-programming-interface/00-%E8%AF%B4%E6%98%8E/><span hidden itemprop=author itemscope itemtype=http://schema.org/Person><meta itemprop=image content="/imgs/371907.jpg"><meta itemprop=name content="🤖"></span><span hidden itemprop=publisher itemscope itemtype=http://schema.org/Organization><meta itemprop=name content="🤖"><meta itemprop=description content="个人博客，主要是零散的笔记。"></span><span hidden itemprop=post itemscope itemtype=http://schema.org/CreativeWork><meta itemprop=name content="00 说明"><meta itemprop=description content="对书的介绍
+
+Linux/UNIX 系统编程手册原名 The Linux Programming Interface，副标题是 A Linux and UNIX System Programming Handbook，这也是其翻译名的由来。
+这本书经常被简称为 TLPI。
+笔记的编号方式
+
+有些笔记的编号是在章内简单排序（在书上没有对应或者不能直接对应），有些笔记的编号是和书的章节对应的。这点确实做的不好，看书的时间太长了，写笔记的方式也发生了变化。"></span><header class=post-header><h2 class=post-title itemprop="name headline"><a href=/the-linux-programming-interface/00-%E8%AF%B4%E6%98%8E/ itemprop=url class=post-title-link>00 说明</a></h2><div class=post-meta-container><div class=post-meta-items><span class=post-meta-item><span class=post-meta-item-icon><i class="far fa-calendar"></i>
+</span><span class=post-meta-item-text title=发表于>发表于：
+</span><time title="创建时间：2024-05-16 00:00:00 +0800 CST" itemprop="dateCreated datePublished" datetime="2024-05-16 00:00:00 +0800 CST">2024-05-16
+</time></span><span class=post-meta-item><span class=post-meta-item-icon><i class="far fa-calendar-check"></i>
+</span><span class=post-meta-item-text title=更新于>更新于：
+</span><time title=修改时间：2024-09-13T00:00:00+08:00 itemprop=dateModified datetime=2024-09-13T00:00:00+08:00>2024-09-13</time>
+</span><span class=post-meta-item><span class=post-meta-item-icon><i class="far fa-folder-open"></i>
+</span><span class=post-meta-item-text title=分类于>分类于：
+</span><span itemprop=about itemscope itemtype=http://schema.org/Thing><a href=/categories/the-linux-programming-interface itemprop=url rel=index><span itemprop=name>the-linux-programming-interface</span></a></span></span></div></div></header><div class=post-body itemprop=articleBody><h1 id=对书的介绍>对书的介绍
+<a class=header-anchor href=#%e5%af%b9%e4%b9%a6%e7%9a%84%e4%bb%8b%e7%bb%8d></a></h1><p>Linux/UNIX 系统编程手册原名 The Linux Programming Interface，副标题是 A Linux and UNIX System Programming Handbook，这也是其翻译名的由来。</p><p>这本书经常被简称为 TLPI。</p><h1 id=笔记的编号方式>笔记的编号方式
+<a class=header-anchor href=#%e7%ac%94%e8%ae%b0%e7%9a%84%e7%bc%96%e5%8f%b7%e6%96%b9%e5%bc%8f></a></h1><p>有些笔记的编号是在章内简单排序（在书上没有对应或者不能直接对应），有些笔记的编号是和书的章节对应的。这点确实做的不好，看书的时间太长了，写笔记的方式也发生了变化。</p><h1 id=我的测试环境>我的测试环境
+<a class=header-anchor href=#%e6%88%91%e7%9a%84%e6%b5%8b%e8%af%95%e7%8e%af%e5%a2%83></a></h1><p>有一部分是在本机的 wsl 测试的，有一部分是在服务器上测试的（会明确说明）。</p><p>2024 年 7 月 20 日：开始考虑使用虚拟机安装系统测试，对应内容是
+<a href=/the-linux-programming-interface/41-%E5%85%B1%E4%BA%AB%E5%BA%93%E5%9F%BA%E7%A1%80/ title="41 共享库基础">41 共享库基础</a> 的中间部分（及以后）。</p></div><footer class=post-footer><div readmore=true><div class=readmore-overlay><div class=readmore-overlay-center><div class=post-button><a class=btn href=/the-linux-programming-interface/00-%E8%AF%B4%E6%98%8E/#more rel=contents>阅读全文 &#187;</a></div></div></div><div class=no-more-to-read><hr><center>没有啦~</center></div></div><div class=post-eof></div></footer></article></div><div class=post-block><article itemscope itemtype=http://schema.org/Article class=post-content lang><link itemprop=mainEntityOfPage href=https://hxhue.github.io/the-linux-programming-interface/05.04-Shell-%E5%90%AF%E5%8A%A8%E7%9A%84%E7%A8%8B%E5%BA%8F%E7%9A%84%E4%B8%89%E5%A4%A7%E6%A0%87%E5%87%86%E6%96%87%E4%BB%B6%E6%98%AF%E5%90%8C%E4%B8%80%E4%B8%AA%E6%96%87%E4%BB%B6/><span hidden itemprop=author itemscope itemtype=http://schema.org/Person><meta itemprop=image content="/imgs/371907.jpg"><meta itemprop=name content="🤖"></span><span hidden itemprop=publisher itemscope itemtype=http://schema.org/Organization><meta itemprop=name content="🤖"><meta itemprop=description content="个人博客，主要是零散的笔记。"></span><span hidden itemprop=post itemscope itemtype=http://schema.org/CreativeWork><meta itemprop=name content="05.04 Shell 启动的程序的三大标准文件是同一个文件"><meta itemprop=description content='#include <errno.h>
+#include <fcntl.h>
+#include <linux/kcmp.h>
+#include <stdio.h>
+#include <sys/syscall.h>
+#include <unistd.h>
+
+int main() {
+    pid_t pid = getpid(); /* always successful */
+    int ret = syscall(SYS_kcmp, pid, pid, KCMP_FILE, 0, 1);
+    int ec = errno;
+    if (ec) {
+        perror("kcmp");
+        return 1;
+    }
+    printf("kcmp returns %d\n", ret);
+}
+其中，kcmp 系统调用可以用来比较两个进程的资源大小（0 等于，1 小于，2 等于，3 不相等但无法确定大小）。输出：'></span><header class=post-header><h2 class=post-title itemprop="name headline"><a href=/the-linux-programming-interface/05.04-Shell-%E5%90%AF%E5%8A%A8%E7%9A%84%E7%A8%8B%E5%BA%8F%E7%9A%84%E4%B8%89%E5%A4%A7%E6%A0%87%E5%87%86%E6%96%87%E4%BB%B6%E6%98%AF%E5%90%8C%E4%B8%80%E4%B8%AA%E6%96%87%E4%BB%B6/ itemprop=url class=post-title-link>05.04 Shell 启动的程序的三大标准文件是同一个文件</a></h2><div class=post-meta-container><div class=post-meta-items><span class=post-meta-item><span class=post-meta-item-icon><i class="far fa-calendar"></i>
+</span><span class=post-meta-item-text title=发表于>发表于：
+</span><time title="创建时间：2024-05-16 00:00:00 +0800 CST" itemprop="dateCreated datePublished" datetime="2024-05-16 00:00:00 +0800 CST">2024-05-16
+</time></span><span class=post-meta-item><span class=post-meta-item-icon><i class="far fa-calendar-check"></i>
+</span><span class=post-meta-item-text title=更新于>更新于：
+</span><time title=修改时间：2024-09-13T00:00:00+08:00 itemprop=dateModified datetime=2024-09-13T00:00:00+08:00>2024-09-13</time>
+</span><span class=post-meta-item><span class=post-meta-item-icon><i class="far fa-folder-open"></i>
+</span><span class=post-meta-item-text title=分类于>分类于：
+</span><span itemprop=about itemscope itemtype=http://schema.org/Thing><a href=/categories/the-linux-programming-interface itemprop=url rel=index><span itemprop=name>the-linux-programming-interface</span></a></span></span></div></div></header><div class=post-body itemprop=articleBody><div class=highlight><pre tabindex=0 style=color:#93a1a1;background-color:#002b36;-moz-tab-size:2;-o-tab-size:2;tab-size:2><code class=language-c data-lang=c><span style=display:flex><span><span style=color:#719e07>#include</span> <span style=color:#719e07>&lt;errno.h&gt;</span><span style=color:#719e07>
+</span></span></span><span style=display:flex><span><span style=color:#719e07>#include</span> <span style=color:#719e07>&lt;fcntl.h&gt;</span><span style=color:#719e07>
+</span></span></span><span style=display:flex><span><span style=color:#719e07>#include</span> <span style=color:#719e07>&lt;linux/kcmp.h&gt;</span><span style=color:#719e07>
+</span></span></span><span style=display:flex><span><span style=color:#719e07>#include</span> <span style=color:#719e07>&lt;stdio.h&gt;</span><span style=color:#719e07>
+</span></span></span><span style=display:flex><span><span style=color:#719e07>#include</span> <span style=color:#719e07>&lt;sys/syscall.h&gt;</span><span style=color:#719e07>
+</span></span></span><span style=display:flex><span><span style=color:#719e07>#include</span> <span style=color:#719e07>&lt;unistd.h&gt;</span><span style=color:#719e07>
+</span></span></span><span style=display:flex><span><span style=color:#719e07></span>
+</span></span><span style=display:flex><span><span style=color:#dc322f>int</span> <span style=color:#268bd2>main</span>() {
+</span></span><span style=display:flex><span>    <span style=color:#dc322f>pid_t</span> pid <span style=color:#719e07>=</span> <span style=color:#268bd2>getpid</span>(); <span style=color:#586e75>/* always successful */</span>
+</span></span><span style=display:flex><span>    <span style=color:#dc322f>int</span> ret <span style=color:#719e07>=</span> <span style=color:#268bd2>syscall</span>(SYS_kcmp, pid, pid, KCMP_FILE, <span style=color:#2aa198>0</span>, <span style=color:#2aa198>1</span>);
+</span></span><span style=display:flex><span>    <span style=color:#dc322f>int</span> ec <span style=color:#719e07>=</span> errno;
+</span></span><span style=display:flex><span>    <span style=color:#719e07>if</span> (ec) {
+</span></span><span style=display:flex><span>        <span style=color:#268bd2>perror</span>(<span style=color:#2aa198>&#34;kcmp&#34;</span>);
+</span></span><span style=display:flex><span>        <span style=color:#719e07>return</span> <span style=color:#2aa198>1</span>;
+</span></span><span style=display:flex><span>    }
+</span></span><span style=display:flex><span>    <span style=color:#268bd2>printf</span>(<span style=color:#2aa198>&#34;kcmp returns %d</span><span style=color:#cb4b16>\n</span><span style=color:#2aa198>&#34;</span>, ret);
+</span></span><span style=display:flex><span>}
+</span></span></code></pre></div><p>其中，kcmp 系统调用可以用来比较两个进程的资源大小（0 等于，1 小于，2 等于，3 不相等但无法确定大小）。输出：</p><div class=highlight><pre tabindex=0 style=color:#93a1a1;background-color:#002b36;-moz-tab-size:2;-o-tab-size:2;tab-size:2><code class=language-txt data-lang=txt><span style=display:flex><span>kcmp returns 0
+</span></span></code></pre></div><p>这说明此文件在终端中运行时，标准输入流和输出流使用的是相同的打开文件项（事实上就连标准错误流都是用的同一个文件项）。一个程序的标准输入输出使用不会产生冲突吗？查看一下当前 shell 的信息：</p><div class=highlight><pre tabindex=0 style=color:#93a1a1;background-color:#002b36;-moz-tab-size:2;-o-tab-size:2;tab-size:2><code class=language-txt data-lang=txt><span style=display:flex><span>(py310) xxx ~ $ ls -lh /proc/self/fd/0
+</span></span><span style=display:flex><span>lrwx------ 1 xxx xxx 64 May 16 16:49 /proc/self/fd/0 -&gt; /dev/pts/0
+</span></span><span style=display:flex><span>(py310) xxx ~ $ ls -lh /proc/$$/fd/0
+</span></span><span style=display:flex><span>lrwx------ 1 xxx xxx 64 May 16 16:43 /proc/387/fd/0 -&gt; /dev/pts/0
+</span></span><span style=display:flex><span>(py310) xxx ~ $ cat /proc/$$/fdinfo/0
+</span></span><span style=display:flex><span>pos:    0
+</span></span><span style=display:flex><span>flags:  0100002
+</span></span><span style=display:flex><span>mnt_id: 115
+</span></span><span style=display:flex><span>ino:    3
+</span></span><span style=display:flex><span>(py310) xxx ~ $ cat /proc/$$/fdinfo/1
+</span></span><span style=display:flex><span>pos:    0
+</span></span><span style=display:flex><span>flags:  0100002
+</span></span><span style=display:flex><span>mnt_id: 115
+</span></span><span style=display:flex><span>ino:    3
+</span></span><span style=display:flex><span>(py310) xxx ~ $ file /proc/$$/fd/0
+</span></span><span style=display:flex><span>/proc/387/fd/0: symbolic link to /dev/pts/0
+</span></span><span style=display:flex><span>(py310) xxx ~ $ file $(readlink -f /proc/$$/fd/0)
+</span></span><span style=display:flex><span>/dev/pts/0: character special (136/0)
+</span></span></code></pre></div></div><footer class=post-footer><div readmore=true><div class=readmore-overlay><div class=readmore-overlay-center><div class=post-button><a class=btn href=/the-linux-programming-interface/05.04-Shell-%E5%90%AF%E5%8A%A8%E7%9A%84%E7%A8%8B%E5%BA%8F%E7%9A%84%E4%B8%89%E5%A4%A7%E6%A0%87%E5%87%86%E6%96%87%E4%BB%B6%E6%98%AF%E5%90%8C%E4%B8%80%E4%B8%AA%E6%96%87%E4%BB%B6/#more rel=contents>阅读全文 &#187;</a></div></div></div><div class=no-more-to-read><hr><center>没有啦~</center></div></div><div class=post-eof></div></footer></article></div><div class=post-block><article itemscope itemtype=http://schema.org/Article class=post-content lang><link itemprop=mainEntityOfPage href=https://hxhue.github.io/the-linux-programming-interface/05.05-dup-%E6%96%87%E4%BB%B6%E6%8F%8F%E8%BF%B0%E7%AC%A6%E4%B8%BA%E4%BB%80%E4%B9%88%E8%A6%81%E5%85%B1%E4%BA%AB%E6%96%87%E4%BB%B6%E6%89%93%E5%BC%80%E9%A1%B9/><span hidden itemprop=author itemscope itemtype=http://schema.org/Person><meta itemprop=image content="/imgs/371907.jpg"><meta itemprop=name content="🤖"></span><span hidden itemprop=publisher itemscope itemtype=http://schema.org/Organization><meta itemprop=name content="🤖"><meta itemprop=description content="个人博客，主要是零散的笔记。"></span><span hidden itemprop=post itemscope itemtype=http://schema.org/CreativeWork><meta itemprop=name content="05.05 dup 文件描述符为什么要共享文件打开项？"><meta itemprop=description content="书上的例子是：
+# 在 bash 中
+./myscript > results.log 2>&amp;1
+这样能够将标准输出流和错误流都重定向到日志文件中去。我们希望标准输出流和标准错误流能共享文件偏移量等信息，否则两者写入同一个文件中时就会相互覆盖。"></span><header class=post-header><h2 class=post-title itemprop="name headline"><a href=/the-linux-programming-interface/05.05-dup-%E6%96%87%E4%BB%B6%E6%8F%8F%E8%BF%B0%E7%AC%A6%E4%B8%BA%E4%BB%80%E4%B9%88%E8%A6%81%E5%85%B1%E4%BA%AB%E6%96%87%E4%BB%B6%E6%89%93%E5%BC%80%E9%A1%B9/ itemprop=url class=post-title-link>05.05 dup 文件描述符为什么要共享文件打开项？</a></h2><div class=post-meta-container><div class=post-meta-items><span class=post-meta-item><span class=post-meta-item-icon><i class="far fa-calendar"></i>
+</span><span class=post-meta-item-text title=发表于>发表于：
+</span><time title="创建时间：2024-05-16 00:00:00 +0800 CST" itemprop="dateCreated datePublished" datetime="2024-05-16 00:00:00 +0800 CST">2024-05-16
+</time></span><span class=post-meta-item><span class=post-meta-item-icon><i class="far fa-calendar-check"></i>
+</span><span class=post-meta-item-text title=更新于>更新于：
+</span><time title=修改时间：2024-09-10T00:00:00+08:00 itemprop=dateModified datetime=2024-09-10T00:00:00+08:00>2024-09-10</time>
+</span><span class=post-meta-item><span class=post-meta-item-icon><i class="far fa-folder-open"></i>
+</span><span class=post-meta-item-text title=分类于>分类于：
+</span><span itemprop=about itemscope itemtype=http://schema.org/Thing><a href=/categories/the-linux-programming-interface itemprop=url rel=index><span itemprop=name>the-linux-programming-interface</span></a></span></span></div></div></header><div class=post-body itemprop=articleBody><p>书上的例子是：</p><div class=highlight><pre tabindex=0 style=color:#93a1a1;background-color:#002b36;-moz-tab-size:2;-o-tab-size:2;tab-size:2><code class=language-bash data-lang=bash><span style=display:flex><span><span style=color:#586e75># 在 bash 中</span>
+</span></span><span style=display:flex><span>./myscript &gt; results.log 2&gt;&amp;<span style=color:#2aa198>1</span>
+</span></span></code></pre></div><p>这样能够将标准输出流和错误流都重定向到日志文件中去。我们希望标准输出流和标准错误流能共享文件偏移量等信息，否则两者写入同一个文件中时就会相互覆盖。</p><p>注意，这里将输出流和错误流都重定向到了一个普通文件，因而 1 和 2 号文件描述符并不是像终端那样对应着字符设备，此时文件偏移量是非常重要的信息。</p></div><footer class=post-footer><div readmore=false><div class=readmore-overlay><div class=readmore-overlay-center><div class=post-button><a class=btn href=/the-linux-programming-interface/05.05-dup-%E6%96%87%E4%BB%B6%E6%8F%8F%E8%BF%B0%E7%AC%A6%E4%B8%BA%E4%BB%80%E4%B9%88%E8%A6%81%E5%85%B1%E4%BA%AB%E6%96%87%E4%BB%B6%E6%89%93%E5%BC%80%E9%A1%B9/#more rel=contents>阅读全文 &#187;</a></div></div></div><div class=no-more-to-read><hr><center>没有啦~</center></div></div><div class=post-eof></div></footer></article></div><div class=post-block><article itemscope itemtype=http://schema.org/Article class=post-content lang><link itemprop=mainEntityOfPage href=https://hxhue.github.io/the-linux-programming-interface/05.06-pwrite-%E4%B8%8D%E4%BC%9A%E6%94%B9%E5%8F%98%E6%96%87%E4%BB%B6%E7%9A%84%E5%81%8F%E7%A7%BB%E9%87%8F/><span hidden itemprop=author itemscope itemtype=http://schema.org/Person><meta itemprop=image content="/imgs/371907.jpg"><meta itemprop=name content="🤖"></span><span hidden itemprop=publisher itemscope itemtype=http://schema.org/Organization><meta itemprop=name content="🤖"><meta itemprop=description content="个人博客，主要是零散的笔记。"></span><span hidden itemprop=post itemscope itemtype=http://schema.org/CreativeWork><meta itemprop=name content="05.06 pwrite 不会改变文件的偏移量"><meta itemprop=description content='#include <assert.h>
+#include <fcntl.h>
+#include <unistd.h>
+#include <stdio.h>
+
+int main() {
+    int fd;
+    assert((fd = open("A.txt", O_WRONLY | O_TRUNC | O_CREAT,
+                      S_IRUSR | S_IWUSR | S_IRGRP | S_IROTH)) != -1);
+    assert(pwrite(fd, "pwrite", 6, 0) == 6);
+    assert(write(fd, "WRITE", 5) == 5);
+}
+最后 A.txt 的文件内容为：
+WRITEe
+这说明第一次用 pwrite 读写完成之后，文件偏移量并没有被更新，还是在 0 的位置。'></span><header class=post-header><h2 class=post-title itemprop="name headline"><a href=/the-linux-programming-interface/05.06-pwrite-%E4%B8%8D%E4%BC%9A%E6%94%B9%E5%8F%98%E6%96%87%E4%BB%B6%E7%9A%84%E5%81%8F%E7%A7%BB%E9%87%8F/ itemprop=url class=post-title-link>05.06 pwrite 不会改变文件的偏移量</a></h2><div class=post-meta-container><div class=post-meta-items><span class=post-meta-item><span class=post-meta-item-icon><i class="far fa-calendar"></i>
+</span><span class=post-meta-item-text title=发表于>发表于：
+</span><time title="创建时间：2024-05-16 00:00:00 +0800 CST" itemprop="dateCreated datePublished" datetime="2024-05-16 00:00:00 +0800 CST">2024-05-16
+</time></span><span class=post-meta-item><span class=post-meta-item-icon><i class="far fa-calendar-check"></i>
+</span><span class=post-meta-item-text title=更新于>更新于：
+</span><time title=修改时间：2024-09-10T00:00:00+08:00 itemprop=dateModified datetime=2024-09-10T00:00:00+08:00>2024-09-10</time>
+</span><span class=post-meta-item><span class=post-meta-item-icon><i class="far fa-folder-open"></i>
+</span><span class=post-meta-item-text title=分类于>分类于：
+</span><span itemprop=about itemscope itemtype=http://schema.org/Thing><a href=/categories/the-linux-programming-interface itemprop=url rel=index><span itemprop=name>the-linux-programming-interface</span></a></span></span></div></div></header><div class=post-body itemprop=articleBody><div class=highlight><pre tabindex=0 style=color:#93a1a1;background-color:#002b36;-moz-tab-size:2;-o-tab-size:2;tab-size:2><code class=language-c data-lang=c><span style=display:flex><span><span style=color:#719e07>#include</span> <span style=color:#719e07>&lt;assert.h&gt;</span><span style=color:#719e07>
+</span></span></span><span style=display:flex><span><span style=color:#719e07>#include</span> <span style=color:#719e07>&lt;fcntl.h&gt;</span><span style=color:#719e07>
+</span></span></span><span style=display:flex><span><span style=color:#719e07>#include</span> <span style=color:#719e07>&lt;unistd.h&gt;</span><span style=color:#719e07>
+</span></span></span><span style=display:flex><span><span style=color:#719e07>#include</span> <span style=color:#719e07>&lt;stdio.h&gt;</span><span style=color:#719e07>
+</span></span></span><span style=display:flex><span><span style=color:#719e07></span>
+</span></span><span style=display:flex><span><span style=color:#dc322f>int</span> <span style=color:#268bd2>main</span>() {
+</span></span><span style=display:flex><span>    <span style=color:#dc322f>int</span> fd;
+</span></span><span style=display:flex><span>    <span style=color:#268bd2>assert</span>((fd <span style=color:#719e07>=</span> <span style=color:#268bd2>open</span>(<span style=color:#2aa198>&#34;A.txt&#34;</span>, O_WRONLY <span style=color:#719e07>|</span> O_TRUNC <span style=color:#719e07>|</span> O_CREAT,
+</span></span><span style=display:flex><span>                      S_IRUSR <span style=color:#719e07>|</span> S_IWUSR <span style=color:#719e07>|</span> S_IRGRP <span style=color:#719e07>|</span> S_IROTH)) <span style=color:#719e07>!=</span> <span style=color:#719e07>-</span><span style=color:#2aa198>1</span>);
+</span></span><span style=display:flex><span>    <span style=color:#268bd2>assert</span>(<span style=color:#268bd2>pwrite</span>(fd, <span style=color:#2aa198>&#34;pwrite&#34;</span>, <span style=color:#2aa198>6</span>, <span style=color:#2aa198>0</span>) <span style=color:#719e07>==</span> <span style=color:#2aa198>6</span>);
+</span></span><span style=display:flex><span>    <span style=color:#268bd2>assert</span>(<span style=color:#268bd2>write</span>(fd, <span style=color:#2aa198>&#34;WRITE&#34;</span>, <span style=color:#2aa198>5</span>) <span style=color:#719e07>==</span> <span style=color:#2aa198>5</span>);
+</span></span><span style=display:flex><span>}
+</span></span></code></pre></div><p>最后 A.txt 的文件内容为：</p><div class=highlight><pre tabindex=0 style=color:#93a1a1;background-color:#002b36;-moz-tab-size:2;-o-tab-size:2;tab-size:2><code class=language-txt data-lang=txt><span style=display:flex><span>WRITEe
+</span></span></code></pre></div><p>这说明第一次用 <code>pwrite</code> 读写完成之后，文件偏移量并没有被更新，还是在 0 的位置。</p></div><footer class=post-footer><div readmore=false><div class=readmore-overlay><div class=readmore-overlay-center><div class=post-button><a class=btn href=/the-linux-programming-interface/05.06-pwrite-%E4%B8%8D%E4%BC%9A%E6%94%B9%E5%8F%98%E6%96%87%E4%BB%B6%E7%9A%84%E5%81%8F%E7%A7%BB%E9%87%8F/#more rel=contents>阅读全文 &#187;</a></div></div></div><div class=no-more-to-read><hr><center>没有啦~</center></div></div><div class=post-eof></div></footer></article></div><nav class=pagination><a class="extend prev" rel=prev href=/the-linux-programming-interface/page/7/><i class="fa fa-angle-left"></i>
+</a><a class=page-number href=/the-linux-programming-interface/>1</a>
+<a class=page-number href=/the-linux-programming-interface/page/2/>2</a>
+<a class=page-number href=/the-linux-programming-interface/page/3/>3</a>
+<a class=page-number href=/the-linux-programming-interface/page/4/>4</a>
+<a class=page-number href=/the-linux-programming-interface/page/5/>5</a>
+<a class=page-number href=/the-linux-programming-interface/page/6/>6</a>
+<a class=page-number href=/the-linux-programming-interface/page/7/>7</a>
+<span class="page-number current">8</span></nav></div></main><footer class=footer><div class=footer-inner><div class=copyright>&copy;
+<span itemprop=copyrightYear>2023 - 2025
+</span><span class=with-love><i class="fa fa-heart"></i>
+</span><span class=author itemprop=copyrightHolder>🤖</span></div><div class=powered-by>由 <a href=https://gohugo.io title=0.143.1 target=_blank>Hugo</a> & <a href=https://github.com/hugo-next/hugo-theme-next title=4.5.3 target=_blank>Hugo NexT.Gemini</a> 强力驱动</div></div></footer><script type=text/javascript src=https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.1/anime.min.js defer></script><script type=text/javascript src=https://cdnjs.cloudflare.com/ajax/libs/medium-zoom/1.1.0/medium-zoom.min.js defer></script><script class=next-config data-name=main type=application/json>{"bookmark":{"color":"#222","enable":false,"save":"manual"},"copybtn":true,"darkmode":false,"hostname":"https://hxhue.github.io/","i18n":{"ds_day":" 天前","ds_days":" 天 ","ds_hour":" 小时前","ds_hours":" 小时 ","ds_just":"刚刚","ds_min":" 分钟前","ds_mins":" 分钟","ds_month":" 个月前","ds_years":" 年 ","empty":"没有找到任何搜索结果：${query}","hits":"找到 ${hits} 个搜索结果","hits_time":"找到 ${hits} 个搜索结果（用时 ${time} 毫秒）","placeholder":"搜索..."},"lang":"zh-CN","lazyload":false,"localSearch":{"enable":true,"limit":1e3,"path":"/searchindexes.xml","preload":false,"topnperarticle":-1,"trigger":"auto","unescape":false},"motion":{"async":true,"enable":false,"transition":{"collheader":"fadeInLeft","menu_item":"fadeInDown","postblock":"fadeIn","postbody":"fadeInDown","postheader":"fadeInDown","sidebar":"fadeInUp"}},"postmeta":{"comments":{"enable":false,"plugin":"waline"},"views":{"enable":false,"plugin":"busuanzi"}},"root":"/","scheme":"Gemini","sidebar":{"display":"post","offset":12,"padding":18,"position":"left","width":256},"vendor":{"plugins":"cdnjs","router":"https://cdnjs.cloudflare.com/ajax/libs"},"version":"4.5.3"}</script><script type=text/javascript src=/js/main.min.37ba8b54f9d4d784d08028c45eea93b5d4e13eda8ee7fb0d2edd6f3fac66cfd2.js defer></script></body></html>

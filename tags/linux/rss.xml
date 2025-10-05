@@ -1,0 +1,353 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Linux on Bluegill</title><link>https://hxhue.github.io/tags/linux/</link><description>Recent content in Linux on Bluegill</description><generator>Hugo</generator><language>zh-CN</language><lastBuildDate>Thu, 01 May 2025 00:00:00 +0800</lastBuildDate><atom:link href="https://hxhue.github.io/tags/linux/rss.xml" rel="self" type="application/rss+xml"/><item><title>在服务器上使用 sing-box 代理</title><link>https://hxhue.github.io/posts/cli/%E5%9C%A8%E6%9C%8D%E5%8A%A1%E5%99%A8%E4%B8%8A%E4%BD%BF%E7%94%A8-sing-box-%E4%BB%A3%E7%90%86/</link><pubDate>Thu, 01 May 2025 00:00:00 +0800</pubDate><guid>https://hxhue.github.io/posts/cli/%E5%9C%A8%E6%9C%8D%E5%8A%A1%E5%99%A8%E4%B8%8A%E4%BD%BF%E7%94%A8-sing-box-%E4%BB%A3%E7%90%86/</guid><description>&lt;h1 id="背景">背景
+&lt;a class="header-anchor" href="#%e8%83%8c%e6%99%af">&lt;/a>
+&lt;/h1>&lt;p>服务器上面不能科学上网。以前都是直接 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ &lt;a href="https://hxhue.github.io/posts/cli/ssh/ssh-%E4%BB%A3%E7%90%86%E8%BD%AC%E5%8F%91%E8%AE%A9%E6%9C%8D%E5%8A%A1%E5%99%A8%E4%B8%8A%E5%A4%96%E7%BD%91/" title="用 ssh 做代理转发" >用 ssh 做代理转发&lt;/a> 的，但是现在在校外只能使用 rvpn，连接非常不稳定，也无法大流量传输文件，只能考虑在服务器上直接上网。&lt;/p></description></item><item><title>实验室服务器故障（续）</title><link>https://hxhue.github.io/posts/systems/Linux/%E6%9C%8D%E5%8A%A1%E5%99%A8%E7%BD%91%E7%BB%9C%E6%95%85%E9%9A%9C/%E5%AE%9E%E9%AA%8C%E5%AE%A4%E6%9C%8D%E5%8A%A1%E5%99%A8%E6%95%85%E9%9A%9C%E7%BB%AD/</link><pubDate>Sun, 27 Apr 2025 00:00:00 +0800</pubDate><guid>https://hxhue.github.io/posts/systems/Linux/%E6%9C%8D%E5%8A%A1%E5%99%A8%E7%BD%91%E7%BB%9C%E6%95%85%E9%9A%9C/%E5%AE%9E%E9%AA%8C%E5%AE%A4%E6%9C%8D%E5%8A%A1%E5%99%A8%E6%95%85%E9%9A%9C%E7%BB%AD/</guid><description>&lt;h1 id="背景">背景
+&lt;a class="header-anchor" href="#%e8%83%8c%e6%99%af">&lt;/a>
+&lt;/h1>&lt;p>本文是 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ &lt;a href="https://hxhue.github.io/posts/systems/Linux/%E6%9C%8D%E5%8A%A1%E5%99%A8%E7%BD%91%E7%BB%9C%E6%95%85%E9%9A%9C/%E5%AE%9E%E9%AA%8C%E5%AE%A4%E6%9C%8D%E5%8A%A1%E5%99%A8-ssh-%E6%97%A0%E6%B3%95%E8%BF%9E%E6%8E%A5/" title="实验室服务器 ssh 无法连接" >实验室服务器 ssh 无法连接&lt;/a> 的后续。&lt;/p>
+&lt;p>今天同学又告诉我发生了类似的情况，师兄已经在找人维修。&lt;/p>
+&lt;p>我连接上去看了服务器重启时间约 10 点。又看了几个信息：&lt;/p></description></item><item><title>验证父进程被杀死后僵尸会被 init 进程收养</title><link>https://hxhue.github.io/posts/systems/Linux/%E9%AA%8C%E8%AF%81%E7%88%B6%E8%BF%9B%E7%A8%8B%E8%A2%AB%E6%9D%80%E6%AD%BB%E5%90%8E%E5%83%B5%E5%B0%B8%E4%BC%9A%E8%A2%AB-init-%E8%BF%9B%E7%A8%8B%E6%94%B6%E5%85%BB/</link><pubDate>Mon, 21 Apr 2025 00:00:00 +0800</pubDate><guid>https://hxhue.github.io/posts/systems/Linux/%E9%AA%8C%E8%AF%81%E7%88%B6%E8%BF%9B%E7%A8%8B%E8%A2%AB%E6%9D%80%E6%AD%BB%E5%90%8E%E5%83%B5%E5%B0%B8%E4%BC%9A%E8%A2%AB-init-%E8%BF%9B%E7%A8%8B%E6%94%B6%E5%85%BB/</guid><description>&lt;h1 id="过程">过程
+&lt;a class="header-anchor" href="#%e8%bf%87%e7%a8%8b">&lt;/a>
+&lt;/h1>&lt;p>首先，创建一个 docker 容器，其 entrypoint 不是可回收子进程（init-like）的命令，也不要加上 &lt;code>--init&lt;/code> 选项。这样即便僵尸被 init 进程收养，也不会被马上回收，方便观察。&lt;/p></description></item><item><title>Python 多进程脚本的常见问题</title><link>https://hxhue.github.io/posts/programming/python/Python-%E5%A4%9A%E8%BF%9B%E7%A8%8B%E8%84%9A%E6%9C%AC%E7%9A%84%E5%B8%B8%E8%A7%81%E9%97%AE%E9%A2%98/</link><pubDate>Sun, 20 Apr 2025 00:00:00 +0800</pubDate><guid>https://hxhue.github.io/posts/programming/python/Python-%E5%A4%9A%E8%BF%9B%E7%A8%8B%E8%84%9A%E6%9C%AC%E7%9A%84%E5%B8%B8%E8%A7%81%E9%97%AE%E9%A2%98/</guid><description>&lt;h1 id="占用过多内存">占用过多内存
+&lt;a class="header-anchor" href="#%e5%8d%a0%e7%94%a8%e8%bf%87%e5%a4%9a%e5%86%85%e5%ad%98">&lt;/a>
+&lt;/h1>&lt;p>TL;DR：大多是具体脚本的问题，不好处理。有的是没有及时 gc，有的是把所有数据全部载入内存之后（假设了内存足够大）才开始处理。&lt;/p>
+&lt;p>我是遇到了这样一个问题：
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ &lt;a href="https://hxhue.github.io/%E7%9F%A5%E8%AF%86%E5%88%86%E7%B1%BB/1.-%E8%AE%B0%E5%BD%95/projects/megatron-lm/megatron-lm/#%e8%b5%84%e6%ba%90%e5%8d%a0%e7%94%a8%e5%a4%a7%e6%9c%89%e5%83%b5%e5%b0%b8" title="megatron-lm huggingface 教程运行时资源占用大、有僵尸" >megatron-lm huggingface 教程运行时资源占用大、有僵尸&lt;/a>（&lt;span style="color:red">2025/4/22 文章还在修改中，尚未公开&lt;/span>）。&lt;/p></description></item><item><title>tmux attach 的时候出现转义字符序列</title><link>https://hxhue.github.io/posts/developer/tmux-attach-%E7%9A%84%E6%97%B6%E5%80%99%E5%87%BA%E7%8E%B0%E8%BD%AC%E4%B9%89%E5%AD%97%E7%AC%A6%E5%BA%8F%E5%88%97/</link><pubDate>Sun, 20 Apr 2025 00:00:00 +0800</pubDate><guid>https://hxhue.github.io/posts/developer/tmux-attach-%E7%9A%84%E6%97%B6%E5%80%99%E5%87%BA%E7%8E%B0%E8%BD%AC%E4%B9%89%E5%AD%97%E7%AC%A6%E5%BA%8F%E5%88%97/</guid><description>&lt;p>Windows Terminal 的问题，换成 Alacritty 就好了。&lt;/p>
+&lt;p>不过 Alacritty 又有别的问题，在 vim 中粘贴文本的时候 &lt;code>\r\n&lt;/code> 会被转换成 &lt;code>\n\n&lt;/code>，导致换行数量加倍，每两行中间会多出来一个空行。参考 &lt;a href="https://github.com/alacritty/alacritty/issues/2324#issuecomment-2408742541" title="WSL &amp;#43; ConPTY &amp;#43; vim -&amp;gt; paste with blanks lines · Issue #2324 · alacritty/alacritty" rel="noopener external nofollow noreferrer"
+ target="_blank" class=" exturl" >WSL + ConPTY + vim -&amp;gt; paste with blanks lines · Issue #2324 · alacritty/alacritty&lt;i class="fa fa-external-link-alt">&lt;/i>&lt;/a> 在 vim 中 &lt;code>：set term=ansi&lt;/code> 可以工作。&lt;/p></description></item><item><title>2025-04-19 Microsoft Copilot 和 Windsurf 体验</title><link>https://hxhue.github.io/daily/2025-04-19-Microsoft-Copilot-%E5%92%8C-Windsurf-%E4%BD%93%E9%AA%8C/</link><pubDate>Sat, 19 Apr 2025 00:00:00 +0800</pubDate><guid>https://hxhue.github.io/daily/2025-04-19-Microsoft-Copilot-%E5%92%8C-Windsurf-%E4%BD%93%E9%AA%8C/</guid><description>&lt;h1 id="开头">开头
+&lt;a class="header-anchor" href="#%e5%bc%80%e5%a4%b4">&lt;/a>
+&lt;/h1>&lt;p>今天在尝试 Microsoft Copilot 和 Windsurf。&lt;/p>
+&lt;h1 id="microsoft-copilot-体验">Microsoft Copilot 体验
+&lt;a class="header-anchor" href="#microsoft-copilot-%e4%bd%93%e9%aa%8c">&lt;/a>
+&lt;/h1>&lt;p>参考 &lt;a href="https://linux.do/t/topic/480869/" title="https://linux.do/t/topic/480869/" rel="noopener external nofollow noreferrer"
+ target="_blank" class=" exturl" >https://linux.do/t/topic/480869/&lt;i class="fa fa-external-link-alt">&lt;/i>&lt;/a> ，解读大模型官网和 IDE 的各种额度限制。里面提到了 Microsoft Copilot 使用了 GPT-4o 和 GPT-o3 mini，之前对 Microsoft Copilot 的感受是比较负面的，看到这个新消息后我也查找了对应的资料（有一说一，Microsoft Copilot 查资料还不如 Grok 做的好）：&lt;/p></description></item><item><title>实验室服务器 ssh 无法连接</title><link>https://hxhue.github.io/posts/systems/Linux/%E6%9C%8D%E5%8A%A1%E5%99%A8%E7%BD%91%E7%BB%9C%E6%95%85%E9%9A%9C/%E5%AE%9E%E9%AA%8C%E5%AE%A4%E6%9C%8D%E5%8A%A1%E5%99%A8-ssh-%E6%97%A0%E6%B3%95%E8%BF%9E%E6%8E%A5/</link><pubDate>Fri, 18 Apr 2025 00:00:00 +0800</pubDate><guid>https://hxhue.github.io/posts/systems/Linux/%E6%9C%8D%E5%8A%A1%E5%99%A8%E7%BD%91%E7%BB%9C%E6%95%85%E9%9A%9C/%E5%AE%9E%E9%AA%8C%E5%AE%A4%E6%9C%8D%E5%8A%A1%E5%99%A8-ssh-%E6%97%A0%E6%B3%95%E8%BF%9E%E6%8E%A5/</guid><description>&lt;h1 id="事情由来">事情由来
+&lt;a class="header-anchor" href="#%e4%ba%8b%e6%83%85%e7%94%b1%e6%9d%a5">&lt;/a>
+&lt;/h1>&lt;p>实验室在今年初安装了两台新的服务器，IP 最后一个段分别为 149 和 150，后文将用这两个数字来指代服务器。据说 149 服务器网络出现故障。&lt;/p>
+&lt;h1 id="检查网络配置非原因可以跳过">检查网络配置（非原因，可以跳过）
+&lt;a class="header-anchor" href="#%e6%a3%80%e6%9f%a5%e7%bd%91%e7%bb%9c%e9%85%8d%e7%bd%ae%e9%9d%9e%e5%8e%9f%e5%9b%a0%e5%8f%af%e4%bb%a5%e8%b7%b3%e8%bf%87">&lt;/a>
+&lt;/h1>&lt;p>用 &lt;code>journalctl&lt;/code> 看日志说 dhcp4 失败。包失败的，服务器都是静态 ip，没有配置 dhcp 服务器。为什么明明是静态 ip 却要尝试使用 dhcp 服务器呢？&lt;/p></description></item><item><title>从按下开机键起，操作系统启动过程</title><link>https://hxhue.github.io/posts/systems/Linux/%E4%BB%8E%E6%8C%89%E4%B8%8B%E5%BC%80%E6%9C%BA%E9%94%AE%E8%B5%B7%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F%E5%90%AF%E5%8A%A8%E8%BF%87%E7%A8%8B/</link><pubDate>Sat, 05 Apr 2025 00:00:00 +0800</pubDate><guid>https://hxhue.github.io/posts/systems/Linux/%E4%BB%8E%E6%8C%89%E4%B8%8B%E5%BC%80%E6%9C%BA%E9%94%AE%E8%B5%B7%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F%E5%90%AF%E5%8A%A8%E8%BF%87%E7%A8%8B/</guid><description>&lt;p>&lt;a href="https://developer.aliyun.com/article/1123943" title="揭秘linux系统启动流程，面试官问起来再也不怕了-阿里云开发者社区" rel="noopener external nofollow noreferrer"
+ target="_blank" class=" exturl" >揭秘linux系统启动流程，面试官问起来再也不怕了-阿里云开发者社区&lt;i class="fa fa-external-link-alt">&lt;/i>&lt;/a>&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" style="color:#93a1a1;background-color:#002b36;-moz-tab-size:2;-o-tab-size:2;tab-size:2;">&lt;code class="language-txt" data-lang="txt">&lt;span style="display:flex;">&lt;span>BIOS -&amp;gt; MBR -&amp;gt; Boot Loader (e.g. GRUB) -&amp;gt; kernel -&amp;gt; mount initramfs as / -&amp;gt; /init
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> / \ / |
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>UEFI -&amp;gt; GPT ----+ +----&amp;gt; initramfs --+ |
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> (memory) V
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> 1 load drivers
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> run /sbin/init &amp;lt;--- 2 mount root
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> 3 switch root
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;ol>
+&lt;li>运行 BIOS（现代系统是 UEFI）。&lt;/li>
+&lt;li>进行开机自检（POST，即 Power-On Self-Test）。&lt;/li>
+&lt;li>寻找启动设备，依次检查存储设备，如果前 512 字节最后两个字节是 0x55 和 0xaa，那么这个块就是 MBR（主引导记录，Master Boot Record），这个存储设备就含有操作系统。然后根据 MBR 的信息找到 Boot Loader 位置，将其加载并运行。&lt;strong>如果是 UEFI，UEFI 固件会读取磁盘上的 GPT (GUID Partition Table)。GPT 中有一个特殊的 EFI 系统分区 (ESP, EFI System Partition)，通常格式化为 FAT32。UEFI 固件会直接在该分区中查找并执行引导加载程序文件（通常是 .efi 文件，例如 \EFI\ubuntu\grubx64.efi 或 \EFI\BOOT\BOOTX64.EFI）&lt;/strong>。它不依赖 MBR 的 0x55AA 签名来启动。&lt;/li>
+&lt;li>Linux 常见的 Boot Loader 是 GRUB。Boot Loader 能理解文件系统，能显示操作系统选择菜单和加载 Linux 内核。&lt;/li>
+&lt;li>GRUB &lt;strong>加载&lt;/strong> (load) 内核 (vmlinuz-&amp;hellip;) 和 initrd/initramfs 文件 &lt;strong>到内存&lt;/strong>。加载完成后，GRUB &lt;strong>将执行控制权转交给已加载到内存中的内核&lt;/strong>。&lt;strong>然后，内核会找到内存中的 initrd/initramfs 镜像，并将其解压&lt;/strong>（如果是压缩格式，如 gzip, xz），然后将其挂载为一个 &lt;strong>临时的根文件系统 (rootfs)&lt;/strong>。&lt;/li>
+&lt;li>内核&lt;strong>执行位于 initramfs 根目录下的 /init 程序&lt;/strong> (通常是一个脚本或小程序，如 dracut 或 mkinitcpio 生成的)，这个程序会&lt;strong>加载必要的驱动模块&lt;/strong>，找到真正的根设备（可能是 /dev/sda2，或者 /dev/nvme0n1p3 等），将真正的根设备挂到临时路径如 /sysroot 上，然后切换根目录并释放 initramfs 的内存。&lt;/li>
+&lt;li>现在根目录已经切换好了，运行 /sbin/init 成为系统的第一个进程。&lt;strong>内核引导阶段结束，用户空间初始化开始。&lt;/strong>&lt;/li>
+&lt;/ol></description></item><item><title>动态链接原理</title><link>https://hxhue.github.io/posts/systems/Linux/%E5%8A%A8%E6%80%81%E9%93%BE%E6%8E%A5%E5%8E%9F%E7%90%86/</link><pubDate>Sat, 05 Apr 2025 00:00:00 +0800</pubDate><guid>https://hxhue.github.io/posts/systems/Linux/%E5%8A%A8%E6%80%81%E9%93%BE%E6%8E%A5%E5%8E%9F%E7%90%86/</guid><description>&lt;h1 id="阶段">阶段
+&lt;a class="header-anchor" href="#%e9%98%b6%e6%ae%b5">&lt;/a>
+&lt;/h1>&lt;ul>
+&lt;li>静态编辑&lt;/li>
+&lt;li>动态加载&lt;/li>
+&lt;li>延迟绑定&lt;/li>
+&lt;/ul>
+&lt;h1 id="一静态编辑">一、静态编辑
+&lt;a class="header-anchor" href="#%e4%b8%80%e9%9d%99%e6%80%81%e7%bc%96%e8%be%91">&lt;/a>
+&lt;/h1>&lt;p>链接器（ld）在生成可执行文件时，会记录可执行文件所依赖的共享库的名称以及需要的符号，并将这些信息存储在特定的段中（例如 .dynamic 段）。同时，它会创建 PLT（Procedure Linkage Table，过程链接表）和 GOT（Global Offset Table，全局偏移表）作为占位符，用于后续的动态链接过程。GOT 表初始时包含的是用于延迟绑定的地址，而非实际的函数地址。&lt;/p></description></item><item><title>能不能解释一下 Linux 中的 IFUNC 机制？</title><link>https://hxhue.github.io/01-llm-generated/%E8%83%BD%E4%B8%8D%E8%83%BD%E8%A7%A3%E9%87%8A%E4%B8%80%E4%B8%8B-Linux-%E4%B8%AD%E7%9A%84-IFUNC-%E6%9C%BA%E5%88%B6/</link><pubDate>Sat, 05 Apr 2025 00:00:00 +0800</pubDate><guid>https://hxhue.github.io/01-llm-generated/%E8%83%BD%E4%B8%8D%E8%83%BD%E8%A7%A3%E9%87%8A%E4%B8%80%E4%B8%8B-Linux-%E4%B8%AD%E7%9A%84-IFUNC-%E6%9C%BA%E5%88%B6/</guid><description>&lt;div class="markdown-alert markdown-alert-caution">
+ &lt;p class="markdown-alert-title">&lt;svg class="octicon octicon-stop mr-2" viewBox="0 0 16 16" width="16" height="16"
+ aria-hidden="true">
+ &lt;path
+ d="M4.47.22A.749.749 0 0 1 5 0h6c.199 0 .389.079.53.22l4.25 4.25c.141.14.22.331.22.53v6a.749.749 0 0 1-.22.53l-4.25 4.25A.749.749 0 0 1 11 16H5a.749.749 0 0 1-.53-.22L.22 11.53A.749.749 0 0 1 0 11V5c0-.199.079-.389.22-.53Zm.84 1.28L1.5 5.31v5.38l3.81 3.81h5.38l3.81-3.81V5.31L10.69 1.5ZM8 4a.75.75 0 0 1 .75.75v3.5a.75.75 0 0 1-1.5 0v-3.5A.75.75 0 0 1 8 4Zm0 8a1 1 0 1 1 0-2 1 1 0 0 1 0 2Z">
+ &lt;/path>
+ &lt;/svg>Caution&lt;/p>
+ &lt;p>由 gemini-2.0-flash-001 生成。&lt;/p>
+&lt;/div>&lt;p>我们来解释一下 Linux 中的 IFUNC (Indirect Function) 机制，以及它与 PLT 的关系。&lt;/p></description></item><item><title>bash 字符串操作</title><link>https://hxhue.github.io/posts/cli/bash/bash-%E5%AD%97%E7%AC%A6%E4%B8%B2%E6%93%8D%E4%BD%9C/</link><pubDate>Fri, 27 Dec 2024 00:00:00 +0800</pubDate><guid>https://hxhue.github.io/posts/cli/bash/bash-%E5%AD%97%E7%AC%A6%E4%B8%B2%E6%93%8D%E4%BD%9C/</guid><description>&lt;h1 id="反转字符串">反转字符串
+&lt;a class="header-anchor" href="#%e5%8f%8d%e8%bd%ac%e5%ad%97%e7%ac%a6%e4%b8%b2">&lt;/a>
+&lt;/h1>&lt;p>将每行内部颠倒用 &lt;code>rev&lt;/code>：&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" style="color:#93a1a1;background-color:#002b36;-moz-tab-size:2;-o-tab-size:2;tab-size:2;">&lt;code class="language-bash" data-lang="bash">&lt;span style="display:flex;">&lt;span>$ &lt;span style="color:#b58900">printf&lt;/span> &lt;span style="color:#2aa198">&amp;#39;1234 5678\nABC abc\n&amp;#39;&lt;/span> | rev
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#2aa198">8765&lt;/span> &lt;span style="color:#2aa198">4321&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>cba CBA
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>将不同行颠倒用 &lt;code>tac&lt;/code>：&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" style="color:#93a1a1;background-color:#002b36;-moz-tab-size:2;-o-tab-size:2;tab-size:2;">&lt;code class="language-bash" data-lang="bash">&lt;span style="display:flex;">&lt;span>$ &lt;span style="color:#b58900">printf&lt;/span> &lt;span style="color:#2aa198">&amp;#39;1234 5678\nABC abc\n&amp;#39;&lt;/span> | tac
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>ABC abc
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#2aa198">1234&lt;/span> &lt;span style="color:#2aa198">5678&lt;/span>
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div></description></item><item><title>获取 ssh 中已知公钥的指纹</title><link>https://hxhue.github.io/posts/systems/Linux/%E8%8E%B7%E5%8F%96-ssh-%E4%B8%AD%E6%AF%8F%E4%B8%AA%E5%85%AC%E9%92%A5%E7%9A%84%E6%8C%87%E7%BA%B9/</link><pubDate>Thu, 28 Nov 2024 00:00:00 +0800</pubDate><guid>https://hxhue.github.io/posts/systems/Linux/%E8%8E%B7%E5%8F%96-ssh-%E4%B8%AD%E6%AF%8F%E4%B8%AA%E5%85%AC%E9%92%A5%E7%9A%84%E6%8C%87%E7%BA%B9/</guid><description>&lt;h1 id="原因">原因
+&lt;a class="header-anchor" href="#%e5%8e%9f%e5%9b%a0">&lt;/a>
+&lt;/h1>&lt;p>服务器上有异常登录现象，通过 /var/log/auth.log 找到了登录记录和公钥的指纹，但是不知道和哪个公钥对应，想要把这个公钥找出来。&lt;/p>
+&lt;h1 id="步骤">步骤
+&lt;a class="header-anchor" href="#%e6%ad%a5%e9%aa%a4">&lt;/a>
+&lt;/h1>&lt;p>参考 &lt;a href="https://serverfault.com/questions/291763/is-it-possible-to-get-openssh-to-log-the-public-key-that-was-used-in-authenticat" title="https://serverfault.com/questions/291763/is-it-possible-to-get-openssh-to-log-the-public-key-that-was-used-in-authenticat" rel="noopener external nofollow noreferrer"
+ target="_blank" class=" exturl" >https://serverfault.com/questions/291763/is-it-possible-to-get-openssh-to-log-the-public-key-that-was-used-in-authenticat&lt;i class="fa fa-external-link-alt">&lt;/i>&lt;/a> 。&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" style="color:#93a1a1;background-color:#002b36;-moz-tab-size:2;-o-tab-size:2;tab-size:2;">&lt;code class="language-bash" data-lang="bash">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#719e07">while&lt;/span> &lt;span style="color:#268bd2">IFS&lt;/span>&lt;span style="color:#719e07">=&lt;/span>&lt;span style="color:#2aa198">$&amp;#39;\n&amp;#39;&lt;/span> &lt;span style="color:#b58900">read&lt;/span> key; &lt;span style="color:#719e07">do&lt;/span> ssh-keygen -lf &amp;lt;&lt;span style="color:#719e07">(&lt;/span>&lt;span style="color:#b58900">echo&lt;/span> &lt;span style="color:#268bd2">$key&lt;/span>&lt;span style="color:#719e07">)&lt;/span>; &lt;span style="color:#719e07">done&lt;/span> &amp;lt; ~/.ssh/authorized_keys
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>或者&lt;/p></description></item><item><title>添加用户到 docker 组</title><link>https://hxhue.github.io/posts/cli/docker/%E6%B7%BB%E5%8A%A0%E7%94%A8%E6%88%B7%E5%88%B0-docker-%E7%BB%84/</link><pubDate>Sun, 13 Oct 2024 00:00:00 +0800</pubDate><guid>https://hxhue.github.io/posts/cli/docker/%E6%B7%BB%E5%8A%A0%E7%94%A8%E6%88%B7%E5%88%B0-docker-%E7%BB%84/</guid><description>&lt;p>通过 &lt;code>sudo usermod -aG docker xx&lt;/code> 把 xx 加到 docker 组之后，需要先退出当前登录才能生效。&lt;/p></description></item><item><title>Linux Mint 22 虚拟机安装 CUDA Toolkit</title><link>https://hxhue.github.io/posts/programming/cuda/Linux-Mint-22-%E8%99%9A%E6%8B%9F%E6%9C%BA%E5%AE%89%E8%A3%85-CUDA-Toolkit/</link><pubDate>Tue, 03 Sep 2024 00:00:00 +0800</pubDate><guid>https://hxhue.github.io/posts/programming/cuda/Linux-Mint-22-%E8%99%9A%E6%8B%9F%E6%9C%BA%E5%AE%89%E8%A3%85-CUDA-Toolkit/</guid><description>&lt;p>&lt;strong>本机没有 NVIDIA GPU，只是无聊想要试试能不能在没有 GPU 的机器（宿主机没 GPU）上做编译工作&lt;/strong>。&lt;/p>
+&lt;p>按照 &lt;a href="https://developer.nvidia.com/cuda-downloads?target_os=Linux&amp;amp;target_arch=x86_64&amp;amp;Distribution=Ubuntu&amp;amp;target_version=24.04&amp;amp;target_type=deb_local" title="官网链接" rel="noopener external nofollow noreferrer"
+ target="_blank" class=" exturl" >官网链接&lt;i class="fa fa-external-link-alt">&lt;/i>&lt;/a>，选择 Ubuntu 即可。cuda-repo-ubuntu2404-12-6-local_12.6.1-560.35.03-1_amd64.deb 这个文件占了 3.2G，安装之后就更大了。&lt;/p>
+&lt;p>安装完成之后，可以在 /usr/local/cuda-12.6/bin/ 中找到 &lt;code>nvcc&lt;/code>。加到 PATH 之后，编译都能正常进行，但是因为没有 GPU，运行时 CUDA 相关的 API 都会报错，仅此而已。&lt;/p></description></item><item><title>保存被终端转义后的文本</title><link>https://hxhue.github.io/posts/systems/Linux/Linux-%E4%BF%9D%E5%AD%98%E8%A2%AB%E7%BB%88%E7%AB%AF%E8%BD%AC%E4%B9%89%E5%90%8E%E7%9A%84%E6%96%87%E6%9C%AC/</link><pubDate>Mon, 02 Sep 2024 00:00:00 +0800</pubDate><guid>https://hxhue.github.io/posts/systems/Linux/Linux-%E4%BF%9D%E5%AD%98%E8%A2%AB%E7%BB%88%E7%AB%AF%E8%BD%AC%E4%B9%89%E5%90%8E%E7%9A%84%E6%96%87%E6%9C%AC/</guid><description>&lt;h1 id="问题起因">问题起因
+&lt;a class="header-anchor" href="#%e9%97%ae%e9%a2%98%e8%b5%b7%e5%9b%a0">&lt;/a>
+&lt;/h1>&lt;p>我的某个程序会自己打印 &lt;code>\r&lt;/code> 和 &lt;code>\b&lt;/code> 字符以在终端上起到提示效果，但是如果将内容重定向到文件，那么显示出来效果就不好。在很多阅读器中特殊字符不能被正确显示，在 VS Code 中 &lt;code>\r&lt;/code> 会换行，而 &lt;code>\b&lt;/code> 也不会真正起到删除的作用。&lt;/p>
+&lt;h1 id="方法-1cat-或者-less--r">方法 1：&lt;code>cat&lt;/code> 或者 &lt;code>less -r&lt;/code>
+&lt;a class="header-anchor" href="#%e6%96%b9%e6%b3%95-1cat-%e6%88%96%e8%80%85-less--r">&lt;/a>
+&lt;/h1>&lt;p>假设现在文件 A.log 中包含了大量 &lt;code>\r&lt;/code> 和 &lt;code>\b&lt;/code>，想要阅读它可以直接将其 &lt;code>cat&lt;/code> 到终端，或者使用 &lt;code>less -r A.log&lt;/code> 来阅读。&lt;strong>用 &lt;code>less -r&lt;/code> 是比较推荐的，因为还能用 &lt;code>/&lt;/code> 查找、用 &lt;code>&amp;amp;&lt;/code> 过滤&lt;/strong>。&lt;/p>
+&lt;h1 id="方法-2col">方法 2：&lt;code>col&lt;/code>
+&lt;a class="header-anchor" href="#%e6%96%b9%e6%b3%95-2col">&lt;/a>
+&lt;/h1>&lt;p>如果想要真正保存一份和我们在终端看上去一样的文件，可以使用：&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" style="color:#93a1a1;background-color:#002b36;-moz-tab-size:2;-o-tab-size:2;tab-size:2;">&lt;code class="language-bash" data-lang="bash">&lt;span style="display:flex;">&lt;span>col -b &amp;lt; A.log &amp;gt; A1.log
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div></description></item><item><title>连续运行程序观察 pid 的变化</title><link>https://hxhue.github.io/posts/systems/Linux/%E8%BF%9E%E7%BB%AD%E8%BF%90%E8%A1%8C%E7%A8%8B%E5%BA%8F%E8%A7%82%E5%AF%9F-pid-%E7%9A%84%E5%8F%98%E5%8C%96/</link><pubDate>Fri, 30 Aug 2024 00:00:00 +0800</pubDate><guid>https://hxhue.github.io/posts/systems/Linux/%E8%BF%9E%E7%BB%AD%E8%BF%90%E8%A1%8C%E7%A8%8B%E5%BA%8F%E8%A7%82%E5%AF%9F-pid-%E7%9A%84%E5%8F%98%E5%8C%96/</guid><description>&lt;p>我的测试环境是 wsl，系统是空载的。理想的情况是两次程序的 pid 连续：&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" style="color:#93a1a1;background-color:#002b36;-moz-tab-size:2;-o-tab-size:2;tab-size:2;">&lt;code class="language-bash" data-lang="bash">&lt;span style="display:flex;">&lt;span>$ grep -i &lt;span style="color:#2aa198">&amp;#39;^pid:&amp;#39;&lt;/span> /proc/self/status
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>Pid: &lt;span style="color:#2aa198">3355&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>$ grep -i &lt;span style="color:#2aa198">&amp;#39;^pid:&amp;#39;&lt;/span> /proc/self/status
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>Pid: &lt;span style="color:#2aa198">3356&lt;/span>
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>但实际上我发现我每次回车（不运行 grep）都会导致 Pid +7，运行 grep 时会 +8（合理，毕竟 grep 本身也是一个进程）。&lt;/p></description></item><item><title>less 大小写不敏感搜索、过滤</title><link>https://hxhue.github.io/posts/cli/common/less-%E5%A4%A7%E5%B0%8F%E5%86%99%E4%B8%8D%E6%95%8F%E6%84%9F%E6%90%9C%E7%B4%A2%E8%BF%87%E6%BB%A4/</link><pubDate>Thu, 04 Jul 2024 00:00:00 +0800</pubDate><guid>https://hxhue.github.io/posts/cli/common/less-%E5%A4%A7%E5%B0%8F%E5%86%99%E4%B8%8D%E6%95%8F%E6%84%9F%E6%90%9C%E7%B4%A2%E8%BF%87%E6%BB%A4/</guid><description>&lt;h1 id="启用标记例子大小写不敏感搜索">启用标记（例子：大小写不敏感搜索）
+&lt;a class="header-anchor" href="#%e5%90%af%e7%94%a8%e6%a0%87%e8%ae%b0%e4%be%8b%e5%ad%90%e5%a4%a7%e5%b0%8f%e5%86%99%e4%b8%8d%e6%95%8f%e6%84%9f%e6%90%9c%e7%b4%a2">&lt;/a>
+&lt;/h1>&lt;p>&lt;code>-&lt;/code> 加上其他字符。比如 &lt;code>-i&lt;/code> 表示开关大小写敏感搜索（ignore case in searches）。但是，这只对全小写的输入有用，如果查询的词中包含大写字母、又想要大小写不敏感搜索，则需要使用 &lt;code>-I&lt;/code>（ignore case in searches and in patterns）。&lt;/p></description></item><item><title>为什么用 tar.gz 安装的共享库 gcc 找不到？</title><link>https://hxhue.github.io/posts/systems/Linux/%E4%B8%BA%E4%BB%80%E4%B9%88%E7%94%A8-tar.gz-%E5%AE%89%E8%A3%85%E7%9A%84%E5%85%B1%E4%BA%AB%E5%BA%93-gcc-%E6%89%BE%E4%B8%8D%E5%88%B0/</link><pubDate>Fri, 28 Jun 2024 00:00:00 +0800</pubDate><guid>https://hxhue.github.io/posts/systems/Linux/%E4%B8%BA%E4%BB%80%E4%B9%88%E7%94%A8-tar.gz-%E5%AE%89%E8%A3%85%E7%9A%84%E5%85%B1%E4%BA%AB%E5%BA%93-gcc-%E6%89%BE%E4%B8%8D%E5%88%B0/</guid><description>&lt;h1 id="情况">情况
+&lt;a class="header-anchor" href="#%e6%83%85%e5%86%b5">&lt;/a>
+&lt;/h1>&lt;p>项目是由 CMake 构建的动态库，用 CPack 我们打包得到了一个 deb 包版本和一个 tar.gz 的压缩包版本。前者安装之后 demo 能够正常编译运行，但是在换用压缩包安装共享库后编译 demo 则出现了找不到库的错误（这里讨论的是非标准路径的情况，即安装路径不在 &lt;code>/&lt;/code>、&lt;code>/usr&lt;/code> 和 &lt;code>/usr/local&lt;/code> 下）。&lt;/p></description></item><item><title>Debian 本地软件包的安装和卸载</title><link>https://hxhue.github.io/posts/systems/Linux/Debian-%E6%9C%AC%E5%9C%B0%E8%BD%AF%E4%BB%B6%E5%8C%85%E7%9A%84%E5%AE%89%E8%A3%85%E5%92%8C%E5%8D%B8%E8%BD%BD/</link><pubDate>Thu, 27 Jun 2024 00:00:00 +0800</pubDate><guid>https://hxhue.github.io/posts/systems/Linux/Debian-%E6%9C%AC%E5%9C%B0%E8%BD%AF%E4%BB%B6%E5%8C%85%E7%9A%84%E5%AE%89%E8%A3%85%E5%92%8C%E5%8D%B8%E8%BD%BD/</guid><description>&lt;p>操作起来感觉 apt 和 dpkg 在安装和卸载软件上是可以混用的，其一安装的包可以由另外一者去卸载。&lt;/p>
+&lt;h1 id="安装软件-i----install">安装软件（&lt;code>-i&lt;/code> | &lt;code>--install&lt;/code>）
+&lt;a class="header-anchor" href="#%e5%ae%89%e8%a3%85%e8%bd%af%e4%bb%b6-i----install">&lt;/a>
+&lt;/h1>&lt;div class="highlight">&lt;pre tabindex="0" style="color:#93a1a1;background-color:#002b36;-moz-tab-size:2;-o-tab-size:2;tab-size:2;">&lt;code class="language-bash" data-lang="bash">&lt;span style="display:flex;">&lt;span>dpkg -i localpackage.deb
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>经过测试，不必像 apt 一样需要加上 &lt;code>./&lt;/code> 前缀以安装本地的软件包。&lt;/p></description></item><item><title>以 zstd 压缩方式导出镜像</title><link>https://hxhue.github.io/posts/cli/docker/%E4%BB%A5-zstd-%E5%8E%8B%E7%BC%A9%E6%96%B9%E5%BC%8F%E5%AF%BC%E5%87%BA%E9%95%9C%E5%83%8F/</link><pubDate>Wed, 12 Jun 2024 00:00:00 +0800</pubDate><guid>https://hxhue.github.io/posts/cli/docker/%E4%BB%A5-zstd-%E5%8E%8B%E7%BC%A9%E6%96%B9%E5%BC%8F%E5%AF%BC%E5%87%BA%E9%95%9C%E5%83%8F/</guid><description>&lt;h1 id="步骤">步骤
+&lt;a class="header-anchor" href="#%e6%ad%a5%e9%aa%a4">&lt;/a>
+&lt;/h1>&lt;div class="highlight">&lt;pre tabindex="0" style="color:#93a1a1;background-color:#002b36;-moz-tab-size:2;-o-tab-size:2;tab-size:2;">&lt;code class="language-bash" data-lang="bash">&lt;span style="display:flex;">&lt;span>docker save image:tag | zstd -o image.tar.zst
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;ul>
+&lt;li>&lt;code>docker save&lt;/code> 是将镜像输出到标准输出流，&lt;code>docker save -o&lt;/code> 是将输出写入到文件。&lt;/li>
+&lt;li>&lt;code>zstd -o&lt;/code> 是将压缩数据写入文件，而 &lt;code>zstd -c&lt;/code> 是将压缩的数据输出到标准输出流。&lt;/li>
+&lt;/ul>
+&lt;h1 id="为什么用-zstd-而不是-gzip-来压缩">为什么用 zstd 而不是 gzip 来压缩
+&lt;a class="header-anchor" href="#%e4%b8%ba%e4%bb%80%e4%b9%88%e7%94%a8-zstd-%e8%80%8c%e4%b8%8d%e6%98%af-gzip-%e6%9d%a5%e5%8e%8b%e7%bc%a9">&lt;/a>
+&lt;/h1>&lt;ol>
+&lt;li>zstd 在 ubuntu/debian 中有现成的包可以下载，安装非常轻松。&lt;/li>
+&lt;li>压缩速度非常快，压缩比可以接受。&lt;/li>
+&lt;li>&lt;strong>我的使用场景&lt;/strong>是在服务器之间传输文件，带宽很高，所以不想花太多时间在压缩和解压上。&lt;/li>
+&lt;/ol></description></item><item><title>UNIX 中 printf 指定参数绑定顺序</title><link>https://hxhue.github.io/posts/programming/cpp/UNIX-%E4%B8%AD-printf-%E6%8C%87%E5%AE%9A%E5%8F%82%E6%95%B0%E7%BB%91%E5%AE%9A%E9%A1%BA%E5%BA%8F/</link><pubDate>Thu, 16 May 2024 00:00:00 +0800</pubDate><guid>https://hxhue.github.io/posts/programming/cpp/UNIX-%E4%B8%AD-printf-%E6%8C%87%E5%AE%9A%E5%8F%82%E6%95%B0%E7%BB%91%E5%AE%9A%E9%A1%BA%E5%BA%8F/</guid><description>&lt;h1 id="unix-中的-printf">UNIX 中的 &lt;code>printf&lt;/code>
+&lt;a class="header-anchor" href="#unix-%e4%b8%ad%e7%9a%84-printf">&lt;/a>
+&lt;/h1>&lt;p>Single UNIX Specification 中允许 &lt;code>printf&lt;/code> 使用 &lt;code>%m$&lt;/code> 和 &lt;code>*m$&lt;/code> 的形式来绑定第 m 个参数，其中 m 从 1 开始计数。如果使用了这种表达方式，则所有参数都要指定序号，而且不能遗漏参数。这样做的好处是：可以多次使用同一个参数。&lt;/p></description></item><item><title>我们实验室的服务器曾如何处理 Docker 数据转移的问题？</title><link>https://hxhue.github.io/posts/systems/Linux/%E6%88%91%E4%BB%AC%E5%AE%9E%E9%AA%8C%E5%AE%A4%E7%9A%84%E6%9C%8D%E5%8A%A1%E5%99%A8%E6%9B%BE%E5%A6%82%E4%BD%95%E5%A4%84%E7%90%86-Docker-%E6%95%B0%E6%8D%AE%E8%BD%AC%E7%A7%BB%E7%9A%84%E9%97%AE%E9%A2%98/</link><pubDate>Wed, 15 May 2024 00:00:00 +0800</pubDate><guid>https://hxhue.github.io/posts/systems/Linux/%E6%88%91%E4%BB%AC%E5%AE%9E%E9%AA%8C%E5%AE%A4%E7%9A%84%E6%9C%8D%E5%8A%A1%E5%99%A8%E6%9B%BE%E5%A6%82%E4%BD%95%E5%A4%84%E7%90%86-Docker-%E6%95%B0%E6%8D%AE%E8%BD%AC%E7%A7%BB%E7%9A%84%E9%97%AE%E9%A2%98/</guid><description>&lt;h1 id="修改配置文件">修改配置文件
+&lt;a class="header-anchor" href="#%e4%bf%ae%e6%94%b9%e9%85%8d%e7%bd%ae%e6%96%87%e4%bb%b6">&lt;/a>
+&lt;/h1>&lt;p>网上一般推荐的做法是这种： &lt;a href="https://linuxiac.com/how-to-change-docker-data-directory/" title="https://linuxiac.com/how-to-change-docker-data-directory/" rel="noopener external nofollow noreferrer"
+ target="_blank" class=" exturl" >https://linuxiac.com/how-to-change-docker-data-directory/&lt;i class="fa fa-external-link-alt">&lt;/i>&lt;/a>&lt;/p>
+&lt;p>修改 /etc/docker/daemon.json，向其中加入：&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" style="color:#93a1a1;background-color:#002b36;-moz-tab-size:2;-o-tab-size:2;tab-size:2;">&lt;code class="language-json" data-lang="json">&lt;span style="display:flex;">&lt;span>{ &lt;span style="color:#268bd2">&amp;#34;data-root&amp;#34;&lt;/span>: &lt;span style="color:#2aa198">&amp;#34;/new/docker/root&amp;#34;&lt;/span> }
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>或者在 systemd 的服务启动程序中指定数据的路径。&lt;/p></description></item><item><title>在 Ubuntu 上安装和使用 nsys</title><link>https://hxhue.github.io/posts/programming/cuda/%E5%9C%A8-Ubuntu-%E4%B8%8A%E5%AE%89%E8%A3%85%E5%92%8C%E4%BD%BF%E7%94%A8-nsys/</link><pubDate>Sat, 11 May 2024 00:00:00 +0800</pubDate><guid>https://hxhue.github.io/posts/programming/cuda/%E5%9C%A8-Ubuntu-%E4%B8%8A%E5%AE%89%E8%A3%85%E5%92%8C%E4%BD%BF%E7%94%A8-nsys/</guid><description>&lt;h1 id="安装">安装
+&lt;a class="header-anchor" href="#%e5%ae%89%e8%a3%85">&lt;/a>
+&lt;/h1>&lt;p>&lt;code>nsys&lt;/code> 来自包 &lt;code>cuda-nsight-systems-11-7&lt;/code>（和自己的 CUDA 版本对应一下）。&lt;/p>
+&lt;p>在网上一直都没有搜到安装方式，官网也说的不明不白。尝试过两个错误的包：&lt;/p></description></item><item><title>NVIDIA 显卡显存占用高但是 nvidia-smi 查不到</title><link>https://hxhue.github.io/posts/systems/Linux/NVIDIA-%E6%98%BE%E5%8D%A1%E6%98%BE%E5%AD%98%E5%8D%A0%E7%94%A8%E9%AB%98%E4%BD%86%E6%98%AF-nvidia-smi-%E6%9F%A5%E4%B8%8D%E5%88%B0/</link><pubDate>Wed, 27 Mar 2024 00:00:00 +0800</pubDate><guid>https://hxhue.github.io/posts/systems/Linux/NVIDIA-%E6%98%BE%E5%8D%A1%E6%98%BE%E5%AD%98%E5%8D%A0%E7%94%A8%E9%AB%98%E4%BD%86%E6%98%AF-nvidia-smi-%E6%9F%A5%E4%B8%8D%E5%88%B0/</guid><description>&lt;h1 id="解决方案">解决方案
+&lt;a class="header-anchor" href="#%e8%a7%a3%e5%86%b3%e6%96%b9%e6%a1%88">&lt;/a>
+&lt;/h1>&lt;p>假设是 3 号卡，用 &lt;code>sudo lsof /dev/nvidia3&lt;/code> 看看有哪些进程正在使用这个设备。然后用各种手段查看各个可疑进程的信息（假设进程号是 66666）：&lt;/p>
+&lt;ul>
+&lt;li>&lt;code>ps ww 66666&lt;/code>（&lt;a href="https://unix.stackexchange.com/questions/243252/ps-wide-output-for-a-single-process" title="BSD 风格的 ps" rel="noopener external nofollow noreferrer"
+ target="_blank" class=" exturl" >BSD 风格的 &lt;code>ps&lt;/code>&lt;i class="fa fa-external-link-alt">&lt;/i>&lt;/a>，而不是 System V）。&lt;/li>
+&lt;li>&lt;code>cat /proc/66666/status&lt;/code> 查看进程状态。除了 status 之外，还有其他信息可以在 /proc 下查看。&lt;/li>
+&lt;li>&lt;code>htop -p 66666&lt;/code> 或者 &lt;code>top -p 66666&lt;/code>。&lt;/li>
+&lt;/ul>
+&lt;p>确定进程没用之后，就可以根据 PID 杀掉进程了。&lt;/p></description></item><item><title>deb 包里面装的是什么？</title><link>https://hxhue.github.io/posts/systems/Linux/deb-%E5%8C%85%E9%87%8C%E9%9D%A2%E8%A3%85%E7%9A%84%E6%98%AF%E4%BB%80%E4%B9%88/</link><pubDate>Fri, 09 Feb 2024 00:00:00 +0800</pubDate><guid>https://hxhue.github.io/posts/systems/Linux/deb-%E5%8C%85%E9%87%8C%E9%9D%A2%E8%A3%85%E7%9A%84%E6%98%AF%E4%BB%80%E4%B9%88/</guid><description>&lt;h1 id="格式解析">格式解析
+&lt;a class="header-anchor" href="#%e6%a0%bc%e5%bc%8f%e8%a7%a3%e6%9e%90">&lt;/a>
+&lt;/h1>&lt;p>根据维基百科，deb 包是一个标准的 ar 归档。&lt;/p>
+&lt;p>因此，对于 Modern CMake for C++ 中示例代码用 CPack 创建的包 CPackPackage-1.2.3-Linux.deb，可以直接解压。&lt;/p></description></item><item><title>tar</title><link>https://hxhue.github.io/posts/cli/common/tar/</link><pubDate>Thu, 08 Feb 2024 00:00:00 +0800</pubDate><guid>https://hxhue.github.io/posts/cli/common/tar/</guid><description>&lt;p>tar 的时候可以指定压缩，要注意打包的时候如果用了压缩，解包的时候需要用同样的算法来解压。这个并不是自动识别的。比如：&lt;/p>
+&lt;p>&lt;code>tar -zcf xxx.tar.gz files&lt;/code> 对应于 &lt;code>tar -zxf xxx.tar.gz&lt;/code>。&lt;/p>
+&lt;p>而且，如果不压缩就不要用 &lt;code>.tar.gz&lt;/code> 来命名，而是用 &lt;code>.tar&lt;/code>。（如果是其他压缩格式就用其他的命名方式。）&lt;/p></description></item><item><title>wget</title><link>https://hxhue.github.io/posts/cli/common/wget/</link><pubDate>Thu, 08 Feb 2024 00:00:00 +0800</pubDate><guid>https://hxhue.github.io/posts/cli/common/wget/</guid><description>&lt;h1 id="下载整个站点">下载整个站点
+&lt;a class="header-anchor" href="#%e4%b8%8b%e8%bd%bd%e6%95%b4%e4%b8%aa%e7%ab%99%e7%82%b9">&lt;/a>
+&lt;/h1>&lt;div class="highlight">&lt;pre tabindex="0" style="color:#93a1a1;background-color:#002b36;-moz-tab-size:2;-o-tab-size:2;tab-size:2;">&lt;code class="language-bash" data-lang="bash">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#586e75"># https://stackoverflow.com/a/11514515/&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>wget -r -p -np -k &lt;span style="color:#2aa198">${&lt;/span>&lt;span style="color:#268bd2">URL&lt;/span>&lt;span style="color:#2aa198">}&lt;/span>
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div></description></item><item><title>find</title><link>https://hxhue.github.io/posts/cli/common/find/</link><pubDate>Mon, 05 Feb 2024 00:00:00 +0800</pubDate><guid>https://hxhue.github.io/posts/cli/common/find/</guid><description>&lt;p>&lt;code>find&lt;/code> 的 &lt;code>-exec&lt;/code> 选项中，以 &lt;code>;&lt;/code> 结尾（注意 shell 转义）是对每个文件单独运行命令。而 &lt;code>+&lt;/code> 结尾是对所有文件用 xargs 的形式运行命令。可以从以下例子看出：&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" style="color:#93a1a1;background-color:#002b36;-moz-tab-size:2;-o-tab-size:2;tab-size:2;">&lt;code class="language-bash" data-lang="bash">&lt;span style="display:flex;">&lt;span>$ find . -name &lt;span style="color:#2aa198">&amp;#39;*.cu&amp;#39;&lt;/span> -exec &lt;span style="color:#b58900">echo&lt;/span> &lt;span style="color:#719e07">{}&lt;/span> +
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>./basic_interop.cu ./ripple.cu ./heat.cu
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>$ find . -name &lt;span style="color:#2aa198">&amp;#39;*.cu&amp;#39;&lt;/span> -exec &lt;span style="color:#b58900">echo&lt;/span> &lt;span style="color:#719e07">{}&lt;/span> &lt;span style="color:#cb4b16">\;&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>./basic_interop.cu
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>./ripple.cu
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>./heat.cu
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>&lt;code>-depth&lt;/code> 选项让 find 以深度优先的顺序访问文件，这样文件夹就一定比其包含的子文件后访问，这对于删除等工作非常重要。&lt;/p></description></item><item><title>cp</title><link>https://hxhue.github.io/posts/cli/common/cp/</link><pubDate>Sun, 21 Jan 2024 00:00:00 +0800</pubDate><guid>https://hxhue.github.io/posts/cli/common/cp/</guid><description>&lt;div class="highlight">&lt;pre tabindex="0" style="color:#93a1a1;background-color:#002b36;-moz-tab-size:2;-o-tab-size:2;tab-size:2;">&lt;code class="language-txt" data-lang="txt">&lt;span style="display:flex;">&lt;span>SYNOPSIS
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> cp [OPTION]... [-T] SOURCE DEST
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> cp [OPTION]... SOURCE... DIRECTORY
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> cp [OPTION]... -t DIRECTORY SOURCE...
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>其实 cp 的选项比我想象中的要多很多。&lt;/p>
+&lt;p>其他选项：&lt;/p>
+&lt;ul>
+&lt;li>创建硬链接（&lt;code>-l&lt;/code>）而不是拷贝。&lt;/li>
+&lt;li>&lt;code>-L&lt;/code> 则会先解引用符号链接。&lt;/li>
+&lt;li>&lt;code>-n&lt;/code> &lt;strong>不会覆盖旧文件&lt;/strong>。&lt;/li>
+&lt;li>&lt;code>-a&lt;/code> 先归档再拷贝，也就是保留所有属性。&lt;/li>
+&lt;li>&lt;code>-r&lt;/code> 递归拷贝（文件夹）。&lt;/li>
+&lt;li>&lt;code>-u&lt;/code> &lt;strong>只拷贝时间上更新的文件&lt;/strong>。&lt;/li>
+&lt;/ul>
+&lt;hr>
+&lt;p>&lt;strong>在 shell 中合并两个目录可以用 rsync&lt;/strong>：&lt;/p></description></item><item><title>📌Linux 主机检查 💻</title><link>https://hxhue.github.io/posts/systems/Linux/Linux-%E4%B8%BB%E6%9C%BA%E8%B5%84%E6%BA%90%E7%9B%91%E6%8E%A7%E5%92%8C%E9%97%AE%E9%A2%98%E6%8E%92%E6%9F%A5/</link><pubDate>Fri, 19 Jan 2024 00:00:00 +0800</pubDate><guid>https://hxhue.github.io/posts/systems/Linux/Linux-%E4%B8%BB%E6%9C%BA%E8%B5%84%E6%BA%90%E7%9B%91%E6%8E%A7%E5%92%8C%E9%97%AE%E9%A2%98%E6%8E%92%E6%9F%A5/</guid><description>&lt;h1 id="常用">常用
+&lt;a class="header-anchor" href="#%e5%b8%b8%e7%94%a8">&lt;/a>
+&lt;/h1>&lt;div style="overflow-x: auto">
+&lt;table>
+ &lt;thead>
+ &lt;tr>
+ &lt;th style="text-align: center">功能&lt;/th>
+ &lt;th style="text-align: center">子项目&lt;/th>
+ &lt;th style="text-align: center">命令&lt;/th>
+ &lt;th style="text-align: center">其他&lt;/th>
+ &lt;/tr>
+ &lt;/thead>
+ &lt;tbody>
+ &lt;tr>
+ &lt;td style="text-align: center">CPU&lt;/td>
+ &lt;td style="text-align: center">-&lt;/td>
+ &lt;td style="text-align: center">&lt;code>htop&lt;/code>&lt;/td>
+ &lt;td style="text-align: center">&lt;/td>
+ &lt;/tr>
+ &lt;tr>
+ &lt;td style="text-align: center">GPU&lt;/td>
+ &lt;td style="text-align: center">-&lt;/td>
+ &lt;td style="text-align: center">&lt;code>nvidia-smi&lt;/code>&lt;/td>
+ &lt;td style="text-align: center">还可以用 &lt;code>gpustat&lt;/code>/ &lt;code>nvitop&lt;/code>&lt;/td>
+ &lt;/tr>
+ &lt;tr>
+ &lt;td style="text-align: center">磁盘&lt;/td>
+ &lt;td style="text-align: center">-&lt;/td>
+ &lt;td style="text-align: center">&lt;code>iostat&lt;/code>&lt;/td>
+ &lt;td style="text-align: center">新版本的 htop 同样可以监控磁盘 I/O（在 3.2.2 版本上测试可以，老版本 2.2.0 上实测不行）&lt;/td>
+ &lt;/tr>
+ &lt;tr>
+ &lt;td style="text-align: center">网络&lt;/td>
+ &lt;td style="text-align: center">-&lt;/td>
+ &lt;td style="text-align: center">&lt;/td>
+ &lt;td style="text-align: center">&lt;/td>
+ &lt;/tr>
+ &lt;tr>
+ &lt;td style="text-align: center">↑&lt;/td>
+ &lt;td style="text-align: center">端口&lt;/td>
+ &lt;td style="text-align: center">&lt;code>sudo netstat -pnltu&lt;/code>&lt;/td>
+ &lt;td style="text-align: center">还可以用 &lt;code>sudo ss -nltup&lt;/code>，快得多（不加 &lt;code>sudo&lt;/code> 可能会少显示一些程序的端口号、名字等）&lt;/td>
+ &lt;/tr>
+ &lt;tr>
+ &lt;td style="text-align: center">↑&lt;/td>
+ &lt;td style="text-align: center">不同连接的网速&lt;/td>
+ &lt;td style="text-align: center">&lt;code>sudo iftop&lt;/code>&lt;/td>
+ &lt;td style="text-align: center">&lt;/td>
+ &lt;/tr>
+ &lt;tr>
+ &lt;td style="text-align: center">↑&lt;/td>
+ &lt;td style="text-align: center">具体接口的不同连接的网速&lt;/td>
+ &lt;td style="text-align: center">&lt;code>sudo tcptrack -i eno1&lt;/code>&lt;/td>
+ &lt;td style="text-align: center">&lt;/td>
+ &lt;/tr>
+ &lt;tr>
+ &lt;td style="text-align: center">↑&lt;/td>
+ &lt;td style="text-align: center">具体端口的网络活动&lt;/td>
+ &lt;td style="text-align: center">&lt;code>tcpdump -i any port 53210&lt;/code>&lt;/td>
+ &lt;td style="text-align: center">&lt;/td>
+ &lt;/tr>
+ &lt;/tbody>
+&lt;/table>
+&lt;/div>&lt;p>注意 docker 容器内的端口号和容器外的端口号是不同的。&lt;/p></description></item><item><title>Linux 上字体相关的环境变量</title><link>https://hxhue.github.io/posts/systems/Linux/Linux-%E4%B8%8A%E5%AD%97%E4%BD%93%E7%9B%B8%E5%85%B3%E7%9A%84%E7%8E%AF%E5%A2%83%E5%8F%98%E9%87%8F/</link><pubDate>Wed, 20 Dec 2023 00:00:00 +0800</pubDate><guid>https://hxhue.github.io/posts/systems/Linux/Linux-%E4%B8%8A%E5%AD%97%E4%BD%93%E7%9B%B8%E5%85%B3%E7%9A%84%E7%8E%AF%E5%A2%83%E5%8F%98%E9%87%8F/</guid><description>&lt;p>&lt;a href="https://www.gnu.org/software/gettext/manual/html_node/Locale-Environment-Variables.html#Locale-Environment-Variables" title="https://www.gnu.org/software/gettext/manual/html_node/Locale-Environment-Variables.html#Locale-Environment-Variables" rel="noopener external nofollow noreferrer"
+ target="_blank" class=" exturl" >https://www.gnu.org/software/gettext/manual/html_node/Locale-Environment-Variables.html#Locale-Environment-Variables&lt;i class="fa fa-external-link-alt">&lt;/i>&lt;/a>&lt;/p>
+&lt;p>&lt;code>gettext&lt;/code> 的优先级：&lt;/p>
+&lt;ul>
+&lt;li>&lt;code>LANGUAGE&lt;/code>&lt;/li>
+&lt;li>&lt;code>LC_ALL&lt;/code>&lt;/li>
+&lt;li>&lt;code>LC_xxx&lt;/code>, according to selected locale category: &lt;code>LC_CTYPE&lt;/code>, &lt;code>LC_NUMERIC&lt;/code>, &lt;code>LC_TIME&lt;/code>, &lt;code>LC_COLLATE&lt;/code>, &lt;code>LC_MONETARY&lt;/code>, &lt;code>LC_MESSAGES&lt;/code>, &amp;hellip;&lt;/li>
+&lt;li>&lt;code>LANG&lt;/code> 算是一个 fallback&lt;/li>
+&lt;/ul>
+&lt;blockquote>
+ &lt;p>&lt;code>$LANGUAGE&lt;/code> is not part of the C locales, but specific to GNU gettext. If set it is given precedence over anything else.&lt;/p>
+&lt;/blockquote>&lt;p>所以设置 &lt;code>LANGUAGE&lt;/code> 不通用，设置 &lt;code>LC_ALL&lt;/code> 高优先级，如果系统里面什么都没有设置，&lt;code>LANG&lt;/code> 就足够了。&lt;/p></description></item><item><title>切换默认 shell</title><link>https://hxhue.github.io/posts/systems/Linux/%E5%88%87%E6%8D%A2%E9%BB%98%E8%AE%A4-shell/</link><pubDate>Sun, 17 Dec 2023 00:00:00 +0800</pubDate><guid>https://hxhue.github.io/posts/systems/Linux/%E5%88%87%E6%8D%A2%E9%BB%98%E8%AE%A4-shell/</guid><description>&lt;div class="highlight">&lt;pre tabindex="0" style="color:#93a1a1;background-color:#002b36;-moz-tab-size:2;-o-tab-size:2;tab-size:2;">&lt;code class="language-bash" data-lang="bash">&lt;span style="display:flex;">&lt;span>sudo usermod -s /bin/bash &lt;span style="color:#719e07">$(&lt;/span>whoami&lt;span style="color:#719e07">)&lt;/span>
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>&lt;code>chsh&lt;/code> 也有同样的功能。两者都是改变了 /etc/passwd 的记录项达到切换登陆 shell 的。&lt;/p>
+&lt;p>注意，如果用 &lt;code>chsh&lt;/code>，必须先切换到要更改 shell 的用户，比如给当前用户切换 shell 则是：&lt;/p></description></item><item><title>rsync</title><link>https://hxhue.github.io/posts/cli/common/rsync/</link><pubDate>Sun, 19 Nov 2023 00:00:00 +0800</pubDate><guid>https://hxhue.github.io/posts/cli/common/rsync/</guid><description>&lt;p>和 scp 相比可以断点续传。&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" style="color:#93a1a1;background-color:#002b36;-moz-tab-size:2;-o-tab-size:2;tab-size:2;">&lt;code class="language-bash" data-lang="bash">&lt;span style="display:flex;">&lt;span>$ rsync -avz -e ssh -r --info&lt;span style="color:#719e07">=&lt;/span>progress2 --info&lt;span style="color:#719e07">=&lt;/span>name0 coco/images/train2014.zip xxserver:/data/xxx/data/
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>2024年2月8日：这里已经是 zip 了，感觉没必要压缩。&lt;/p></description></item><item><title>EDITOR, PAGER, BROWSER</title><link>https://hxhue.github.io/posts/systems/Linux/EDITOR-PAGER-BROWSER/</link><pubDate>Sat, 18 Nov 2023 00:00:00 +0800</pubDate><guid>https://hxhue.github.io/posts/systems/Linux/EDITOR-PAGER-BROWSER/</guid><description>&lt;p>&lt;a href="https://unix.stackexchange.com/questions/213367/where-do-editor-pager-browser-environment-variables-come-from" title="Where do EDITOR, PAGER, BROWSER environment variables come from? - Unix &amp;amp; Linux Stack Exchange" rel="noopener external nofollow noreferrer"
+ target="_blank" class=" exturl" >Where do EDITOR, PAGER, BROWSER environment variables come from? - Unix &amp;amp; Linux Stack Exchange&lt;i class="fa fa-external-link-alt">&lt;/i>&lt;/a>&lt;/p>
+&lt;p>EDITOR, PAGER, BROWSER 这三个环境变量控制 linux 中很多工具展示输出的方式。还有 &lt;code>SUDO_EDITOR&lt;/code> 可以设置 sudoedit 使用的编辑器。&lt;/p></description></item><item><title>Linux 创建新用户</title><link>https://hxhue.github.io/posts/systems/Linux/Linux-%E5%88%9B%E5%BB%BA%E6%96%B0%E7%94%A8%E6%88%B7/</link><pubDate>Sat, 18 Nov 2023 00:00:00 +0800</pubDate><guid>https://hxhue.github.io/posts/systems/Linux/Linux-%E5%88%9B%E5%BB%BA%E6%96%B0%E7%94%A8%E6%88%B7/</guid><description>&lt;p>adduser 有交互过程，比 useradd 更友好。事实上，adduser 是 useradd 的 wrapper。&lt;/p></description></item><item><title>使用 nodejs 启动文件服务器</title><link>https://hxhue.github.io/posts/systems/Linux/%E4%BD%BF%E7%94%A8-nodejs-%E5%90%AF%E5%8A%A8%E6%96%87%E4%BB%B6%E6%9C%8D%E5%8A%A1%E5%99%A8/</link><pubDate>Thu, 26 Oct 2023 00:00:00 +0800</pubDate><guid>https://hxhue.github.io/posts/systems/Linux/%E4%BD%BF%E7%94%A8-nodejs-%E5%90%AF%E5%8A%A8%E6%96%87%E4%BB%B6%E6%9C%8D%E5%8A%A1%E5%99%A8/</guid><description>&lt;div class="highlight">&lt;pre tabindex="0" style="color:#93a1a1;background-color:#002b36;-moz-tab-size:2;-o-tab-size:2;tab-size:2;">&lt;code class="language-bash" data-lang="bash">&lt;span style="display:flex;">&lt;span>apt install nodejs
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>apt install npm
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#586e75"># 校内可用&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>npm config &lt;span style="color:#b58900">set&lt;/span> registry xxx
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>npm install --global http-server
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>http-server
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>默认的 serve 路径是 &lt;code>./public&lt;/code>，如果找不到则使用 &lt;code>.&lt;/code> 这个路径。&lt;/p></description></item><item><title>top</title><link>https://hxhue.github.io/posts/cli/common/top/</link><pubDate>Sun, 22 Oct 2023 00:00:00 +0800</pubDate><guid>https://hxhue.github.io/posts/cli/common/top/</guid><description>&lt;p>&lt;code>top -H&lt;/code> 显示人类能阅读的大小。&lt;/p>
+&lt;p>进入 top 之后：&lt;/p>
+&lt;ul>
+&lt;li>shift + M：按照内存排序&lt;/li>
+&lt;li>shift + P：按照 CPU 使用排序&lt;/li>
+&lt;li>shift + T：按照时间排序&lt;/li>
+&lt;li>shift + N：按照 PID 排序&lt;/li>
+&lt;/ul>
+&lt;p>其实不是一定要按 shift，只要输入大写字母即可（比如用 CapsLk）&lt;/p></description></item><item><title>awk</title><link>https://hxhue.github.io/posts/cli/common/awk/</link><pubDate>Sat, 02 Sep 2023 00:00:00 +0800</pubDate><guid>https://hxhue.github.io/posts/cli/common/awk/</guid><description>&lt;h1 id="删除重复行">删除重复行
+&lt;a class="header-anchor" href="#%e5%88%a0%e9%99%a4%e9%87%8d%e5%a4%8d%e8%a1%8c">&lt;/a>
+&lt;/h1>&lt;p>可以用 &lt;code>awk '!x[$0]++'&lt;/code>。&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" style="color:#93a1a1;background-color:#002b36;-moz-tab-size:2;-o-tab-size:2;tab-size:2;">&lt;code class="language-txt" data-lang="txt">&lt;span style="display:flex;">&lt;span>$ cat text
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>aaaa
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>bb
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>bb
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>aaaa
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>c
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>$ awk &amp;#39;!x[$0]++&amp;#39; text
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>aaaa
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>bb
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>c
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div></description></item><item><title>tmux</title><link>https://hxhue.github.io/posts/cli/common/tmux/</link><pubDate>Sat, 12 Aug 2023 00:00:00 +0800</pubDate><guid>https://hxhue.github.io/posts/cli/common/tmux/</guid><description>&lt;p>配置文件在 &lt;code>~/.tmux.conf&lt;/code>。&lt;/p>
+&lt;p>开启鼠标（可能是最正常的操作逻辑了）：&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" style="color:#93a1a1;background-color:#002b36;-moz-tab-size:2;-o-tab-size:2;tab-size:2;">&lt;code class="language-bash" data-lang="bash">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#b58900">set&lt;/span> -g mouse on
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>打开之后能够支持切换 window、panel，调整 panel 之间的相对大小。右键还有一些便捷操作。比如 mark 提供复制功能。&lt;/p></description></item><item><title>vim</title><link>https://hxhue.github.io/posts/cli/common/vim/</link><pubDate>Sat, 12 Aug 2023 00:00:00 +0800</pubDate><guid>https://hxhue.github.io/posts/cli/common/vim/</guid><description>&lt;h1 id="vim-配置文件位置">vim 配置文件位置
+&lt;a class="header-anchor" href="#vim-%e9%85%8d%e7%bd%ae%e6%96%87%e4%bb%b6%e4%bd%8d%e7%bd%ae">&lt;/a>
+&lt;/h1>&lt;p>使用 &lt;code>:scriptnames&lt;/code> 查看。&lt;/p>
+&lt;p>neovim + Windows 的配置文件：&lt;code>%userprofile%\AppData\Local\nvim\init.vim&lt;/code>&lt;/p>
+&lt;p>macOS 和 Linux：&lt;code>~/.config/nvim/init.vim&lt;/code>&lt;/p></description></item><item><title>一些 macOS 和 GNU 的命令差异</title><link>https://hxhue.github.io/posts/systems/macOS/%E4%B8%80%E4%BA%9B-macOS-%E5%92%8C-GNU-%E7%9A%84%E5%91%BD%E4%BB%A4%E5%B7%AE%E5%BC%82/</link><pubDate>Sat, 12 Aug 2023 00:00:00 +0800</pubDate><guid>https://hxhue.github.io/posts/systems/macOS/%E4%B8%80%E4%BA%9B-macOS-%E5%92%8C-GNU-%E7%9A%84%E5%91%BD%E4%BB%A4%E5%B7%AE%E5%BC%82/</guid><description>&lt;h1 id="sed--i">sed -i
+&lt;a class="header-anchor" href="#sed--i">&lt;/a>
+&lt;/h1>&lt;p>macOS &lt;code>sed&lt;/code> 的 -i 需要指定参数，如果不需要备份文件，需要显式给出 &lt;code>sed -i ''&lt;/code>。不然可以用 &lt;code>gsed&lt;/code> 命令（用 brew 安装）。&lt;/p>
+&lt;h1 id="xargs">xargs
+&lt;a class="header-anchor" href="#xargs">&lt;/a>
+&lt;/h1>&lt;p>如果没有收到输入，就不会运行。而 GNU 的 &lt;code>xargs&lt;/code> 在没有收到输入时会只运行右侧命令而不附带参数。要想 GNU xargs 在此时不运行命令，需要使用 &lt;code>-r&lt;/code> 选项。&lt;/p></description></item></channel></rss>

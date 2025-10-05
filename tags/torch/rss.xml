@@ -1,0 +1,152 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Torch on Bluegill</title><link>https://hxhue.github.io/tags/torch/</link><description>Recent content in Torch on Bluegill</description><generator>Hugo</generator><language>zh-CN</language><lastBuildDate>Thu, 02 Oct 2025 00:00:00 +0800</lastBuildDate><atom:link href="https://hxhue.github.io/tags/torch/rss.xml" rel="self" type="application/rss+xml"/><item><title>PyTorch C++ 代码生成</title><link>https://hxhue.github.io/posts/programming/python/2.-PyTorch-C++-%E4%BB%A3%E7%A0%81%E7%94%9F%E6%88%90/</link><pubDate>Mon, 30 Jun 2025 00:00:00 +0800</pubDate><guid>https://hxhue.github.io/posts/programming/python/2.-PyTorch-C++-%E4%BB%A3%E7%A0%81%E7%94%9F%E6%88%90/</guid><description>&lt;h1 id="一些问题">一些问题
+&lt;a class="header-anchor" href="#%e4%b8%80%e4%ba%9b%e9%97%ae%e9%a2%98">&lt;/a>
+&lt;/h1>&lt;p>为什么有些会生成 at::cuda 名字空间的函数，有些不会？（待解决）&lt;/p>
+&lt;h1 id="提要">提要
+&lt;a class="header-anchor" href="#%e6%8f%90%e8%a6%81">&lt;/a>
+&lt;/h1>&lt;p>&lt;strong>本文说明了 &lt;code>m.impl(&amp;quot;index_put.out&amp;quot;, ...)&lt;/code> 到 &lt;code>at::native::index_put&lt;/code> 的调用路径&lt;/strong>。结合 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ &lt;a href="https://hxhue.github.io/posts/programming/python/1.-PyTorch-C&amp;#43;&amp;#43;-%E5%87%BD%E6%95%B0%E6%B4%BE%E5%8F%91/" title="PyTorch C&amp;#43;&amp;#43; 函数派发" >PyTorch C++ 函数派发&lt;/a> 中 &lt;code>at::native::index_put_&lt;/code> → &lt;code>at::_index_put_impl_&lt;/code> → &lt;code>index_put_stub&lt;/code> 的调用路径，补全了从 m.impl 到 stub 的全路径。&lt;/p></description></item><item><title>PyTorch C++ 函数派发</title><link>https://hxhue.github.io/posts/programming/python/1.-PyTorch-C++-%E5%87%BD%E6%95%B0%E6%B4%BE%E5%8F%91/</link><pubDate>Mon, 30 Jun 2025 00:00:00 +0800</pubDate><guid>https://hxhue.github.io/posts/programming/python/1.-PyTorch-C++-%E5%87%BD%E6%95%B0%E6%B4%BE%E5%8F%91/</guid><description>&lt;h1 id="stub-注册流程">Stub 注册流程
+&lt;a class="header-anchor" href="#stub-%e6%b3%a8%e5%86%8c%e6%b5%81%e7%a8%8b">&lt;/a>
+&lt;/h1>&lt;p>所有的 stub 定义几乎都在 aten/src/ATen/native/DispatchStub.h 文件，可以慢慢看。里面有段注释：&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" style="color:#93a1a1;background-color:#002b36;-moz-tab-size:2;-o-tab-size:2;tab-size:2;">&lt;code class="language-cpp" data-lang="cpp">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#586e75">// Implements instruction set specific function dispatch.
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#586e75">//
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#586e75">// Kernels that may make use of specialized instruction sets (e.g. AVX2) are
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#586e75">// compiled multiple times with different compiler flags (e.g. -mavx2). A
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#586e75">// DispatchStub contains a table of function pointers for a kernel. At runtime,
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#586e75">// the fastest available kernel is chosen based on the features reported by
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#586e75">// cpuinfo.
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#586e75">//
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#586e75">// Example:
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#586e75">//
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#586e75">// In native/MyKernel.h:
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#586e75">// using fn_type = void(*)(const Tensor&amp;amp; x);
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#586e75">// DECLARE_DISPATCH(fn_type, stub)
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#586e75">//
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#586e75">// In native/MyKernel.cpp
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#586e75">// DEFINE_DISPATCH(stub);
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#586e75">//
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#586e75">// In native/cpu/MyKernel.cpp:
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#586e75">// namespace {
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#586e75">// // use anonymous namespace so that different cpu versions won&amp;#39;t conflict
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#586e75">// void kernel(const Tensor&amp;amp; x) { ... }
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#586e75">// }
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#586e75">// REGISTER_DISPATCH(stub, &amp;amp;kernel);
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#586e75">//
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#586e75">// To call:
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#586e75">// stub(kCPU, tensor);
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#586e75">//
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#586e75">// TODO: CPU instruction set selection should be folded into whatever
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#586e75">// the main dispatch mechanism is.
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#586e75">//
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#586e75">// Supported device types for registration:
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#586e75">// - CPU: Central Processing Unit
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#586e75">// - CUDA: NVIDIA GPUs
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#586e75">// - HIP: AMD GPUs
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#586e75">// - MPS: Apple Silicon GPUs (Metal Performance Shaders)
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#586e75">// - MTIA: Meta Training and Inference Devices
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#586e75">// - XPU: Intel GPUs
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#586e75">// - HPU: Reserved for HPU (Intel Gaudi) device types
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#586e75">// - PrivateUse1: Reserved for private/custom device types
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#586e75">//
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#586e75">// If you want to update the list of supported devices, add a new dispatch_ptr
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#586e75">// member in DispatchStubImpl.h and update the get_call_ptr switch.
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#586e75">// As well you will need to update the inlined list in &amp;#39;is_device_supported`
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#586e75">//
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#586e75">//
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#586e75">// ignore warnings about DispatchStub::DEFAULT, AVX, AVX2 defined elsewhere
+&lt;/span>&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;h1 id="dispatchstub-模板基类定义">&lt;code>DispatchStub&lt;/code> 模板基类定义
+&lt;a class="header-anchor" href="#dispatchstub-%e6%a8%a1%e6%9d%bf%e5%9f%ba%e7%b1%bb%e5%ae%9a%e4%b9%89">&lt;/a>
+&lt;/h1>&lt;p>见 aten/src/ATen/native/DispatchStub.h。&lt;code>DispatchStub&lt;/code> 类型为：&lt;/p></description></item><item><title>2025-04-21 PyTorch 编译架构中没有 sm_89</title><link>https://hxhue.github.io/daily/2025-04-21-PyTorch-%E7%BC%96%E8%AF%91%E6%9E%B6%E6%9E%84%E4%B8%AD%E6%B2%A1%E6%9C%89-sm_89/</link><pubDate>Mon, 21 Apr 2025 00:00:00 +0800</pubDate><guid>https://hxhue.github.io/daily/2025-04-21-PyTorch-%E7%BC%96%E8%AF%91%E6%9E%B6%E6%9E%84%E4%B8%AD%E6%B2%A1%E6%9C%89-sm_89/</guid><description>&lt;p>今天发现很有意思的一件事情：配备 4090 显卡的服务器上安装 torch 之后，显示的架构并没有 sm_89，也没有 PTX（&lt;code>compute_xx&lt;/code>）来支持 JIT。&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" style="color:#93a1a1;background-color:#002b36;-moz-tab-size:2;-o-tab-size:2;tab-size:2;">&lt;code class="language-bash" data-lang="bash">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#719e07">(&lt;/span>minimind&lt;span style="color:#719e07">)&lt;/span> ➜ ~ python -c &lt;span style="color:#2aa198">&amp;#39;import torch;print(torch.cuda.get_arch_list())&amp;#39;&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#719e07">[&lt;/span>&lt;span style="color:#2aa198">&amp;#39;sm_50&amp;#39;&lt;/span>, &lt;span style="color:#2aa198">&amp;#39;sm_60&amp;#39;&lt;/span>, &lt;span style="color:#2aa198">&amp;#39;sm_70&amp;#39;&lt;/span>, &lt;span style="color:#2aa198">&amp;#39;sm_75&amp;#39;&lt;/span>, &lt;span style="color:#2aa198">&amp;#39;sm_80&amp;#39;&lt;/span>, &lt;span style="color:#2aa198">&amp;#39;sm_86&amp;#39;&lt;/span>, &lt;span style="color:#2aa198">&amp;#39;sm_90&amp;#39;&lt;/span>&lt;span style="color:#719e07">]&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#719e07">(&lt;/span>minimind&lt;span style="color:#719e07">)&lt;/span> ➜ ~
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>&lt;a href="https://discuss.pytorch.org/t/sm-89-not-listed-in-the-torch-cuda-get-arch-list/215827/5" title="sm_89 not listed in the torch.cuda.get_arch_list() - PyTorch Forums" rel="noopener external nofollow noreferrer"
+ target="_blank" class=" exturl" >&lt;code>sm_89&lt;/code> not listed in the &lt;code>torch.cuda.get_arch_list()&lt;/code> - PyTorch Forums&lt;i class="fa fa-external-link-alt">&lt;/i>&lt;/a> 这个讨论说明 sm_89 和 sm_86 是完全兼容的，除了 FP8 支持，这些 kernels 被专门处理。&lt;/p></description></item><item><title>如何对齐 PyTorch 的除法运算？</title><link>https://hxhue.github.io/posts/programming/python/%E5%A6%82%E4%BD%95%E5%AF%B9%E9%BD%90-PyTorch-%E7%9A%84%E9%99%A4%E6%B3%95%E8%BF%90%E7%AE%97/</link><pubDate>Tue, 26 Nov 2024 00:00:00 +0800</pubDate><guid>https://hxhue.github.io/posts/programming/python/%E5%A6%82%E4%BD%95%E5%AF%B9%E9%BD%90-PyTorch-%E7%9A%84%E9%99%A4%E6%B3%95%E8%BF%90%E7%AE%97/</guid><description>&lt;h1 id="过程">过程
+&lt;a class="header-anchor" href="#%e8%bf%87%e7%a8%8b">&lt;/a>
+&lt;/h1>&lt;p>我遇到的情况是：&lt;code>a&lt;/code> 为 64 位浮点数（FP64）标量，&lt;code>b&lt;/code> 为 32 位浮点数（FP32）张量，要计算 &lt;code>a / b&lt;/code>。&lt;/p>
+&lt;p>一种做法是：使用 &lt;code>1 / b * a&lt;/code> 来代替 &lt;code>a / b&lt;/code>。这样的结果看起来和 PyTorch 的计算是对齐的。&lt;/p></description></item><item><title>用 cv2 或 Pillow 保存 numpy 格式图片</title><link>https://hxhue.github.io/posts/programming/python/%E7%94%A8-cv2-%E6%88%96-Pillow-%E4%BF%9D%E5%AD%98-numpy-%E6%A0%BC%E5%BC%8F%E5%9B%BE%E7%89%87/</link><pubDate>Wed, 20 Nov 2024 00:00:00 +0800</pubDate><guid>https://hxhue.github.io/posts/programming/python/%E7%94%A8-cv2-%E6%88%96-Pillow-%E4%BF%9D%E5%AD%98-numpy-%E6%A0%BC%E5%BC%8F%E5%9B%BE%E7%89%87/</guid><description>&lt;div class="highlight">&lt;pre tabindex="0" style="color:#93a1a1;background-color:#002b36;-moz-tab-size:2;-o-tab-size:2;tab-size:2;">&lt;code class="language-python" data-lang="python">&lt;span style="display:flex;">&lt;span>img &lt;span style="color:#719e07">=&lt;/span> np&lt;span style="color:#719e07">.&lt;/span>asarray(img)
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#719e07">if&lt;/span> &lt;span style="color:#b58900">len&lt;/span>(img&lt;span style="color:#719e07">.&lt;/span>shape) &lt;span style="color:#719e07">==&lt;/span> &lt;span style="color:#2aa198">4&lt;/span>:
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#719e07">assert&lt;/span> img&lt;span style="color:#719e07">.&lt;/span>shape[&lt;span style="color:#2aa198">0&lt;/span>] &lt;span style="color:#719e07">==&lt;/span> &lt;span style="color:#2aa198">1&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> img &lt;span style="color:#719e07">=&lt;/span> img[&lt;span style="color:#2aa198">0&lt;/span>]
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#719e07">assert&lt;/span> &lt;span style="color:#b58900">len&lt;/span>(img&lt;span style="color:#719e07">.&lt;/span>shape) &lt;span style="color:#719e07">==&lt;/span> &lt;span style="color:#2aa198">3&lt;/span> &lt;span style="color:#719e07">and&lt;/span> img&lt;span style="color:#719e07">.&lt;/span>shape[&lt;span style="color:#2aa198">0&lt;/span>] &lt;span style="color:#719e07">in&lt;/span> (&lt;span style="color:#2aa198">1&lt;/span>, &lt;span style="color:#2aa198">3&lt;/span>)
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>img &lt;span style="color:#719e07">=&lt;/span> img&lt;span style="color:#719e07">.&lt;/span>transpose(&lt;span style="color:#2aa198">1&lt;/span>, &lt;span style="color:#2aa198">2&lt;/span>, &lt;span style="color:#2aa198">0&lt;/span>) &lt;span style="color:#586e75"># to channels-last&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#586e75">#1&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>img &lt;span style="color:#719e07">=&lt;/span> img[&lt;span style="color:#719e07">...&lt;/span>, ::&lt;span style="color:#719e07">-&lt;/span>&lt;span style="color:#2aa198">1&lt;/span>] &lt;span style="color:#586e75"># RGB to BGR&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>img &lt;span style="color:#719e07">=&lt;/span> (img &lt;span style="color:#719e07">*&lt;/span> &lt;span style="color:#2aa198">255.0&lt;/span>)&lt;span style="color:#719e07">.&lt;/span>astype(np&lt;span style="color:#719e07">.&lt;/span>uint8)
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>img &lt;span style="color:#719e07">=&lt;/span> np&lt;span style="color:#719e07">.&lt;/span>ascontiguousarray(img)
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#719e07">assert&lt;/span> cv2&lt;span style="color:#719e07">.&lt;/span>imwrite(&lt;span style="color:#2aa198">&amp;#34;fused.jpg&amp;#34;&lt;/span>, img)
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#586e75">#2&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#586e75">## https://pytorch.org/vision/main/generated/torchvision.transforms.ToPILImage.html&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#586e75">## img.shape: (C x H x W) if img is torch.Tensor, (H x W x C) if img is np.ndarray.&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#586e75"># img = transforms.ToPILImage()(img)&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#586e75"># img.save(&amp;#39;fused.jpg&amp;#39;)&lt;/span>
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>要么进行 RGB -&amp;gt; BGR、将 0~1 缩放到 0~255、转换到 &lt;code>np.uint8&lt;/code> 类型、将数组转连续等操作，要么直接使用 torchvision 的 transforms 工具。&lt;/p></description></item><item><title>PyTorch `optimizer.step()` 影响 BatchNorm2d 权重的梯度</title><link>https://hxhue.github.io/posts/programming/python/PyTorch-optimizer.step-%E5%BD%B1%E5%93%8D-BatchNorm2d-%E6%9D%83%E9%87%8D%E7%9A%84%E6%A2%AF%E5%BA%A6/</link><pubDate>Wed, 06 Nov 2024 00:00:00 +0800</pubDate><guid>https://hxhue.github.io/posts/programming/python/PyTorch-optimizer.step-%E5%BD%B1%E5%93%8D-BatchNorm2d-%E6%9D%83%E9%87%8D%E7%9A%84%E6%A2%AF%E5%BA%A6/</guid><description>&lt;p>我发现 &lt;code>optimizer.step()&lt;/code> 这一步会改变 &lt;code>torch.nn.BatchNorm2d&lt;/code> 层的 weight 和 bias 的梯度（看上去是每个元素按照相同的比例进行了缩放）。如果想要比较梯度，应该在 &lt;code>optimizer.step()&lt;/code> 之前来对比，想要对比更新后的权重，要在 &lt;code>optimizer.step()&lt;/code> 之后对比。&lt;/p></description></item><item><title>PyTorch 注册反向传播的钩子</title><link>https://hxhue.github.io/posts/programming/python/PyTorch-%E6%B3%A8%E5%86%8C%E5%8F%8D%E5%90%91%E4%BC%A0%E6%92%AD%E7%9A%84%E9%92%A9%E5%AD%90/</link><pubDate>Wed, 30 Oct 2024 00:00:00 +0800</pubDate><guid>https://hxhue.github.io/posts/programming/python/PyTorch-%E6%B3%A8%E5%86%8C%E5%8F%8D%E5%90%91%E4%BC%A0%E6%92%AD%E7%9A%84%E9%92%A9%E5%AD%90/</guid><description>&lt;h1 id="注册钩子">注册钩子
+&lt;a class="header-anchor" href="#%e6%b3%a8%e5%86%8c%e9%92%a9%e5%ad%90">&lt;/a>
+&lt;/h1>&lt;p>通过注册钩子，收集模型运行时的输出，可以对每一层的输出值进行调试。&lt;/p>
+&lt;p>假设模型是 &lt;code>model&lt;/code>，我们可以把每一层的输入的梯度和输出的梯度保存在字典中：&lt;/p></description></item><item><title>用特定的 CUDA 版本构建 PyTorch</title><link>https://hxhue.github.io/posts/programming/python/%E7%94%A8%E7%89%B9%E5%AE%9A%E7%9A%84-CUDA-%E7%89%88%E6%9C%AC%E6%9E%84%E5%BB%BA-PyTorch-%E5%B9%B6%E6%89%93%E5%8C%85-Conda-%E7%8E%AF%E5%A2%83/</link><pubDate>Tue, 15 Oct 2024 00:00:00 +0800</pubDate><guid>https://hxhue.github.io/posts/programming/python/%E7%94%A8%E7%89%B9%E5%AE%9A%E7%9A%84-CUDA-%E7%89%88%E6%9C%AC%E6%9E%84%E5%BB%BA-PyTorch-%E5%B9%B6%E6%89%93%E5%8C%85-Conda-%E7%8E%AF%E5%A2%83/</guid><description>&lt;h1 id="说明">说明
+&lt;a class="header-anchor" href="#%e8%af%b4%e6%98%8e">&lt;/a>
+&lt;/h1>&lt;p>文章是按照我解决问题的过程来写的，不是一个一步式的教程，所以显得有点凌乱。如果要操作请务必先看完全文，以免跟着中间过程走了同样的弯路。&lt;strong>如果不想看前面的内容可以直接跳到 conda 打包这一节&lt;/strong>。&lt;/p></description></item><item><title>PyTorch 的 CPU 计算为什么使用 double 作为 32 位浮点数的累加类型？</title><link>https://hxhue.github.io/posts/programming/python/PyTorch-%E7%9A%84-CPU-%E8%AE%A1%E7%AE%97%E4%B8%BA%E4%BB%80%E4%B9%88%E4%BD%BF%E7%94%A8-double-%E4%BD%9C%E4%B8%BA-32-%E4%BD%8D%E6%B5%AE%E7%82%B9%E6%95%B0%E7%9A%84%E7%B4%AF%E5%8A%A0%E7%B1%BB%E5%9E%8B/</link><pubDate>Sat, 10 Aug 2024 00:00:00 +0800</pubDate><guid>https://hxhue.github.io/posts/programming/python/PyTorch-%E7%9A%84-CPU-%E8%AE%A1%E7%AE%97%E4%B8%BA%E4%BB%80%E4%B9%88%E4%BD%BF%E7%94%A8-double-%E4%BD%9C%E4%B8%BA-32-%E4%BD%8D%E6%B5%AE%E7%82%B9%E6%95%B0%E7%9A%84%E7%B4%AF%E5%8A%A0%E7%B1%BB%E5%9E%8B/</guid><description>&lt;div class="markdown-alert markdown-alert-tip">
+ &lt;p class="markdown-alert-title">
+ &lt;svg class="octicon octicon-light-bulb mr-2" viewBox="0 0 16 16" width="16" height="16" aria-hidden="true">
+ &lt;path
+ d="M8 1.5c-2.363 0-4 1.69-4 3.75 0 .984.424 1.625.984 2.304l.214.253c.223.264.47.556.673.848.284.411.537.896.621 1.49a.75.75 0 0 1-1.484.211c-.04-.282-.163-.547-.37-.847a8.456 8.456 0 0 0-.542-.68c-.084-.1-.173-.205-.268-.32C3.201 7.75 2.5 6.766 2.5 5.25 2.5 2.31 4.863 0 8 0s5.5 2.31 5.5 5.25c0 1.516-.701 2.5-1.328 3.259-.095.115-.184.22-.268.319-.207.245-.383.453-.541.681-.208.3-.33.565-.37.847a.751.751 0 0 1-1.485-.212c.084-.593.337-1.078.621-1.489.203-.292.45-.584.673-.848.075-.088.147-.173.213-.253.561-.679.985-1.32.985-2.304 0-2.06-1.637-3.75-4-3.75ZM5.75 12h4.5a.75.75 0 0 1 0 1.5h-4.5a.75.75 0 0 1 0-1.5ZM6 15.25a.75.75 0 0 1 .75-.75h2.5a.75.75 0 0 1 0 1.5h-2.5a.75.75 0 0 1-.75-.75Z">
+ &lt;/path>
+ &lt;/svg>Tip&lt;/p>
+ &lt;p>本文没有得到最终结论，只是一些个人猜想。&lt;/p></description></item><item><title>torch 自动求导的代码在哪里？</title><link>https://hxhue.github.io/posts/programming/python/torch-%E8%87%AA%E5%8A%A8%E6%B1%82%E5%AF%BC%E5%92%8C%E6%B4%BE%E5%8F%91%E7%9A%84%E4%BB%A3%E7%A0%81%E5%9C%A8%E5%93%AA%E9%87%8C/</link><pubDate>Mon, 05 Aug 2024 00:00:00 +0800</pubDate><guid>https://hxhue.github.io/posts/programming/python/torch-%E8%87%AA%E5%8A%A8%E6%B1%82%E5%AF%BC%E5%92%8C%E6%B4%BE%E5%8F%91%E7%9A%84%E4%BB%A3%E7%A0%81%E5%9C%A8%E5%93%AA%E9%87%8C/</guid><description>&lt;p>2024 年 8 月 5 日：当前 torch 发布的版本是 2.4。PyTorch 的源码中还有几个 YAML 文件，这些文件都挺重要的，可以关注一下。&lt;/p>
+&lt;p>tools/autograd/derivatives.yaml 中有一些求导代码片段：&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" style="color:#93a1a1;background-color:#002b36;-moz-tab-size:2;-o-tab-size:2;tab-size:2;">&lt;code class="language-yaml" data-lang="yaml">&lt;span style="display:flex;">&lt;span>- &lt;span style="color:#268bd2">name&lt;/span>: prod.dim_int(Tensor self, int dim, bool keepdim=False, *, ScalarType? dtype=None) -&amp;gt; Tensor
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#268bd2">self&lt;/span>: prod_backward(grad, self.to(grad.scalar_type()), result, dim, keepdim)
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#268bd2">result&lt;/span>: (prod_backward(at::ones({}, result.options()).expand_as(result), self_p.to(result.scalar_type()), result, dim, keepdim) * self_t.conj()).sum(dim, keepdim).conj()
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>- &lt;span style="color:#268bd2">name&lt;/span>: put(Tensor self, Tensor index, Tensor source, bool accumulate=False) -&amp;gt; Tensor
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#268bd2">self&lt;/span>: &lt;span style="color:#2aa198">&amp;#34;accumulate ? grad : grad.put(index, zeros_like(source), false)&amp;#34;&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#268bd2">index&lt;/span>: non_differentiable
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#268bd2">source&lt;/span>: grad.take(index).reshape_as(source)
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#268bd2">result&lt;/span>: self_t.put(index, source_t, accumulate)
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>- &lt;span style="color:#268bd2">name&lt;/span>: linalg_qr(Tensor A, str mode=&amp;#39;reduced&amp;#39;) -&amp;gt; (Tensor Q, Tensor R)
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#268bd2">A&lt;/span>: linalg_qr_backward(grad_Q, grad_R, Q, R, mode)
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#268bd2">Q, R&lt;/span>: linalg_qr_jvp(A_t, Q, R, mode)
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>- &lt;span style="color:#268bd2">name&lt;/span>: rad2deg(Tensor self) -&amp;gt; Tensor
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#268bd2">self&lt;/span>: rad2deg_backward(grad)
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#268bd2">result&lt;/span>: auto_element_wise
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>- &lt;span style="color:#268bd2">name&lt;/span>: random_.from(Tensor(a!) self, int from, int? to, *, Generator? generator=None) -&amp;gt; Tensor(a!)
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#268bd2">self&lt;/span>: zeros_like(grad)
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#268bd2">result&lt;/span>: self_t.zero_()
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>- &lt;span style="color:#268bd2">name&lt;/span>: random_.to(Tensor(a!) self, int to, *, Generator? generator=None) -&amp;gt; Tensor(a!)
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#268bd2">self&lt;/span>: zeros_like(grad)
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#268bd2">result&lt;/span>: self_t.zero_()
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>看起来 &lt;code>name&lt;/code> 是近似于 python 的伪代码，其他的都是 C++ 代码？&lt;/p></description></item><item><title>torch 分布式程序产生僵尸进程</title><link>https://hxhue.github.io/posts/programming/python/torch-%E5%88%86%E5%B8%83%E5%BC%8F%E7%A8%8B%E5%BA%8F%E4%BA%A7%E7%94%9F%E5%83%B5%E5%B0%B8%E8%BF%9B%E7%A8%8B/</link><pubDate>Mon, 08 Jul 2024 00:00:00 +0800</pubDate><guid>https://hxhue.github.io/posts/programming/python/torch-%E5%88%86%E5%B8%83%E5%BC%8F%E7%A8%8B%E5%BA%8F%E4%BA%A7%E7%94%9F%E5%83%B5%E5%B0%B8%E8%BF%9B%E7%A8%8B/</guid><description>&lt;p>聊天记录：&lt;/p>
+&lt;blockquote>
+ &lt;p>A
+torch 的分布式程序在一些异常结束的情况下会留下一些僵尸进程
+我之前经常是这样
+你 kill 掉主进程子进程不会被回收&lt;/p>
+&lt;p>B
+为什么没有会回收？因为父进程没死且没有被回收，难道父进程不是 torch 的主进程，而是整个容器里面的一个活跃进程？
+不在容器里使用是否不会出现这种情况？
+如果父进程死了，应该由 init 回收
+是否是因为容器的起始进程不是 init&lt;/p></description></item></channel></rss>

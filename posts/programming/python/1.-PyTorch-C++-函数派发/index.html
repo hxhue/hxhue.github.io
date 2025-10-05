@@ -1,0 +1,211 @@
+<!doctype html><html lang=zh-CN data-theme=light><head><meta charset=UTF-8><meta name=viewport content="width=device-width"><meta name=theme-color content="#222" media="(prefers-color-scheme: light)"><meta name=generator content="Hugo 0.143.1"><link rel="shortcut icon" type=image/x-icon href=/imgs/icons/favicon.ico><link rel=icon type=image/x-icon href=/imgs/icons/favicon.ico><link rel=icon type=image/png sizes=16x16 href=/imgs/icons/favicon_16x16_next.png><link rel=icon type=image/png sizes=32x32 href=/imgs/icons/favicon_32_32_next.png><link rel=apple-touch-icon sizes=180x180 href=/imgs/icons/apple_touch_icon_next.png><meta itemprop=name content="PyTorch C++ 函数派发"><meta itemprop=description content="个人博客，主要是零散的笔记。"><meta itemprop=datePublished zgotmplz><meta itemprop=dateModified zgotmplz><meta itemprop=image content="https://hxhue.github.io/imgs/371907.jpg"><meta itemprop=keywords content="torch"><link type=text/css rel=stylesheet href=https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.1.2/css/all.min.css><link type=text/css rel=stylesheet href=https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.1.1/animate.min.css><link rel=stylesheet href=/css/main.min.bea76f574a755574e17d42bea39502a74ca3ca4db65807b8c82d3e26dcec8420.css><style type=text/css>.post-footer,.flinks-list-footer hr:after{content:"~ 我可是有底线的哟 ~"}</style><link rel=stylesheet type=text/css href=/css/style.css><link rel=preconnect href=https://fonts.googleapis.com><link rel=preconnect href=https://fonts.gstatic.com crossorigin><link rel=stylesheet href=https://cdn.jsdelivr.net/npm/github-markdown-css@5.3.0/github-markdown-dark.css><script type=text/javascript id=MathJax-script async src=https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-svg.js></script><script>MathJax={tex:{displayMath:[["$$","$$"],["\\[","\\]"]],inlineMath:[["$","$"],["\\(","\\)"]]},svg:{fontCache:"global"}}</script><script type=module>
+  import mermaid from 'https://cdn.jsdelivr.net/npm/mermaid/dist/mermaid.esm.min.mjs';
+  mermaid.initialize({ startOnLoad: false });
+  mermaid.mermaidAPI.initialize();
+  window.mermaid = mermaid;
+</script><script type=text/javascript>(function(){localDB={set:function(e,t,n){if(n===0)return;const s=new Date,o=n*864e5,i={value:t,expiry:s.getTime()+o};localStorage.setItem(e,JSON.stringify(i))},get:function(e){const t=localStorage.getItem(e);if(!t)return void 0;const n=JSON.parse(t),s=new Date;return s.getTime()>n.expiry?(localStorage.removeItem(e),void 0):n.value}},theme={active:function(){const e=localDB.get("theme");if(e==null)return;theme.toggle(e),window.matchMedia("(prefers-color-scheme: dark)").addListener(function(e){theme.toggle(e.matches?"dark":"light")})},toggle:function(e){document.documentElement.setAttribute("data-theme",e),localDB.set("theme",e,2);const t=document.querySelector("iframe.giscus-frame");if(t){const n={setConfig:{theme:e}};t.contentWindow.postMessage({giscus:n},"https://giscus.app")}}},theme.active()})(window)</script><script class=next-config data-name=page type=application/json>{"comments":false,"isHome":false,"isPage":true,"path":"1.-PyTorch-C++-%E5%87%BD%E6%95%B0%E6%B4%BE%E5%8F%91","permalink":"https://hxhue.github.io/posts/programming/python/1.-PyTorch-C++-%E5%87%BD%E6%95%B0%E6%B4%BE%E5%8F%91/","title":"PyTorch C++ 函数派发","waline":{"js":[{"alias":"waline","alias_name":"@waline/client","file":"dist/pageview.js","name":"pageview","version":"2.13.0"},{"alias":"waline","alias_name":"@waline/client","file":"dist/comment.js","name":"comment","version":"2.13.0"}]}}</script><script type=text/javascript>document.addEventListener("DOMContentLoaded",()=>{var e=document.createElement("script");e.charset="UTF-8",e.src="",e.async=!1,e.defer=!0,document.head.appendChild(e),e.onload=function(){NexT.utils.fmtBusuanzi()}})</script><title>PyTorch C++ 函数派发 - Bluegill</title><noscript><link rel=stylesheet href=/css/noscript.css></noscript></head><body itemscope itemtype=http://schema.org/WebPage><div class=headband></div><main class=main><header class=header itemscope itemtype=http://schema.org/WPHeader><div class=header-inner><div class=site-brand-container><div class=site-nav-toggle><div class=toggle aria-label role=button><span class=toggle-line></span>
+<span class=toggle-line></span>
+<span class=toggle-line></span></div></div><div class=site-meta><a href=/ class=brand rel=start><i class=logo-line></i><h1 class=site-title>Bluegill</h1><i class=logo-line></i></a><p class=site-subtitle itemprop=description></p></div><div class=site-nav-right><div class="toggle popup-trigger"><i class="fa fa-search fa-fw fa-lg"></i></div></div></div><nav class=site-nav><ul class="main-menu menu"><li class="menu-item menu-item-home"><a href=/ class=hvr-icon-pulse rel=section><i class="fa fa-home hvr-icon"></i>首页</a></li><li class="menu-item menu-item-about"><a href=/about/ class=hvr-icon-pulse rel=section><i class="fa fa-user hvr-icon"></i>关于</a></li><li class="menu-item menu-item-archives"><a href=/archives/ class=hvr-icon-pulse rel=section><i class="fa fa-archive hvr-icon"></i>归档</a></li><li class="menu-item menu-item-categories"><a href=/categories/ class=hvr-icon-pulse rel=section><i class="fa fa-th hvr-icon"></i>分类</a></li><li class="menu-item menu-item-tags"><a href=/tags/ class=hvr-icon-pulse rel=section><i class="fa fa-hashtag hvr-icon"></i>标签</a></li><li class="menu-item menu-item-daily"><a href=/daily/ class=hvr-icon-pulse rel=section><i class="fa fa-newspaper hvr-icon"></i>随笔</a></li><li class="menu-item menu-item-discovery"><a href=https://rift-fear-f2c.notion.site/2025-1e354a33cfb1802c841bdf29f2f3dab3 class=hvr-icon-pulse rel=section><i class="fa fa-compass hvr-icon"></i>发现</a></li><li class="menu-item menu-item-search"><a role=button class="popup-trigger hvr-icon-pulse"><i class="fa fa-search fa-fw hvr-icon"></i>搜索</a></li></ul></nav><div class=search-pop-overlay><div class="popup search-popup"><div class=search-header><span class=search-icon><i class="fa fa-search"></i></span><div class=search-input-container><input autocomplete=off autocapitalize=off maxlength=80 placeholder=搜索... spellcheck=false type=search class=search-input></div><span class=popup-btn-close role=button><i class="fa fa-times-circle"></i></span></div><div class="search-result-container no-result"><div class=search-result-icon><i class="fa fa-spinner fa-pulse fa-5x"></i></div></div></div></div></div><div class="toggle sidebar-toggle" role=button><span class=toggle-line></span>
+<span class=toggle-line></span>
+<span class=toggle-line></span></div><aside class=sidebar><div class="sidebar-inner sidebar-nav-active sidebar-toc-active"><ul class=sidebar-nav><li class=sidebar-nav-toc>文章目录</li><li class=sidebar-nav-overview>站点概览</li></ul><div class=sidebar-panel-container><div class="post-toc-wrap sidebar-panel"><div class="post-toc animated"><nav id=TableOfContents><ul><li><a href=#stub-注册流程>Stub 注册流程</a></li><li><a href=#dispatchstub-模板基类定义><code>DispatchStub</code> 模板基类定义</a></li><li><a href=#声明派发-declare_dispatch>声明派发 <code>DECLARE_DISPATCH</code></a></li><li><a href=#定义派发-define_dispatch>定义派发 <code>DEFINE_DISPATCH</code></a></li><li><a href=#注册派发-register_dispatch>注册派发 <code>REGISTER_DISPATCH</code></a></li><li><a href=#stub-调用>Stub 调用</a></li></ul></nav></div></div><div class="site-overview-wrap sidebar-panel"><div class="site-author site-overview-item animated" itemprop=author itemscope itemtype=http://schema.org/Person><img class=site-author-image itemprop=image alt=🤖 src=/imgs/371907.jpg><p class=site-author-name itemprop=name>🤖</p><div class=site-description itemprop=description>个人博客，主要是零散的笔记。</div></div><div class="site-state-wrap site-overview-item animated"><nav class=site-state><div class="site-state-item site-state-posts"><a href=/archives/><span class=site-state-item-count>433</span>
+<span class=site-state-item-name>日志</span></a></div><div class="site-state-item site-state-categories"><a href=/categories/><span class=site-state-item-count>12</span>
+<span class=site-state-item-name>分类</span></a></div><div class="site-state-item site-state-tags"><a href=/tags/><span class=site-state-item-count>86</span>
+<span class=site-state-item-name>标签</span></a></div></nav></div><div class="links-of-social site-overview-item animated"><span class=links-of-social-item><a href=https://github.com/hxhue title="Github → https://github.com/hxhue" rel=noopener target=_blank><i class="fab fa-github fa-fw"></i>
+Github
+</a></span><span class=links-of-social-item><a href=/rss.xml title="RSS 订阅 → /rss.xml" rel=noopener target=_blank><i class="fa fa-rss fa-fw"></i>
+RSS 订阅</a></span></div><div class="cc-license animated" itemprop=license><a href=https://creativecommons.org/licenses/by-nc-sa/4.0/deed.zh class=cc-opacity rel=noopener target=_blank title=共享知识><img src=/imgs/cc/big/by_nc_sa.svg alt=共享知识></a></div><div class="links-of-blogroll site-overview-item animated"><div class=links-of-blogroll-title><i class="fa fa-globe fa-fw"></i>
+友情链接</div><ul class=links-of-blogroll-list><li class=links-of-blogroll-item><a href=https://shuai.guru/ title=https://shuai.guru/ target=_blank>shuai.guru</a></li></ul></div></div></div></div></aside><div class=sidebar-dimmer></div></header><div class=tool-buttons><div id=toggle-theme class=button title=深浅模式切换><i class="fas fa-adjust"></i></div><div class=back-to-top role=button title=返回顶部><i class="fa fa-arrow-up"></i>
+<span>0%</span></div></div><div class=reading-progress-bar></div><noscript><div class=noscript-warning>Theme NexT works best with JavaScript enabled</div></noscript><div class="main-inner post posts-expand"><div class=post-block><article itemscope itemtype=http://schema.org/Article class=post-content lang><link itemprop=mainEntityOfPage href=https://hxhue.github.io/posts/programming/python/1.-PyTorch-C++-%E5%87%BD%E6%95%B0%E6%B4%BE%E5%8F%91/><span hidden itemprop=author itemscope itemtype=http://schema.org/Person><meta itemprop=image content="/imgs/371907.jpg"><meta itemprop=name content="🤖"></span><span hidden itemprop=publisher itemscope itemtype=http://schema.org/Organization><meta itemprop=name content="🤖"><meta itemprop=description content="个人博客，主要是零散的笔记。"></span><span hidden itemprop=post itemscope itemtype=http://schema.org/CreativeWork><meta itemprop=name content="PyTorch C++ 函数派发"><meta itemprop=description content="Stub 注册流程
+
+所有的 stub 定义几乎都在 aten/src/ATen/native/DispatchStub.h 文件，可以慢慢看。里面有段注释：
+// Implements instruction set specific function dispatch.
+//
+// Kernels that may make use of specialized instruction sets (e.g. AVX2) are
+// compiled multiple times with different compiler flags (e.g. -mavx2). A
+// DispatchStub contains a table of function pointers for a kernel. At runtime,
+// the fastest available kernel is chosen based on the features reported by
+// cpuinfo.
+//
+// Example:
+//
+// In native/MyKernel.h:
+//   using fn_type = void(*)(const Tensor& x);
+//   DECLARE_DISPATCH(fn_type, stub)
+//
+// In native/MyKernel.cpp
+//   DEFINE_DISPATCH(stub);
+//
+// In native/cpu/MyKernel.cpp:
+//   namespace {
+//     // use anonymous namespace so that different cpu versions won't conflict
+//     void kernel(const Tensor& x) { ... }
+//   }
+//   REGISTER_DISPATCH(stub, &amp;kernel);
+//
+// To call:
+//   stub(kCPU, tensor);
+//
+// TODO: CPU instruction set selection should be folded into whatever
+// the main dispatch mechanism is.
+//
+// Supported device types for registration:
+//   - CPU: Central Processing Unit
+//   - CUDA: NVIDIA GPUs
+//   - HIP: AMD GPUs
+//   - MPS: Apple Silicon GPUs (Metal Performance Shaders)
+//   - MTIA: Meta Training and Inference Devices
+//   - XPU: Intel GPUs
+//   - HPU: Reserved for HPU (Intel Gaudi) device types
+//   - PrivateUse1: Reserved for private/custom device types
+//
+// If you want to update the list of supported devices, add a new dispatch_ptr
+// member in DispatchStubImpl.h and update the get_call_ptr switch.
+// As well you will need to update the inlined list in 'is_device_supported`
+//
+//
+// ignore warnings about DispatchStub::DEFAULT, AVX, AVX2 defined elsewhere
+DispatchStub 模板基类定义
+
+见 aten/src/ATen/native/DispatchStub.h。DispatchStub 类型为："></span><header class=post-header><h1 class=post-title itemprop="name headline">PyTorch C++ 函数派发</h1><div class=post-meta-container><div class=post-meta-items><span class=post-meta-item><span class=post-meta-item-icon><i class="far fa-calendar"></i>
+</span><span class=post-meta-item-text title=发表于>发表于：
+</span><time title="创建时间：2025-06-30 00:00:00 +0800 CST" itemprop="dateCreated datePublished" datetime="2025-06-30 00:00:00 +0800 CST">2025-06-30
+</time></span><span class=post-meta-item><span class=post-meta-item-icon><i class="far fa-calendar-check"></i>
+</span><span class=post-meta-item-text title=更新于>更新于：
+</span><time title=修改时间：2025-10-02T00:00:00+08:00 itemprop=dateModified datetime=2025-10-02T00:00:00+08:00>2025-10-02</time></span></div><div class=post-meta-items><span class=post-meta-item title=字数><span class=post-meta-item-icon><i class="far fa-file-word"></i>
+</span><span class=post-meta-item-text>字数：</span>
+<span>1300</span>
+</span><span class=post-meta-item title=阅读><span class=post-meta-item-icon><i class="far fa-clock"></i>
+</span><span class=post-meta-item-text>阅读：&ap;</span>
+<span>3分钟</span></span></div></div></header><div class=post-body itemprop=articleBody><h1 id=stub-注册流程>Stub 注册流程
+<a class=header-anchor href=#stub-%e6%b3%a8%e5%86%8c%e6%b5%81%e7%a8%8b></a></h1><p>所有的 stub 定义几乎都在 aten/src/ATen/native/DispatchStub.h 文件，可以慢慢看。里面有段注释：</p><div class=highlight><pre tabindex=0 style=color:#93a1a1;background-color:#002b36;-moz-tab-size:2;-o-tab-size:2;tab-size:2><code class=language-cpp data-lang=cpp><span style=display:flex><span><span style=color:#586e75>// Implements instruction set specific function dispatch.
+</span></span></span><span style=display:flex><span><span style=color:#586e75>//
+</span></span></span><span style=display:flex><span><span style=color:#586e75>// Kernels that may make use of specialized instruction sets (e.g. AVX2) are
+</span></span></span><span style=display:flex><span><span style=color:#586e75>// compiled multiple times with different compiler flags (e.g. -mavx2). A
+</span></span></span><span style=display:flex><span><span style=color:#586e75>// DispatchStub contains a table of function pointers for a kernel. At runtime,
+</span></span></span><span style=display:flex><span><span style=color:#586e75>// the fastest available kernel is chosen based on the features reported by
+</span></span></span><span style=display:flex><span><span style=color:#586e75>// cpuinfo.
+</span></span></span><span style=display:flex><span><span style=color:#586e75>//
+</span></span></span><span style=display:flex><span><span style=color:#586e75>// Example:
+</span></span></span><span style=display:flex><span><span style=color:#586e75>//
+</span></span></span><span style=display:flex><span><span style=color:#586e75>// In native/MyKernel.h:
+</span></span></span><span style=display:flex><span><span style=color:#586e75>//   using fn_type = void(*)(const Tensor&amp; x);
+</span></span></span><span style=display:flex><span><span style=color:#586e75>//   DECLARE_DISPATCH(fn_type, stub)
+</span></span></span><span style=display:flex><span><span style=color:#586e75>//
+</span></span></span><span style=display:flex><span><span style=color:#586e75>// In native/MyKernel.cpp
+</span></span></span><span style=display:flex><span><span style=color:#586e75>//   DEFINE_DISPATCH(stub);
+</span></span></span><span style=display:flex><span><span style=color:#586e75>//
+</span></span></span><span style=display:flex><span><span style=color:#586e75>// In native/cpu/MyKernel.cpp:
+</span></span></span><span style=display:flex><span><span style=color:#586e75>//   namespace {
+</span></span></span><span style=display:flex><span><span style=color:#586e75>//     // use anonymous namespace so that different cpu versions won&#39;t conflict
+</span></span></span><span style=display:flex><span><span style=color:#586e75>//     void kernel(const Tensor&amp; x) { ... }
+</span></span></span><span style=display:flex><span><span style=color:#586e75>//   }
+</span></span></span><span style=display:flex><span><span style=color:#586e75>//   REGISTER_DISPATCH(stub, &amp;kernel);
+</span></span></span><span style=display:flex><span><span style=color:#586e75>//
+</span></span></span><span style=display:flex><span><span style=color:#586e75>// To call:
+</span></span></span><span style=display:flex><span><span style=color:#586e75>//   stub(kCPU, tensor);
+</span></span></span><span style=display:flex><span><span style=color:#586e75>//
+</span></span></span><span style=display:flex><span><span style=color:#586e75>// TODO: CPU instruction set selection should be folded into whatever
+</span></span></span><span style=display:flex><span><span style=color:#586e75>// the main dispatch mechanism is.
+</span></span></span><span style=display:flex><span><span style=color:#586e75>//
+</span></span></span><span style=display:flex><span><span style=color:#586e75>// Supported device types for registration:
+</span></span></span><span style=display:flex><span><span style=color:#586e75>//   - CPU: Central Processing Unit
+</span></span></span><span style=display:flex><span><span style=color:#586e75>//   - CUDA: NVIDIA GPUs
+</span></span></span><span style=display:flex><span><span style=color:#586e75>//   - HIP: AMD GPUs
+</span></span></span><span style=display:flex><span><span style=color:#586e75>//   - MPS: Apple Silicon GPUs (Metal Performance Shaders)
+</span></span></span><span style=display:flex><span><span style=color:#586e75>//   - MTIA: Meta Training and Inference Devices
+</span></span></span><span style=display:flex><span><span style=color:#586e75>//   - XPU: Intel GPUs
+</span></span></span><span style=display:flex><span><span style=color:#586e75>//   - HPU: Reserved for HPU (Intel Gaudi) device types
+</span></span></span><span style=display:flex><span><span style=color:#586e75>//   - PrivateUse1: Reserved for private/custom device types
+</span></span></span><span style=display:flex><span><span style=color:#586e75>//
+</span></span></span><span style=display:flex><span><span style=color:#586e75>// If you want to update the list of supported devices, add a new dispatch_ptr
+</span></span></span><span style=display:flex><span><span style=color:#586e75>// member in DispatchStubImpl.h and update the get_call_ptr switch.
+</span></span></span><span style=display:flex><span><span style=color:#586e75>// As well you will need to update the inlined list in &#39;is_device_supported`
+</span></span></span><span style=display:flex><span><span style=color:#586e75>//
+</span></span></span><span style=display:flex><span><span style=color:#586e75>//
+</span></span></span><span style=display:flex><span><span style=color:#586e75>// ignore warnings about DispatchStub::DEFAULT, AVX, AVX2 defined elsewhere
+</span></span></span></code></pre></div><h1 id=dispatchstub-模板基类定义><code>DispatchStub</code> 模板基类定义
+<a class=header-anchor href=#dispatchstub-%e6%a8%a1%e6%9d%bf%e5%9f%ba%e7%b1%bb%e5%ae%9a%e4%b9%89></a></h1><p>见 aten/src/ATen/native/DispatchStub.h。<code>DispatchStub</code> 类型为：</p><div class=highlight><pre tabindex=0 style=color:#93a1a1;background-color:#002b36;-moz-tab-size:2;-o-tab-size:2;tab-size:2><code class=language-cpp data-lang=cpp><span style=display:flex><span><span style=color:#719e07>template</span> <span style=color:#719e07>&lt;</span><span style=color:#719e07>typename</span> rT, <span style=color:#719e07>typename</span> T, <span style=color:#719e07>typename</span>... Args<span style=color:#719e07>&gt;</span>
+</span></span><span style=display:flex><span><span style=color:#719e07>struct</span> <span style=color:#268bd2>DispatchStub</span><span style=color:#719e07>&lt;</span>rT (<span style=color:#719e07>*</span>)(Args...), T<span style=color:#719e07>&gt;</span>;
+</span></span></code></pre></div><p>其中主要包含几类方法，一是调用，会根据设备类型来选择函数指针，强制转换后调用：</p><div class=highlight><pre tabindex=0 style=color:#93a1a1;background-color:#002b36;-moz-tab-size:2;-o-tab-size:2;tab-size:2><code class=language-cpp data-lang=cpp><span style=display:flex><span>	<span style=color:#586e75>// ...
+</span></span></span><span style=display:flex><span><span style=color:#586e75></span>  <span style=color:#719e07>template</span> <span style=color:#719e07>&lt;</span><span style=color:#719e07>typename</span>... ArgTypes<span style=color:#719e07>&gt;</span>
+</span></span><span style=display:flex><span>  rT <span style=color:#719e07>operator</span>()(c10<span style=color:#719e07>::</span>DeviceType device_type, ArgTypes<span style=color:#719e07>&amp;&amp;</span>... args) {
+</span></span><span style=display:flex><span>    FnPtr call_ptr <span style=color:#719e07>=</span> get_call_ptr(device_type);
+</span></span><span style=display:flex><span>    <span style=color:#719e07>return</span> (<span style=color:#719e07>*</span>call_ptr)(std<span style=color:#719e07>::</span>forward<span style=color:#719e07>&lt;</span>ArgTypes<span style=color:#719e07>&gt;</span>(args)...);
+</span></span><span style=display:flex><span>  }
+</span></span><span style=display:flex><span>	<span style=color:#586e75>// ...
+</span></span></span></code></pre></div><p>二是注册指针（只挑两个设备来展示，实际上还支持很多设备），后面注册 stub 的时候这些方法会被调用到：</p><div class=highlight><pre tabindex=0 style=color:#93a1a1;background-color:#002b36;-moz-tab-size:2;-o-tab-size:2;tab-size:2><code class=language-cpp data-lang=cpp><span style=display:flex><span>	<span style=color:#586e75>// ...
+</span></span></span><span style=display:flex><span><span style=color:#586e75></span>  <span style=color:#dc322f>void</span> <span style=color:#268bd2>set_cuda_dispatch_ptr</span>(FnPtr fn_ptr) {
+</span></span><span style=display:flex><span>    impl.cuda_dispatch_ptr <span style=color:#719e07>=</span> <span style=color:#719e07>reinterpret_cast</span><span style=color:#719e07>&lt;</span><span style=color:#dc322f>void</span><span style=color:#719e07>*&gt;</span>(fn_ptr);
+</span></span><span style=display:flex><span>  }
+</span></span><span style=display:flex><span>  <span style=color:#dc322f>void</span> <span style=color:#268bd2>set_mps_dispatch_ptr</span>(FnPtr fn_ptr) {
+</span></span><span style=display:flex><span>    impl.mps_dispatch_ptr <span style=color:#719e07>=</span> <span style=color:#719e07>reinterpret_cast</span><span style=color:#719e07>&lt;</span><span style=color:#dc322f>void</span><span style=color:#719e07>*&gt;</span>(fn_ptr);
+</span></span><span style=display:flex><span>  }
+</span></span><span style=display:flex><span>	<span style=color:#586e75>// ...
+</span></span></span></code></pre></div><p>三是检查设备是否受支持（再深入进去看代码，实际上就是用设备类型来 switch，看对应指针是否注册）：</p><div class=highlight><pre tabindex=0 style=color:#93a1a1;background-color:#002b36;-moz-tab-size:2;-o-tab-size:2;tab-size:2><code class=language-cpp data-lang=cpp><span style=display:flex><span>	<span style=color:#586e75>// ...
+</span></span></span><span style=display:flex><span><span style=color:#586e75></span>  <span style=color:#586e75>// Returns true if the dispatcher has a kernel registered for this device
+</span></span></span><span style=display:flex><span><span style=color:#586e75></span>  <span style=color:#586e75>// type.
+</span></span></span><span style=display:flex><span><span style=color:#586e75></span>  <span style=color:#dc322f>bool</span> <span style=color:#268bd2>is_device_supported</span>(<span style=color:#719e07>const</span> c10<span style=color:#719e07>::</span>DeviceType device_type) {
+</span></span><span style=display:flex><span>    <span style=color:#719e07>auto</span> result <span style=color:#719e07>=</span> impl.try_get_call_ptr(device_type
+</span></span><span style=display:flex><span>      , <span style=color:#719e07>reinterpret_cast</span><span style=color:#719e07>&lt;</span><span style=color:#dc322f>void</span><span style=color:#719e07>*&gt;</span>(DEFAULT)
+</span></span><span style=display:flex><span><span style=color:#719e07>#ifdef HAVE_AVX512_CPU_DEFINITION
+</span></span></span><span style=display:flex><span><span style=color:#719e07></span>      , <span style=color:#719e07>reinterpret_cast</span><span style=color:#719e07>&lt;</span><span style=color:#dc322f>void</span><span style=color:#719e07>*&gt;</span>(AVX512)
+</span></span><span style=display:flex><span><span style=color:#719e07>#endif
+</span></span></span><span style=display:flex><span><span style=color:#719e07>#ifdef HAVE_AVX2_CPU_DEFINITION
+</span></span></span><span style=display:flex><span><span style=color:#719e07></span>      , <span style=color:#719e07>reinterpret_cast</span><span style=color:#719e07>&lt;</span><span style=color:#dc322f>void</span><span style=color:#719e07>*&gt;</span>(AVX2)
+</span></span><span style=display:flex><span><span style=color:#719e07>#endif
+</span></span></span><span style=display:flex><span><span style=color:#719e07>#ifdef HAVE_VSX_CPU_DEFINITION
+</span></span></span><span style=display:flex><span><span style=color:#719e07></span>      , <span style=color:#719e07>reinterpret_cast</span><span style=color:#719e07>&lt;</span><span style=color:#dc322f>void</span><span style=color:#719e07>*&gt;</span>(VSX)
+</span></span><span style=display:flex><span><span style=color:#719e07>#endif
+</span></span></span><span style=display:flex><span><span style=color:#719e07>#ifdef HAVE_ZVECTOR_CPU_DEFINITION
+</span></span></span><span style=display:flex><span><span style=color:#719e07></span>      , <span style=color:#719e07>reinterpret_cast</span><span style=color:#719e07>&lt;</span><span style=color:#dc322f>void</span><span style=color:#719e07>*&gt;</span>(ZVECTOR)
+</span></span><span style=display:flex><span><span style=color:#719e07>#endif
+</span></span></span><span style=display:flex><span><span style=color:#719e07>#ifdef HAVE_SVE256_CPU_DEFINITION
+</span></span></span><span style=display:flex><span><span style=color:#719e07></span>      , <span style=color:#719e07>reinterpret_cast</span><span style=color:#719e07>&lt;</span><span style=color:#dc322f>void</span><span style=color:#719e07>*&gt;</span>(SVE256)
+</span></span><span style=display:flex><span><span style=color:#719e07>#endif
+</span></span></span><span style=display:flex><span><span style=color:#719e07></span>      );
+</span></span><span style=display:flex><span>    <span style=color:#719e07>if</span> (std<span style=color:#719e07>::</span>holds_alternative<span style=color:#719e07>&lt;</span>ErrorType<span style=color:#719e07>&gt;</span>(result)){
+</span></span><span style=display:flex><span>      <span style=color:#719e07>return</span> <span style=color:#b58900>false</span>;
+</span></span><span style=display:flex><span>    }
+</span></span><span style=display:flex><span>    <span style=color:#719e07>return</span> <span style=color:#b58900>true</span>;
+</span></span><span style=display:flex><span>  }
+</span></span><span style=display:flex><span>  <span style=color:#586e75>// ...
+</span></span></span></code></pre></div><h1 id=声明派发-declare_dispatch>声明派发 <code>DECLARE_DISPATCH</code>
+<a class=header-anchor href=#%e5%a3%b0%e6%98%8e%e6%b4%be%e5%8f%91-declare_dispatch></a></h1><p>声明派发需要 stub 的名字和函数指针类型。声明过程<strong>包含对 stub 类的定义</strong>，以及对 stub 对象的声明。设备 + stub 名形成了一个独一无二的 stub 类。</p><div class=highlight><pre tabindex=0 style=color:#93a1a1;background-color:#002b36;-moz-tab-size:2;-o-tab-size:2;tab-size:2><code class=language-cpp data-lang=cpp><span style=display:flex><span><span style=color:#719e07>#define DECLARE_DISPATCH(fn, name)                                                         \
+</span></span></span><span style=display:flex><span><span style=color:#719e07>  struct name##_DECLARE_DISPATCH_type : DispatchStub&lt;fn, name##_DECLARE_DISPATCH_type&gt; {   \
+</span></span></span><span style=display:flex><span><span style=color:#719e07>    name##_DECLARE_DISPATCH_type() = default;                                              \
+</span></span></span><span style=display:flex><span><span style=color:#719e07>    name##_DECLARE_DISPATCH_type(const name##_DECLARE_DISPATCH_type&amp;) = delete;            \
+</span></span></span><span style=display:flex><span><span style=color:#719e07>    name##_DECLARE_DISPATCH_type&amp; operator=(const name##_DECLARE_DISPATCH_type&amp;) = delete; \
+</span></span></span><span style=display:flex><span><span style=color:#719e07>    name##_DECLARE_DISPATCH_type(name##_DECLARE_DISPATCH_type&amp;&amp;) = delete;                 \
+</span></span></span><span style=display:flex><span><span style=color:#719e07>    name##_DECLARE_DISPATCH_type&amp; operator=(name##_DECLARE_DISPATCH_type&amp;&amp;) = delete;      \
+</span></span></span><span style=display:flex><span><span style=color:#719e07>    ~name##_DECLARE_DISPATCH_type() = default;                                             \
+</span></span></span><span style=display:flex><span><span style=color:#719e07>  };                                                                                       \
+</span></span></span><span style=display:flex><span><span style=color:#719e07>  extern TORCH_API struct name##_DECLARE_DISPATCH_type name;
+</span></span></span></code></pre></div><p>比如 <code>DECLARE_DISPATCH(index_put_fn, index_put_stub)</code> 会定义一个 <code>index_put_stub_DECLARE_DISPATCH_type</code> 类，并且声明一个该类的对象为 <code>index_put_stub</code>。这个类用 CRTP 继承 <code>DispatchStub</code> 类，<code>fn</code> 参数会用于父类的模板参数。</p><h1 id=定义派发-define_dispatch>定义派发 <code>DEFINE_DISPATCH</code>
+<a class=header-anchor href=#%e5%ae%9a%e4%b9%89%e6%b4%be%e5%8f%91-define_dispatch></a></h1><p>定义派发只需要一个 stub 名字。</p><div class=highlight><pre tabindex=0 style=color:#93a1a1;background-color:#002b36;-moz-tab-size:2;-o-tab-size:2;tab-size:2><code class=language-cpp data-lang=cpp><span style=display:flex><span><span style=color:#719e07>#define DEFINE_DISPATCH(name) struct name##_DECLARE_DISPATCH_type name
+</span></span></span></code></pre></div><p>比如 <code>DEFINE_DISPATCH(index_put_stub);</code> 会展开为：</p><div class=highlight><pre tabindex=0 style=color:#93a1a1;background-color:#002b36;-moz-tab-size:2;-o-tab-size:2;tab-size:2><code class=language-cpp data-lang=cpp><span style=display:flex><span><span style=color:#719e07>struct</span> <span style=color:#268bd2>index_put_stub_DECLARE_DISPATCH_type</span> index_put_stub;
+</span></span></code></pre></div><h1 id=注册派发-register_dispatch>注册派发 <code>REGISTER_DISPATCH</code>
+<a class=header-anchor href=#%e6%b3%a8%e5%86%8c%e6%b4%be%e5%8f%91-register_dispatch></a></h1><p>注册派发需要 stub 的名字和函数指针，不同设备的 <code>REGISTER_DISPATCH</code> 定义不同。</p><p>比如 CUDA 文件中的 <code>REGISTER_DISPATCH(index_put_stub, &amp;index_put_kernel)</code>，实际上宏展开后定义了这样的静态成员：</p><div class=highlight><pre tabindex=0 style=color:#93a1a1;background-color:#002b36;-moz-tab-size:2;-o-tab-size:2;tab-size:2><code class=language-cpp data-lang=cpp><span style=display:flex><span><span style=color:#719e07>static</span> RegisterCUDADispatch<span style=color:#719e07>&lt;</span><span style=color:#719e07>struct</span> <span style=color:#268bd2>index_put_stub_DECLARE_DISPATCH_type</span><span style=color:#719e07>&gt;</span> \
+</span></span><span style=display:flex><span>		index_put_stub__register(index_put_stub, <span style=color:#719e07>&amp;</span>index_put_kernel);
+</span></span></code></pre></div><p>看这个类的定义：</p><div class=highlight><pre tabindex=0 style=color:#93a1a1;background-color:#002b36;-moz-tab-size:2;-o-tab-size:2;tab-size:2><code class=language-cpp data-lang=cpp><span style=display:flex><span><span style=color:#719e07>template</span> <span style=color:#719e07>&lt;</span><span style=color:#719e07>typename</span> DispatchStub<span style=color:#719e07>&gt;</span>
+</span></span><span style=display:flex><span><span style=color:#719e07>struct</span> <span style=color:#268bd2>RegisterCUDADispatch</span> {
+</span></span><span style=display:flex><span>  RegisterCUDADispatch(DispatchStub <span style=color:#719e07>&amp;</span>stub, <span style=color:#719e07>typename</span> DispatchStub<span style=color:#719e07>::</span>FnPtr value) {
+</span></span><span style=display:flex><span>    stub.set_cuda_dispatch_ptr(value);
+</span></span><span style=display:flex><span>  }
+</span></span><span style=display:flex><span>};
+</span></span></code></pre></div><p><code>index_put_stub__register</code> 在静态初始化阶段构造函数会调用 <code>set_cuda_dispatch_ptr</code>，从而将 CUDA 设备的函数指针记录在 stub 中。</p><h1 id=stub-调用>Stub 调用
+<a class=header-anchor href=#stub-%e8%b0%83%e7%94%a8></a></h1><p>按照 <code>DispatchStub</code> 基类的定义，stub 是函数对象。一种可能的路线是 <code>dispatch_*</code> → <code>*_stub</code>，在某些源码的位置则是直接调用。<strong>调用 stub 需要提供设备的类型作为第一个参数</strong>。</p><p>调用侧，以 add 为例（可以参考 <a href=https://blog.ezyang.com/2019/05/pytorch-internals/ title=https://blog.ezyang.com/2019/05/pytorch-internals/ rel="noopener external nofollow noreferrer" target=_blank class=exturl>https://blog.ezyang.com/2019/05/pytorch-internals/<i class="fa fa-external-link-alt"></i></a> ）：</p><ol><li><code>dispatch_add</code></li><li><code>Tensor::add</code></li><li><code>at::native::add</code></li><li><code>add_stub</code></li></ol><p>在文件里给了个注释：</p><div class=highlight><pre tabindex=0 style=color:#93a1a1;background-color:#002b36;-moz-tab-size:2;-o-tab-size:2;tab-size:2><code class=language-cpp data-lang=cpp><span style=display:flex><span><span style=color:#586e75>// NB: codegenned
+</span></span></span><span style=display:flex><span><span style=color:#586e75></span>DECLARE_DISPATCH(structured_binary_fn_alpha, add_stub)
+</span></span></code></pre></div><p>因为是代码生成，所以我们看不到 <code>add_stub</code> 的定义和实现注册。</p><p>也可以 <code>_index_put_impl_</code> 为例看 stub 调用。native_functions.yaml 中写到 <code>index_put_</code> 会调用到 <code>_index_put_impl_</code> 上来，进去检查里面确实有 <code>index_put_stub</code> 调用。那么 <code>index_put_</code> 是怎么联系到 <code>_index_put_impl_</code> 的？</p><p>在 <a href=https://github.com/pytorch/pytorch/blob/e959dd017d7dcd7c6351c9ef303f3667aebe11f5/aten/src/ATen/native/TensorAdvancedIndexing.cpp#L1077 title=代码 rel="noopener external nofollow noreferrer" target=_blank class=exturl>代码<i class="fa fa-external-link-alt"></i></a> 中，<code>at::native::index_put_</code> 调用了 <code>at::_index_put_impl_</code>。</p><div class=highlight><pre tabindex=0 style=color:#93a1a1;background-color:#002b36;-moz-tab-size:2;-o-tab-size:2;tab-size:2><code class=language-cpp data-lang=cpp><span style=display:flex><span>Tensor<span style=color:#719e07>&amp;</span> index_put_(
+</span></span><span style=display:flex><span>    Tensor<span style=color:#719e07>&amp;</span> self,
+</span></span><span style=display:flex><span>    <span style=color:#719e07>const</span> torch<span style=color:#719e07>::</span>List<span style=color:#719e07>&lt;</span>std<span style=color:#719e07>::</span>optional<span style=color:#719e07>&lt;</span>Tensor<span style=color:#719e07>&gt;&gt;&amp;</span> indices,
+</span></span><span style=display:flex><span>    <span style=color:#719e07>const</span> Tensor<span style=color:#719e07>&amp;</span> value,
+</span></span><span style=display:flex><span>    <span style=color:#719e07>const</span> <span style=color:#dc322f>bool</span> accumulate) {
+</span></span><span style=display:flex><span>  <span style=color:#719e07>return</span> at<span style=color:#719e07>::</span>_index_put_impl_(
+</span></span><span style=display:flex><span>      self, indices, value, accumulate, <span style=color:#586e75>/*unsafe=*/</span><span style=color:#b58900>false</span>);
+</span></span><span style=display:flex><span>}
+</span></span></code></pre></div><p>因此路径为 <code>at::native::index_put_</code> → <code>at::_index_put_impl_</code> → <code>index_put_stub</code>。</p><p>PyTorch 又是怎么把 <code>torch.index_put_</code> 和 <code>torch.Tensor.index_put_</code> 关联到 <code>at::native::index_put_</code> 上来的？这就要看下一篇
+<a href=/posts/programming/python/2.-PyTorch-C++-%E4%BB%A3%E7%A0%81%E7%94%9F%E6%88%90/ title="PyTorch C++ 代码生成">PyTorch C++ 代码生成</a> 了。</p></div><footer class=post-footer><div class=post-tags><a href=/tags/torch>torch</a></div><div class=addthis_inline_share_toolbox style=text-align:center></div><hr><div class=post-nav><div class="post-nav-next post-nav-item"><a href=/posts/programming/python/2.-PyTorch-C++-%E4%BB%A3%E7%A0%81%E7%94%9F%E6%88%90/ rel=next title="PyTorch C++ 代码生成"><i class="fa fa-chevron-left"></i> PyTorch C++ 代码生成</a></div><div class="post-nav-prev post-nav-item"><a href=/posts/cli/%E5%9C%A8%E6%9C%8D%E5%8A%A1%E5%99%A8%E4%B8%8A%E4%BD%BF%E7%94%A8-sing-box-%E4%BB%A3%E7%90%86/ rel=prev title="在服务器上使用 sing-box 代理">在服务器上使用 sing-box 代理
+<i class="fa fa-chevron-right"></i></a></div></div></footer></article></div></div></main><footer class=footer><div class=footer-inner><div class=copyright>&copy;
+<span itemprop=copyrightYear>2023 - 2025
+</span><span class=with-love><i class="fa fa-heart"></i>
+</span><span class=author itemprop=copyrightHolder>🤖</span></div><div class=powered-by>由 <a href=https://gohugo.io title=0.143.1 target=_blank>Hugo</a> & <a href=https://github.com/hugo-next/hugo-theme-next title=4.5.3 target=_blank>Hugo NexT.Gemini</a> 强力驱动</div></div></footer><script type=text/javascript src=https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.1/anime.min.js defer></script><script type=text/javascript src=https://cdnjs.cloudflare.com/ajax/libs/medium-zoom/1.1.0/medium-zoom.min.js defer></script><script class=next-config data-name=main type=application/json>{"bookmark":{"color":"#222","enable":false,"save":"manual"},"copybtn":true,"darkmode":false,"hostname":"https://hxhue.github.io/","i18n":{"ds_day":" 天前","ds_days":" 天 ","ds_hour":" 小时前","ds_hours":" 小时 ","ds_just":"刚刚","ds_min":" 分钟前","ds_mins":" 分钟","ds_month":" 个月前","ds_years":" 年 ","empty":"没有找到任何搜索结果：${query}","hits":"找到 ${hits} 个搜索结果","hits_time":"找到 ${hits} 个搜索结果（用时 ${time} 毫秒）","placeholder":"搜索..."},"lang":"zh-CN","lazyload":false,"localSearch":{"enable":true,"limit":1e3,"path":"/searchindexes.xml","preload":false,"topnperarticle":-1,"trigger":"auto","unescape":false},"motion":{"async":true,"enable":false,"transition":{"collheader":"fadeInLeft","menu_item":"fadeInDown","postblock":"fadeIn","postbody":"fadeInDown","postheader":"fadeInDown","sidebar":"fadeInUp"}},"postmeta":{"comments":{"enable":false,"plugin":"waline"},"views":{"enable":false,"plugin":"busuanzi"}},"root":"/","scheme":"Gemini","sidebar":{"display":"post","offset":12,"padding":18,"position":"left","width":256},"vendor":{"plugins":"cdnjs","router":"https://cdnjs.cloudflare.com/ajax/libs"},"version":"4.5.3"}</script><script type=text/javascript src=/js/main.min.37ba8b54f9d4d784d08028c45eea93b5d4e13eda8ee7fb0d2edd6f3fac66cfd2.js defer></script></body></html>

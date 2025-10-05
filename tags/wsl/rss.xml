@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Wsl on Bluegill</title><link>https://hxhue.github.io/tags/wsl/</link><description>Recent content in Wsl on Bluegill</description><generator>Hugo</generator><language>zh-CN</language><lastBuildDate>Mon, 03 Mar 2025 00:00:00 +0800</lastBuildDate><atom:link href="https://hxhue.github.io/tags/wsl/rss.xml" rel="self" type="application/rss+xml"/><item><title>WSL2 中安装 perf</title><link>https://hxhue.github.io/posts/systems/Windows/WSL2-%E4%B8%AD%E5%AE%89%E8%A3%85-perf/</link><pubDate>Mon, 06 Jan 2025 00:00:00 +0800</pubDate><guid>https://hxhue.github.io/posts/systems/Windows/WSL2-%E4%B8%AD%E5%AE%89%E8%A3%85-perf/</guid><description>&lt;p>&lt;a href="https://juanjose.garciaripoll.com/blog/installing-perf-on-WSL2/index.html" title="https://juanjose.garciaripoll.com/blog/installing-perf-on-WSL2/index.html" rel="noopener external nofollow noreferrer"
+ target="_blank" class=" exturl" >https://juanjose.garciaripoll.com/blog/installing-perf-on-WSL2/index.html&lt;i class="fa fa-external-link-alt">&lt;/i>&lt;/a>&lt;/p>
+&lt;p>参考这个教程，直接下载 perf 并编译，编译报错。&lt;/p>
+&lt;p>&lt;a href="https://gist.github.com/abel0b/b1881e41b9e1c4b16d84e5e083c38a13" title="https://gist.github.com/abel0b/b1881e41b9e1c4b16d84e5e083c38a13" rel="noopener external nofollow noreferrer"
+ target="_blank" class=" exturl" >https://gist.github.com/abel0b/b1881e41b9e1c4b16d84e5e083c38a13&lt;i class="fa fa-external-link-alt">&lt;/i>&lt;/a>&lt;/p>
+&lt;p>从 WSL2 的仓库附属代码编译 perf。注意找到和自己内核版本对应的源码，可以用 &lt;code>uname -a&lt;/code> 来查看自己的内核版本。&lt;/p></description></item><item><title>WSL2 中 nvim 的复制粘贴和 Windows 不共享剪贴板</title><link>https://hxhue.github.io/posts/systems/Windows/WSL2-%E4%B8%AD-nvim-%E7%9A%84%E5%A4%8D%E5%88%B6%E7%B2%98%E8%B4%B4%E5%92%8C-Windows-%E4%B8%8D%E5%85%B1%E4%BA%AB%E5%89%AA%E8%B4%B4%E6%9D%BF/</link><pubDate>Sun, 15 Sep 2024 00:00:00 +0800</pubDate><guid>https://hxhue.github.io/posts/systems/Windows/WSL2-%E4%B8%AD-nvim-%E7%9A%84%E5%A4%8D%E5%88%B6%E7%B2%98%E8%B4%B4%E5%92%8C-Windows-%E4%B8%8D%E5%85%B1%E4%BA%AB%E5%89%AA%E8%B4%B4%E6%9D%BF/</guid><description>&lt;h1 id="三个剪贴板">三个剪贴板
+&lt;a class="header-anchor" href="#%e4%b8%89%e4%b8%aa%e5%89%aa%e8%b4%b4%e6%9d%bf">&lt;/a>
+&lt;/h1>&lt;p>Windows 一个，X selection 一个，Wayland 一个。&lt;/p>
+&lt;p>安装 wl-clipboard 包可以获得 &lt;code>wl-copy&lt;/code> 和 &lt;code>wl-paste&lt;/code> 工具，它们操作 Wayland 剪贴板。&lt;/p>
+&lt;p>安装 xclip 可以获得 &lt;code>xclip&lt;/code> 工具，&lt;code>xclip&lt;/code> 或 &lt;code>xclip -i&lt;/code> 类似 &lt;code>wl-copy&lt;/code>，完成复制功能，&lt;code>xclip -o&lt;/code> 完成粘贴功能。它操作的是 X selection。&lt;/p></description></item><item><title>WSL2 不能使用 code 打开 VS Code</title><link>https://hxhue.github.io/posts/systems/Windows/WSL2-%E4%B8%8D%E8%83%BD%E4%BD%BF%E7%94%A8-code-%E6%89%93%E5%BC%80-VS-Code/</link><pubDate>Sun, 17 Sep 2023 00:00:00 +0800</pubDate><guid>https://hxhue.github.io/posts/systems/Windows/WSL2-%E4%B8%8D%E8%83%BD%E4%BD%BF%E7%94%A8-code-%E6%89%93%E5%BC%80-VS-Code/</guid><description>&lt;p>首先检查 &lt;code>/etc/wsl.conf&lt;/code> 配置，如果设置了不追加 Windows 的 PATH，则需要自己额外添加 VS Code 的命令目录到 WSL 中。&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" style="color:#93a1a1;background-color:#002b36;-moz-tab-size:2;-o-tab-size:2;tab-size:2;">&lt;code class="language-toml" data-lang="toml">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#586e75"># /etc/wsl.conf&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>[boot]
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>systemd=&lt;span style="color:#cb4b16">true&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>[interop]
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>appendWindowsPath=&lt;span style="color:#cb4b16">false&lt;/span>
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;div class="highlight">&lt;pre tabindex="0" style="color:#93a1a1;background-color:#002b36;-moz-tab-size:2;-o-tab-size:2;tab-size:2;">&lt;code class="language-bash" data-lang="bash">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#586e75"># ~/.bashrc 或者其他配置文件&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#b58900">export&lt;/span> &lt;span style="color:#268bd2">PATH&lt;/span>&lt;span style="color:#719e07">=&lt;/span>&lt;span style="color:#2aa198">&amp;#34;/mnt/c/Users/xxx/AppData/Local/Programs/Microsoft VS Code/bin:&lt;/span>&lt;span style="color:#268bd2">$PATH&lt;/span>&lt;span style="color:#2aa198">&amp;#34;&lt;/span>
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>如果报错：&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" style="color:#93a1a1;background-color:#002b36;-moz-tab-size:2;-o-tab-size:2;tab-size:2;">&lt;code class="language-txt" data-lang="txt">&lt;span style="display:flex;">&lt;span>/mnt/c/Users/xxx/AppData/Local/Programs/Microsoft VS Code/bin/code: 61: /mnt/c/Users/xxx/AppData/Local/Programs/Microsoft VS Code/Code.exe: Exec format error
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>则可能是新版 WSL 的 systemd 打包问题。（参考 &lt;a href="https://github.com/microsoft/WSL/issues/8952#issuecomment-1568212651" title="https://github.com/microsoft/WSL/issues/8952#issuecomment-1568212651" rel="noopener external nofollow noreferrer"
+ target="_blank" class=" exturl" >https://github.com/microsoft/WSL/issues/8952#issuecomment-1568212651&lt;i class="fa fa-external-link-alt">&lt;/i>&lt;/a>）&lt;/p></description></item><item><title>Windows 提示被管理员禁止安装核显驱动、WSL 也无法启动</title><link>https://hxhue.github.io/posts/systems/Windows/Windows-%E6%8F%90%E7%A4%BA%E8%A2%AB%E7%AE%A1%E7%90%86%E5%91%98%E7%A6%81%E6%AD%A2%E5%AE%89%E8%A3%85%E6%A0%B8%E6%98%BE%E9%A9%B1%E5%8A%A8WSL-%E4%B9%9F%E6%97%A0%E6%B3%95%E5%90%AF%E5%8A%A8/</link><pubDate>Sat, 12 Aug 2023 00:00:00 +0800</pubDate><guid>https://hxhue.github.io/posts/systems/Windows/Windows-%E6%8F%90%E7%A4%BA%E8%A2%AB%E7%AE%A1%E7%90%86%E5%91%98%E7%A6%81%E6%AD%A2%E5%AE%89%E8%A3%85%E6%A0%B8%E6%98%BE%E9%A9%B1%E5%8A%A8WSL-%E4%B9%9F%E6%97%A0%E6%B3%95%E5%90%AF%E5%8A%A8/</guid><description>&lt;p>原因是很早之前按照知乎的说法启用了这个设置，本想禁用系统更新时自动安装旧版本的核显驱动，但也使得我的电脑核显驱动坏掉且不能自行安装。&lt;/p>
+&lt;p>
+
+
+
+
+
+
+&lt;img src="https://hxhue.github.io/assets/df665a70a2b095157646fb53c02e2313.webp">&lt;/p>
+&lt;p>恢复核显驱动首先应该关闭这项，然后去下载对应驱动安装，或者回退到旧的驱动。&lt;/p></description></item><item><title>WSL 合集</title><link>https://hxhue.github.io/posts/systems/Windows/WSL-%E5%90%88%E9%9B%86/</link><pubDate>Sat, 12 Aug 2023 00:00:00 +0800</pubDate><guid>https://hxhue.github.io/posts/systems/Windows/WSL-%E5%90%88%E9%9B%86/</guid><description>&lt;h1 id="常见问题">常见问题
+&lt;a class="header-anchor" href="#%e5%b8%b8%e8%a7%81%e9%97%ae%e9%a2%98">&lt;/a>
+&lt;/h1>&lt;p>&lt;strong>设置 apt 代理&lt;/strong>。编辑 /etc/apt/apt.conf，格式如下（ip 会变）：&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" style="color:#93a1a1;background-color:#002b36;-moz-tab-size:2;-o-tab-size:2;tab-size:2;">&lt;code class="language-txt" data-lang="txt">&lt;span style="display:flex;">&lt;span>// 很奇怪，注释竟然是//开头，而不是#
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>Acquire::http::Proxy &amp;#34;http://192.168.1.56:12366/&amp;#34;;
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>Acquire::https::Proxy &amp;#34;http://192.168.1.56:12366/&amp;#34;;
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;blockquote>
+ &lt;p>sudo 没有 &lt;code>$http_proxy&lt;/code> 代理的原因是默认不传递环境变量，使用 &lt;code>-E&lt;/code> 选项传递环境变量就可以不设置上面的代理。&lt;/p></description></item></channel></rss>

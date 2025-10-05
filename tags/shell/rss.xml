@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Shell on Bluegill</title><link>https://hxhue.github.io/tags/shell/</link><description>Recent content in Shell on Bluegill</description><generator>Hugo</generator><language>zh-CN</language><lastBuildDate>Tue, 25 Feb 2025 00:00:00 +0800</lastBuildDate><atom:link href="https://hxhue.github.io/tags/shell/rss.xml" rel="self" type="application/rss+xml"/><item><title>tar</title><link>https://hxhue.github.io/posts/cli/common/tar/</link><pubDate>Thu, 08 Feb 2024 00:00:00 +0800</pubDate><guid>https://hxhue.github.io/posts/cli/common/tar/</guid><description>&lt;p>tar 的时候可以指定压缩，要注意打包的时候如果用了压缩，解包的时候需要用同样的算法来解压。这个并不是自动识别的。比如：&lt;/p>
+&lt;p>&lt;code>tar -zcf xxx.tar.gz files&lt;/code> 对应于 &lt;code>tar -zxf xxx.tar.gz&lt;/code>。&lt;/p>
+&lt;p>而且，如果不压缩就不要用 &lt;code>.tar.gz&lt;/code> 来命名，而是用 &lt;code>.tar&lt;/code>。（如果是其他压缩格式就用其他的命名方式。）&lt;/p></description></item><item><title>wget</title><link>https://hxhue.github.io/posts/cli/common/wget/</link><pubDate>Thu, 08 Feb 2024 00:00:00 +0800</pubDate><guid>https://hxhue.github.io/posts/cli/common/wget/</guid><description>&lt;h1 id="下载整个站点">下载整个站点
+&lt;a class="header-anchor" href="#%e4%b8%8b%e8%bd%bd%e6%95%b4%e4%b8%aa%e7%ab%99%e7%82%b9">&lt;/a>
+&lt;/h1>&lt;div class="highlight">&lt;pre tabindex="0" style="color:#93a1a1;background-color:#002b36;-moz-tab-size:2;-o-tab-size:2;tab-size:2;">&lt;code class="language-bash" data-lang="bash">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#586e75"># https://stackoverflow.com/a/11514515/&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>wget -r -p -np -k &lt;span style="color:#2aa198">${&lt;/span>&lt;span style="color:#268bd2">URL&lt;/span>&lt;span style="color:#2aa198">}&lt;/span>
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div></description></item><item><title>find</title><link>https://hxhue.github.io/posts/cli/common/find/</link><pubDate>Mon, 05 Feb 2024 00:00:00 +0800</pubDate><guid>https://hxhue.github.io/posts/cli/common/find/</guid><description>&lt;p>&lt;code>find&lt;/code> 的 &lt;code>-exec&lt;/code> 选项中，以 &lt;code>;&lt;/code> 结尾（注意 shell 转义）是对每个文件单独运行命令。而 &lt;code>+&lt;/code> 结尾是对所有文件用 xargs 的形式运行命令。可以从以下例子看出：&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" style="color:#93a1a1;background-color:#002b36;-moz-tab-size:2;-o-tab-size:2;tab-size:2;">&lt;code class="language-bash" data-lang="bash">&lt;span style="display:flex;">&lt;span>$ find . -name &lt;span style="color:#2aa198">&amp;#39;*.cu&amp;#39;&lt;/span> -exec &lt;span style="color:#b58900">echo&lt;/span> &lt;span style="color:#719e07">{}&lt;/span> +
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>./basic_interop.cu ./ripple.cu ./heat.cu
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>$ find . -name &lt;span style="color:#2aa198">&amp;#39;*.cu&amp;#39;&lt;/span> -exec &lt;span style="color:#b58900">echo&lt;/span> &lt;span style="color:#719e07">{}&lt;/span> &lt;span style="color:#cb4b16">\;&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>./basic_interop.cu
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>./ripple.cu
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>./heat.cu
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>&lt;code>-depth&lt;/code> 选项让 find 以深度优先的顺序访问文件，这样文件夹就一定比其包含的子文件后访问，这对于删除等工作非常重要。&lt;/p></description></item><item><title>cp</title><link>https://hxhue.github.io/posts/cli/common/cp/</link><pubDate>Sun, 21 Jan 2024 00:00:00 +0800</pubDate><guid>https://hxhue.github.io/posts/cli/common/cp/</guid><description>&lt;div class="highlight">&lt;pre tabindex="0" style="color:#93a1a1;background-color:#002b36;-moz-tab-size:2;-o-tab-size:2;tab-size:2;">&lt;code class="language-txt" data-lang="txt">&lt;span style="display:flex;">&lt;span>SYNOPSIS
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> cp [OPTION]... [-T] SOURCE DEST
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> cp [OPTION]... SOURCE... DIRECTORY
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> cp [OPTION]... -t DIRECTORY SOURCE...
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>其实 cp 的选项比我想象中的要多很多。&lt;/p>
+&lt;p>其他选项：&lt;/p>
+&lt;ul>
+&lt;li>创建硬链接（&lt;code>-l&lt;/code>）而不是拷贝。&lt;/li>
+&lt;li>&lt;code>-L&lt;/code> 则会先解引用符号链接。&lt;/li>
+&lt;li>&lt;code>-n&lt;/code> &lt;strong>不会覆盖旧文件&lt;/strong>。&lt;/li>
+&lt;li>&lt;code>-a&lt;/code> 先归档再拷贝，也就是保留所有属性。&lt;/li>
+&lt;li>&lt;code>-r&lt;/code> 递归拷贝（文件夹）。&lt;/li>
+&lt;li>&lt;code>-u&lt;/code> &lt;strong>只拷贝时间上更新的文件&lt;/strong>。&lt;/li>
+&lt;/ul>
+&lt;hr>
+&lt;p>&lt;strong>在 shell 中合并两个目录可以用 rsync&lt;/strong>：&lt;/p></description></item><item><title>切换默认 shell</title><link>https://hxhue.github.io/posts/systems/Linux/%E5%88%87%E6%8D%A2%E9%BB%98%E8%AE%A4-shell/</link><pubDate>Sun, 17 Dec 2023 00:00:00 +0800</pubDate><guid>https://hxhue.github.io/posts/systems/Linux/%E5%88%87%E6%8D%A2%E9%BB%98%E8%AE%A4-shell/</guid><description>&lt;div class="highlight">&lt;pre tabindex="0" style="color:#93a1a1;background-color:#002b36;-moz-tab-size:2;-o-tab-size:2;tab-size:2;">&lt;code class="language-bash" data-lang="bash">&lt;span style="display:flex;">&lt;span>sudo usermod -s /bin/bash &lt;span style="color:#719e07">$(&lt;/span>whoami&lt;span style="color:#719e07">)&lt;/span>
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>&lt;code>chsh&lt;/code> 也有同样的功能。两者都是改变了 /etc/passwd 的记录项达到切换登陆 shell 的。&lt;/p>
+&lt;p>注意，如果用 &lt;code>chsh&lt;/code>，必须先切换到要更改 shell 的用户，比如给当前用户切换 shell 则是：&lt;/p></description></item><item><title>rsync</title><link>https://hxhue.github.io/posts/cli/common/rsync/</link><pubDate>Sun, 19 Nov 2023 00:00:00 +0800</pubDate><guid>https://hxhue.github.io/posts/cli/common/rsync/</guid><description>&lt;p>和 scp 相比可以断点续传。&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" style="color:#93a1a1;background-color:#002b36;-moz-tab-size:2;-o-tab-size:2;tab-size:2;">&lt;code class="language-bash" data-lang="bash">&lt;span style="display:flex;">&lt;span>$ rsync -avz -e ssh -r --info&lt;span style="color:#719e07">=&lt;/span>progress2 --info&lt;span style="color:#719e07">=&lt;/span>name0 coco/images/train2014.zip xxserver:/data/xxx/data/
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>2024年2月8日：这里已经是 zip 了，感觉没必要压缩。&lt;/p></description></item><item><title>top</title><link>https://hxhue.github.io/posts/cli/common/top/</link><pubDate>Sun, 22 Oct 2023 00:00:00 +0800</pubDate><guid>https://hxhue.github.io/posts/cli/common/top/</guid><description>&lt;p>&lt;code>top -H&lt;/code> 显示人类能阅读的大小。&lt;/p>
+&lt;p>进入 top 之后：&lt;/p>
+&lt;ul>
+&lt;li>shift + M：按照内存排序&lt;/li>
+&lt;li>shift + P：按照 CPU 使用排序&lt;/li>
+&lt;li>shift + T：按照时间排序&lt;/li>
+&lt;li>shift + N：按照 PID 排序&lt;/li>
+&lt;/ul>
+&lt;p>其实不是一定要按 shift，只要输入大写字母即可（比如用 CapsLk）&lt;/p></description></item><item><title>awk</title><link>https://hxhue.github.io/posts/cli/common/awk/</link><pubDate>Sat, 02 Sep 2023 00:00:00 +0800</pubDate><guid>https://hxhue.github.io/posts/cli/common/awk/</guid><description>&lt;h1 id="删除重复行">删除重复行
+&lt;a class="header-anchor" href="#%e5%88%a0%e9%99%a4%e9%87%8d%e5%a4%8d%e8%a1%8c">&lt;/a>
+&lt;/h1>&lt;p>可以用 &lt;code>awk '!x[$0]++'&lt;/code>。&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" style="color:#93a1a1;background-color:#002b36;-moz-tab-size:2;-o-tab-size:2;tab-size:2;">&lt;code class="language-txt" data-lang="txt">&lt;span style="display:flex;">&lt;span>$ cat text
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>aaaa
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>bb
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>bb
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>aaaa
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>c
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>$ awk &amp;#39;!x[$0]++&amp;#39; text
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>aaaa
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>bb
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>c
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div></description></item><item><title>tmux</title><link>https://hxhue.github.io/posts/cli/common/tmux/</link><pubDate>Sat, 12 Aug 2023 00:00:00 +0800</pubDate><guid>https://hxhue.github.io/posts/cli/common/tmux/</guid><description>&lt;p>配置文件在 &lt;code>~/.tmux.conf&lt;/code>。&lt;/p>
+&lt;p>开启鼠标（可能是最正常的操作逻辑了）：&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" style="color:#93a1a1;background-color:#002b36;-moz-tab-size:2;-o-tab-size:2;tab-size:2;">&lt;code class="language-bash" data-lang="bash">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#b58900">set&lt;/span> -g mouse on
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>打开之后能够支持切换 window、panel，调整 panel 之间的相对大小。右键还有一些便捷操作。比如 mark 提供复制功能。&lt;/p></description></item><item><title>vim</title><link>https://hxhue.github.io/posts/cli/common/vim/</link><pubDate>Sat, 12 Aug 2023 00:00:00 +0800</pubDate><guid>https://hxhue.github.io/posts/cli/common/vim/</guid><description>&lt;h1 id="vim-配置文件位置">vim 配置文件位置
+&lt;a class="header-anchor" href="#vim-%e9%85%8d%e7%bd%ae%e6%96%87%e4%bb%b6%e4%bd%8d%e7%bd%ae">&lt;/a>
+&lt;/h1>&lt;p>使用 &lt;code>:scriptnames&lt;/code> 查看。&lt;/p>
+&lt;p>neovim + Windows 的配置文件：&lt;code>%userprofile%\AppData\Local\nvim\init.vim&lt;/code>&lt;/p>
+&lt;p>macOS 和 Linux：&lt;code>~/.config/nvim/init.vim&lt;/code>&lt;/p></description></item></channel></rss>

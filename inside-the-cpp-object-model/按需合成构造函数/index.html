@@ -1,0 +1,163 @@
+<!doctype html><html lang=zh-CN data-theme=light><head><meta charset=UTF-8><meta name=viewport content="width=device-width"><meta name=theme-color content="#222" media="(prefers-color-scheme: light)"><meta name=generator content="Hugo 0.143.1"><link rel="shortcut icon" type=image/x-icon href=/imgs/icons/favicon.ico><link rel=icon type=image/x-icon href=/imgs/icons/favicon.ico><link rel=icon type=image/png sizes=16x16 href=/imgs/icons/favicon_16x16_next.png><link rel=icon type=image/png sizes=32x32 href=/imgs/icons/favicon_32_32_next.png><link rel=apple-touch-icon sizes=180x180 href=/imgs/icons/apple_touch_icon_next.png><meta itemprop=name content="按需合成构造函数"><meta itemprop=description content="个人博客，主要是零散的笔记。"><meta itemprop=datePublished zgotmplz><meta itemprop=dateModified zgotmplz><meta itemprop=image content="https://hxhue.github.io/imgs/371907.jpg"><meta itemprop=keywords content="cpp,inside-the-cpp-object-model"><link type=text/css rel=stylesheet href=https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.1.2/css/all.min.css><link type=text/css rel=stylesheet href=https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.1.1/animate.min.css><link rel=stylesheet href=/css/main.min.bea76f574a755574e17d42bea39502a74ca3ca4db65807b8c82d3e26dcec8420.css><style type=text/css>.post-footer,.flinks-list-footer hr:after{content:"~ 我可是有底线的哟 ~"}</style><link rel=stylesheet type=text/css href=/css/style.css><link rel=preconnect href=https://fonts.googleapis.com><link rel=preconnect href=https://fonts.gstatic.com crossorigin><link rel=stylesheet href=https://cdn.jsdelivr.net/npm/github-markdown-css@5.3.0/github-markdown-dark.css><script type=text/javascript id=MathJax-script async src=https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-svg.js></script><script>MathJax={tex:{displayMath:[["$$","$$"],["\\[","\\]"]],inlineMath:[["$","$"],["\\(","\\)"]]},svg:{fontCache:"global"}}</script><script type=module>
+  import mermaid from 'https://cdn.jsdelivr.net/npm/mermaid/dist/mermaid.esm.min.mjs';
+  mermaid.initialize({ startOnLoad: false });
+  mermaid.mermaidAPI.initialize();
+  window.mermaid = mermaid;
+</script><script type=text/javascript>(function(){localDB={set:function(e,t,n){if(n===0)return;const s=new Date,o=n*864e5,i={value:t,expiry:s.getTime()+o};localStorage.setItem(e,JSON.stringify(i))},get:function(e){const t=localStorage.getItem(e);if(!t)return void 0;const n=JSON.parse(t),s=new Date;return s.getTime()>n.expiry?(localStorage.removeItem(e),void 0):n.value}},theme={active:function(){const e=localDB.get("theme");if(e==null)return;theme.toggle(e),window.matchMedia("(prefers-color-scheme: dark)").addListener(function(e){theme.toggle(e.matches?"dark":"light")})},toggle:function(e){document.documentElement.setAttribute("data-theme",e),localDB.set("theme",e,2);const t=document.querySelector("iframe.giscus-frame");if(t){const n={setConfig:{theme:e}};t.contentWindow.postMessage({giscus:n},"https://giscus.app")}}},theme.active()})(window)</script><script class=next-config data-name=page type=application/json>{"comments":false,"isHome":false,"isPage":true,"path":"%E6%8C%89%E9%9C%80%E5%90%88%E6%88%90%E6%9E%84%E9%80%A0%E5%87%BD%E6%95%B0","permalink":"https://hxhue.github.io/inside-the-cpp-object-model/%E6%8C%89%E9%9C%80%E5%90%88%E6%88%90%E6%9E%84%E9%80%A0%E5%87%BD%E6%95%B0/","title":"按需合成构造函数","waline":{"js":[{"alias":"waline","alias_name":"@waline/client","file":"dist/pageview.js","name":"pageview","version":"2.13.0"},{"alias":"waline","alias_name":"@waline/client","file":"dist/comment.js","name":"comment","version":"2.13.0"}]}}</script><script type=text/javascript>document.addEventListener("DOMContentLoaded",()=>{var e=document.createElement("script");e.charset="UTF-8",e.src="",e.async=!1,e.defer=!0,document.head.appendChild(e),e.onload=function(){NexT.utils.fmtBusuanzi()}})</script><title>按需合成构造函数 - Bluegill</title><noscript><link rel=stylesheet href=/css/noscript.css></noscript></head><body itemscope itemtype=http://schema.org/WebPage><div class=headband></div><main class=main><header class=header itemscope itemtype=http://schema.org/WPHeader><div class=header-inner><div class=site-brand-container><div class=site-nav-toggle><div class=toggle aria-label role=button><span class=toggle-line></span>
+<span class=toggle-line></span>
+<span class=toggle-line></span></div></div><div class=site-meta><a href=/ class=brand rel=start><i class=logo-line></i><h1 class=site-title>Bluegill</h1><i class=logo-line></i></a><p class=site-subtitle itemprop=description></p></div><div class=site-nav-right><div class="toggle popup-trigger"><i class="fa fa-search fa-fw fa-lg"></i></div></div></div><nav class=site-nav><ul class="main-menu menu"><li class="menu-item menu-item-home"><a href=/ class=hvr-icon-pulse rel=section><i class="fa fa-home hvr-icon"></i>首页</a></li><li class="menu-item menu-item-about"><a href=/about/ class=hvr-icon-pulse rel=section><i class="fa fa-user hvr-icon"></i>关于</a></li><li class="menu-item menu-item-archives"><a href=/archives/ class=hvr-icon-pulse rel=section><i class="fa fa-archive hvr-icon"></i>归档</a></li><li class="menu-item menu-item-categories"><a href=/categories/ class=hvr-icon-pulse rel=section><i class="fa fa-th hvr-icon"></i>分类</a></li><li class="menu-item menu-item-tags"><a href=/tags/ class=hvr-icon-pulse rel=section><i class="fa fa-hashtag hvr-icon"></i>标签</a></li><li class="menu-item menu-item-daily"><a href=/daily/ class=hvr-icon-pulse rel=section><i class="fa fa-newspaper hvr-icon"></i>随笔</a></li><li class="menu-item menu-item-discovery"><a href=https://rift-fear-f2c.notion.site/2025-1e354a33cfb1802c841bdf29f2f3dab3 class=hvr-icon-pulse rel=section><i class="fa fa-compass hvr-icon"></i>发现</a></li><li class="menu-item menu-item-search"><a role=button class="popup-trigger hvr-icon-pulse"><i class="fa fa-search fa-fw hvr-icon"></i>搜索</a></li></ul></nav><div class=search-pop-overlay><div class="popup search-popup"><div class=search-header><span class=search-icon><i class="fa fa-search"></i></span><div class=search-input-container><input autocomplete=off autocapitalize=off maxlength=80 placeholder=搜索... spellcheck=false type=search class=search-input></div><span class=popup-btn-close role=button><i class="fa fa-times-circle"></i></span></div><div class="search-result-container no-result"><div class=search-result-icon><i class="fa fa-spinner fa-pulse fa-5x"></i></div></div></div></div></div><div class="toggle sidebar-toggle" role=button><span class=toggle-line></span>
+<span class=toggle-line></span>
+<span class=toggle-line></span></div><aside class=sidebar><div class="sidebar-inner sidebar-nav-active sidebar-toc-active"><ul class=sidebar-nav><li class=sidebar-nav-toc>文章目录</li><li class=sidebar-nav-overview>站点概览</li></ul><div class=sidebar-panel-container><div class="post-toc-wrap sidebar-panel"><div class="post-toc animated"><nav id=TableOfContents></nav></div></div><div class="site-overview-wrap sidebar-panel"><div class="site-author site-overview-item animated" itemprop=author itemscope itemtype=http://schema.org/Person><img class=site-author-image itemprop=image alt=🤖 src=/imgs/371907.jpg><p class=site-author-name itemprop=name>🤖</p><div class=site-description itemprop=description>个人博客，主要是零散的笔记。</div></div><div class="site-state-wrap site-overview-item animated"><nav class=site-state><div class="site-state-item site-state-posts"><a href=/archives/><span class=site-state-item-count>433</span>
+<span class=site-state-item-name>日志</span></a></div><div class="site-state-item site-state-categories"><a href=/categories/><span class=site-state-item-count>12</span>
+<span class=site-state-item-name>分类</span></a></div><div class="site-state-item site-state-tags"><a href=/tags/><span class=site-state-item-count>86</span>
+<span class=site-state-item-name>标签</span></a></div></nav></div><div class="links-of-social site-overview-item animated"><span class=links-of-social-item><a href=https://github.com/hxhue title="Github → https://github.com/hxhue" rel=noopener target=_blank><i class="fab fa-github fa-fw"></i>
+Github
+</a></span><span class=links-of-social-item><a href=/rss.xml title="RSS 订阅 → /rss.xml" rel=noopener target=_blank><i class="fa fa-rss fa-fw"></i>
+RSS 订阅</a></span></div><div class="cc-license animated" itemprop=license><a href=https://creativecommons.org/licenses/by-nc-sa/4.0/deed.zh class=cc-opacity rel=noopener target=_blank title=共享知识><img src=/imgs/cc/big/by_nc_sa.svg alt=共享知识></a></div><div class="links-of-blogroll site-overview-item animated"><div class=links-of-blogroll-title><i class="fa fa-globe fa-fw"></i>
+友情链接</div><ul class=links-of-blogroll-list><li class=links-of-blogroll-item><a href=https://shuai.guru/ title=https://shuai.guru/ target=_blank>shuai.guru</a></li></ul></div></div></div></div></aside><div class=sidebar-dimmer></div></header><div class=tool-buttons><div id=toggle-theme class=button title=深浅模式切换><i class="fas fa-adjust"></i></div><div class=back-to-top role=button title=返回顶部><i class="fa fa-arrow-up"></i>
+<span>0%</span></div></div><div class=reading-progress-bar></div><noscript><div class=noscript-warning>Theme NexT works best with JavaScript enabled</div></noscript><div class="main-inner post posts-expand"><div class=post-block><article itemscope itemtype=http://schema.org/Article class=post-content lang><link itemprop=mainEntityOfPage href=https://hxhue.github.io/inside-the-cpp-object-model/%E6%8C%89%E9%9C%80%E5%90%88%E6%88%90%E6%9E%84%E9%80%A0%E5%87%BD%E6%95%B0/><span hidden itemprop=author itemscope itemtype=http://schema.org/Person><meta itemprop=image content="/imgs/371907.jpg"><meta itemprop=name content="🤖"></span><span hidden itemprop=publisher itemscope itemtype=http://schema.org/Organization><meta itemprop=name content="🤖"><meta itemprop=description content="个人博客，主要是零散的笔记。"></span><span hidden itemprop=post itemscope itemtype=http://schema.org/CreativeWork><meta itemprop=name content="按需合成构造函数"><meta itemprop=description content="
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+复制、默认构造都是按需生成的。对于平凡的情况不需要生成，只是在语意上满足“拥有构造函数”的含义。
+x86-64 gcc 13.1 -std=c++20
+struct Point {
+    int x;
+    int y;
+    Point() = default; // 即便显式声明了默认构造函数，也不会合成
+};
+
+int main() {
+    auto some_point = Point{}; // {}初始化对聚合类有清零的效果
+}
+main:
+        push    rbp
+        mov     rbp, rsp
+        mov     DWORD PTR [rbp-8], 0
+        mov     DWORD PTR [rbp-4], 0
+        mov     eax, 0
+        pop     rbp
+        ret
+修改 Point 的定义："></span><header class=post-header><h1 class=post-title itemprop="name headline">按需合成构造函数</h1><div class=post-meta-container><div class=post-meta-items><span class=post-meta-item><span class=post-meta-item-icon><i class="far fa-calendar"></i>
+</span><span class=post-meta-item-text title=发表于>发表于：
+</span><time title="创建时间：2023-08-12 00:00:00 +0800 CST" itemprop="dateCreated datePublished" datetime="2023-08-12 00:00:00 +0800 CST">2023-08-12
+</time></span><span class=post-meta-item><span class=post-meta-item-icon><i class="far fa-calendar-check"></i>
+</span><span class=post-meta-item-text title=更新于>更新于：
+</span><time title=修改时间：2024-04-08T00:00:00+08:00 itemprop=dateModified datetime=2024-04-08T00:00:00+08:00>2024-04-08</time>
+</span><span class=post-meta-item><span class=post-meta-item-icon><i class="far fa-folder-open"></i>
+</span><span class=post-meta-item-text title=分类于>分类于：
+</span><span itemprop=about itemscope itemtype=http://schema.org/Thing><a href=/categories/inside-the-cpp-object-model itemprop=url rel=index><span itemprop=name>inside-the-cpp-object-model</span></a></span></span></div><div class=post-meta-items><span class=post-meta-item title=字数><span class=post-meta-item-icon><i class="far fa-file-word"></i>
+</span><span class=post-meta-item-text>字数：</span>
+<span>519</span>
+</span><span class=post-meta-item title=阅读><span class=post-meta-item-icon><i class="far fa-clock"></i>
+</span><span class=post-meta-item-text>阅读：&ap;</span>
+<span>2分钟</span></span></div></div></header><div class=post-body itemprop=articleBody><p><img src=/assets/862beea85cbeacd098f8815be021dd62.webp></p><p><img src=/assets/44d6ca6c8f48a441c50cc07501a274e2.webp></p><p>复制、默认构造都是按需生成的。对于平凡的情况不需要生成，只是在语意上满足“拥有构造函数”的含义。</p><p><code>x86-64 gcc 13.1 -std=c++20</code></p><div class=highlight><pre tabindex=0 style=color:#93a1a1;background-color:#002b36;-moz-tab-size:2;-o-tab-size:2;tab-size:2><code class=language-cpp data-lang=cpp><span style=display:flex><span><span style=color:#719e07>struct</span> <span style=color:#268bd2>Point</span> {
+</span></span><span style=display:flex><span>    <span style=color:#dc322f>int</span> x;
+</span></span><span style=display:flex><span>    <span style=color:#dc322f>int</span> y;
+</span></span><span style=display:flex><span>    Point() <span style=color:#719e07>=</span> <span style=color:#719e07>default</span>; <span style=color:#586e75>// 即便显式声明了默认构造函数，也不会合成
+</span></span></span><span style=display:flex><span><span style=color:#586e75></span>};
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#dc322f>int</span> <span style=color:#268bd2>main</span>() {
+</span></span><span style=display:flex><span>    <span style=color:#719e07>auto</span> some_point <span style=color:#719e07>=</span> Point{}; <span style=color:#586e75>// {}初始化对聚合类有清零的效果
+</span></span></span><span style=display:flex><span><span style=color:#586e75></span>}
+</span></span></code></pre></div><div class=highlight><pre tabindex=0 style=color:#93a1a1;background-color:#002b36;-moz-tab-size:2;-o-tab-size:2;tab-size:2><code class=language-nasm data-lang=nasm><span style=display:flex><span>main:
+</span></span><span style=display:flex><span>        <span style=color:#268bd2>push</span>    <span style=color:#b58900>rbp</span>
+</span></span><span style=display:flex><span>        <span style=color:#268bd2>mov</span>     <span style=color:#b58900>rbp</span>, <span style=color:#b58900>rsp</span>
+</span></span><span style=display:flex><span>        <span style=color:#268bd2>mov</span>     <span style=color:#dc322f>DWORD</span> <span style=color:#268bd2>PTR</span> [<span style=color:#b58900>rbp</span><span style=color:#719e07>-</span><span style=color:#2aa198>8</span>], <span style=color:#2aa198>0</span>
+</span></span><span style=display:flex><span>        <span style=color:#268bd2>mov</span>     <span style=color:#dc322f>DWORD</span> <span style=color:#268bd2>PTR</span> [<span style=color:#b58900>rbp</span><span style=color:#719e07>-</span><span style=color:#2aa198>4</span>], <span style=color:#2aa198>0</span>
+</span></span><span style=display:flex><span>        <span style=color:#268bd2>mov</span>     <span style=color:#b58900>eax</span>, <span style=color:#2aa198>0</span>
+</span></span><span style=display:flex><span>        <span style=color:#268bd2>pop</span>     <span style=color:#b58900>rbp</span>
+</span></span><span style=display:flex><span>        <span style=color:#268bd2>ret</span>
+</span></span></code></pre></div><p>修改 Point 的定义：</p><div class=highlight><pre tabindex=0 style=color:#93a1a1;background-color:#002b36;-moz-tab-size:2;-o-tab-size:2;tab-size:2><code class=language-cpp data-lang=cpp><span style=display:flex><span><span style=color:#719e07>struct</span> <span style=color:#268bd2>Point</span> {
+</span></span><span style=display:flex><span>    <span style=color:#dc322f>int</span> x{}; <span style=color:#586e75>// 只修改了这里，结果合成了默认构造函数
+</span></span></span><span style=display:flex><span><span style=color:#586e75></span>    <span style=color:#dc322f>int</span> y;
+</span></span><span style=display:flex><span>    Point() <span style=color:#719e07>=</span> <span style=color:#719e07>default</span>;
+</span></span><span style=display:flex><span>};
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#dc322f>int</span> <span style=color:#268bd2>main</span>() {
+</span></span><span style=display:flex><span>    <span style=color:#719e07>auto</span> some_point <span style=color:#719e07>=</span> Point{};
+</span></span><span style=display:flex><span>}
+</span></span></code></pre></div><div class=highlight><pre tabindex=0 style=color:#93a1a1;background-color:#002b36;-moz-tab-size:2;-o-tab-size:2;tab-size:2><code class=language-nasm data-lang=nasm><span style=display:flex><span>Point::<span style=color:#268bd2>Point</span>() [<span style=color:#268bd2>base</span> <span style=color:#268bd2>object</span> <span style=color:#268bd2>constructor</span>]:
+</span></span><span style=display:flex><span>        <span style=color:#268bd2>push</span>    <span style=color:#b58900>rbp</span>
+</span></span><span style=display:flex><span>        <span style=color:#268bd2>mov</span>     <span style=color:#b58900>rbp</span>, <span style=color:#b58900>rsp</span>
+</span></span><span style=display:flex><span>        <span style=color:#268bd2>mov</span>     <span style=color:#dc322f>QWORD</span> <span style=color:#268bd2>PTR</span> [<span style=color:#b58900>rbp</span><span style=color:#719e07>-</span><span style=color:#2aa198>8</span>], <span style=color:#b58900>rdi</span>
+</span></span><span style=display:flex><span>        <span style=color:#268bd2>mov</span>     <span style=color:#b58900>rax</span>, <span style=color:#dc322f>QWORD</span> <span style=color:#268bd2>PTR</span> [<span style=color:#b58900>rbp</span><span style=color:#719e07>-</span><span style=color:#2aa198>8</span>]
+</span></span><span style=display:flex><span>        <span style=color:#268bd2>mov</span>     <span style=color:#dc322f>DWORD</span> <span style=color:#268bd2>PTR</span> [<span style=color:#b58900>rax</span>], <span style=color:#2aa198>0</span>
+</span></span><span style=display:flex><span>        <span style=color:#268bd2>nop</span>
+</span></span><span style=display:flex><span>        <span style=color:#268bd2>pop</span>     <span style=color:#b58900>rbp</span>
+</span></span><span style=display:flex><span>        <span style=color:#268bd2>ret</span>
+</span></span><span style=display:flex><span>main:
+</span></span><span style=display:flex><span>        <span style=color:#268bd2>push</span>    <span style=color:#b58900>rbp</span>
+</span></span><span style=display:flex><span>        <span style=color:#268bd2>mov</span>     <span style=color:#b58900>rbp</span>, <span style=color:#b58900>rsp</span>
+</span></span><span style=display:flex><span>        <span style=color:#268bd2>sub</span>     <span style=color:#b58900>rsp</span>, <span style=color:#2aa198>16</span>
+</span></span><span style=display:flex><span>        <span style=color:#268bd2>mov</span>     <span style=color:#dc322f>DWORD</span> <span style=color:#268bd2>PTR</span> [<span style=color:#b58900>rbp</span><span style=color:#719e07>-</span><span style=color:#2aa198>8</span>], <span style=color:#2aa198>0</span>
+</span></span><span style=display:flex><span>        <span style=color:#268bd2>mov</span>     <span style=color:#dc322f>DWORD</span> <span style=color:#268bd2>PTR</span> [<span style=color:#b58900>rbp</span><span style=color:#719e07>-</span><span style=color:#2aa198>4</span>], <span style=color:#2aa198>0</span>
+</span></span><span style=display:flex><span>        <span style=color:#268bd2>lea</span>     <span style=color:#b58900>rax</span>, [<span style=color:#b58900>rbp</span><span style=color:#719e07>-</span><span style=color:#2aa198>8</span>]
+</span></span><span style=display:flex><span>        <span style=color:#268bd2>mov</span>     <span style=color:#b58900>rdi</span>, <span style=color:#b58900>rax</span>
+</span></span><span style=display:flex><span>        <span style=color:#268bd2>call</span>    <span style=color:#268bd2>Point</span>::<span style=color:#268bd2>Point</span>() [<span style=color:#268bd2>complete</span> <span style=color:#268bd2>object</span> <span style=color:#268bd2>constructor</span>]
+</span></span><span style=display:flex><span>        <span style=color:#268bd2>mov</span>     <span style=color:#b58900>eax</span>, <span style=color:#2aa198>0</span>
+</span></span><span style=display:flex><span>        <span style=color:#268bd2>leave</span>
+</span></span><span style=display:flex><span>        <span style=color:#268bd2>ret</span>
+</span></span></code></pre></div><p>接下来删掉默认构造函数的声明：</p><div class=highlight><pre tabindex=0 style=color:#93a1a1;background-color:#002b36;-moz-tab-size:2;-o-tab-size:2;tab-size:2><code class=language-cpp data-lang=cpp><span style=display:flex><span><span style=color:#719e07>struct</span> <span style=color:#268bd2>Point</span> {
+</span></span><span style=display:flex><span>    <span style=color:#dc322f>int</span> x{};
+</span></span><span style=display:flex><span>    <span style=color:#dc322f>int</span> y;
+</span></span><span style=display:flex><span>        <span style=color:#586e75>// 删掉了默认构造函数声明，结果不再合成默认构造函数
+</span></span></span><span style=display:flex><span><span style=color:#586e75></span>};
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#dc322f>int</span> <span style=color:#268bd2>main</span>() {
+</span></span><span style=display:flex><span>    <span style=color:#719e07>auto</span> some_point <span style=color:#719e07>=</span> Point{};
+</span></span><span style=display:flex><span>}
+</span></span></code></pre></div><div class=highlight><pre tabindex=0 style=color:#93a1a1;background-color:#002b36;-moz-tab-size:2;-o-tab-size:2;tab-size:2><code class=language-nasm data-lang=nasm><span style=display:flex><span>main:
+</span></span><span style=display:flex><span>        <span style=color:#268bd2>push</span>    <span style=color:#b58900>rbp</span>
+</span></span><span style=display:flex><span>        <span style=color:#268bd2>mov</span>     <span style=color:#b58900>rbp</span>, <span style=color:#b58900>rsp</span>
+</span></span><span style=display:flex><span>        <span style=color:#268bd2>mov</span>     <span style=color:#dc322f>QWORD</span> <span style=color:#268bd2>PTR</span> [<span style=color:#b58900>rbp</span><span style=color:#719e07>-</span><span style=color:#2aa198>8</span>], <span style=color:#2aa198>0</span>
+</span></span><span style=display:flex><span>        <span style=color:#268bd2>mov</span>     <span style=color:#b58900>eax</span>, <span style=color:#2aa198>0</span>
+</span></span><span style=display:flex><span>        <span style=color:#268bd2>pop</span>     <span style=color:#b58900>rbp</span>
+</span></span><span style=display:flex><span>        <span style=color:#268bd2>ret</span>
+</span></span></code></pre></div><p>构造函数和成员默认值同时出现时，就会合成默认构造函数。这个和书中的描述是相符的，因为有成员默认值时，默认构造函数需要特别处理一些内容。</p><p>接下来：</p><div class=highlight><pre tabindex=0 style=color:#93a1a1;background-color:#002b36;-moz-tab-size:2;-o-tab-size:2;tab-size:2><code class=language-cpp data-lang=cpp><span style=display:flex><span><span style=color:#719e07>struct</span> <span style=color:#268bd2>Point</span> {
+</span></span><span style=display:flex><span>    <span style=color:#dc322f>int</span> x{};
+</span></span><span style=display:flex><span>    <span style=color:#dc322f>int</span> y;
+</span></span><span style=display:flex><span>};
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#dc322f>int</span> <span style=color:#268bd2>main</span>() {
+</span></span><span style=display:flex><span>    <span style=color:#719e07>auto</span> some_point <span style=color:#719e07>=</span> Point(); <span style=color:#586e75>// 注意花括号变成了圆括号
+</span></span></span><span style=display:flex><span><span style=color:#586e75></span>}
+</span></span></code></pre></div><div class=highlight><pre tabindex=0 style=color:#93a1a1;background-color:#002b36;-moz-tab-size:2;-o-tab-size:2;tab-size:2><code class=language-nasm data-lang=nasm><span style=display:flex><span>Point::<span style=color:#268bd2>Point</span>() [<span style=color:#268bd2>base</span> <span style=color:#268bd2>object</span> <span style=color:#268bd2>constructor</span>]:
+</span></span><span style=display:flex><span>        <span style=color:#268bd2>push</span>    <span style=color:#b58900>rbp</span>
+</span></span><span style=display:flex><span>        <span style=color:#268bd2>mov</span>     <span style=color:#b58900>rbp</span>, <span style=color:#b58900>rsp</span>
+</span></span><span style=display:flex><span>        <span style=color:#268bd2>mov</span>     <span style=color:#dc322f>QWORD</span> <span style=color:#268bd2>PTR</span> [<span style=color:#b58900>rbp</span><span style=color:#719e07>-</span><span style=color:#2aa198>8</span>], <span style=color:#b58900>rdi</span>
+</span></span><span style=display:flex><span>        <span style=color:#268bd2>mov</span>     <span style=color:#b58900>rax</span>, <span style=color:#dc322f>QWORD</span> <span style=color:#268bd2>PTR</span> [<span style=color:#b58900>rbp</span><span style=color:#719e07>-</span><span style=color:#2aa198>8</span>]
+</span></span><span style=display:flex><span>        <span style=color:#268bd2>mov</span>     <span style=color:#dc322f>DWORD</span> <span style=color:#268bd2>PTR</span> [<span style=color:#b58900>rax</span>], <span style=color:#2aa198>0</span>
+</span></span><span style=display:flex><span>        <span style=color:#268bd2>nop</span>
+</span></span><span style=display:flex><span>        <span style=color:#268bd2>pop</span>     <span style=color:#b58900>rbp</span>
+</span></span><span style=display:flex><span>        <span style=color:#268bd2>ret</span>
+</span></span><span style=display:flex><span>main:
+</span></span><span style=display:flex><span>        <span style=color:#268bd2>push</span>    <span style=color:#b58900>rbp</span>
+</span></span><span style=display:flex><span>        <span style=color:#268bd2>mov</span>     <span style=color:#b58900>rbp</span>, <span style=color:#b58900>rsp</span>
+</span></span><span style=display:flex><span>        <span style=color:#268bd2>sub</span>     <span style=color:#b58900>rsp</span>, <span style=color:#2aa198>16</span>
+</span></span><span style=display:flex><span>        <span style=color:#268bd2>mov</span>     <span style=color:#dc322f>DWORD</span> <span style=color:#268bd2>PTR</span> [<span style=color:#b58900>rbp</span><span style=color:#719e07>-</span><span style=color:#2aa198>8</span>], <span style=color:#2aa198>0</span>
+</span></span><span style=display:flex><span>        <span style=color:#268bd2>mov</span>     <span style=color:#dc322f>DWORD</span> <span style=color:#268bd2>PTR</span> [<span style=color:#b58900>rbp</span><span style=color:#719e07>-</span><span style=color:#2aa198>4</span>], <span style=color:#2aa198>0</span>
+</span></span><span style=display:flex><span>        <span style=color:#268bd2>lea</span>     <span style=color:#b58900>rax</span>, [<span style=color:#b58900>rbp</span><span style=color:#719e07>-</span><span style=color:#2aa198>8</span>]
+</span></span><span style=display:flex><span>        <span style=color:#268bd2>mov</span>     <span style=color:#b58900>rdi</span>, <span style=color:#b58900>rax</span>
+</span></span><span style=display:flex><span>        <span style=color:#268bd2>call</span>    <span style=color:#268bd2>Point</span>::<span style=color:#268bd2>Point</span>() [<span style=color:#268bd2>complete</span> <span style=color:#268bd2>object</span> <span style=color:#268bd2>constructor</span>]
+</span></span><span style=display:flex><span>        <span style=color:#268bd2>mov</span>     <span style=color:#b58900>eax</span>, <span style=color:#2aa198>0</span>
+</span></span><span style=display:flex><span>        <span style=color:#268bd2>leave</span>
+</span></span><span style=display:flex><span>        <span style=color:#268bd2>ret</span>
+</span></span></code></pre></div><p>显式使用构造函数相当于声明了构造函数。</p><p><strong>不过但凡用上 <code>-O1</code> 级别的优化，空的默认构造函数就可以被内联。</strong></p></div><footer class=post-footer><div class=post-tags><a href=/tags/cpp>cpp
+</a><a href=/tags/inside-the-cpp-object-model>inside-the-cpp-object-model</a></div><div class=addthis_inline_share_toolbox style=text-align:center></div><hr><div class=post-nav><div class="post-nav-next post-nav-item"><a href=/inside-the-cpp-object-model/new-%E5%92%8C-delete/ rel=next title="new 和 delete"><i class="fa fa-chevron-left"></i> new 和 delete</a></div><div class="post-nav-prev post-nav-item"><a href=/inside-the-cpp-object-model/%E5%AF%B9%E8%B1%A1%E5%B8%83%E5%B1%80/ rel=prev title=对象布局>对象布局
+<i class="fa fa-chevron-right"></i></a></div></div></footer></article></div></div></main><footer class=footer><div class=footer-inner><div class=copyright>&copy;
+<span itemprop=copyrightYear>2023 - 2025
+</span><span class=with-love><i class="fa fa-heart"></i>
+</span><span class=author itemprop=copyrightHolder>🤖</span></div><div class=powered-by>由 <a href=https://gohugo.io title=0.143.1 target=_blank>Hugo</a> & <a href=https://github.com/hugo-next/hugo-theme-next title=4.5.3 target=_blank>Hugo NexT.Gemini</a> 强力驱动</div></div></footer><script type=text/javascript src=https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.1/anime.min.js defer></script><script type=text/javascript src=https://cdnjs.cloudflare.com/ajax/libs/medium-zoom/1.1.0/medium-zoom.min.js defer></script><script class=next-config data-name=main type=application/json>{"bookmark":{"color":"#222","enable":false,"save":"manual"},"copybtn":true,"darkmode":false,"hostname":"https://hxhue.github.io/","i18n":{"ds_day":" 天前","ds_days":" 天 ","ds_hour":" 小时前","ds_hours":" 小时 ","ds_just":"刚刚","ds_min":" 分钟前","ds_mins":" 分钟","ds_month":" 个月前","ds_years":" 年 ","empty":"没有找到任何搜索结果：${query}","hits":"找到 ${hits} 个搜索结果","hits_time":"找到 ${hits} 个搜索结果（用时 ${time} 毫秒）","placeholder":"搜索..."},"lang":"zh-CN","lazyload":false,"localSearch":{"enable":true,"limit":1e3,"path":"/searchindexes.xml","preload":false,"topnperarticle":-1,"trigger":"auto","unescape":false},"motion":{"async":true,"enable":false,"transition":{"collheader":"fadeInLeft","menu_item":"fadeInDown","postblock":"fadeIn","postbody":"fadeInDown","postheader":"fadeInDown","sidebar":"fadeInUp"}},"postmeta":{"comments":{"enable":false,"plugin":"waline"},"views":{"enable":false,"plugin":"busuanzi"}},"root":"/","scheme":"Gemini","sidebar":{"display":"post","offset":12,"padding":18,"position":"left","width":256},"vendor":{"plugins":"cdnjs","router":"https://cdnjs.cloudflare.com/ajax/libs"},"version":"4.5.3"}</script><script type=text/javascript src=/js/main.min.37ba8b54f9d4d784d08028c45eea93b5d4e13eda8ee7fb0d2edd6f3fac66cfd2.js defer></script></body></html>

@@ -1,0 +1,92 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Git on Bluegill</title><link>https://hxhue.github.io/tags/git/</link><description>Recent content in Git on Bluegill</description><generator>Hugo</generator><language>zh-CN</language><lastBuildDate>Sun, 21 Sep 2025 00:00:00 +0800</lastBuildDate><atom:link href="https://hxhue.github.io/tags/git/rss.xml" rel="self" type="application/rss+xml"/><item><title>git log --remerge-diff</title><link>https://hxhue.github.io/posts/cli/git/git-log--remerge-diff/</link><pubDate>Mon, 10 Feb 2025 00:00:00 +0800</pubDate><guid>https://hxhue.github.io/posts/cli/git/git-log--remerge-diff/</guid><description>&lt;p>&lt;code>--remerge-diff&lt;/code> 选项在 &lt;code>git log&lt;/code> 和 &lt;code>git show&lt;/code> 命令中都存在。它用更容易阅读的方式显示一个合并结点相对于两个 parent 的变化。&lt;/p>
+&lt;p>下图是一个例子（&lt;a href="https://github.blog/open-source/git/highlights-from-git-2-36/#review-merge-conflict-resolution-with-remerge-diff" title="来源在这里" rel="noopener external nofollow noreferrer"
+ target="_blank" class=" exturl" >来源在这里&lt;i class="fa fa-external-link-alt">&lt;/i>&lt;/a>）。没用这个选项的时候会显示三路的差异，有三种颜色。只看绿色部分就是最终解决了冲突后的代码，但是看红色还得看红色是来自哪一个 parent，不够方便。&lt;/p></description></item><item><title>记一次代码合并后发生错误的定位过程</title><link>https://hxhue.github.io/posts/cli/git/%E8%AE%B0%E4%B8%80%E6%AC%A1%E4%BB%A3%E7%A0%81%E5%90%88%E5%B9%B6%E5%90%8E%E5%8F%91%E7%94%9F%E9%94%99%E8%AF%AF%E7%9A%84%E5%AE%9A%E4%BD%8D%E8%BF%87%E7%A8%8B/</link><pubDate>Wed, 12 Jun 2024 00:00:00 +0800</pubDate><guid>https://hxhue.github.io/posts/cli/git/%E8%AE%B0%E4%B8%80%E6%AC%A1%E4%BB%A3%E7%A0%81%E5%90%88%E5%B9%B6%E5%90%8E%E5%8F%91%E7%94%9F%E9%94%99%E8%AF%AF%E7%9A%84%E5%AE%9A%E4%BD%8D%E8%BF%87%E7%A8%8B/</guid><description>&lt;p>昨天晚上合并完新的代码准备提交上去但是 CI 跑不了，有一个单元测试报错。然后照着官方的 &lt;a href="https://www.git-scm.com/docs/git-bisect" title="git-bisect" rel="noopener external nofollow noreferrer"
+ target="_blank" class=" exturl" >git-bisect&lt;i class="fa fa-external-link-alt">&lt;/i>&lt;/a> 文档找问题。这个工具比想象中要好用很多，大部分时间都花在了构建项目上面（每次修改 HEAD 之后都要重新构建才能测试）。半个小时后锁定了问题在一个具体的提交上。&lt;/p></description></item><item><title>7.8 Git Tools - Advanced Merging</title><link>https://hxhue.github.io/pro-git-the-book/7.8-Git-Tools-Advanced-Merging/</link><pubDate>Sat, 10 Feb 2024 00:00:00 +0800</pubDate><guid>https://hxhue.github.io/pro-git-the-book/7.8-Git-Tools-Advanced-Merging/</guid><description>&lt;h1 id="终止合并">终止合并
+&lt;a class="header-anchor" href="#%e7%bb%88%e6%ad%a2%e5%90%88%e5%b9%b6">&lt;/a>
+&lt;/h1>&lt;p>可以用 &lt;code>git merge --abort&lt;/code>，就不要用 &lt;code>git reset --hard&lt;/code> 了。&lt;/p>
+&lt;h1 id="合并的时候忽略空白字符">合并的时候忽略空白字符
+&lt;a class="header-anchor" href="#%e5%90%88%e5%b9%b6%e7%9a%84%e6%97%b6%e5%80%99%e5%bf%bd%e7%95%a5%e7%a9%ba%e7%99%bd%e5%ad%97%e7%ac%a6">&lt;/a>
+&lt;/h1>&lt;p>&lt;code>git merge&lt;/code> 时加入参数 &lt;code>-Xignore-all-space&lt;/code> or &lt;code>-Xignore-space-change&lt;/code>。&lt;/p>
+&lt;p>最好还是不用，因为这样容易出现混合的换行方式（&lt;code>\n&lt;/code> 和 &lt;code>\r\n&lt;/code>）。&lt;/p>
+&lt;h1 id="手动-re-merging">手动 re-merging
+&lt;a class="header-anchor" href="#%e6%89%8b%e5%8a%a8-re-merging">&lt;/a>
+&lt;/h1>&lt;p>讲的是 &lt;code>git merge-file&lt;/code> 的用法。和手动修改相比，这样做更容易脚本化，因为很多命令行工具只能对没有 conflict markers 的源码处理。&lt;/p></description></item><item><title>7.9 Git Tools - Rerere</title><link>https://hxhue.github.io/pro-git-the-book/7.9-Git-Tools-Rerere/</link><pubDate>Sat, 10 Feb 2024 00:00:00 +0800</pubDate><guid>https://hxhue.github.io/pro-git-the-book/7.9-Git-Tools-Rerere/</guid><description>&lt;p>&lt;a href="https://git-scm.com/book/en/v2/Git-Tools-Rerere" title="https://git-scm.com/book/en/v2/Git-Tools-Rerere" rel="noopener external nofollow noreferrer"
+ target="_blank" class=" exturl" >https://git-scm.com/book/en/v2/Git-Tools-Rerere&lt;i class="fa fa-external-link-alt">&lt;/i>&lt;/a>&lt;/p>
+&lt;h1 id="rerere-的一些性质">rerere 的一些性质
+&lt;a class="header-anchor" href="#rerere-%e7%9a%84%e4%b8%80%e4%ba%9b%e6%80%a7%e8%b4%a8">&lt;/a>
+&lt;/h1>&lt;p>rerere 没有默认开启。&lt;/p>
+&lt;p>rerere 是在前一步骤合并冲突，生成了含有冲突 markers 的文件之后，根据记录的结果重新应用冲突解决方案的。因而可以手动对冲突了的文件（通过 &lt;code>git checkout --conflict=merge -- &amp;lt;files&amp;gt;&lt;/code> 创建）应用 &lt;code>git rerere&lt;/code>。&lt;/p></description></item><item><title>git-blame-ignore-revs</title><link>https://hxhue.github.io/posts/cli/git/git-blame-ignore-revs/</link><pubDate>Fri, 02 Feb 2024 00:00:00 +0800</pubDate><guid>https://hxhue.github.io/posts/cli/git/git-blame-ignore-revs/</guid><description>&lt;p>LLVM 项目中有个文件：.git-blame-ignore-revs&lt;/p>
+&lt;p>说明是：&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" style="color:#93a1a1;background-color:#002b36;-moz-tab-size:2;-o-tab-size:2;tab-size:2;">&lt;code class="language-txt" data-lang="txt">&lt;span style="display:flex;">&lt;span># Since version 2.23 (released in August 2019), git-blame has a feature
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span># to ignore or bypass certain commits.
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>#
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span># This file contains a list of commits that are not likely what you
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span># are looking for in a blame, such as mass reformatting or renaming.
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span># You can set this file as a default ignore file for blame by running
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span># the following command.
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>#
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span># $ git config blame.ignoreRevsFile .git-blame-ignore-revs
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>这个文件可以指定要在 blame 时忽略的那些提交（比如对工程整体的格式化）。因为 git 配置是本地的，所以需要手动跑一次。&lt;/p></description></item><item><title>git 仓库中，对不再存在的文件的体积进行统计</title><link>https://hxhue.github.io/posts/cli/git/git-%E4%BB%93%E5%BA%93%E4%B8%AD%E5%AF%B9%E4%B8%8D%E5%86%8D%E5%AD%98%E5%9C%A8%E7%9A%84%E6%96%87%E4%BB%B6%E7%9A%84%E4%BD%93%E7%A7%AF%E8%BF%9B%E8%A1%8C%E7%BB%9F%E8%AE%A1/</link><pubDate>Fri, 29 Dec 2023 00:00:00 +0800</pubDate><guid>https://hxhue.github.io/posts/cli/git/git-%E4%BB%93%E5%BA%93%E4%B8%AD%E5%AF%B9%E4%B8%8D%E5%86%8D%E5%AD%98%E5%9C%A8%E7%9A%84%E6%96%87%E4%BB%B6%E7%9A%84%E4%BD%93%E7%A7%AF%E8%BF%9B%E8%A1%8C%E7%BB%9F%E8%AE%A1/</guid><description>&lt;p>首先必须处在仓库中，然后用 &lt;a href="https://stackoverflow.com/a/42544963/" title="https://stackoverflow.com/a/42544963/" rel="noopener external nofollow noreferrer"
+ target="_blank" class=" exturl" >https://stackoverflow.com/a/42544963/&lt;i class="fa fa-external-link-alt">&lt;/i>&lt;/a> 提供的方法提取出每个文件的大小，最后用 perl 计算总的体积。&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" style="color:#93a1a1;background-color:#002b36;-moz-tab-size:2;-o-tab-size:2;tab-size:2;">&lt;code class="language-bash" data-lang="bash">&lt;span style="display:flex;">&lt;span>git rev-list --objects --all |
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> git cat-file --batch-check&lt;span style="color:#719e07">=&lt;/span>&lt;span style="color:#2aa198">&amp;#39;%(objecttype) %(objectname) %(objectsize) %(rest)&amp;#39;&lt;/span> |
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> sed -n &lt;span style="color:#2aa198">&amp;#39;s/^blob //p&amp;#39;&lt;/span> |
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> grep -vF --file&lt;span style="color:#719e07">=&lt;/span>&amp;lt;&lt;span style="color:#719e07">(&lt;/span>git ls-tree -r HEAD | awk &lt;span style="color:#2aa198">&amp;#39;{print $3}&amp;#39;&lt;/span>&lt;span style="color:#719e07">)&lt;/span> |
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> sort --numeric-sort --key&lt;span style="color:#719e07">=&lt;/span>&lt;span style="color:#2aa198">2&lt;/span> |
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> cut -c 1-12,41- |
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#719e07">$(&lt;/span>&lt;span style="color:#b58900">command&lt;/span> -v gnumfmt &lt;span style="color:#719e07">||&lt;/span> &lt;span style="color:#b58900">echo&lt;/span> numfmt&lt;span style="color:#719e07">)&lt;/span> --field&lt;span style="color:#719e07">=&lt;/span>&lt;span style="color:#2aa198">2&lt;/span> --to&lt;span style="color:#719e07">=&lt;/span>iec-i --suffix&lt;span style="color:#719e07">=&lt;/span>B --padding&lt;span style="color:#719e07">=&lt;/span>&lt;span style="color:#2aa198">7&lt;/span> --round&lt;span style="color:#719e07">=&lt;/span>nearest &amp;gt; legacy.txt
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>perl -ne &lt;span style="color:#2aa198">&amp;#39;BEGIN{my $sum=0} s/.* (.*) .*/$1/g;
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#2aa198">s/B//g;s/Ki/*1024/g;s/Mi/*1024*1024/g;s/Gi/*1024*1024*1024/g;$sum+=eval($_);
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#2aa198">END{printf &amp;#34;%.1f MiB\n&amp;#34;, $sum/1024/1024}&amp;#39;&lt;/span> legacy.txt
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>把上面的 &lt;code>objectsize&lt;/code> 换成 &lt;code>objectsize:disk&lt;/code> 就能看到压缩后的文件总体积，在我们仓库中大概是 2216.4 MiB，而压缩前大概是 7304.1 MiB。&lt;/p></description></item><item><title>VS Code 友好的 pre-commit hook</title><link>https://hxhue.github.io/posts/developer/vscode/VS-Code-%E5%8F%8B%E5%A5%BD%E7%9A%84-pre-commit-hook/</link><pubDate>Mon, 20 Nov 2023 00:00:00 +0800</pubDate><guid>https://hxhue.github.io/posts/developer/vscode/VS-Code-%E5%8F%8B%E5%A5%BD%E7%9A%84-pre-commit-hook/</guid><description>&lt;p>&lt;strong>问题&lt;/strong>：加入 pre-commit 之后，在 VS Code 的侧边栏 git 模块中提交代码看似卡住，看不到 pre-commit 的输出，也无法和 pre-commit 交互。&lt;/p>
+&lt;p>将下面的 &lt;code>entry_point&lt;/code> 函数替换成要执行的流程，然后作为 .git/hooks/pre-commit 的内容即可。其主要作用是判断当前是否在 VS Code 环境中，如果是，则将输出写到一个临时文件中，然后再用 VS Code 打开这个文件以观察输出。&lt;strong>解决了看不到输出、进度的问题，但是还解决不了输入的问题&lt;/strong>。&lt;/p></description></item><item><title>初读 Pro Git</title><link>https://hxhue.github.io/pro-git-the-book/%E5%88%9D%E8%AF%BB-Pro-Git/</link><pubDate>Thu, 16 Nov 2023 00:00:00 +0800</pubDate><guid>https://hxhue.github.io/pro-git-the-book/%E5%88%9D%E8%AF%BB-Pro-Git/</guid><description>&lt;p>一些需要弄明白的名词：commit range/refspec。&lt;/p>
+&lt;h1 id="git-基础">git 基础
+&lt;a class="header-anchor" href="#git-%e5%9f%ba%e7%a1%80">&lt;/a>
+&lt;/h1>&lt;p>git 的管理方式是记录每个文件的快照。&lt;/p>
+&lt;p>
+
+
+
+
+
+
+&lt;img src="https://hxhue.github.io/assets/85fc388c6e2e33f14af4af02b672389b.webp">&lt;/p>
+&lt;p>然后分成三个区：&lt;/p>
+&lt;p>
+
+
+
+
+
+
+&lt;img src="https://hxhue.github.io/assets/0a706ecf17b1dad0bff56e9c61c58c73.webp">&lt;/p>
+&lt;h1 id="git-add">git add
+&lt;a class="header-anchor" href="#git-add">&lt;/a>
+&lt;/h1>&lt;p>如果一个文件改动了多个地方，但是只想要提交其中的部分行，可以用 &lt;code>git add --patch&lt;/code>。这样 git 会启动一个交互式的程序，并询问用户每个 chunk 是否要加入。这种交互式环境提供多种操作，其中 &lt;code>e&lt;/code> 操作允许用户使用编辑器精准编辑要添加的修改。&lt;/p></description></item><item><title>git restore</title><link>https://hxhue.github.io/posts/cli/git/git-restore/</link><pubDate>Wed, 15 Nov 2023 00:00:00 +0800</pubDate><guid>https://hxhue.github.io/posts/cli/git/git-restore/</guid><description>&lt;p>在没有 &lt;code>--source&lt;/code> 选项时，有 &lt;code>--staged&lt;/code> 则默认使用 HEAD 来恢复，如果没有则默认使用 index。此时：&lt;/p>
+&lt;ul>
+&lt;li>&lt;code>git restore&lt;/code> 相当于 &lt;code>git restore --worktree&lt;/code>。&lt;/li>
+&lt;li>&lt;code>git restore --staged&lt;/code> 用 HEAD 的信息来恢复 index，不会改动 working tree。&lt;/li>
+&lt;li>&lt;code>git restore --worktree&lt;/code> 用 index 的信息来恢复 working tree。&lt;/li>
+&lt;li>&lt;code>git restore --worktree --staged&lt;/code> 同时恢复 working tree 和 index。&lt;code>git restore --source HEAD --worktree --staged&lt;/code> 相当于 &lt;code>git reset --hard&lt;/code> 对于单个文件的效果。（虽然按照官方的描述来说是默认 source 为 HEAD，但是在 git 2.25.1 中实测这种情况下的默认 source 是 index）&lt;/li>
+&lt;/ul>
+&lt;blockquote>
+ &lt;p>&lt;code>-W&lt;/code> &lt;a href="https://git-scm.com/docs/git-restore#Documentation/git-restore.txt---worktree" title="link1" rel="noopener external nofollow noreferrer"
+ target="_blank" class=" exturl" >link1&lt;i class="fa fa-external-link-alt">&lt;/i>&lt;/a>; &lt;a href="https://git-scm.com/docs/git-restore#Documentation/git-restore.txt--S" title="link2" rel="noopener external nofollow noreferrer"
+ target="_blank" class=" exturl" >link2&lt;i class="fa fa-external-link-alt">&lt;/i>&lt;/a> &lt;a href="https://git-scm.com/docs/git-restore#Documentation/git-restore.txt---staged" title="link3" rel="noopener external nofollow noreferrer"
+ target="_blank" class=" exturl" >link3&lt;i class="fa fa-external-link-alt">&lt;/i>&lt;/a>
+Specify the restore location. If neither option is specified, by default the working tree is restored. Specifying &lt;code>--staged&lt;/code> will only restore the index. Specifying both restores both.&lt;/p></description></item><item><title>Git 合集</title><link>https://hxhue.github.io/posts/cli/git/Git-%E5%90%88%E9%9B%86/</link><pubDate>Thu, 31 Aug 2023 00:00:00 +0800</pubDate><guid>https://hxhue.github.io/posts/cli/git/Git-%E5%90%88%E9%9B%86/</guid><description>&lt;h1 id="git-config">git-config
+&lt;a class="header-anchor" href="#git-config">&lt;/a>
+&lt;/h1>&lt;p>&lt;a href="https://git-scm.com/docs/git-config#_configuration_file" title="https://git-scm.com/docs/git-config#_configuration_file" rel="noopener external nofollow noreferrer"
+ target="_blank" class=" exturl" >https://git-scm.com/docs/git-config#_configuration_file&lt;i class="fa fa-external-link-alt">&lt;/i>&lt;/a>&lt;/p>
+&lt;p>&lt;code>git config --global --edit&lt;/code> 能在命令行打开全局的配置文件，即 &lt;code>%userprofile%\.gitconfig&lt;/code> 或 &lt;code>~/.gitconfig&lt;/code> 文件。&lt;/p>
+&lt;blockquote>
+ &lt;p>如果想要更换编辑器比如用 VS Code 编辑，可以用 &lt;code> EDITOR=code git config --global --edit&lt;/code>。&lt;/p>
+&lt;/blockquote>&lt;p>配置文件的格式：&lt;/p>
+&lt;ol>
+&lt;li>空白字符都被忽略（无论是 &lt;code>\t&lt;/code> 还是空格都可以）&lt;/li>
+&lt;li>注释的开头可以是 &lt;code>#&lt;/code> 和 &lt;code>;&lt;/code>&lt;/li>
+&lt;/ol>
+&lt;h1 id="git-pull-origin-ab">git pull origin A:B
+&lt;a class="header-anchor" href="#git-pull-origin-ab">&lt;/a>
+&lt;/h1>&lt;p>需要本地有 B 才能成功拉取，不然会拉取到当前分支。拉取的时候会自动 merge。&lt;/p></description></item></channel></rss>

@@ -1,0 +1,230 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Python on Bluegill</title><link>https://hxhue.github.io/tags/python/</link><description>Recent content in Python on Bluegill</description><generator>Hugo</generator><language>zh-CN</language><lastBuildDate>Tue, 22 Apr 2025 00:00:00 +0800</lastBuildDate><atom:link href="https://hxhue.github.io/tags/python/rss.xml" rel="self" type="application/rss+xml"/><item><title>Python 多进程脚本的常见问题</title><link>https://hxhue.github.io/posts/programming/python/Python-%E5%A4%9A%E8%BF%9B%E7%A8%8B%E8%84%9A%E6%9C%AC%E7%9A%84%E5%B8%B8%E8%A7%81%E9%97%AE%E9%A2%98/</link><pubDate>Sun, 20 Apr 2025 00:00:00 +0800</pubDate><guid>https://hxhue.github.io/posts/programming/python/Python-%E5%A4%9A%E8%BF%9B%E7%A8%8B%E8%84%9A%E6%9C%AC%E7%9A%84%E5%B8%B8%E8%A7%81%E9%97%AE%E9%A2%98/</guid><description>&lt;h1 id="占用过多内存">占用过多内存
+&lt;a class="header-anchor" href="#%e5%8d%a0%e7%94%a8%e8%bf%87%e5%a4%9a%e5%86%85%e5%ad%98">&lt;/a>
+&lt;/h1>&lt;p>TL;DR：大多是具体脚本的问题，不好处理。有的是没有及时 gc，有的是把所有数据全部载入内存之后（假设了内存足够大）才开始处理。&lt;/p>
+&lt;p>我是遇到了这样一个问题：
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ &lt;a href="https://hxhue.github.io/%E7%9F%A5%E8%AF%86%E5%88%86%E7%B1%BB/1.-%E8%AE%B0%E5%BD%95/projects/megatron-lm/megatron-lm/#%e8%b5%84%e6%ba%90%e5%8d%a0%e7%94%a8%e5%a4%a7%e6%9c%89%e5%83%b5%e5%b0%b8" title="megatron-lm huggingface 教程运行时资源占用大、有僵尸" >megatron-lm huggingface 教程运行时资源占用大、有僵尸&lt;/a>（&lt;span style="color:red">2025/4/22 文章还在修改中，尚未公开&lt;/span>）。&lt;/p></description></item><item><title>Python 的绝对导入和相对导入</title><link>https://hxhue.github.io/posts/programming/python/Python-%E7%9A%84%E7%BB%9D%E5%AF%B9%E5%AF%BC%E5%85%A5%E5%92%8C%E7%9B%B8%E5%AF%B9%E5%AF%BC%E5%85%A5/</link><pubDate>Fri, 11 Apr 2025 00:00:00 +0800</pubDate><guid>https://hxhue.github.io/posts/programming/python/Python-%E7%9A%84%E7%BB%9D%E5%AF%B9%E5%AF%BC%E5%85%A5%E5%92%8C%E7%9B%B8%E5%AF%B9%E5%AF%BC%E5%85%A5/</guid><description>&lt;p>&lt;strong>绝对导入&lt;/strong>需要包在 &lt;code>sys.path&lt;/code> 中，可以通过环境变量 &lt;code>PYTHONPATH&lt;/code> 来增加一些搜索路径。&lt;/p>
+&lt;p>&lt;strong>相对导入&lt;/strong>需要当前在一个子包内。&lt;a href="https://stackoverflow.com/questions/16981921/relative-imports-in-python-3" title="Relative imports in Python 3 - Stack Overflow" rel="noopener external nofollow noreferrer"
+ target="_blank" class=" exturl" >Relative imports in Python 3 - Stack Overflow&lt;i class="fa fa-external-link-alt">&lt;/i>&lt;/a> 这个回答就说明如果直接运行一个包含了 &lt;code>import .xx&lt;/code> 或者 &lt;code>from .xx import xx&lt;/code> 的脚本就会失败，&lt;strong>我的直观感受&lt;/strong>是这样的文件只能出现在比 main 文件（&lt;code>__name__&lt;/code> 为 &lt;code>__main__&lt;/code> 的那个文件，也就是入口文件）更深的文件夹下。相对导入有助于避免 sys.path 中出现更靠前的搜索路径，且该路径包含同名包，导致真正要导入的包被覆盖。&lt;/p></description></item><item><title>如何对齐 PyTorch 的除法运算？</title><link>https://hxhue.github.io/posts/programming/python/%E5%A6%82%E4%BD%95%E5%AF%B9%E9%BD%90-PyTorch-%E7%9A%84%E9%99%A4%E6%B3%95%E8%BF%90%E7%AE%97/</link><pubDate>Tue, 26 Nov 2024 00:00:00 +0800</pubDate><guid>https://hxhue.github.io/posts/programming/python/%E5%A6%82%E4%BD%95%E5%AF%B9%E9%BD%90-PyTorch-%E7%9A%84%E9%99%A4%E6%B3%95%E8%BF%90%E7%AE%97/</guid><description>&lt;h1 id="过程">过程
+&lt;a class="header-anchor" href="#%e8%bf%87%e7%a8%8b">&lt;/a>
+&lt;/h1>&lt;p>我遇到的情况是：&lt;code>a&lt;/code> 为 64 位浮点数（FP64）标量，&lt;code>b&lt;/code> 为 32 位浮点数（FP32）张量，要计算 &lt;code>a / b&lt;/code>。&lt;/p>
+&lt;p>一种做法是：使用 &lt;code>1 / b * a&lt;/code> 来代替 &lt;code>a / b&lt;/code>。这样的结果看起来和 PyTorch 的计算是对齐的。&lt;/p></description></item><item><title>用 cv2 或 Pillow 保存 numpy 格式图片</title><link>https://hxhue.github.io/posts/programming/python/%E7%94%A8-cv2-%E6%88%96-Pillow-%E4%BF%9D%E5%AD%98-numpy-%E6%A0%BC%E5%BC%8F%E5%9B%BE%E7%89%87/</link><pubDate>Wed, 20 Nov 2024 00:00:00 +0800</pubDate><guid>https://hxhue.github.io/posts/programming/python/%E7%94%A8-cv2-%E6%88%96-Pillow-%E4%BF%9D%E5%AD%98-numpy-%E6%A0%BC%E5%BC%8F%E5%9B%BE%E7%89%87/</guid><description>&lt;div class="highlight">&lt;pre tabindex="0" style="color:#93a1a1;background-color:#002b36;-moz-tab-size:2;-o-tab-size:2;tab-size:2;">&lt;code class="language-python" data-lang="python">&lt;span style="display:flex;">&lt;span>img &lt;span style="color:#719e07">=&lt;/span> np&lt;span style="color:#719e07">.&lt;/span>asarray(img)
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#719e07">if&lt;/span> &lt;span style="color:#b58900">len&lt;/span>(img&lt;span style="color:#719e07">.&lt;/span>shape) &lt;span style="color:#719e07">==&lt;/span> &lt;span style="color:#2aa198">4&lt;/span>:
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#719e07">assert&lt;/span> img&lt;span style="color:#719e07">.&lt;/span>shape[&lt;span style="color:#2aa198">0&lt;/span>] &lt;span style="color:#719e07">==&lt;/span> &lt;span style="color:#2aa198">1&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> img &lt;span style="color:#719e07">=&lt;/span> img[&lt;span style="color:#2aa198">0&lt;/span>]
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#719e07">assert&lt;/span> &lt;span style="color:#b58900">len&lt;/span>(img&lt;span style="color:#719e07">.&lt;/span>shape) &lt;span style="color:#719e07">==&lt;/span> &lt;span style="color:#2aa198">3&lt;/span> &lt;span style="color:#719e07">and&lt;/span> img&lt;span style="color:#719e07">.&lt;/span>shape[&lt;span style="color:#2aa198">0&lt;/span>] &lt;span style="color:#719e07">in&lt;/span> (&lt;span style="color:#2aa198">1&lt;/span>, &lt;span style="color:#2aa198">3&lt;/span>)
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>img &lt;span style="color:#719e07">=&lt;/span> img&lt;span style="color:#719e07">.&lt;/span>transpose(&lt;span style="color:#2aa198">1&lt;/span>, &lt;span style="color:#2aa198">2&lt;/span>, &lt;span style="color:#2aa198">0&lt;/span>) &lt;span style="color:#586e75"># to channels-last&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#586e75">#1&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>img &lt;span style="color:#719e07">=&lt;/span> img[&lt;span style="color:#719e07">...&lt;/span>, ::&lt;span style="color:#719e07">-&lt;/span>&lt;span style="color:#2aa198">1&lt;/span>] &lt;span style="color:#586e75"># RGB to BGR&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>img &lt;span style="color:#719e07">=&lt;/span> (img &lt;span style="color:#719e07">*&lt;/span> &lt;span style="color:#2aa198">255.0&lt;/span>)&lt;span style="color:#719e07">.&lt;/span>astype(np&lt;span style="color:#719e07">.&lt;/span>uint8)
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>img &lt;span style="color:#719e07">=&lt;/span> np&lt;span style="color:#719e07">.&lt;/span>ascontiguousarray(img)
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#719e07">assert&lt;/span> cv2&lt;span style="color:#719e07">.&lt;/span>imwrite(&lt;span style="color:#2aa198">&amp;#34;fused.jpg&amp;#34;&lt;/span>, img)
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#586e75">#2&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#586e75">## https://pytorch.org/vision/main/generated/torchvision.transforms.ToPILImage.html&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#586e75">## img.shape: (C x H x W) if img is torch.Tensor, (H x W x C) if img is np.ndarray.&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#586e75"># img = transforms.ToPILImage()(img)&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#586e75"># img.save(&amp;#39;fused.jpg&amp;#39;)&lt;/span>
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>要么进行 RGB -&amp;gt; BGR、将 0~1 缩放到 0~255、转换到 &lt;code>np.uint8&lt;/code> 类型、将数组转连续等操作，要么直接使用 torchvision 的 transforms 工具。&lt;/p></description></item><item><title>PyTorch `optimizer.step()` 影响 BatchNorm2d 权重的梯度</title><link>https://hxhue.github.io/posts/programming/python/PyTorch-optimizer.step-%E5%BD%B1%E5%93%8D-BatchNorm2d-%E6%9D%83%E9%87%8D%E7%9A%84%E6%A2%AF%E5%BA%A6/</link><pubDate>Wed, 06 Nov 2024 00:00:00 +0800</pubDate><guid>https://hxhue.github.io/posts/programming/python/PyTorch-optimizer.step-%E5%BD%B1%E5%93%8D-BatchNorm2d-%E6%9D%83%E9%87%8D%E7%9A%84%E6%A2%AF%E5%BA%A6/</guid><description>&lt;p>我发现 &lt;code>optimizer.step()&lt;/code> 这一步会改变 &lt;code>torch.nn.BatchNorm2d&lt;/code> 层的 weight 和 bias 的梯度（看上去是每个元素按照相同的比例进行了缩放）。如果想要比较梯度，应该在 &lt;code>optimizer.step()&lt;/code> 之前来对比，想要对比更新后的权重，要在 &lt;code>optimizer.step()&lt;/code> 之后对比。&lt;/p></description></item><item><title>在 VS Code 中从 C++ 调试 pybind</title><link>https://hxhue.github.io/posts/programming/python/%E5%9C%A8-VS-Code-%E4%B8%AD%E4%BB%8E-C++-%E8%B0%83%E8%AF%95-pybind/</link><pubDate>Tue, 05 Nov 2024 00:00:00 +0800</pubDate><guid>https://hxhue.github.io/posts/programming/python/%E5%9C%A8-VS-Code-%E4%B8%AD%E4%BB%8E-C++-%E8%B0%83%E8%AF%95-pybind/</guid><description>&lt;h1 id="使用-debugpy-调试">使用 debugpy 调试
+&lt;a class="header-anchor" href="#%e4%bd%bf%e7%94%a8-debugpy-%e8%b0%83%e8%af%95">&lt;/a>
+&lt;/h1>&lt;p>在被 C++ 调用的 python 文件中加上这样的内容（端口可以随便选）：&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" style="color:#93a1a1;background-color:#002b36;-moz-tab-size:2;-o-tab-size:2;tab-size:2;">&lt;code class="language-python" data-lang="python">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#719e07">import&lt;/span> debugpy
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>debugpy&lt;span style="color:#719e07">.&lt;/span>listen(&lt;span style="color:#2aa198">5678&lt;/span>)
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>debugpy&lt;span style="color:#719e07">.&lt;/span>wait_for_client()
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>这样在第一次加载这个 python 模块的时候，这行代码就会暂停等待调试器连接。我们可以创建这样的 Python 调试配置，随后连接正在监听端口的 python 程序。&lt;/p></description></item><item><title>导出和导入 conda 环境</title><link>https://hxhue.github.io/00-failed/%E5%A4%B1%E8%B4%A5%E7%9A%84%E5%B0%9D%E8%AF%95%E5%AF%BC%E5%87%BA%E5%92%8C%E5%AF%BC%E5%85%A5-conda-%E7%8E%AF%E5%A2%83/</link><pubDate>Mon, 21 Oct 2024 00:00:00 +0800</pubDate><guid>https://hxhue.github.io/00-failed/%E5%A4%B1%E8%B4%A5%E7%9A%84%E5%B0%9D%E8%AF%95%E5%AF%BC%E5%87%BA%E5%92%8C%E5%AF%BC%E5%85%A5-conda-%E7%8E%AF%E5%A2%83/</guid><description>&lt;p>我在 conda 环境中自行构建了 PyTorch（见 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ &lt;a href="https://hxhue.github.io/posts/programming/python/%E7%94%A8%E7%89%B9%E5%AE%9A%E7%9A%84-CUDA-%E7%89%88%E6%9C%AC%E6%9E%84%E5%BB%BA-PyTorch-%E5%B9%B6%E6%89%93%E5%8C%85-Conda-%E7%8E%AF%E5%A2%83/" title="用特定的 CUDA 版本构建 PyTorch 并打包 Conda 环境" >用特定的 CUDA 版本构建 PyTorch 并打包 Conda 环境&lt;/a>），所以导出为配置文件、再重新安装的方式行不通。考虑到 Conda 环境本质上是一个文件夹，我尝试将其完整导出。&lt;/p></description></item><item><title>安装 cv2 Python 包</title><link>https://hxhue.github.io/posts/programming/python/%E5%AE%89%E8%A3%85-cv2-Python-%E5%8C%85/</link><pubDate>Fri, 11 Oct 2024 00:00:00 +0800</pubDate><guid>https://hxhue.github.io/posts/programming/python/%E5%AE%89%E8%A3%85-cv2-Python-%E5%8C%85/</guid><description>&lt;h1 id="通过-mambaconda-安装">通过 mamba/conda 安装
+&lt;a class="header-anchor" href="#%e9%80%9a%e8%bf%87-mambaconda-%e5%ae%89%e8%a3%85">&lt;/a>
+&lt;/h1>&lt;div class="highlight">&lt;pre tabindex="0" style="color:#93a1a1;background-color:#002b36;-moz-tab-size:2;-o-tab-size:2;tab-size:2;">&lt;code class="language-bash" data-lang="bash">&lt;span style="display:flex;">&lt;span>mamba install -c mempo opencv
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;h1 id="通过-pip-安装">通过 pip 安装
+&lt;a class="header-anchor" href="#%e9%80%9a%e8%bf%87-pip-%e5%ae%89%e8%a3%85">&lt;/a>
+&lt;/h1>&lt;div class="highlight">&lt;pre tabindex="0" style="color:#93a1a1;background-color:#002b36;-moz-tab-size:2;-o-tab-size:2;tab-size:2;">&lt;code class="language-bash" data-lang="bash">&lt;span style="display:flex;">&lt;span>pip install opencv-python opencv-python-headless
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>可能需要安装 opencv-contrib-python-headless，但是我这里不安装也成功了。&lt;/p>
+&lt;h1 id="注意">注意
+&lt;a class="header-anchor" href="#%e6%b3%a8%e6%84%8f">&lt;/a>
+&lt;/h1>&lt;p>两种安装方式不能混合使用。尤其是在通过 &lt;code>pip&lt;/code> 安装 opencv-python 之后，发现不生效，是不能通过 conda 安装 opencv 来补救的。只能继续安装 opencv-python-headless。&lt;/p></description></item><item><title>在 C++ 项目中使用 Pybind11</title><link>https://hxhue.github.io/posts/programming/cpp/%E5%9C%A8-C++-%E9%A1%B9%E7%9B%AE%E4%B8%AD%E4%BD%BF%E7%94%A8-Pybind11/</link><pubDate>Fri, 11 Oct 2024 00:00:00 +0800</pubDate><guid>https://hxhue.github.io/posts/programming/cpp/%E5%9C%A8-C++-%E9%A1%B9%E7%9B%AE%E4%B8%AD%E4%BD%BF%E7%94%A8-Pybind11/</guid><description>&lt;p>安装 pybind11：&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" style="color:#93a1a1;background-color:#002b36;-moz-tab-size:2;-o-tab-size:2;tab-size:2;">&lt;code class="language-bash" data-lang="bash">&lt;span style="display:flex;">&lt;span>pip install &lt;span style="color:#2aa198">&amp;#39;pybind11[global]&amp;#39;&lt;/span>
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;div class="highlight">&lt;pre tabindex="0" style="color:#93a1a1;background-color:#002b36;-moz-tab-size:2;-o-tab-size:2;tab-size:2;">&lt;code class="language-cmake" data-lang="cmake">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#586e75"># add your executable
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#586e75">&lt;/span>&lt;span style="color:#b58900">set&lt;/span>(&lt;span style="color:#2aa198">PYTHON_EXECUTABLE&lt;/span> &lt;span style="color:#2aa198">/opt/miniforge3/bin/python&lt;/span>)
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#b58900">find_package&lt;/span>(&lt;span style="color:#2aa198">pybind11&lt;/span> &lt;span style="color:#2aa198">REQUIRED&lt;/span>)
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#b58900">target_link_libraries&lt;/span>(&lt;span style="color:#2aa198">your_executable&lt;/span> &lt;span style="color:#2aa198">PRIVATE&lt;/span> &lt;span style="color:#2aa198">pybind11::pybind11&lt;/span> &lt;span style="color:#2aa198">pybind11::embed&lt;/span>)
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>设置 &lt;code>PYTHON_EXECUTABLE&lt;/code> 可以确保 pybind11 使用正确的 python 版本，这样才能在里面找到你安装好的其他的包。&lt;/p></description></item><item><title>Python 临时目录在退出时没有被清理</title><link>https://hxhue.github.io/posts/programming/python/Python-%E4%B8%B4%E6%97%B6%E7%9B%AE%E5%BD%95%E5%9C%A8%E9%80%80%E5%87%BA%E6%97%B6%E6%B2%A1%E6%9C%89%E8%A2%AB%E6%B8%85%E7%90%86/</link><pubDate>Tue, 10 Sep 2024 00:00:00 +0800</pubDate><guid>https://hxhue.github.io/posts/programming/python/Python-%E4%B8%B4%E6%97%B6%E7%9B%AE%E5%BD%95%E5%9C%A8%E9%80%80%E5%87%BA%E6%97%B6%E6%B2%A1%E6%9C%89%E8%A2%AB%E6%B8%85%E7%90%86/</guid><description>&lt;p>我的主要代码是这样：&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" style="color:#93a1a1;background-color:#002b36;-moz-tab-size:2;-o-tab-size:2;tab-size:2;">&lt;code class="language-python" data-lang="python">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#719e07">def&lt;/span> &lt;span style="color:#268bd2">main&lt;/span>():
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#719e07">with&lt;/span> tempfile&lt;span style="color:#719e07">.&lt;/span>TemporaryDirectory() &lt;span style="color:#719e07">as&lt;/span> d:
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> write_tmp_files(d)
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>即便是程序在终端被 &lt;code>^C&lt;/code> 终止，临时文件夹也会被正常清理，但是我发现 SIGHUP 到来时，临时文件夹就不会被正常清理了。可以注册一个信号处理器函数：&lt;/p></description></item><item><title>在 Python 中对文件名按照数值排序</title><link>https://hxhue.github.io/posts/programming/python/%E5%9C%A8-Python-%E4%B8%AD%E5%AF%B9%E6%96%87%E4%BB%B6%E5%90%8D%E6%8C%89%E7%85%A7%E6%95%B0%E5%80%BC%E6%8E%92%E5%BA%8F/</link><pubDate>Sat, 07 Sep 2024 00:00:00 +0800</pubDate><guid>https://hxhue.github.io/posts/programming/python/%E5%9C%A8-Python-%E4%B8%AD%E5%AF%B9%E6%96%87%E4%BB%B6%E5%90%8D%E6%8C%89%E7%85%A7%E6%95%B0%E5%80%BC%E6%8E%92%E5%BA%8F/</guid><description>&lt;h1 id="对数据集的文件名正确排序">对数据集的文件名正确排序
+&lt;a class="header-anchor" href="#%e5%af%b9%e6%95%b0%e6%8d%ae%e9%9b%86%e7%9a%84%e6%96%87%e4%bb%b6%e5%90%8d%e6%ad%a3%e7%a1%ae%e6%8e%92%e5%ba%8f">&lt;/a>
+&lt;/h1>&lt;p>有些训练或评估程序要求数据集输入文件的顺序严格有序 &lt;sup id="fnref:1">&lt;a href="#fn:1" class="footnote-ref" role="doc-noteref">1&lt;/a>&lt;/sup>，但是文件名长度又不同，不能简单按照字典序来排序。比如，数据集的标签文件名可能是 0.txt、1.txt……10.txt 等，能想到的一个方法是在前面填充字符 &lt;code>'0'&lt;/code>。&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" style="color:#93a1a1;background-color:#002b36;-moz-tab-size:2;-o-tab-size:2;tab-size:2;">&lt;code class="language-python" data-lang="python">&lt;span style="display:flex;">&lt;span>lst &lt;span style="color:#719e07">=&lt;/span> os&lt;span style="color:#719e07">.&lt;/span>listdir(directory)
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>lst &lt;span style="color:#719e07">=&lt;/span> &lt;span style="color:#b58900">sorted&lt;/span>(lst, key&lt;span style="color:#719e07">=&lt;/span>&lt;span style="color:#719e07">lambda&lt;/span> s : s&lt;span style="color:#719e07">.&lt;/span>zfill(&lt;span style="color:#2aa198">50&lt;/span>))
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>如果先去掉后缀名，然后再把前面的字符串转数字，则可能会遇到很多复杂的情况（比如多重后缀名），比不上在前面填充字符简单。&lt;/p></description></item><item><title>上手 cv2 遇到的一些问题</title><link>https://hxhue.github.io/posts/programming/python/%E4%B8%8A%E6%89%8B-cv2-%E9%81%87%E5%88%B0%E7%9A%84%E4%B8%80%E4%BA%9B%E9%97%AE%E9%A2%98/</link><pubDate>Fri, 06 Sep 2024 00:00:00 +0800</pubDate><guid>https://hxhue.github.io/posts/programming/python/%E4%B8%8A%E6%89%8B-cv2-%E9%81%87%E5%88%B0%E7%9A%84%E4%B8%80%E4%BA%9B%E9%97%AE%E9%A2%98/</guid><description>&lt;h1 id="cv2-的参数输入格式">&lt;code>cv2&lt;/code> 的参数输入格式
+&lt;a class="header-anchor" href="#cv2-%e7%9a%84%e5%8f%82%e6%95%b0%e8%be%93%e5%85%a5%e6%a0%bc%e5%bc%8f">&lt;/a>
+&lt;/h1>&lt;p>&lt;code>cv2&lt;/code> 全部改成了用 &lt;code>numpy.ndarray&lt;/code> 作为图像处理格式。只是操作图像的时候：&lt;/p>
+&lt;ol>
+&lt;li>数据类型必须是 uint8。&lt;/li>
+&lt;li>形状必须是 &lt;code>(H, W, C)&lt;/code> 或者 &lt;code>(H, W)&lt;/code>，后者为灰度图。&lt;/li>
+&lt;li>必须是连续的，必要时得用 &lt;code>np.ascontiguousarray()&lt;/code> 转换一下（不然报错会很晦涩）。&lt;/li>
+&lt;/ol>
+&lt;p>如果使用训练模型用的张量转 numpy，一定要记得把批量维度去掉，并且转 channels-last 格式。否则 cv2 不能正常识别图像，并可能报错（报错信息晦涩难懂）。&lt;/p></description></item><item><title>torch 自动求导的代码在哪里？</title><link>https://hxhue.github.io/posts/programming/python/torch-%E8%87%AA%E5%8A%A8%E6%B1%82%E5%AF%BC%E5%92%8C%E6%B4%BE%E5%8F%91%E7%9A%84%E4%BB%A3%E7%A0%81%E5%9C%A8%E5%93%AA%E9%87%8C/</link><pubDate>Mon, 05 Aug 2024 00:00:00 +0800</pubDate><guid>https://hxhue.github.io/posts/programming/python/torch-%E8%87%AA%E5%8A%A8%E6%B1%82%E5%AF%BC%E5%92%8C%E6%B4%BE%E5%8F%91%E7%9A%84%E4%BB%A3%E7%A0%81%E5%9C%A8%E5%93%AA%E9%87%8C/</guid><description>&lt;p>2024 年 8 月 5 日：当前 torch 发布的版本是 2.4。PyTorch 的源码中还有几个 YAML 文件，这些文件都挺重要的，可以关注一下。&lt;/p>
+&lt;p>tools/autograd/derivatives.yaml 中有一些求导代码片段：&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" style="color:#93a1a1;background-color:#002b36;-moz-tab-size:2;-o-tab-size:2;tab-size:2;">&lt;code class="language-yaml" data-lang="yaml">&lt;span style="display:flex;">&lt;span>- &lt;span style="color:#268bd2">name&lt;/span>: prod.dim_int(Tensor self, int dim, bool keepdim=False, *, ScalarType? dtype=None) -&amp;gt; Tensor
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#268bd2">self&lt;/span>: prod_backward(grad, self.to(grad.scalar_type()), result, dim, keepdim)
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#268bd2">result&lt;/span>: (prod_backward(at::ones({}, result.options()).expand_as(result), self_p.to(result.scalar_type()), result, dim, keepdim) * self_t.conj()).sum(dim, keepdim).conj()
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>- &lt;span style="color:#268bd2">name&lt;/span>: put(Tensor self, Tensor index, Tensor source, bool accumulate=False) -&amp;gt; Tensor
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#268bd2">self&lt;/span>: &lt;span style="color:#2aa198">&amp;#34;accumulate ? grad : grad.put(index, zeros_like(source), false)&amp;#34;&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#268bd2">index&lt;/span>: non_differentiable
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#268bd2">source&lt;/span>: grad.take(index).reshape_as(source)
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#268bd2">result&lt;/span>: self_t.put(index, source_t, accumulate)
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>- &lt;span style="color:#268bd2">name&lt;/span>: linalg_qr(Tensor A, str mode=&amp;#39;reduced&amp;#39;) -&amp;gt; (Tensor Q, Tensor R)
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#268bd2">A&lt;/span>: linalg_qr_backward(grad_Q, grad_R, Q, R, mode)
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#268bd2">Q, R&lt;/span>: linalg_qr_jvp(A_t, Q, R, mode)
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>- &lt;span style="color:#268bd2">name&lt;/span>: rad2deg(Tensor self) -&amp;gt; Tensor
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#268bd2">self&lt;/span>: rad2deg_backward(grad)
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#268bd2">result&lt;/span>: auto_element_wise
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>- &lt;span style="color:#268bd2">name&lt;/span>: random_.from(Tensor(a!) self, int from, int? to, *, Generator? generator=None) -&amp;gt; Tensor(a!)
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#268bd2">self&lt;/span>: zeros_like(grad)
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#268bd2">result&lt;/span>: self_t.zero_()
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>- &lt;span style="color:#268bd2">name&lt;/span>: random_.to(Tensor(a!) self, int to, *, Generator? generator=None) -&amp;gt; Tensor(a!)
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#268bd2">self&lt;/span>: zeros_like(grad)
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#268bd2">result&lt;/span>: self_t.zero_()
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>看起来 &lt;code>name&lt;/code> 是近似于 python 的伪代码，其他的都是 C++ 代码？&lt;/p></description></item><item><title>torch 分布式程序产生僵尸进程</title><link>https://hxhue.github.io/posts/programming/python/torch-%E5%88%86%E5%B8%83%E5%BC%8F%E7%A8%8B%E5%BA%8F%E4%BA%A7%E7%94%9F%E5%83%B5%E5%B0%B8%E8%BF%9B%E7%A8%8B/</link><pubDate>Mon, 08 Jul 2024 00:00:00 +0800</pubDate><guid>https://hxhue.github.io/posts/programming/python/torch-%E5%88%86%E5%B8%83%E5%BC%8F%E7%A8%8B%E5%BA%8F%E4%BA%A7%E7%94%9F%E5%83%B5%E5%B0%B8%E8%BF%9B%E7%A8%8B/</guid><description>&lt;p>聊天记录：&lt;/p>
+&lt;blockquote>
+ &lt;p>A
+torch 的分布式程序在一些异常结束的情况下会留下一些僵尸进程
+我之前经常是这样
+你 kill 掉主进程子进程不会被回收&lt;/p>
+&lt;p>B
+为什么没有会回收？因为父进程没死且没有被回收，难道父进程不是 torch 的主进程，而是整个容器里面的一个活跃进程？
+不在容器里使用是否不会出现这种情况？
+如果父进程死了，应该由 init 回收
+是否是因为容器的起始进程不是 init&lt;/p></description></item><item><title>Python re.match</title><link>https://hxhue.github.io/posts/programming/python/Python-re.match/</link><pubDate>Sat, 11 Nov 2023 00:00:00 +0800</pubDate><guid>https://hxhue.github.io/posts/programming/python/Python-re.match/</guid><description>&lt;p>Python 的正则表达式函数基本都是从第一个字符开始匹配的。不像 bash 和 JS 是任意位置匹配都行。所以要适当加上 &lt;code>.*&lt;/code>。&lt;/p></description></item><item><title>不同语言闭包的捕获方式</title><link>https://hxhue.github.io/posts/unsorted/%E4%B8%8D%E5%90%8C%E8%AF%AD%E8%A8%80%E9%97%AD%E5%8C%85%E7%9A%84%E6%8D%95%E8%8E%B7%E6%96%B9%E5%BC%8F/</link><pubDate>Thu, 12 Oct 2023 00:00:00 +0800</pubDate><guid>https://hxhue.github.io/posts/unsorted/%E4%B8%8D%E5%90%8C%E8%AF%AD%E8%A8%80%E9%97%AD%E5%8C%85%E7%9A%84%E6%8D%95%E8%8E%B7%E6%96%B9%E5%BC%8F/</guid><description>&lt;h1 id="总览">总览
+&lt;a class="header-anchor" href="#%e6%80%bb%e8%a7%88">&lt;/a>
+&lt;/h1>&lt;ul>
+&lt;li>C++ 根据在捕获列表中标注的方式进行捕获。&lt;/li>
+&lt;li>Java 按照值捕获（而且 Java 在某些情况下还要求显式的 final 修饰符）。&lt;/li>
+&lt;li>JavaScript：见 
+ 
+ &lt;a href="https://hxhue.github.io/posts/unsorted/%E4%B8%8D%E5%90%8C%E8%AF%AD%E8%A8%80%E9%97%AD%E5%8C%85%E7%9A%84%E6%8D%95%E8%8E%B7%E6%96%B9%E5%BC%8F#javascript-%e6%8d%95%e8%8e%b7" title="JavaScript 捕获" >JavaScript 捕获&lt;/a>。
+&lt;ul>
+&lt;li>注意：捕获和传值是不同的！例如：JavaScript 在函数参数传递时仍然时按照值传递。&lt;/li>
+&lt;/ul>
+&lt;/li>
+&lt;li>Python/Go 按照引用捕获，for 循环不会创造新的作用域。&lt;/li>
+&lt;/ul>
+&lt;h1 id="javascript-捕获">JavaScript 捕获
+&lt;a class="header-anchor" href="#javascript-%e6%8d%95%e8%8e%b7">&lt;/a>
+&lt;/h1>&lt;p>看上去是引用捕获，但是 for 循环的 let 和 const 绑定会创造新的作用域。&lt;/p></description></item><item><title>Python dict 和 OrderedDict</title><link>https://hxhue.github.io/posts/programming/python/Python-dict-%E5%92%8C-OrderedDict/</link><pubDate>Sat, 19 Aug 2023 00:00:00 +0800</pubDate><guid>https://hxhue.github.io/posts/programming/python/Python-dict-%E5%92%8C-OrderedDict/</guid><description>&lt;h1 id="有序性">有序性
+&lt;a class="header-anchor" href="#%e6%9c%89%e5%ba%8f%e6%80%a7">&lt;/a>
+&lt;/h1>&lt;p>这里说的有序指的是&lt;strong>维持键的插入顺序&lt;/strong>，并不是指使用二叉树维持键的大小关系。&lt;/p>
+&lt;blockquote>
+ &lt;p>&lt;strong>As of Python version 3.7, dictionaries are ordered&lt;/strong>. In Python 3.6 and earlier, dictionaries are unordered.&lt;/p>
+&lt;/blockquote>&lt;p>而 &lt;code>OrderedDict&lt;/code> 一直是有序的。&lt;/p>
+&lt;p>&lt;a href="https://devdocs.io/python~3.11/library/collections#collections.OrderedDict" title="https://devdocs.io/python~3.11/library/collections#collections.OrderedDict" rel="noopener external nofollow noreferrer"
+ target="_blank" class=" exturl" >https://devdocs.io/python~3.11/library/collections#collections.OrderedDict&lt;i class="fa fa-external-link-alt">&lt;/i>&lt;/a>&lt;/p>
+&lt;h1 id="比较">比较
+&lt;a class="header-anchor" href="#%e6%af%94%e8%be%83">&lt;/a>
+&lt;/h1>&lt;ol>
+&lt;li>Python 内置的字典主要用于查询（但在 3.7 版本之后也附带了维持插入顺序的功能），如果要频繁使用排序的功能，&lt;code>OrderedDict&lt;/code> 性能更好。&lt;/li>
+&lt;li>&lt;code>OrderedDict&lt;/code> 有一些排序的接口，方便实现 LRU 缓存等。&lt;/li>
+&lt;li>&lt;code>OrderedDict&lt;/code> 在相等比较时会额外比较键的顺序。&lt;/li>
+&lt;/ol>
+&lt;blockquote>
+ &lt;p>A &lt;a href="https://devdocs.io/python~3.11/library/stdtypes#dict%20%22dict%22" title="regular" rel="noopener external nofollow noreferrer"
+ target="_blank" class=" exturl" >regular&lt;i class="fa fa-external-link-alt">&lt;/i>&lt;/a> can emulate the order sensitive equality test with :
+&lt;code>p == q and all(k1 == k2 for k1, k2 in zip(p, q))&lt;/code>.&lt;/p></description></item><item><title>在 Windows 的 bat 脚本中写 python 代码</title><link>https://hxhue.github.io/posts/programming/python/%E5%9C%A8-Windows-%E7%9A%84-bat-%E8%84%9A%E6%9C%AC%E4%B8%AD%E5%86%99-python-%E4%BB%A3%E7%A0%81/</link><pubDate>Thu, 17 Aug 2023 00:00:00 +0800</pubDate><guid>https://hxhue.github.io/posts/programming/python/%E5%9C%A8-Windows-%E7%9A%84-bat-%E8%84%9A%E6%9C%AC%E4%B8%AD%E5%86%99-python-%E4%BB%A3%E7%A0%81/</guid><description>&lt;div class="highlight">&lt;pre tabindex="0" style="color:#93a1a1;background-color:#002b36;-moz-tab-size:2;-o-tab-size:2;tab-size:2;">&lt;code class="language-python" data-lang="python">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#2aa198">&amp;#34;python&amp;#34;&lt;/span> &lt;span style="color:#2aa198">&amp;#34;%~dp0%~nx0&amp;#34;&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>exit
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#2aa198">&amp;#34;&amp;#34;&amp;#34;
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#2aa198">字符串对于 cmd 来说是外部命令或参数，对于 python 来说是可拼接的字面量。
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#2aa198">exit 对 cmd 来说是退出，对于 python 来说是一个函数名。
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#2aa198">exit 会中止调用者，但在桌面点击运行的环境下可以正常使用。
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#2aa198">&amp;#34;&amp;#34;&amp;#34;&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#719e07">import&lt;/span> uuid
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#719e07">import&lt;/span> subprocess
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#719e07">def&lt;/span> &lt;span style="color:#268bd2">main&lt;/span>():
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#719e07">while&lt;/span> (&lt;span style="color:#b58900">input&lt;/span>(&lt;span style="color:#2aa198">&amp;#39;Hit enter to generate another key: &amp;#39;&lt;/span>)&lt;span style="color:#719e07">.&lt;/span>strip() &lt;span style="color:#719e07">==&lt;/span> &lt;span style="color:#2aa198">&amp;#39;&amp;#39;&lt;/span>):
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> s &lt;span style="color:#719e07">=&lt;/span> &lt;span style="color:#b58900">str&lt;/span>(uuid&lt;span style="color:#719e07">.&lt;/span>uuid4())
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> subprocess&lt;span style="color:#719e07">.&lt;/span>run(&lt;span style="color:#2aa198">&amp;#34;clip&amp;#34;&lt;/span>, text&lt;span style="color:#719e07">=&lt;/span>&lt;span style="color:#cb4b16">True&lt;/span>, &lt;span style="color:#b58900">input&lt;/span>&lt;span style="color:#719e07">=&lt;/span>s)
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#b58900">print&lt;/span>(&lt;span style="color:#2aa198">f&lt;/span>&lt;span style="color:#2aa198">&amp;#39;&lt;/span>&lt;span style="color:#2aa198">{&lt;/span>s&lt;span style="color:#2aa198">}&lt;/span>&lt;span style="color:#2aa198"> is sent to your clipboard!&lt;/span>&lt;span style="color:#cb4b16">\n&lt;/span>&lt;span style="color:#2aa198">&amp;#39;&lt;/span>)
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#719e07">if&lt;/span> __name__ &lt;span style="color:#719e07">==&lt;/span> &lt;span style="color:#2aa198">&amp;#39;__main__&amp;#39;&lt;/span>:
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#719e07">try&lt;/span>:
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> main()
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#719e07">except&lt;/span>:
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#719e07">pass&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#b58900">input&lt;/span>(&lt;span style="color:#2aa198">&amp;#39;&lt;/span>&lt;span style="color:#cb4b16">\n&lt;/span>&lt;span style="color:#2aa198">You entered something else. Program will end after your next input.&amp;#39;&lt;/span>)
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div></description></item><item><title>Python 判断字符串是否为空</title><link>https://hxhue.github.io/posts/programming/python/Python-%E5%88%A4%E6%96%AD%E5%AD%97%E7%AC%A6%E4%B8%B2%E6%98%AF%E5%90%A6%E4%B8%BA%E7%A9%BA/</link><pubDate>Tue, 15 Aug 2023 00:00:00 +0800</pubDate><guid>https://hxhue.github.io/posts/programming/python/Python-%E5%88%A4%E6%96%AD%E5%AD%97%E7%AC%A6%E4%B8%B2%E6%98%AF%E5%90%A6%E4%B8%BA%E7%A9%BA/</guid><description>&lt;div class="highlight">&lt;pre tabindex="0" style="color:#93a1a1;background-color:#002b36;-moz-tab-size:2;-o-tab-size:2;tab-size:2;">&lt;code class="language-python" data-lang="python">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#719e07">def&lt;/span> &lt;span style="color:#268bd2">empty&lt;/span>(s): &lt;span style="color:#719e07">return&lt;/span> s &lt;span style="color:#719e07">is&lt;/span> &lt;span style="color:#cb4b16">None&lt;/span> &lt;span style="color:#719e07">or&lt;/span> &lt;span style="color:#b58900">len&lt;/span>(s) &lt;span style="color:#719e07">==&lt;/span> &lt;span style="color:#2aa198">0&lt;/span> &lt;span style="color:#719e07">or&lt;/span> s&lt;span style="color:#719e07">.&lt;/span>isblank()
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div></description></item><item><title>Python __pycache__</title><link>https://hxhue.github.io/posts/programming/python/Python-__pycache__/</link><pubDate>Sat, 12 Aug 2023 00:00:00 +0800</pubDate><guid>https://hxhue.github.io/posts/programming/python/Python-__pycache__/</guid><description>&lt;h1 id="工作原理">工作原理
+&lt;a class="header-anchor" href="#%e5%b7%a5%e4%bd%9c%e5%8e%9f%e7%90%86">&lt;/a>
+&lt;/h1>&lt;p>&lt;a href="https://peps.python.org/pep-3147/#python-behavior" title="https://peps.python.org/pep-3147/#python-behavior" rel="noopener external nofollow noreferrer"
+ target="_blank" class=" exturl" >https://peps.python.org/pep-3147/#python-behavior&lt;i class="fa fa-external-link-alt">&lt;/i>&lt;/a>&lt;/p>
+&lt;p>
+
+
+
+
+
+
+&lt;img src="https://hxhue.github.io/assets/dbdbce0fb3f79132732f34d71c5fee8f.webp">&lt;/p>
+&lt;p>每次 import 的时候，解释器检查当前目录下的 &lt;code>__pycache__&lt;/code> 文件夹，读取和 Python 版本对应的 cache，然后读取 cache 中库的修改时间（cache 文件中记录着源码的修改时间，并不是 cache 文件本身的修改时间）。将这个时间和源码的时间比较，如果这个时间不存在，或者比源码的时间新，就加载 &lt;code>.pyc&lt;/code> 而不必加载源码。&lt;/p></description></item><item><title>Python __slots__</title><link>https://hxhue.github.io/posts/programming/python/Python-__slots__/</link><pubDate>Sat, 12 Aug 2023 00:00:00 +0800</pubDate><guid>https://hxhue.github.io/posts/programming/python/Python-__slots__/</guid><description>&lt;p>定义了 &lt;code>__slots__&lt;/code> 静态属性的类没有 &lt;code>__dict__&lt;/code> 属性。而且只能添加存在于槽中的属性（可以少加，不能多加）。&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" style="color:#93a1a1;background-color:#002b36;-moz-tab-size:2;-o-tab-size:2;tab-size:2;">&lt;code class="language-python" data-lang="python">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#719e07">class&lt;/span> &lt;span style="color:#268bd2">Point&lt;/span>:
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> __slots__ &lt;span style="color:#719e07">=&lt;/span> [&lt;span style="color:#2aa198">&amp;#39;x&amp;#39;&lt;/span>, &lt;span style="color:#2aa198">&amp;#39;y&amp;#39;&lt;/span>]
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#719e07">def&lt;/span> __init__(&lt;span style="color:#268bd2">self&lt;/span>, x, y):
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#268bd2">self&lt;/span>&lt;span style="color:#719e07">.&lt;/span>x &lt;span style="color:#719e07">=&lt;/span> x
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#268bd2">self&lt;/span>&lt;span style="color:#719e07">.&lt;/span>y &lt;span style="color:#719e07">=&lt;/span> y
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>p &lt;span style="color:#719e07">=&lt;/span> Point(&lt;span style="color:#2aa198">1&lt;/span>, &lt;span style="color:#2aa198">2&lt;/span>)
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#b58900">print&lt;/span>(p&lt;span style="color:#719e07">.&lt;/span>__dict__) &lt;span style="color:#586e75"># 输出: AttributeError: &amp;#39;Point&amp;#39; object has no attribute &amp;#39;__dict__&amp;#39;&lt;/span>
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>槽最大的意义在于节省空间：共享 &lt;code>__slots__&lt;/code>，每个对象没有自己的 &lt;code>__dict__&lt;/code>。节省了字典的空间。对于属性较多的对象，使用槽访问速度可能会下降。&lt;/p></description></item><item><title>Python sys vs os</title><link>https://hxhue.github.io/posts/programming/python/Python-sys-vs-os/</link><pubDate>Sat, 12 Aug 2023 00:00:00 +0800</pubDate><guid>https://hxhue.github.io/posts/programming/python/Python-sys-vs-os/</guid><description>&lt;p>sys 可以访问解释器（运行时功能）和系统特定功能（系统有关功能）。os 提供了操作系统上的统一抽象（系统无关功能）。&lt;/p>
+&lt;ul>
+&lt;li>解释器功能：比如 &lt;code>sys.argv&lt;/code> 访问命令行参数，&lt;code>sys.exit()&lt;/code> 退出程序，&lt;code>sys.path&lt;/code> 是 python 包的查询路径，&lt;code>sys.stdin/sys.stdout/sys.stderr&lt;/code> 分别表示三个系统管道。&lt;/li>
+&lt;li>系统有关功能：比如 &lt;code>sys.getwindowsversion&lt;/code> 可以得到 windows 的大小版本号。&lt;code>sys.platform&lt;/code> 可以获得操作系统平台。&lt;code>sys.version&lt;/code> 是 python 安装信息。&lt;/li>
+&lt;li>系统无关功能：操作文件系统，path 分隔符，环境变量等。&lt;/li>
+&lt;/ul></description></item></channel></rss>

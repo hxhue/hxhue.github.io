@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>八股 on Bluegill</title><link>https://hxhue.github.io/tags/%E5%85%AB%E8%82%A1/</link><description>Recent content in 八股 on Bluegill</description><generator>Hugo</generator><language>zh-CN</language><lastBuildDate>Sun, 06 Apr 2025 00:00:00 +0800</lastBuildDate><atom:link href="https://hxhue.github.io/tags/%E5%85%AB%E8%82%A1/rss.xml" rel="self" type="application/rss+xml"/><item><title>从按下开机键起，操作系统启动过程</title><link>https://hxhue.github.io/posts/systems/Linux/%E4%BB%8E%E6%8C%89%E4%B8%8B%E5%BC%80%E6%9C%BA%E9%94%AE%E8%B5%B7%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F%E5%90%AF%E5%8A%A8%E8%BF%87%E7%A8%8B/</link><pubDate>Sat, 05 Apr 2025 00:00:00 +0800</pubDate><guid>https://hxhue.github.io/posts/systems/Linux/%E4%BB%8E%E6%8C%89%E4%B8%8B%E5%BC%80%E6%9C%BA%E9%94%AE%E8%B5%B7%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F%E5%90%AF%E5%8A%A8%E8%BF%87%E7%A8%8B/</guid><description>&lt;p>&lt;a href="https://developer.aliyun.com/article/1123943" title="揭秘linux系统启动流程，面试官问起来再也不怕了-阿里云开发者社区" rel="noopener external nofollow noreferrer"
+ target="_blank" class=" exturl" >揭秘linux系统启动流程，面试官问起来再也不怕了-阿里云开发者社区&lt;i class="fa fa-external-link-alt">&lt;/i>&lt;/a>&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" style="color:#93a1a1;background-color:#002b36;-moz-tab-size:2;-o-tab-size:2;tab-size:2;">&lt;code class="language-txt" data-lang="txt">&lt;span style="display:flex;">&lt;span>BIOS -&amp;gt; MBR -&amp;gt; Boot Loader (e.g. GRUB) -&amp;gt; kernel -&amp;gt; mount initramfs as / -&amp;gt; /init
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> / \ / |
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>UEFI -&amp;gt; GPT ----+ +----&amp;gt; initramfs --+ |
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> (memory) V
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> 1 load drivers
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> run /sbin/init &amp;lt;--- 2 mount root
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> 3 switch root
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;ol>
+&lt;li>运行 BIOS（现代系统是 UEFI）。&lt;/li>
+&lt;li>进行开机自检（POST，即 Power-On Self-Test）。&lt;/li>
+&lt;li>寻找启动设备，依次检查存储设备，如果前 512 字节最后两个字节是 0x55 和 0xaa，那么这个块就是 MBR（主引导记录，Master Boot Record），这个存储设备就含有操作系统。然后根据 MBR 的信息找到 Boot Loader 位置，将其加载并运行。&lt;strong>如果是 UEFI，UEFI 固件会读取磁盘上的 GPT (GUID Partition Table)。GPT 中有一个特殊的 EFI 系统分区 (ESP, EFI System Partition)，通常格式化为 FAT32。UEFI 固件会直接在该分区中查找并执行引导加载程序文件（通常是 .efi 文件，例如 \EFI\ubuntu\grubx64.efi 或 \EFI\BOOT\BOOTX64.EFI）&lt;/strong>。它不依赖 MBR 的 0x55AA 签名来启动。&lt;/li>
+&lt;li>Linux 常见的 Boot Loader 是 GRUB。Boot Loader 能理解文件系统，能显示操作系统选择菜单和加载 Linux 内核。&lt;/li>
+&lt;li>GRUB &lt;strong>加载&lt;/strong> (load) 内核 (vmlinuz-&amp;hellip;) 和 initrd/initramfs 文件 &lt;strong>到内存&lt;/strong>。加载完成后，GRUB &lt;strong>将执行控制权转交给已加载到内存中的内核&lt;/strong>。&lt;strong>然后，内核会找到内存中的 initrd/initramfs 镜像，并将其解压&lt;/strong>（如果是压缩格式，如 gzip, xz），然后将其挂载为一个 &lt;strong>临时的根文件系统 (rootfs)&lt;/strong>。&lt;/li>
+&lt;li>内核&lt;strong>执行位于 initramfs 根目录下的 /init 程序&lt;/strong> (通常是一个脚本或小程序，如 dracut 或 mkinitcpio 生成的)，这个程序会&lt;strong>加载必要的驱动模块&lt;/strong>，找到真正的根设备（可能是 /dev/sda2，或者 /dev/nvme0n1p3 等），将真正的根设备挂到临时路径如 /sysroot 上，然后切换根目录并释放 initramfs 的内存。&lt;/li>
+&lt;li>现在根目录已经切换好了，运行 /sbin/init 成为系统的第一个进程。&lt;strong>内核引导阶段结束，用户空间初始化开始。&lt;/strong>&lt;/li>
+&lt;/ol></description></item><item><title>动态链接原理</title><link>https://hxhue.github.io/posts/systems/Linux/%E5%8A%A8%E6%80%81%E9%93%BE%E6%8E%A5%E5%8E%9F%E7%90%86/</link><pubDate>Sat, 05 Apr 2025 00:00:00 +0800</pubDate><guid>https://hxhue.github.io/posts/systems/Linux/%E5%8A%A8%E6%80%81%E9%93%BE%E6%8E%A5%E5%8E%9F%E7%90%86/</guid><description>&lt;h1 id="阶段">阶段
+&lt;a class="header-anchor" href="#%e9%98%b6%e6%ae%b5">&lt;/a>
+&lt;/h1>&lt;ul>
+&lt;li>静态编辑&lt;/li>
+&lt;li>动态加载&lt;/li>
+&lt;li>延迟绑定&lt;/li>
+&lt;/ul>
+&lt;h1 id="一静态编辑">一、静态编辑
+&lt;a class="header-anchor" href="#%e4%b8%80%e9%9d%99%e6%80%81%e7%bc%96%e8%be%91">&lt;/a>
+&lt;/h1>&lt;p>链接器（ld）在生成可执行文件时，会记录可执行文件所依赖的共享库的名称以及需要的符号，并将这些信息存储在特定的段中（例如 .dynamic 段）。同时，它会创建 PLT（Procedure Linkage Table，过程链接表）和 GOT（Global Offset Table，全局偏移表）作为占位符，用于后续的动态链接过程。GOT 表初始时包含的是用于延迟绑定的地址，而非实际的函数地址。&lt;/p></description></item><item><title>45.1 简单总结 Linux IPC 机制</title><link>https://hxhue.github.io/the-linux-programming-interface/45.1-%E7%AE%80%E5%8D%95%E6%80%BB%E7%BB%93-Linux-IPC-%E6%9C%BA%E5%88%B6/</link><pubDate>Sat, 08 Mar 2025 00:00:00 +0800</pubDate><guid>https://hxhue.github.io/the-linux-programming-interface/45.1-%E7%AE%80%E5%8D%95%E6%80%BB%E7%BB%93-Linux-IPC-%E6%9C%BA%E5%88%B6/</guid><description>&lt;p>2025/3/8 个人理解：&lt;/p>
+&lt;ul>
+&lt;li>socket：UNIX 域套接字还是网络套接字，这取决于通信进程是否属于同一个主机。&lt;/li>
+&lt;li>管道：包括匿名管道（&lt;code>pipe&lt;/code> 系统调用）和命名管道（fifo 文件）。&lt;/li>
+&lt;li>System V IPC 三大件（POSIX 中也能找到这几个组件的替代物）
+&lt;ul>
+&lt;li>信号量&lt;/li>
+&lt;li>共享内存&lt;/li>
+&lt;li>消息队列&lt;/li>
+&lt;li>System V IPC 用 key 来访问，本质是命名的，&lt;code>IPC_PRIVATE&lt;/code> 只是生成独一无二的名字而已；除了消息队列必须命名之外，POSIX 中其他两个既可以命名也可以匿名。&lt;/li>
+&lt;li>其他区别见 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ &lt;a href="https://hxhue.github.io/the-linux-programming-interface/51-POSIX-IPC-%E4%BB%8B%E7%BB%8D/" title="51 POSIX IPC 介绍" >51 POSIX IPC 介绍&lt;/a>。&lt;/li>
+&lt;/ul>
+&lt;/li>
+&lt;li>mmap：单独用 mmap 可以实现匿名共享内存，但不能解决命名共享内存的问题。POSIX 共享内存可以解决命名共享内存的问题，但是要配合 mmap 才能附加到进程地址空间。mmap 因为很特殊所以单独放出来，没合并到共享内存里面去。&lt;/li>
+&lt;li>文件锁&lt;/li>
+&lt;li>futex&lt;/li>
+&lt;li>信号：信息传输效率低，一般用于操作系统给进程通知信息，或者用户交互式干预进程运行。&lt;/li>
+&lt;/ul></description></item></channel></rss>
